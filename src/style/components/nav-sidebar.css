@@ -1,0 +1,175 @@
+/* Message overview rail — one marker per user turn. */
+.typorai-message-rail {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 42px;
+  max-height: min(280px, calc(100% - 112px));
+  z-index: 80;
+  opacity: 0;
+  pointer-events: none;
+  color: var(--typorai-fg-faint, var(--text-faint));
+  transform: translateY(-50%);
+}
+
+.typorai-message-rail--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.typorai-message-rail-track {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: inherit;
+  padding-block: 4px;
+  scrollbar-width: none;
+}
+
+.typorai-message-rail-track::-webkit-scrollbar {
+  display: none;
+}
+
+.typorai-message-rail-marker {
+  position: relative;
+  flex: 0 0 13px;
+  width: 40px;
+  height: 13px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.typorai-message-rail-line {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  width: 7px;
+  height: 1.5px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.42;
+  transform-origin: left center;
+  transition-property: transform, opacity, background-color;
+  transition-duration: 130ms;
+  transition-timing-function: ease;
+}
+
+.typorai-message-rail-marker:hover .typorai-message-rail-line,
+.typorai-message-rail-marker:focus-visible .typorai-message-rail-line {
+  opacity: 0.9;
+  transform: scaleX(2.8);
+  background: var(--typorai-fg-primary, var(--text-normal));
+}
+
+.typorai-message-rail-marker--active .typorai-message-rail-line {
+  opacity: 0.72;
+  transform: scaleX(1.8);
+  background: var(--typorai-fg-primary, var(--text-normal));
+}
+
+.typorai-message-rail-marker:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: 3px 4px;
+  border: 1px solid color-mix(in srgb, var(--typorai-accent, var(--interactive-accent)) 52%, transparent);
+  border-radius: 6px;
+}
+
+.typorai-message-rail-preview {
+  position: absolute;
+  left: 34px;
+  top: 8px;
+  width: min(330px, calc(100vw - 96px));
+  box-sizing: border-box;
+  padding: 13px 15px 14px;
+  border: 1px solid color-mix(in srgb, var(--typorai-border, var(--background-modifier-border)) 68%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--typorai-bg-primary, var(--background-primary)) 96%, transparent);
+  color: var(--typorai-fg-primary, var(--text-normal));
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 12px 34px rgba(0, 0, 0, 0.11);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-5px) scale(0.985);
+  transform-origin: left center;
+  pointer-events: none;
+  transition-property: opacity, transform, visibility;
+  transition-duration: 160ms;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.typorai-message-rail--previewing .typorai-message-rail-preview {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0) scale(1);
+  pointer-events: auto;
+}
+
+.typorai-message-rail-preview-title {
+  overflow: hidden;
+  color: var(--typorai-fg-primary, var(--text-normal));
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typorai-message-rail-preview-prompt,
+.typorai-message-rail-preview-response {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 5px;
+  color: var(--typorai-fg-muted, var(--text-muted));
+  font-size: 12px;
+  line-height: 1.55;
+  text-wrap: pretty;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.typorai-message-rail-preview-prompt + .typorai-message-rail-preview-response {
+  margin-top: 2px;
+  color: var(--typorai-fg-faint, var(--text-faint));
+}
+
+.typorai-message-rail-preview-files {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-top: 9px;
+  color: var(--typorai-fg-faint, var(--text-faint));
+  font-size: 10.5px;
+}
+
+.typorai-message-rail-preview-file {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typorai-message-rail-preview-file::before {
+  content: '▣';
+  margin-inline-end: 5px;
+  font-size: 8px;
+}
+
+.typorai-message-rail-preview-file-count {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typorai-message-rail-line,
+  .typorai-message-rail-preview {
+    transition: none;
+  }
+}

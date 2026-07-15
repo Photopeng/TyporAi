@@ -1,0 +1,41 @@
+/* Accessibility - Focus Visible Styles */
+
+/* outline + offset + border-radius */
+.typorai-tool-header:focus-visible,
+.typorai-thinking-header:focus-visible,
+.typorai-subagent-header:focus-visible,
+.typorai-header-action-btn:focus-visible,
+.typorai-input-nav-btn:focus-visible,
+.typorai-model-btn:focus-visible,
+.typorai-thinking-current:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* outline + offset only */
+.typorai-action-btn:focus-visible,
+.typorai-toggle-switch:focus-visible,
+.typorai-file-chip:focus-visible,
+.typorai-image-chip:focus-visible,
+.typorai-file-chip-remove:focus-visible,
+.typorai-image-remove:focus-visible,
+.typorai-image-modal-close:focus-visible,
+.typorai-approved-remove-btn:focus-visible,
+.typorai-save-env-btn:focus-visible,
+.typorai-restore-snippet-btn:focus-visible,
+.typorai-edit-snippet-btn:focus-visible,
+.typorai-delete-snippet-btn:focus-visible,
+.typorai-cancel-btn:focus-visible,
+.typorai-save-btn:focus-visible,
+.typorai-code-lang-label:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+/* outline + negative offset + border-radius */
+.typorai-history-item-content:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: -2px;
+  border-radius: 4px;
+}

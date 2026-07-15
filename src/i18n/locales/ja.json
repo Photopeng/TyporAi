@@ -1,0 +1,1386 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "消去",
+    "edit": "編集",
+    "add": "追加",
+    "remove": "取り除く",
+    "clear": "クリア",
+    "clearAll": "すべてクリア",
+    "loading": "読み込み中",
+    "error": "エラー",
+    "success": "成功",
+    "warning": "警告",
+    "confirm": "確認する",
+    "settings": "設定",
+    "advanced": "高度な",
+    "enabled": "有効",
+    "disabled": "無効",
+    "platform": "プラットフォーム",
+    "refresh": "リフレッシュ",
+    "rewind": "巻き戻し",
+    "unknown": "未知",
+    "typorai": "TyporAi",
+    "close": "近い"
+  },
+  "chat": {
+    "slashCommand": {
+      "noMatchingCommands": "一致するコマンドはありません"
+    },
+    "imageAttachments": {
+      "unsupportedByProvider": "画像添付ファイルはこのプロバイダーではサポートされていません。",
+      "exceedsLimit": "画像が {size} 制限を超えています。",
+      "unsupportedType": "サポートされていない画像タイプです。",
+      "attachFailed": "画像の添付に失敗しました。",
+      "dropHere": "ここに画像をドロップ",
+      "remove": "画像を削除",
+      "fileNotFound": "ファイルが見つかりません",
+      "permissionDenied": "許可が拒否されました"
+    },
+    "tabs": {
+      "switchFailed": "タブの切り替えに失敗しました",
+      "closeFailed": "タブを閉じることができませんでした",
+      "maxReached": "許可される最大 {count} タブ",
+      "createFailed": "タブの作成に失敗しました",
+      "newConversationFailed": "会話の作成に失敗しました",
+      "historyToggleFailed": "チャット履歴の切り替えに失敗しました"
+    },
+    "forkUnsupported": "このプロバイダーではフォークがサポートされていません。",
+    "forkUnavailable": "フォークは使用できません。",
+    "rewind": {
+      "confirmMessage": "この時点まで巻き戻しますか?このメッセージの後に行われたファイルの変更は元に戻されます。巻き戻しは、手動または bash 経由で編集されたファイルには影響しません。",
+      "confirmMessageConversationOnly": "会話をこの時点まで巻き戻しますか?ファイルの変更は保持されます。",
+      "confirmButton": "巻き戻し",
+      "ariaLabel": "ここまで巻き戻します",
+      "menuConversationOnly": "会話のみを巻き戻す",
+      "menuCodeAndConversation": "コード + 会話を巻き戻す",
+      "notice": "巻き戻し: {count} ファイルが元に戻されました",
+      "noticeConversationOnly": "巻き戻された会話。ファイルの変更が保持される",
+      "noticeSaveFailed": "巻き戻し: {count} ファイルは元に戻されましたが、状態の保存に失敗しました: {error}",
+      "noticeConversationOnlySaveFailed": "会話を巻き戻しましたが、状態を保存できませんでした: {error}",
+      "failed": "巻き戻しに失敗しました: {error}",
+      "cannot": "巻き戻しできません: {error}",
+      "unavailableStreaming": "ストリーミング中は巻き戻しできません",
+      "unavailableNoUuid": "巻き戻しできません: メッセージ識別子がありません"
+    },
+    "fork": {
+      "ariaLabel": "フォーク会話",
+      "chooseTarget": "フォーク会話",
+      "targetNewTab": "新しいタブ",
+      "targetCurrentTab": "現在のタブ",
+      "maxTabsReached": "フォークできません: 最大 {count} タブに達しました",
+      "notice": "新しいタブにフォークされました",
+      "noticeCurrentTab": "現在のタブでフォークされました",
+      "failed": "フォークが失敗しました: {error}",
+      "unavailableStreaming": "ストリーミング中にフォークできない",
+      "unavailableNoUuid": "フォークできません: メッセージ識別子がありません",
+      "unavailableNoResponse": "フォークできません: フォークに対する応答がありません",
+      "errorMessageNotFound": "メッセージが見つかりません",
+      "errorNoSession": "使用可能なセッション ID がありません",
+      "errorNoActiveTab": "アクティブなタブがありません",
+      "commandNoMessages": "フォークできません: 会話にメッセージがありません",
+      "commandNoAssistantUuid": "フォークできません: 識別子を含むアシスタント応答がありません",
+      "notSupported": "このプロバイダーではフォークがサポートされていません。",
+      "notAvailable": "フォークは使用できません。"
+    },
+    "tab": {
+      "cannotSwitchProvider": "バインドされたセッションではプロバイダーを切り替えることができません。代わりに新しいタブを開始してください。"
+    },
+    "input": {
+      "placeholder": "今日はどのようにお手伝いできますか?",
+      "sendFailed": "メッセージの送信に失敗しました",
+      "cancelFailed": "応答のキャンセルに失敗しました",
+      "initFailed": "チャットサービスの初期化に失敗しました",
+      "renameFailed": "会話の名前を変更できませんでした",
+      "resumeNoConversations": "再開できる会話はありません",
+      "steering": "操舵...",
+      "steerNow": "今すぐ舵を取る",
+      "queuedPrefix": "キューに入れられました:",
+      "editQueued": "キューに入れられたメッセージを編集する",
+      "discardQueued": "キューに入れられたメッセージを破棄する",
+      "compacting": "圧縮中...",
+      "planApproved": "ユーザーが計画を承認し、新しいセッションを開始しました。",
+      "planImplement": "計画を実行します。",
+      "steerFailed": "キューに入れられた Codex メッセージの操作に失敗しました。まだご利用いただけます。",
+      "customSystemPromptAdded": "カスタム システム プロンプトに命令が追加されました",
+      "processingFailed": "応答の処理に失敗しました",
+      "refineFailed": "指示を改良できませんでした",
+      "noInstruction": "指示は受けていません",
+      "agentInitFailed": "エージェントサービスの初期化に失敗しました。もう一度試してください。",
+      "agentNotAvailable": "エージェントサービスはご利用いただけません。プラグインをリロードしてください。",
+      "providerUnavailable": "{provider} が無効になっているか、構成されていません。チャットする前に、[設定] で有効にして構成します。",
+      "errorWithMessage": "エラー: {error}",
+      "detachedInput": "入力エリアは使用できません。",
+      "approvalAgent": "エージェント: {agent}",
+      "commandUnsupported": "/{command} は現在のプロバイダーではサポートされていません。",
+      "unknownCommand": "不明なコマンド: {command}",
+      "openConversationFailed": "会話を開けませんでした: {error}"
+    },
+    "permission": {
+      "title": "許可が必要です",
+      "question": "このアクションを許可しますか?",
+      "deny": "拒否",
+      "allowOnce": "一度許可する",
+      "alwaysAllow": "常に許可する"
+    },
+    "approve": {
+      "approve": "承認する",
+      "reject": "拒否する"
+    },
+    "bangBash": {
+      "placeholder": "> bash コマンドを実行します...",
+      "commandPanel": "コマンドパネル",
+      "copyAriaLabel": "最新のコマンド出力をコピーする",
+      "clearAriaLabel": "bash 出力をクリアする",
+      "commandLabel": "{command}",
+      "statusLabel": "ステータス: {status}",
+      "collapseOutput": "コマンド出力を折りたたむ",
+      "expandOutput": "コマンド出力を拡張する",
+      "running": "走っています...",
+      "copyFailed": "クリップボードへのコピーに失敗しました",
+      "commandFailed": "コマンドが失敗しました: {error}"
+    },
+    "toolbar": {
+      "safeLabel": "SAFE",
+      "yoloLabel": "YOLO",
+      "safeTooltip": "SAFE がオンになっている場合、現在のドキュメントに対するすべての AI 変更がブロックされます。",
+      "yoloTooltip": "YOLO がオンになっている場合: AI はチャットの指示に基づいて現在のドキュメントを変更する可能性があります。",
+      "planMode": "プラン",
+      "planModeTooltip": "計画モード: AI は現在のドキュメントを分析できますが、変更することはできません。",
+      "mcpClickToEnable": "MCP サーバー (クリックして有効化)",
+      "unknownModel": "未知",
+      "addExternalContext": "外部コンテキストを追加 (クリック)",
+      "mcpServers": "MCPサーバー",
+      "noMcpServers": "MCP サーバーが構成されていません",
+      "allMcpDisabled": "すべての MCP サーバーが無効になっています",
+      "thinking": "考え：",
+      "failedChangeModel": "機種変更に失敗しました",
+      "failedChangeMode": "モード変更に失敗しました",
+      "failedChangeEffort": "努力レベルの変更に失敗しました",
+      "failedChangeThinking": "思考予算を変更できませんでした",
+      "failedChangePermission": "許可モードの変更に失敗しました",
+      "failedChangeServiceTier": "サービスレベルの変更に失敗しました",
+      "toggleFastMode": "高速モードのオン/オフを切り替える",
+      "mcpEnabled": "{count} MCP サーバー{plural} 有効 (クリックして管理)",
+      "contextSavingHint": "コンテキストの保存: @{name} 経由で有効にすることもできます",
+      "cursorFlow": "カーソルの流れ",
+      "cursorFlowTooltip": "有効にすると、テキストを選択した後、カーソルが入力に自動的にフォーカスします。",
+      "cursorFlowAriaLabel": "有効にすると、テキストを選択した後、カーソルが入力に自動的にフォーカスします。"
+    },
+    "nav": {
+      "tocTitle": "目次",
+      "noPrompts": "まだプロンプトはありません",
+      "moreFiles": "+{count}もっと見る",
+      "awaitingResponse": "応答を待っています…",
+      "jumpToMessage": "メッセージ {index} にジャンプ: {title}",
+      "messageRail": "メッセージナビゲーション",
+      "untitledMessage": "無題のメッセージ"
+    },
+    "resume": {
+      "title": "会話を再開する",
+      "empty": "会話なし",
+      "current": "現在のセッション"
+    },
+    "fileContext": {
+      "openNotFound": "ファイルを開けませんでした: {path}",
+      "openFailed": "ファイルを開けませんでした: {error}"
+    },
+    "actions": {
+      "newTab": "新しいタブ",
+      "newConversation": "新しい会話",
+      "history": "チャット履歴"
+    }
+  },
+  "quickActions": {
+    "toolbar": {
+      "ariaLabel": "クイックアクションツールバー"
+    },
+    "copy": "コピー",
+    "ask": "聞く",
+    "edit": "編集",
+    "quote": "引用",
+    "working": "働く...",
+    "noResult": "結果はありません",
+    "askInstruction": "次の文章について質問してください",
+    "askPrompt": "選択したテキストについて説明してください。",
+    "quotePreview": "{text} [{lineCount} 行]",
+    "clearQuote": "明確な見積もり",
+    "actionFailed": "アクションが失敗しました"
+  },
+  "modal": {
+    "instruction": {
+      "yourInput": "あなたの意見",
+      "yourResponse": "あなたの返答",
+      "refinedSnippet": "洗練されたスニペット",
+      "preview": "プレビュー",
+      "edit": "編集",
+      "titleAdd": "カスタム命令を追加する",
+      "processing": "指示を処理しています...",
+      "placeholder": "さらに詳しい情報を提供してください...",
+      "cancel": "キャンセル",
+      "cancelAria": "キャンセル",
+      "submit": "提出する",
+      "submitAria": "応答を送信する",
+      "editAria": "編集命令",
+      "accept": "受け入れる",
+      "acceptAria": "指示を受け入れる",
+      "processingInline": "処理..."
+    }
+  },
+  "inlineEdit": {
+    "unavailable": "インライン編集は利用できません: アクティブなエディターにアクセスできませんでした。メモを再度開いてみてください。",
+    "workspaceLoadFailed": "ワークスペースファイルのロードに失敗しました。ワークスペースの @-メンションは利用できない場合があります。",
+    "placeholderInsert": "説明を挿入...",
+    "placeholderEdit": "指示を編集...",
+    "replyPlaceholder": "続行するには返信してください...",
+    "noResponse": "エージェントから応答がありません",
+    "errorRetry": "エラー - 再試行してください",
+    "invalidPath": "ファイルの添付に失敗しました: 無効なパス",
+    "prompt": {
+      "ariaLabel": "編集命令",
+      "placeholder": "編集内容を説明する",
+      "send": "送信"
+    },
+    "unavailableMarkdownView": "インライン編集は利用できません: アクティブなマークダウン ビューにアクセスできませんでした。",
+    "generating": "生成中...",
+    "actions": {
+      "accept": "受け入れる",
+      "refine": "リファイン",
+      "reject": "拒否する",
+      "refinePrompt": "選択した提案テキストを絞り込む"
+    },
+    "errors": {
+      "documentEditingBlocked": "SAFEがオンになっています。 AI が現在のドキュメントを変更できるようにするには、これをオフにします。",
+      "enterInstruction": "編集指示を入力します。",
+      "generationFailed": "生成の編集に失敗しました。",
+      "noReplacement": "編集応答には置換テキストが含まれていませんでした。",
+      "noCliProvider": "有効な CLI プロバイダーが設定されていません。 [設定] で Claude、Codex、または OpenCode を有効にして構成します。",
+      "refineFailed": "絞り込みに失敗しました。",
+      "refineNoReplacement": "絞り込み応答には置換テキストが含まれていませんでした。",
+      "selectSuggestionToRefine": "候補ブロック内のテキストを選択して絞り込みます。"
+    }
+  },
+  "typora": {
+    "panel": {
+      "hideAria": "TyporAi パネルを非表示にする",
+      "hideTitle": "パネルを非表示にする",
+      "showAria": "TyporAi パネルを表示",
+      "showTitle": "TyporAi を表示する"
+    },
+    "settings": {
+      "openAria": "TyporAi 設定を開く",
+      "title": "設定"
+    }
+  },
+  "validation": {
+    "slug": {
+      "required": "{label} 名前は必須です",
+      "tooLong": "{label} 名は {max} 文字以下である必要があります",
+      "invalidChars": "{label} 名には、小文字、数字、ハイフンのみを含めることができます",
+      "reservedWord": "{label} 名は YAML 予約語 (true、false、null、yes、no、on、off) にすることはできません。",
+      "labelCommand": "指示",
+      "labelAgent": "エージェント",
+      "labelCodexSubagent": "コーデックスサブエージェント",
+      "labelOpencodeSubagent": "OpenCodeサブエージェント",
+      "labelCodexSkill": "コーデックススキル"
+    }
+  },
+  "renderer": {
+    "message": {
+      "interrupted": "中断されました",
+      "interruptedHint": "・TyporAi は代わりに何をすべきでしょうか?",
+      "conversationCompacted": "会話がコンパクトにまとまった",
+      "bakedFor": "* {duration} の場合は {word}",
+      "baked": "焼きました",
+      "subagentTask": "サブエージェントタスク",
+      "failedToRender": "メッセージの内容をレンダリングできませんでした。",
+      "copied": "コピーしました！",
+      "copyMessageAria": "メッセージをコピーする",
+      "copyAria": "コピー",
+      "codeCopied": "コピーしました！",
+      "noResult": "結果はありません"
+    },
+    "thinking": {
+      "ariaExpand": "拡張された思考 - クリックして展開します",
+      "elapsed": "{seconds} を考えています...",
+      "thoughtFor": "{seconds} への思い",
+      "thought": "考え"
+    },
+    "tool": {
+      "tasksProgress": "タスク {completed}/{total}",
+      "tasks": "タスク",
+      "enteringPlanMode": "計画モードに入る",
+      "planComplete": "計画完了",
+      "readFile": "読み取り: {path}",
+      "writeFile": "書き込み: {path}",
+      "editFile": "編集: {path}",
+      "command": "バッシュ: {command}",
+      "url": "ウェブフェッチ: {url}",
+      "file": "ファイル",
+      "pattern": "グレップ: {pattern}",
+      "skill": "スキル：{name}",
+      "toolSearch": "ツール検索: {query}",
+      "tools": "ツール",
+      "toolSearchLabel": "グロブ: {pattern}",
+      "agents": "{count} エージェント{plural}",
+      "noResult": "結果はありません",
+      "noMatchesFound": "一致するものが見つかりませんでした",
+      "moreLines": "... {count} 行以上",
+      "moreChars": "... {count} 追加文字",
+      "fileDeleted": "ファイルが削除されました",
+      "noTextualDiff": "利用可能なテキストの差分はありません",
+      "changesAria": "変更点: +{added} -{removed}",
+      "webSearch": "ウェブ検索: {query}",
+      "search": "検索",
+      "openPage": "ページを開く",
+      "findInPage": "ページ内で検索",
+      "findInPageWithPattern": "「{pattern}」を検索",
+      "list": "LS: {path}",
+      "urlUnavailable": "URLが利用できません",
+      "patternLabel": "パターン: {pattern}",
+      "queryLabel": "クエリ: {query}",
+      "altQueryLabel": "代替クエリ: {query}",
+      "moreQueries": "...{count}その他のクエリ",
+      "bashPrefix": "$ {command}",
+      "tasksUpdated": "タスクが更新されました",
+      "statusCompleted": "ステータス: 完了",
+      "statusInProgress": "ステータス: 進行中",
+      "statusLabel": "ステータス: {status}",
+      "running": "走っています...",
+      "waitingForAnswer": "答えを待っています...",
+      "notAnswered": "未回答",
+      "noOptionsRecorded": "オプションは記録されていません",
+      "questionOption": "オプション",
+      "questionDefault": "オプション",
+      "reviewAnswer": "回答を確認してください"
+    },
+    "writeEdit": {
+      "statusRunning": "ステータス: 実行中",
+      "statusError": "ステータス: エラー",
+      "writing": "書き込み...",
+      "done": "終わり",
+      "error": "エラー",
+      "defaultError": "エラー"
+    },
+    "diff": {
+      "noChanges": "変更なし",
+      "moreLines": "... {count} 行以上",
+      "prefix": "+",
+      "ariaLabel": "変更点: +{added} -{removed}"
+    },
+    "subagent": {
+      "subagentTask": "サブエージェントタスク",
+      "backgroundTask": "バックグラウンドタスク",
+      "backgroundTaskCompleted": "(バックグラウンドタスクが完了しました)",
+      "backgroundTaskRenderFailed": "バックグラウンド タスクは完了しましたが、結果をレンダリングできませんでした。",
+      "prompt": "プロンプト",
+      "result": "結果",
+      "noPromptProvided": "プロンプトは提供されません",
+      "initializing": "初期化中",
+      "runningInBackground": "バックグラウンドで実行中",
+      "completed": "完了",
+      "error": "エラー",
+      "orphaned": "孤児",
+      "conversationEnded": "タスクが完了する前に会話が終了しました",
+      "clickToExpand": "クリックして展開します",
+      "ariaHeader": "{type}: {description} - {status} - クリックして展開します",
+      "ariaStatus": "ステータス: {status}",
+      "statusPending": "保留中",
+      "statusRunning": "走っている",
+      "statusCompleted": "完了しました",
+      "statusError": "エラー",
+      "statusOrphaned": "孤児"
+    },
+    "ask": {
+      "defaultTitle": "質問",
+      "placeholderSecret": "シークレットを入力してください。",
+      "placeholderCustom": "何かを入力します。",
+      "submit": "提出する",
+      "submitAnswers": "回答を送信する",
+      "cancel": "キャンセル",
+      "reviewAnswers": "回答を確認してください",
+      "readyToSubmit": "回答を送信する準備はできましたか?",
+      "hints": "Enter で選択 ･ Tab/矢印キーで移動 ･ Esc でキャンセル",
+      "hintsImmediate": "Enter で選択します ･ 矢印キーで移動します ･ Esc でキャンセルします",
+      "notAnswered": "未回答",
+      "optionFallback": "オプション"
+    },
+    "plan": {
+      "title": "計画完了",
+      "requestedPermissions": "要求された権限:",
+      "approveNewSession": "承認（新規セッション）",
+      "approveCurrentSession": "承認（現在のセッション）",
+      "cancel": "キャンセル",
+      "feedbackPlaceholder": "計画を続けるにはフィードバックを入力してください...",
+      "readError": "計画ファイルを読み取れませんでした: {error}。 「承認（新しいセッション）」には計画の詳細は含まれません。",
+      "hints": "矢印キーで移動 ･ Enter で選択 ･ Esc でキャンセル"
+    },
+    "planApproval": {
+      "title": "計画完了",
+      "implement": "埋め込む",
+      "revise": "改訂",
+      "cancel": "キャンセル",
+      "feedbackPlaceholder": "計画を修正するためにフィードバックを入力してください...",
+      "hints": "矢印キーで移動 ･ Enter で選択 ･ Esc でキャンセル"
+    },
+    "history": {
+      "header": "会話",
+      "empty": "会話なし",
+      "runningInAnotherPane": "別のペインで実行中",
+      "openInAnotherPane": "別のペインで開く",
+      "running": "ランニング",
+      "runningInTab": "{tab} で実行中",
+      "currentTabIndex": "現在のタブ {index}",
+      "currentSession": "現在のセッション",
+      "openInTab": "{tab}で開く",
+      "tabIndex": "タブ {index}",
+      "currentTab": "現在のタブ",
+      "tab": "タブ",
+      "generatingAria": "タイトルを生成中...",
+      "regenerateAria": "タイトルを再生成する",
+      "openInNewTabAria": "新しいタブで開く",
+      "renameAria": "名前の変更",
+      "deleteAria": "消去",
+      "openInNewTab": "新しいタブで開く",
+      "openInBackgroundTab": "「バックグラウンド」タブで開く",
+      "switchToOpenSession": "オープンセッションに切り替える",
+      "rename": "名前の変更",
+      "delete": "消去",
+      "loadFailed": "会話の読み込みに失敗しました",
+      "deleteFailed": "会話の削除に失敗しました",
+      "regenerateFailed": "応答の再生成に失敗しました",
+      "saveFailed": "保存に失敗しました"
+    },
+    "renameFailed": "会話の名前を変更できませんでした",
+    "rewind": {
+      "failed": "巻き戻しに失敗しました: {error}",
+      "unavailableStreaming": "アシスタントがストリーミング中は巻き戻しできません",
+      "cannot": "巻き戻しできません: {error}",
+      "unsupportedProvider": "このプロバイダーでは巻き戻しはサポートされていません。",
+      "errorMessageNotFound": "メッセージが見つかりません"
+    },
+    "greeting": {
+      "day": {
+        "sun": [
+          "Happy Sunday",
+          "Sunday session?",
+          "Welcome to the weekend"
+        ],
+        "mon": [
+          "Happy Monday",
+          "Back at it",
+          "Back at it!"
+        ],
+        "tue": [
+          "Happy Tuesday"
+        ],
+        "wed": [
+          "Happy Wednesday"
+        ],
+        "thu": [
+          "Happy Thursday"
+        ],
+        "fri": [
+          "Happy Friday",
+          "That Friday feeling"
+        ],
+        "sat": [
+          "Happy Saturday",
+          "Happy Saturday!",
+          "Welcome to the weekend"
+        ]
+      },
+      "morning": [
+        "Good morning",
+        "Coffee and TyporAi time?"
+      ],
+      "afternoon": [
+        "Good afternoon",
+        "Hey there",
+        "How's it going"
+      ],
+      "evening": [
+        "Good evening",
+        "Evening",
+        "How was your day"
+      ],
+      "night": [
+        "Hello, night owl",
+        "Evening"
+      ],
+      "general": [
+        "Hey there",
+        "Hi {name}, how are you?",
+        "Hi, how are you?",
+        "How's it going?",
+        "Welcome back!",
+        "What's new?",
+        "{name} returns!",
+        "You are absolutely right!"
+      ]
+    }
+  },
+  "settings": {
+    "title": "TyporAi の設定",
+    "storage": {
+      "tabLayout": {
+        "saveFailed": "タブレイアウトの保存に失敗しました"
+      }
+    },
+    "tabs": {
+      "general": "一般",
+      "claude": "Claude",
+      "codex": "Codex"
+    },
+    "display": "画面",
+    "conversations": "会話",
+    "content": "コンテンツ",
+    "input": "入力",
+    "setup": "設定",
+    "models": "モデル",
+    "experimental": "実験的",
+    "userName": {
+      "name": "TyporAi はあなたを何と呼ぶべきですか?",
+      "desc": "パーソナライズされた挨拶の場合はあなたの名前 (一般的な挨拶の場合は空白のままにします)"
+    },
+    "excludedTags": {
+      "name": "除外されるタグ",
+      "desc": "これらのタグを含むメモはコンテキストとして自動ロードされません (1 行に 1 つ、# なし)",
+      "placeholder": "システム\nプライベート\nドラフト"
+    },
+    "mediaFolder": {
+      "name": "メディアフォルダー",
+      "desc": "添付ファイル/画像を含むフォルダー。メモに![[image.jpg]]を使用する場合、クロードはここを参照します。ボルトのルートは空のままにしておきます。",
+      "placeholder": "添付ファイル"
+    },
+    "systemPrompt": {
+      "name": "カスタム システム プロンプト",
+      "desc": "デフォルトのシステムプロンプトに追加された追加の指示"
+    },
+    "autoTitle": {
+      "name": "会話タイトルを自動生成",
+      "desc": "最初のユーザーメッセージが送信された後、会話タイトルを自動的に生成します。"
+    },
+    "titleModel": {
+      "name": "タイトル生成モデル",
+      "desc": "会話タイトルの自動生成に使用されるモデル。",
+      "auto": "自動（俳句）"
+    },
+    "navMappings": {
+      "name": "Vim スタイルのナビゲーション マッピング",
+      "desc": "1 行に 1 つのマッピング。形式：「マップ <key> <action>」（アクション：scrollUp、scrollDown、focusInput）。",
+      "placeholder": "スクロールアップ付き地図\n地図のスクロールダウン\nマップ私フォーカス入力"
+    },
+    "requireCommandOrControlEnterToSend": {
+      "name": "送信するにはCommand/Ctrl+Enterが必要です",
+      "desc": "有効にすると、Enter キーで改行が挿入されます。 macOS では Command+Enter で送信します。 Windows および Linux では Ctrl+Enter で送信されます。"
+    },
+    "hotkeys": "ホットキー",
+    "inlineEditHotkey": {
+      "name": "インライン編集",
+      "descWithKey": "現在のホットキー: {hotkey}",
+      "descNoKey": "ホットキーが設定されていません",
+      "btnChange": "変化",
+      "btnSet": "ホットキーを設定する"
+    },
+    "openChatHotkey": {
+      "name": "オープンチャット",
+      "descWithKey": "現在のホットキー: {hotkey}",
+      "descNoKey": "ホットキーが設定されていません",
+      "btnChange": "変化",
+      "btnSet": "ホットキーを設定する"
+    },
+    "newSessionHotkey": {
+      "name": "新しいセッション",
+      "descWithKey": "現在のホットキー: {hotkey}",
+      "descNoKey": "ホットキーが設定されていません",
+      "btnChange": "変化",
+      "btnSet": "ホットキーを設定する"
+    },
+    "newTabHotkey": {
+      "name": "新しいタブ",
+      "descWithKey": "現在のホットキー: {hotkey}",
+      "descNoKey": "ホットキーが設定されていません",
+      "btnChange": "変化",
+      "btnSet": "ホットキーを設定する"
+    },
+    "closeTabHotkey": {
+      "name": "タブを閉じる",
+      "descWithKey": "現在のホットキー: {hotkey}",
+      "descNoKey": "ホットキーが設定されていません",
+      "btnChange": "変化",
+      "btnSet": "ホットキーを設定する"
+    },
+    "hotkeySearch": "TyporAi",
+    "slashCommands": {
+      "name": "コマンドとスキル",
+      "desc": ".claude/commands/ および .claude/skills/ に保存されている Vault レベルのコマンドとスキルを管理します。 /name によってトリガーされます。"
+    },
+    "hiddenSlashCommands": {
+      "name": "隠しコマンドとスキル",
+      "desc": "特定のコマンドとスキルをドロップダウンから非表示にします。 TyporAi に関係のないクロード コード エントリを非表示にするのに役立ちます。先頭のスラッシュを付けずに名前を 1 行に 1 つずつ入力します。",
+      "placeholder": "コミットする\n構築する\nテスト"
+    },
+    "mcpServers": {
+      "name": "MCPサーバー",
+      "desc": ".claude/mcp.json に保存されているボールトレベルの MCP サーバー構成を管理します。コンテキスト保存モードを備えたサーバーをアクティブ化するには @mention が必要です。"
+    },
+    "plugins": {
+      "name": "クロードコードプラグイン",
+      "desc": "~/.claude/plugins から検出された Claude Code プラグインを管理します。有効なプラグインは、ボールトごとに .claude/settings.json に保存されます。"
+    },
+    "subagents": {
+      "name": "サブエージェント",
+      "desc": ".claude/agents/ に保存されているボールトレベルのサブエージェントを管理します。各 Markdown ファイルは 1 つのカスタム エージェントを定義します。",
+      "noAgents": "サブエージェントが構成されていません。 + をクリックして作成します。",
+      "deleteConfirm": "サブエージェント「{name}」を削除しますか?",
+      "saveFailed": "サブエージェントの保存に失敗しました: {message}",
+      "refreshFailed": "サブエージェントの更新に失敗しました: {message}",
+      "deleteFailed": "サブエージェントの削除に失敗しました: {message}",
+      "renameCleanupFailed": "警告: 「{name}」の古いファイルを削除できませんでした",
+      "created": "サブエージェント「{name}」が作成されました",
+      "updated": "サブエージェント「{name}」が更新されました",
+      "deleted": "サブエージェント「{name}」が削除されました",
+      "duplicateName": "「{name}」という名前のエージェントはすでに存在します",
+      "descriptionRequired": "説明は必須です",
+      "promptRequired": "システムプロンプトは必須です",
+      "loadFailed": "サブエージェント「{name}」のロードに失敗しました: {message}",
+      "modelOptions": {
+        "inherit": "継承する",
+        "sonnet": "ソネット",
+        "opus": "オーパス",
+        "haiku": "俳句"
+      },
+      "modal": {
+        "titleEdit": "サブエージェントの編集",
+        "titleAdd": "サブエージェントの追加",
+        "name": "名前",
+        "nameDesc": "小文字、数字、ハイフンのみ",
+        "namePlaceholder": "コードレビュー担当者",
+        "description": "説明",
+        "descriptionDesc": "このエージェントの簡単な説明",
+        "descriptionPlaceholder": "コードのバグとスタイルをレビューする",
+        "advancedOptions": "詳細オプション",
+        "model": "モデル",
+        "modelDesc": "このエージェントのモデルオーバーライド",
+        "tools": "ツール",
+        "toolsDesc": "許可されるツールのカンマ区切りリスト (空 = すべて)",
+        "disallowedTools": "許可されていないツール",
+        "disallowedToolsDesc": "禁止するツールのカンマ区切りリスト",
+        "skills": "スキル",
+        "skillsDesc": "スキルのカンマ区切りリスト",
+        "prompt": "システムプロンプト",
+        "promptDesc": "代理店への指示",
+        "promptPlaceholder": "あなたはコードレビュー担当者です。指定されたコードを分析して..."
+      }
+    },
+    "safety": "安全性",
+    "loadUserSettings": {
+      "name": "ユーザーのクロード設定をロードする",
+      "desc": "~/.claude/settings.json をロードします。有効にすると、ユーザーのクロード コード権限ルールがセーフ モードをバイパスする可能性があります。"
+    },
+    "claudeSafeMode": {
+      "name": "セーフモード",
+      "desc": "Safe トグルがアクティブな場合に使用される許可モード。"
+    },
+    "codexSafeMode": {
+      "name": "セーフモード",
+      "desc": "安全トグルがアクティブな場合に使用されるサンドボックス モード。"
+    },
+    "environment": "環境",
+    "environmentShared": {
+      "name": "共有環境",
+      "desc": "すべてのプロバイダー間で共有されるプロバイダー中立のランタイム変数。これを PATH、プロキシ、証明書、および一時変数に使用します。",
+      "placeholder": "PATH=/opt/homebrew/bin:/usr/local/bin\nHTTPS_PROXY=http://proxy.example.com:8080\nSSL_CERT_FILE=/path/to/cert.pem"
+    },
+    "customVariables": {
+      "name": "カスタム変数",
+      "desc": "Claude SDK の環境変数 (KEY=VALUE 形式、1 行に 1 つ)。シェル エクスポート プレフィックスがサポートされています。"
+    },
+    "envSnippets": {
+      "name": "スニペット",
+      "addBtn": "スニペットを追加",
+      "noSnippets": "保存された環境スニペットはまだありません。 + をクリックして現在の環境構成を保存します。",
+      "nameRequired": "スニペットの名前を入力してください",
+      "insertFailed": "スニペットの挿入に失敗しました",
+      "deleteFailed": "スニペットの削除に失敗しました",
+      "deleteConfirm": "環境スニペット「{name}」を削除しますか?",
+      "saved": "環境スニペット「{name}」が保存されました",
+      "updated": "環境スニペット「{name}」が更新されました",
+      "deleted": "環境スニペット「{name}」が削除されました",
+      "insertAria": "スニペットを挿入",
+      "aliasAria": "{modelId}のエイリアス",
+      "aliasTitle": "モデルセレクターに表示されるカスタムラベル。デフォルトを使用するには、空のままにしておきます。",
+      "contextWindowAria": "{modelId} のコンテキスト ウィンドウ",
+      "contextWindowPlaceholder": "200k",
+      "modal": {
+        "titleEdit": "スニペットの編集",
+        "titleSave": "スニペットの保存",
+        "name": "名前",
+        "namePlaceholder": "この環境構成のわかりやすい名前",
+        "description": "説明",
+        "descPlaceholder": "オプションの説明",
+        "envVars": "環境変数",
+        "envVarsPlaceholder": "KEY=VALUE format, one per line (export prefix supported)",
+        "save": "保存",
+        "update": "アップデート",
+        "cancel": "キャンセル"
+      }
+    },
+    "customModelOverrides": {
+      "name": "カスタムモデルのオーバーライド",
+      "desc": "カスタム モデルのモデル セレクター エイリアスとコンテキスト ウィンドウ サイズを設定します。"
+    },
+    "customModelAliases": {
+      "placeholder": "エイリアス",
+      "ariaLabel": "{modelId}のエイリアス",
+      "aliasTitle": "モデルセレクターに表示されるカスタムラベル。デフォルトを使用するには、空のままにしておきます。"
+    },
+    "customContextLimits": {
+      "name": "カスタムコンテキストの制限",
+      "desc": "カスタム モデルのコンテキスト ウィンドウ サイズを設定します。デフォルト (200k トークン) を使用する場合は、空のままにします。",
+      "ariaLabel": "{modelId} のコンテキスト ウィンドウ",
+      "invalid": "無効な形式です。使用: 256k、1m、または正確なカウント (1000-10000000)。"
+    },
+    "enableOpus1M": {
+      "name": "Opus 1M コンテキスト ウィンドウ",
+      "desc": "モデルセレクターに Opus 1M を表示します。 Max、Team、Enterprise プランに含まれています。 API および Pro ユーザーには追加の使用量が必要です。"
+    },
+    "enableSonnet1M": {
+      "name": "Sonnet 1M コンテキスト ウィンドウ",
+      "desc": "モデルセレクターに Sonnet 1M を表示します。 Max、Team、Enterprise プランでは追加の使用量が必要です。 API および Pro ユーザーには追加の使用量が必要です。"
+    },
+    "customModels": {
+      "name": "カスタムモデル",
+      "desc": "追加のクロード モデル ID を 1 行に 1 つずつピッカーに追加します。環境モデルのオーバーライドは引き続きピッカーを置き換えます。",
+      "placeholder": "claude-opus-4-6\nclaude-opus-4-6[1m]\nclaude-opus-4-5-20251101"
+    },
+    "enableChrome": {
+      "name": "Chrome拡張機能を有効にする",
+      "desc": "クロードが claude-in-chrome 拡張機能を介して Chrome と対話できるようにします。拡張機能をインストールする必要があります。セッションの再起動が必要です。"
+    },
+    "enableBangBash": {
+      "name": "bash モードを有効にする (!)",
+      "desc": "タイプ ！空の入力で bash モードに入ります。 Node.js child_process 経由でコマンドを直接実行します。ビューを再度開く必要があります。",
+      "validation": {
+        "noNode": "Node.js が PATH 上に見つかりません。 Node.js をインストールするか、PATH 構成を確認してください。"
+      }
+    },
+    "maxTabs": {
+      "name": "チャットタブの最大数",
+      "desc": "同時チャット タブの最大数 (3 ～ 10)。各タブは個別のクロード セッションを使用します。",
+      "warning": "5 つを超えるタブは、パフォーマンスとメモリ使用量に影響を与える可能性があります。"
+    },
+    "enableAutoScroll": {
+      "name": "ストリーミング中の自動スクロール",
+      "desc": "クロードが応答をストリーミングすると、自動的に一番下までスクロールします。トップに留まり、最初から読むことを無効にします。"
+    },
+    "deferMathRenderingDuringStreaming": {
+      "name": "ストリーミング中に数学レンダリングを延期する",
+      "desc": "応答がストリーミングされている間に生の LaTeX を表示し、各テキスト ブロックが完了したときに数式を 1 回レンダリングします。"
+    },
+    "expandFileEditsByDefault": {
+      "name": "デフォルトでファイル編集を拡張する",
+      "desc": "Write および Edit の差分を最初に表示したときに展開して表示します。"
+    },
+    "chatViewPlacement": {
+      "name": "でTyporAiを開きます",
+      "desc": "チャット パネルの作成時に開く場所を選択します",
+      "rightSidebar": "右サイドバー",
+      "leftSidebar": "左側のサイドバー",
+      "mainTab": "メインエディタタブ"
+    },
+    "cliPath": {
+      "name": "クロード CLI パス",
+      "desc": "Claude Code CLI へのカスタム パス。自動検出するには空のままにしておきます。",
+      "descWindows": "ネイティブ インストーラーの場合は、claude.exe を使用します。 npm/pnpm/yarn またはその他のパッケージ マネージャーのインストールの場合は、cli-wrapper.cjs パス (claude.cmd ではない) を使用します。",
+      "descUnix": "「どのクロード」の出力を貼り付けます。ネイティブ インストールと npm/pnpm/yarn インストールの両方で機能します。",
+      "validation": {
+        "notExist": "パスが存在しません",
+        "isDirectory": "パスはファイルではなくディレクトリです"
+      }
+    },
+    "language": {
+      "name": "言語",
+      "desc": "プラグインインターフェースの表示言語を変更する"
+    },
+    "claude": {
+      "enableProvider": {
+        "name": "クロードプロバイダーを有効にする",
+        "desc": "有効にすると、クロード モデルが新しい会話に表示されます。 Claude を有効にすると、Codex と OpenCode が無効になります。"
+      },
+      "plugins": {
+        "header": "クロードコードプラグイン",
+        "refreshAria": "プラグインを更新する",
+        "empty": "クロード コード プラグインが見つかりません。 Claude CLI 経由でプラグインを有効にします。",
+        "project": "プロジェクトプラグイン",
+        "user": "ユーザープラグイン",
+        "disableAria": "プラグインを無効にする",
+        "enableAria": "プラグインを有効にする",
+        "refreshFailed": "プラグインを更新できませんでした: {message}",
+        "toggleFailed": "プラグインの切り替えに失敗しました: {message}",
+        "togglePartiallyFailed": "プラグインは切り替わりましたが、一部のタブが再起動に失敗しました。",
+        "noticeToggledDisabled": "プラグイン「{id}」が無効になっています",
+        "noticeToggledEnabled": "プラグイン「{id}」が有効になりました",
+        "noticeRefreshed": "プラグインリストが更新されました"
+      },
+      "slashCommands": {
+        "type": {
+          "name": "タイプ",
+          "desc": "このエントリがスラッシュ コマンドであるかスキルであるかを選択します。",
+          "skillLabel": "スキル",
+          "commandLabel": "指示",
+          "commandOption": "指示",
+          "skillOption": "スキル"
+        },
+        "name": {
+          "name": "名前",
+          "desc": "小文字、数字、ハイフンのみ。",
+          "placeholder": "レビュー-PR"
+        },
+        "description": {
+          "name": "説明",
+          "desc": "スラッシュコマンドリストに簡単な説明が表示されます。"
+        },
+        "argumentHint": {
+          "name": "引数のヒント",
+          "desc": "引数のプレースホルダー テキスト (例: \"[file] [focus]\")"
+        },
+        "modelOverride": {
+          "name": "モデルオーバーライド",
+          "desc": "このコマンドに使用するオプションのモデル。",
+          "placeholder": "Claude-sonnet-4-5"
+        },
+        "allowedTools": {
+          "name": "許可されたツール",
+          "desc": "許可するツールのカンマ区切りのリスト (空 = すべて)。"
+        },
+        "disableModelInvocation": {
+          "name": "モデルの呼び出しを無効にする",
+          "desc": "モデル自体がこのコマンドを呼び出さないようにします。"
+        },
+        "disableUserInvocation": {
+          "name": "ユーザー呼び出しを無効にする",
+          "desc": "ユーザーがこのスキルを直接呼び出せないようにします。"
+        },
+        "context": {
+          "name": "コンテクスト",
+          "desc": "サブエージェント (フォーク) で実行します。"
+        },
+        "agent": {
+          "name": "エージェント",
+          "desc": "コンテキストがフォークの場合のサブエージェントのタイプ。",
+          "placeholder": "コードレビューア"
+        },
+        "prompt": {
+          "name": "プロンプトテンプレート",
+          "desc": "$ARGUMENTS、$1、$2、@file、!`bash` を使用します。"
+        },
+        "promptPlaceholder": "Review this code for:\n$ARGUMENTS\n\n@$1",
+        "advancedOptions": "詳細オプション",
+        "promptRequired": "プロンプトテンプレートは必須です",
+        "duplicateName": "「/{name}」という名前のコマンドはすでに存在します",
+        "saveFailed": "スラッシュコマンドの保存に失敗しました",
+        "saveFailedSkill": "スキルの保存に失敗しました",
+        "saveFailedCommand": "スラッシュコマンドの保存に失敗しました",
+        "deleteFailedSkill": "スキルの削除に失敗しました",
+        "deleteFailedCommand": "スラッシュコマンドの削除に失敗しました",
+        "convertToSkillAria": "スキルに変換",
+        "convertFailed": "スキル変換に失敗しました",
+        "converted": "「/{name}」をスキルに変換しました",
+        "skillBadge": "スキル",
+        "skillLabel": "スキル",
+        "slashCommandLabel": "スラッシュコマンド",
+        "created": "作成されました",
+        "updated": "更新されました",
+        "deleted": "削除されました",
+        "unavailable": "クロード コマンド カタログは利用できません。",
+        "emptyCatalog": "コマンドやスキルが見つかりません。",
+        "emptyNone": "コマンドやスキルはまだありません。 + をクリックして追加します。",
+        "learnMore": "もっと詳しく知る",
+        "duplicateSkillName": "「/{name}」という名前のスキルはすでに存在します",
+        "saveFailedWithLabel": "{label}の保存に失敗しました",
+        "deleteFailedWithLabel": "{label} の削除に失敗しました",
+        "noticeCreated": "{label}「/{name}」が作成されました",
+        "noticeUpdated": "{label}「/{name}」を更新しました",
+        "noticeDeleted": "{label}「/{name}」を削除しました"
+      },
+      "customVariables": {
+        "desc": "クロードが所有するランタイム変数のみ。これを ANTHROPIC_* および Claude 固有の切り替えに使用します。",
+        "placeholder": "ANTHROPIC_API_KEY=your-key\nANTHROPIC_BASE_URL=https://api.example.com\nANTHROPIC_MODEL=custom-model\nCLAUDE_CODE_USE_BEDROCK=1"
+      }
+    },
+    "codex": {
+      "enable": {
+        "name": "コーデックスプロバイダーを有効にする",
+        "desc": "有効にすると、新しい会話のモデル セレクターに Codex モデルが表示されます。既存の Codex セッションは保持されます。"
+      },
+      "installationMethod": {
+        "name": "設置方法",
+        "desc": "TyporAi が Windows 上で Codex を起動する方法。ネイティブ Windows は Windows 実行可能パスを使用します。 WSL は、選択したディストリビューション内で Linux CLI を起動します。",
+        "nativeWindows": "ネイティブウィンドウ",
+        "wsl": "WSL"
+      },
+      "cliPath": {
+        "name": "コーデックス CLI パス",
+        "desc": "Codex CLI へのカスタム パス。",
+        "placeholder": "コーデックス実行可能ファイルへのパス",
+        "descNative": "ローカル Codex CLI へのカスタム パス。 PATH から自動検出する場合は空のままにします。",
+        "descWsl": "WSL 内で実行する Linux 側の Codex コマンドまたは絶対パス。選択したディストリビューション内で PATH ルックアップを行う場合は、空のままにしておきます。",
+        "descWindows": "ローカル Codex CLI へのカスタム パス。 PATH から自動検出する場合は空のままにします。ネイティブの Windows 実行可能パス (通常は `codex.exe`) を使用します。",
+        "placeholderNative": "/usr/local/bin/codex",
+        "placeholderWsl": "コーデックス",
+        "placeholderWindows": "C:\\Users\\you\\AppData\\Roaming\\npm\\codex.exe",
+        "wslModeError": "WSL モードでは、Windows 実行可能パスではなく、Linux コマンドまたは Linux 絶対パスが必要です。"
+      },
+      "wslDistro": {
+        "name": "WSL ディストリビューションのオーバーライド",
+        "desc": "オプションの高度なオーバーライド。可能な場合は WSL ワークスペース パスからディストリビューションを推測するには空のままにし、それ以外の場合はデフォルトの WSL ディストリビューションを使用します。",
+        "placeholder": "Ubuntu"
+      },
+      "reasoningSummary": {
+        "name": "推論の要約",
+        "desc": "モデルの推論プロセスの概要を思考ブロックに表示します。",
+        "auto": "自動",
+        "concise": "簡潔",
+        "detailed": "詳細",
+        "none": "なし"
+      },
+      "customModels": {
+        "placeholder": "gpt-5.4\ngpt-5.3-codex-spark"
+      },
+      "skills": {
+        "heading": "コーデックスのスキル",
+        "desc": ".codex/skills/ または .agents/skills/ に保存されている Vault レベルの Codex スキルを管理します。家庭レベルのスキルはここでは除外されます。",
+        "label": "コーデックススキル",
+        "empty": "Vault には Codex スキルがありません。 + をクリックして作成します。",
+        "skillBadge": "スキル",
+        "deletedNotice": "コーデックススキル「{name}」を削除",
+        "createdNotice": "コーデックススキル「{name}」作成",
+        "updatedNotice": "コーデックススキル「{name}」更新",
+        "saveFailed": "コーデックス スキルの保存に失敗しました",
+        "deleteFailed": "コーデックス スキルの削除に失敗しました",
+        "instructionsRequired": "指示が必要です"
+      },
+      "hiddenSkills": {
+        "name": "隠しスキル",
+        "desc": "特定の Codex スキルをドロップダウンから非表示にします。先頭の $ を除いたスキル名を 1 行に 1 つずつ入力します。",
+        "placeholder": "分析する\n説明する\n修正する"
+      },
+      "skillModal": {
+        "titleAdd": "コーデックススキルを追加",
+        "titleEdit": "コーデックススキルの編集",
+        "directory": {
+          "name": "ディレクトリ",
+          "desc": "スキルを保存する場所"
+        },
+        "name": {
+          "name": "スキル名",
+          "desc": "$ の後に使用される名前 (例: $analyze の場合は「analyze」)",
+          "placeholder": "コードを分析する"
+        },
+        "description": {
+          "name": "説明",
+          "desc": "ドロップダウンに表示されるオプションの説明"
+        },
+        "instructions": {
+          "name": "説明書",
+          "desc": "スキル説明書（SKILL.mdコンテンツ）",
+          "placeholder": "コードを分析して..."
+        }
+      },
+      "subagents": {
+        "heading": "コーデックスのサブエージェント",
+        "desc": ".codex/agents/ に保存されているボールトレベルの Codex サブエージェントを管理します。各 TOML ファイルは 1 つのカスタム エージェントを定義します。",
+        "label": "コーデックスサブエージェント",
+        "empty": "ボールトに Codex サブエージェントがありません。 + をクリックして作成します。"
+      },
+      "subagentModal": {
+        "titleAdd": "Codex サブエージェントの追加",
+        "titleEdit": "Codex サブエージェントの編集",
+        "advanced": "詳細オプション",
+        "name": {
+          "name": "名前",
+          "desc": "Codex が生成時に使用するエージェント名 (小文字、ハイフン、アンダースコア)",
+          "placeholder": "コードレビューア"
+        },
+        "description": {
+          "name": "説明",
+          "desc": "Codex がこのエージェントを使用する必要がある場合",
+          "placeholder": "コードの正確性とセキュリティをレビューする",
+          "required": "説明は必須です"
+        },
+        "model": {
+          "name": "モデル",
+          "desc": "モデルのオーバーライド (継承するには空のままにします)"
+        },
+        "reasoningEffort": {
+          "name": "推論の努力",
+          "desc": "モデル推論の努力レベル",
+          "inherit": "継承する",
+          "low": "低い",
+          "medium": "中くらい",
+          "high": "高い",
+          "xhigh": "エクストラハイ"
+        },
+        "sandboxMode": {
+          "name": "サンドボックスモード",
+          "desc": "このエージェントのサンドボックス制限",
+          "inherit": "継承する",
+          "readOnly": "読み取り専用",
+          "dangerFullAccess": "危険なフルアクセス",
+          "workspaceWrite": "ワークスペースの書き込み"
+        },
+        "nicknameCandidates": {
+          "name": "ニックネーム候補",
+          "desc": "カンマ区切りの表示ニックネーム (例: アトラス、デルタ、エコー)"
+        },
+        "developerInstructions": {
+          "name": "開発者向けの指示",
+          "desc": "エージェントの動作を定義する中心的な指示",
+          "placeholder": "オーナーのようにコードをレビューします。\n正確性、セキュリティ、欠落しているテスト カバレッジを優先します。",
+          "required": "開発者の指示が必要です"
+        },
+        "errors": {
+          "duplicateName": "「{name}」という名前のサブエージェントはすでに存在します",
+          "saveFailed": "サブエージェントの保存に失敗しました: {message}",
+          "deleteFailed": "サブエージェントの削除に失敗しました",
+          "deletedNotice": "サブエージェント「{name}」が削除されました",
+          "createdNotice": "サブエージェント「{name}」が作成されました",
+          "updatedNotice": "サブエージェント「{name}」が更新されました",
+          "deleteConfirm": "サブエージェント「{name}」を削除しますか?"
+        },
+        "validation": {
+          "nameRequired": "サブエージェント名は必須です",
+          "nameTooLong": "サブエージェント名は {max} 文字以下である必要があります",
+          "nameInvalid": "サブエージェント名には小文字、数字、ハイフン、アンダースコアのみを含めることができます",
+          "nicknameInvalid": "ニックネームの候補には、ASCII 文字、数字、スペース、ハイフン、アンダースコアのみを含めることができます",
+          "nicknameDuplicate": "ニックネーム候補は一意である必要があります"
+        }
+      },
+      "safeMode": {
+        "workspaceWrite": "ワークスペースの書き込み",
+        "readOnly": "読み取り専用"
+      },
+      "env": {
+        "name": "カスタム変数",
+        "desc": "Codex の環境変数 (KEY=VALUE 形式、1 行に 1 つ)。シェル エクスポート プレフィックスがサポートされています。",
+        "placeholder": "OPENAI_API_KEY=your-key\nOPENAI_BASE_URL=https://api.openai.com/v1"
+      },
+      "mcp": {
+        "notice": "Codex は、独自の CLI を介して MCP サーバーを管理します。 `codex mcp` で設定すると、TyporAi で使用できるようになります。",
+        "learnMore": "もっと詳しく知る"
+      }
+    },
+    "opencode": {
+      "setup": {
+        "heading": "設定"
+      },
+      "enable": {
+        "name": "OpenCode プロバイダーを有効にする",
+        "desc": "有効にすると、OpenCode モデルが新しい会話のモデル セレクターに表示されます。"
+      },
+      "cliPath": {
+        "name": "CLIパス",
+        "desc": "このコンピューターの OpenCode CLI へのオプションの絶対パス。 PATH から `opencode` を使用するには、空のままにします。",
+        "placeholder": "オープンコード",
+        "placeholderWin": "C:\\Users\\you\\AppData\\Roaming\\npm\\opencode.cmd",
+        "placeholderUnix": "/usr/local/bin/opencode",
+        "validation": {
+          "notExist": "パスが存在しません",
+          "isDirectory": "パスはファイルを指している必要があります",
+          "isFile": "パスはファイルを指している必要があります",
+          "notFile": "パスがファイルを指していません"
+        }
+      },
+      "models": {
+        "heading": "モデル",
+        "browse": "モデルを参照する",
+        "searchPlaceholder": "モデルを検索...",
+        "empty": "モデルは見つかりませんでした。",
+        "loading": "モデルをロード中...",
+        "loadFailed": "モデルのロードに失敗しました。",
+        "startOpencode": "OpenCode を起動してモデルを検出します。",
+        "notReported": "現在 OpenCode によって報告されていません",
+        "selectedCount": "{count} が選択されました",
+        "ofDiscovered": "{total} が発見されました",
+        "noneDiscovered": "何も発見されなかった",
+        "available": "利用可能",
+        "allProviders": "すべてのプロバイダー",
+        "allProvidersCount": "すべてのプロバイダー ({count})",
+        "providerOption": "{label} ({count})",
+        "removeAria": "{label}を削除",
+        "aliasAria": "{name}のエイリアス",
+        "aliasTitle": "モデルセレクターに表示されるカスタムラベル。デフォルトを使用するには、空のままにしておきます。",
+        "visibleLabel": "可視モデル",
+        "clearAllAria": "選択したモデルをすべてクリアします",
+        "emptyFiltered": "検索に一致するモデルはありません。",
+        "emptyLoading": "OpenCode からモデルをロードしています...",
+        "emptyLoadFailed": "OpenCode からモデルをロードできませんでした。 CLI パスを確認して、再試行してください。",
+        "emptyStartOpencode": "OpenCode を起動して、利用可能なモデルを確認します。",
+        "visible": {
+          "name": "可視モデル",
+          "desc": "ピッカーに表示されるモデルを選択します。空の場合、検出されたすべてのモデルが表示されます。"
+        },
+        "unavailableBadge": "利用不可",
+        "unavailableTitle": "このモデルは現在 OpenCode から入手できません"
+      },
+      "commands": {
+        "heading": "コマンド",
+        "desc": "ボールトレベルの OpenCode コマンドを管理します。"
+      },
+      "hiddenCommands": {
+        "name": "隠しコマンド",
+        "desc": "特定の OpenCode コマンドをドロップダウンから非表示にします。先頭のスラッシュを付けずに名前を 1 行に 1 つずつ入力します。",
+        "placeholder": "コマンド1\nコマンド2"
+      },
+      "subagents": {
+        "heading": "サブエージェント",
+        "desc": "ボールトレベルの OpenCode サブエージェントを管理します。"
+      },
+      "agentModal": {
+        "titleAdd": "OpenCode サブエージェントの追加",
+        "titleEdit": "OpenCode サブエージェントの編集",
+        "advanced": "詳細オプション",
+        "name": {
+          "name": "名前",
+          "desc": "OpenCode エージェント名。ネストされたエージェントにはスラッシュで区切られたセグメントを使用します。",
+          "placeholder": "レビュー",
+          "required": "エージェント名は必須です",
+          "slashLeadingTrailing": "エージェント名には、先頭または末尾のスラッシュを含まないスラッシュで区切られたパス セグメントを使用する必要があります",
+          "segmentEmpty": "エージェント名のパスセグメントを空にしたり、空白のみにすることはできません",
+          "segmentWhitespace": "エージェント名のパスセグメントの先頭または末尾を空白にすることはできません",
+          "dotSegment": "エージェント名に「.」を含めることはできません。または「..」パスセグメント",
+          "reservedChars": "エージェント名のパスセグメントには、Windows で予約されているファイル名文字を含めることはできません"
+        },
+        "description": {
+          "name": "説明",
+          "desc": "OpenCode がこのサブエージェントを使用する必要がある場合",
+          "placeholder": "コードの正確性と保守性をレビューする",
+          "required": "説明は必須です"
+        },
+        "model": {
+          "name": "モデル",
+          "desc": "プロバイダー/モデル形式でのモデルのオーバーライド",
+          "placeholder": "Anthropic/Claude-sonnet-4-20250514"
+        },
+        "variant": {
+          "name": "変異体",
+          "desc": "モデルバリアントのオーバーライド",
+          "placeholder": "高い"
+        },
+        "temperature": {
+          "name": "温度",
+          "desc": "オプションのサンプリング温度",
+          "placeholder": "0.1",
+          "invalid": "温度は有効な数値である必要があります"
+        },
+        "topP": {
+          "name": "トップページ",
+          "desc": "オプションの核サンプリング値",
+          "placeholder": "0.9",
+          "invalid": "上位 P は有効な数値でなければなりません"
+        },
+        "color": {
+          "name": "色",
+          "desc": "16 進数の色またはテーマのトークン",
+          "placeholder": "#Ff5733"
+        },
+        "steps": {
+          "name": "ステップ",
+          "desc": "テキストのみの出力を強制するまでのエージェントの最大反復回数",
+          "placeholder": "10",
+          "invalid": "ステップは正の整数でなければなりません"
+        },
+        "hidden": {
+          "name": "@メンションから非表示にする",
+          "desc": "@ autocomplete メニューからこのサブエージェントを非表示にする"
+        },
+        "disable": {
+          "name": "エージェントを無効にする",
+          "desc": "ファイルを削除せずにエージェントを無効にする"
+        },
+        "tools": {
+          "name": "有効なツール (JSON)",
+          "desc": "オプションの非推奨ツール マップ。 {\"write\":false,\"edit\":false}",
+          "placeholder": "{\n  \"write\": false,\n  \"edit\": false\n}",
+          "invalid": "有効なツールはツール名をブール値にマップする必要があります"
+        },
+        "permission": {
+          "name": "許可(JSON)",
+          "desc": "オプションの権限設定。例: {\"edit\":\"deny\",\"bash\":\"allow\"}",
+          "placeholder": "{\n  \"edit\": \"deny\"\n}",
+          "invalid": "権限は有効な JSON である必要があります"
+        },
+        "options": {
+          "name": "オプション(JSON)",
+          "desc": "オプションのカスタム エージェント オプション",
+          "placeholder": "{\n  \"focus\": \"security\"\n}",
+          "invalid": "オプションは JSON オブジェクトである必要があります"
+        },
+        "prompt": {
+          "name": "プロンプト",
+          "desc": "エージェントプロンプトとして使用されるマークダウン本文",
+          "placeholder": "コードの変更を注意深くレビューし、正確さ、リグレッション、カバレッジの欠落を指摘します。",
+          "required": "プロンプトは必須です"
+        },
+        "errors": {
+          "duplicate": "「{name}」という名前のサブエージェントはすでに存在します",
+          "saveFailed": "サブエージェントの保存に失敗しました: {message}",
+          "deleteFailed": "サブエージェントの削除に失敗しました",
+          "created": "サブエージェント「{name}」が作成されました",
+          "updated": "サブエージェント「{name}」が更新されました",
+          "deleted": "サブエージェント「{name}」が削除されました"
+        }
+      },
+      "agentList": {
+        "label": "OpenCode サブエージェント",
+        "empty": "Vault に OpenCode サブエージェントがありません。 + をクリックして作成します。",
+        "badgeSubagent": "復代理人",
+        "refreshAria": "リフレッシュ",
+        "addAria": "追加",
+        "editAria": "編集",
+        "deleteAria": "消去",
+        "deleteConfirm": "サブエージェント「{name}」を削除しますか?"
+      },
+      "env": {
+        "heading": "環境",
+        "name": "環境変数",
+        "desc": "OpenCode に渡される追加の環境変数。 `OPENCODE_ENABLE_EXA=1` はデフォルトで有効になっています。",
+        "placeholder": "{defaultEnv}\nOPENCODE_DB=/path/to/opencode.db"
+      }
+    },
+    "typora": {
+      "setup": {
+        "heading": "設定"
+      },
+      "enable": {
+        "name": "Typora プロバイダーを有効にする",
+        "desc": "有効にすると、Typora プロバイダーをモデル セレクターで使用できます。"
+      },
+      "api": {
+        "heading": "API"
+      },
+      "apiKey": {
+        "name": "APIキー",
+        "desc": "Typora プロバイダー API へのリクエストを認証するために使用される API キー。"
+      },
+      "apiBaseUrl": {
+        "name": "APIベースURL",
+        "desc": "Typora プロバイダー API のベース URL。デフォルトでは空のままにしておきます。"
+      },
+      "apiModel": {
+        "name": "APIモデル",
+        "desc": "Typora プロバイダー API に使用するモデル ID。"
+      }
+    },
+    "mcp": {
+      "modal": {
+        "titleEdit": "MCPサーバーの編集",
+        "titleAdd": "MCPサーバーの追加",
+        "serverName": {
+          "name": "サーバー名",
+          "desc": "この MCP サーバーの一意の識別子。",
+          "placeholder": "私のmcpサーバー"
+        },
+        "type": {
+          "name": "タイプ",
+          "desc": "MCP サーバーの起動または接続方法を選択します。",
+          "stdio": "stdio (ローカルコマンド)",
+          "sse": "SSE (サーバー送信イベント)",
+          "http": "HTTP"
+        },
+        "enabled": {
+          "name": "有効",
+          "desc": "無効なサーバーは起動されず、モデルに提供されません。"
+        },
+        "contextSaving": {
+          "name": "コンテキストの保存",
+          "desc": "有効にすると、このサーバーはチャット内で @ メンションした場合にのみアクティブになり、コンテキスト トークンが保存されます。"
+        },
+        "command": {
+          "name": "指示",
+          "desc": "MCP サーバーを起動するシェル コマンド。引数はスペースで区切られます。",
+          "placeholder": "npx -y @my-org/mcp-server"
+        },
+        "env": {
+          "name": "環境変数",
+          "desc": "1 行に 1 つの KEY=VALUE ペア。シェルで必要な場合は、`export` プレフィックスを使用します。",
+          "placeholder": "API_KEY=your-key\nDEBUG=true"
+        },
+        "url": {
+          "name": "URL",
+          "desc": "MCP サーバーのエンドポイント。",
+          "sseDesc": "サーバー送信イベントのエンドポイント URL。",
+          "httpDesc": "HTTP エンドポイント URL。",
+          "placeholder": "https://example.com/mcp"
+        },
+        "headers": {
+          "name": "ヘッダー",
+          "desc": "カスタム HTTP ヘッダー、1 行に 1 つの KEY=VALUE。",
+          "placeholder": "Authorization=Bearer your-token"
+        },
+        "nameRequired": "サーバー名を入力してください",
+        "nameInvalid": "サーバー名には文字、数字、ドット、ハイフン、アンダースコアのみを含めることができます",
+        "commandRequired": "コマンドを入力してください",
+        "urlRequired": "URLを入力してください"
+      },
+      "empty": "MCP サーバーが構成されていません。 + をクリックして追加します。",
+      "addOptionStdio": "Stdio (ローカルコマンド)",
+      "addOptionHttp": "HTTP / SSE",
+      "addOptionImport": "クリップボードからインポート",
+      "contextSavingBadgeTitle": "コンテキストの保存: @{name} でメンションして有効にします",
+      "verifyAria": "検証（ツールを表示）",
+      "disableAria": "無効にする",
+      "enableAria": "有効にする",
+      "editAria": "編集",
+      "deleteAria": "消去",
+      "alreadyExists": "サーバー「{name}」はすでに存在します",
+      "updated": "MCPサーバー「{name}」が更新されました",
+      "added": "MCPサーバー「{name}」を追加しました",
+      "enabled": "MCPサーバー「{name}」が有効になりました",
+      "disabled": "MCP サーバー「{name}」が無効になっています",
+      "deleted": "MCPサーバー「{name}」が削除されました",
+      "deleteConfirm": "MCP サーバー「{name}」を削除しますか?",
+      "saveFailed": "MCPサーバーの保存に失敗しました",
+      "importEmpty": "クリップボードが空です",
+      "importInvalid": "クリップボードに有効な mcp 構成が見つかりません",
+      "importFailed": "クリップボードの読み取りに失敗しました",
+      "importEnterName": "サーバーの名前を入力します",
+      "importSuccess": "インポートされた {count} MCP サーバー{plural}",
+      "importPartial": "インポートされた {count} MCP サーバー {plural} ({skipped} はスキップされました)",
+      "importNone": "新しい mcp サーバーはインポートされませんでした",
+      "reloadFailed": "設定は保存されましたが、リロードに失敗しました。変更は次回のセッションに適用されます。",
+      "verificationFailed": "検証に失敗しました",
+      "test": {
+        "toggleError": "切り替えに失敗しました",
+        "permissionDenied": "許可が拒否されました。コマンドのファイル権限を確認してください。",
+        "diskFull": "ディスクがいっぱいか、スペースがありません。スペースを解放して、再試行してください。",
+        "configCorrupted": "MCP 構成が破損しています。 JSON を確認して修正してください。",
+        "title": "確認: {name}",
+        "connecting": "接続中...",
+        "connected": "正常に接続されました",
+        "connectedTo": "{name} に正常に接続されました",
+        "connectedToVersion": "{name} v{version} に正常に接続されました",
+        "connectionFailed": "接続に失敗しました",
+        "availableTools": "利用可能なツール ({count})",
+        "noToolsInfo": "利用可能なツール情報はありません。チャットで使用するとツールが読み込まれます。",
+        "disableAll": "すべて無効にする",
+        "enableAll": "すべて有効にする",
+        "close": "近い"
+      }
+    },
+    "envReview": {
+      "heading": "環境の見直し",
+      "message": "環境の所有権を確認します: {keys}",
+      "keysFor": "環境の所有権を確認します: {keys}"
+    }
+  },
+  "provider": {
+    "claude": "Claude",
+    "codex": "Codex",
+    "opencode": "OpenCode",
+    "typora": "Typora"
+  }
+}

@@ -1,0 +1,1386 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "remove": "Supprimer",
+    "clear": "Effacer",
+    "clearAll": "Tout effacer",
+    "loading": "Chargement",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Avertissement",
+    "confirm": "Confirmer",
+    "settings": "Paramètres",
+    "advanced": "Avancé",
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "platform": "Plateforme",
+    "refresh": "Actualiser",
+    "rewind": "Rembobiner",
+    "unknown": "Inconnu",
+    "typorai": "TyporAi",
+    "close": "Fermer"
+  },
+  "chat": {
+    "rewind": {
+      "confirmMessage": "Rembobiner jusqu'à ce point ? Les modifications de fichiers après ce message seront annulées. Le rembobinage n'affecte pas les fichiers modifiés manuellement ou via bash.",
+      "confirmMessageConversationOnly": "Rembobiner la conversation jusqu'à ce point ? Les modifications de fichiers seront conservées.",
+      "confirmButton": "Rembobiner",
+      "ariaLabel": "Rembobiner jusqu'ici",
+      "menuConversationOnly": "Rembobiner la conversation seule",
+      "menuCodeAndConversation": "Rembobiner code + conversation",
+      "notice": "Rembobiné : {count} fichier(s) restauré(s)",
+      "noticeConversationOnly": "Conversation rembobinée ; modifications de fichiers conservées",
+      "noticeSaveFailed": "Rembobiné : {count} fichier(s) restauré(s), mais impossible d'enregistrer l'état : {error}",
+      "noticeConversationOnlySaveFailed": "Conversation rembobinée, mais impossible d'enregistrer l'état : {error}",
+      "failed": "Échec du rembobinage : {error}",
+      "cannot": "Impossible de rembobiner : {error}",
+      "unavailableStreaming": "Impossible de rembobiner pendant le streaming",
+      "unavailableNoUuid": "Impossible de rembobiner : identifiants de message manquants"
+    },
+    "fork": {
+      "ariaLabel": "Bifurquer la conversation",
+      "chooseTarget": "Bifurquer la conversation",
+      "targetNewTab": "Nouvel onglet",
+      "targetCurrentTab": "Onglet actuel",
+      "maxTabsReached": "Impossible de bifurquer : maximum de {count} onglets atteint",
+      "notice": "Bifurqué dans un nouvel onglet",
+      "noticeCurrentTab": "Bifurqué dans l'onglet actuel",
+      "failed": "Échec de la bifurcation : {error}",
+      "unavailableStreaming": "Impossible de bifurquer pendant le streaming",
+      "unavailableNoUuid": "Impossible de bifurquer : identifiants de message manquants",
+      "unavailableNoResponse": "Impossible de bifurquer : aucune réponse pour bifurquer",
+      "errorMessageNotFound": "Message introuvable",
+      "errorNoSession": "Aucun ID de session disponible",
+      "errorNoActiveTab": "Aucun onglet actif",
+      "commandNoMessages": "Impossible de bifurquer : aucun message dans la conversation",
+      "commandNoAssistantUuid": "Impossible de bifurquer : aucune réponse de l’assistant avec des identifiants",
+      "notSupported": "Fork n'est pas pris en charge par ce fournisseur.",
+      "notAvailable": "Fourchette non disponible."
+    },
+    "bangBash": {
+      "placeholder": "> Exécuter une commande bash...",
+      "commandPanel": "Panneau de commandes",
+      "copyAriaLabel": "Copier la sortie de la dernière commande",
+      "clearAriaLabel": "Effacer la sortie bash",
+      "commandLabel": "{command}",
+      "statusLabel": "Statut : {status}",
+      "collapseOutput": "Réduire la sortie de la commande",
+      "expandOutput": "Développer la sortie de la commande",
+      "running": "Exécution...",
+      "copyFailed": "Échec de la copie dans le presse-papiers",
+      "commandFailed": "La commande a échoué: {error}"
+    },
+    "toolbar": {
+      "safeLabel": "SAFE",
+      "yoloLabel": "YOLO",
+      "safeTooltip": "SAFE est activé : toute modification du document actuel par l’IA est bloquée.",
+      "yoloTooltip": "YOLO est activé : l’IA peut modifier le document actuel selon les instructions du chat.",
+      "planMode": "PLAN",
+      "planModeTooltip": "Mode plan : l’IA peut analyser, mais ne peut pas modifier le document actuel.",
+      "mcpClickToEnable": "Serveurs MCP (cliquer pour activer)",
+      "unknownModel": "Inconnu",
+      "addExternalContext": "Ajouter des contextes externes (cliquez)",
+      "mcpServers": "Serveurs Mcp",
+      "noMcpServers": "Aucun serveur MCP configuré",
+      "allMcpDisabled": "Tous les serveurs MCP désactivés",
+      "thinking": "Pensée:",
+      "failedChangeModel": "Échec du changement de modèle",
+      "failedChangeMode": "Échec du changement de mode",
+      "failedChangeEffort": "Échec de la modification du niveau d'effort",
+      "failedChangeThinking": "Échec de la modification du budget de réflexion",
+      "failedChangePermission": "Échec de la modification du mode d'autorisation",
+      "failedChangeServiceTier": "Échec de la modification du niveau de service",
+      "toggleFastMode": "Activer/désactiver le mode rapide",
+      "mcpEnabled": "{count} MCP serveur{plural} activé (cliquez pour gérer)",
+      "contextSavingHint": "Sauvegarde du contexte : peut également être activée via @{name}",
+      "cursorFlow": "Flux du curseur",
+      "cursorFlowTooltip": "Une fois activé, le curseur se place automatiquement dans la zone de saisie après une sélection.",
+      "cursorFlowAriaLabel": "Une fois activé, le curseur se place automatiquement dans la zone de saisie après une sélection."
+    },
+    "nav": {
+      "tocTitle": "Table des matières",
+      "noPrompts": "Aucune invite pour l'instant",
+      "moreFiles": "+{count} autres",
+      "awaitingResponse": "En attente d'une réponse…",
+      "jumpToMessage": "Aller au message {index} : {title}",
+      "messageRail": "Navigation des messages",
+      "untitledMessage": "Message sans titre"
+    },
+    "tab": {
+      "cannotSwitchProvider": "Impossible de changer de fournisseur sur une session liée. Démarrez plutôt un nouvel onglet."
+    },
+    "input": {
+      "placeholder": "Comment puis-je vous aider aujourd'hui ?",
+      "sendFailed": "Échec de l'envoi du message",
+      "cancelFailed": "Échec de l'annulation de la réponse",
+      "initFailed": "Échec de l'initialisation du service de chat",
+      "renameFailed": "Échec du renommage de la conversation",
+      "resumeNoConversations": "Aucune conversation à reprendre",
+      "steering": "Pilotage...",
+      "steerNow": "Dirigez-vous maintenant",
+      "editQueued": "Modifier le message en file d'attente",
+      "discardQueued": "Supprimer le message en file d'attente",
+      "compacting": "Compactage...",
+      "planApproved": "L'utilisateur a approuvé le plan et a démarré une nouvelle session.",
+      "planImplement": "Mettre en œuvre le plan.",
+      "steerFailed": "Échec de la transmission du message Codex en file d'attente. Il est toujours disponible.",
+      "customSystemPromptAdded": "Instruction ajoutée à l'invite système personnalisée",
+      "processingFailed": "Échec du traitement de la réponse",
+      "refineFailed": "Impossible d'affiner les instructions",
+      "noInstruction": "Aucune instruction reçue",
+      "agentInitFailed": "Échec de l'initialisation du service d'agent. Veuillez réessayer.",
+      "agentNotAvailable": "Service d'agent non disponible. Veuillez recharger le plugin.",
+      "providerUnavailable": "{provider} est désactivé ou non configuré. Activez-le et configurez-le dans les paramètres avant de discuter.",
+      "queuedPrefix": "En file d'attente :",
+      "errorWithMessage": "Erreur : {error}",
+      "detachedInput": "La zone de saisie est indisponible.",
+      "approvalAgent": "Agent : {agent}",
+      "commandUnsupported": "Le fournisseur actuel ne prend pas en charge /{command}.",
+      "unknownCommand": "Commande inconnue : {command}",
+      "openConversationFailed": "Impossible d'ouvrir la conversation : {error}"
+    },
+    "permission": {
+      "title": "Autorisation requise",
+      "question": "Autoriser cette action ?",
+      "deny": "Refuser",
+      "allowOnce": "Autoriser une fois",
+      "alwaysAllow": "Autorisez toujours"
+    },
+    "approve": {
+      "approve": "Approuver",
+      "reject": "Rejeter"
+    },
+    "slashCommand": {
+      "noMatchingCommands": "Aucune commande correspondante"
+    },
+    "imageAttachments": {
+      "unsupportedByProvider": "Les pièces jointes d'images ne sont pas prises en charge par ce fournisseur.",
+      "exceedsLimit": "L'image dépasse la limite de {size}.",
+      "unsupportedType": "Type d'image non pris en charge.",
+      "attachFailed": "Échec de la pièce jointe de l'image.",
+      "dropHere": "Déposer l'image ici",
+      "remove": "Supprimer l'image",
+      "fileNotFound": "Fichier non trouvé",
+      "permissionDenied": "Permission refusée"
+    },
+    "tabs": {
+      "switchFailed": "Échec du changement d'onglet",
+      "closeFailed": "Échec de la fermeture de l'onglet",
+      "maxReached": "Maximum {count} onglets autorisés",
+      "createFailed": "Impossible de créer l'onglet",
+      "newConversationFailed": "Impossible de créer la conversation",
+      "historyToggleFailed": "Impossible d'afficher ou masquer l'historique"
+    },
+    "forkUnsupported": "Fork n'est pas pris en charge par ce fournisseur.",
+    "forkUnavailable": "Fourchette non disponible.",
+    "actions": {
+      "newTab": "Nouvel onglet",
+      "newConversation": "Nouvelle conversation",
+      "history": "Historique du chat"
+    },
+    "resume": {
+      "title": "Reprendre la conversation",
+      "empty": "Aucune conversation",
+      "current": "Session actuelle"
+    },
+    "fileContext": {
+      "openNotFound": "Impossible d'ouvrir le fichier: {path}",
+      "openFailed": "Échec de l'ouverture du fichier: {error}"
+    }
+  },
+  "settings": {
+    "title": "Paramètres TyporAi",
+    "tabs": {
+      "general": "Général",
+      "claude": "Claude",
+      "codex": "Codex"
+    },
+    "display": "Affichage",
+    "conversations": "Discussions",
+    "content": "Contenu",
+    "input": "Saisie",
+    "setup": "Configuration",
+    "models": "Modèles",
+    "experimental": "Expérimental",
+    "userName": {
+      "name": "Comment TyporAi doit-il vous appeler ?",
+      "desc": "Votre nom pour les salutations personnalisées (laisser vide pour les salutations génériques)"
+    },
+    "excludedTags": {
+      "name": "Tags exclus",
+      "desc": "Les notes avec ces tags ne seront pas chargées automatiquement comme contexte (un par ligne, sans #)",
+      "placeholder": "Système\nprivé\nbrouillon"
+    },
+    "mediaFolder": {
+      "name": "Dossier des médias",
+      "desc": "Dossier contenant les pièces jointes/images. Lorsque les notes utilisent ![[image.jpg]], Claude cherchera ici. Laisser vide pour la racine du coffre.",
+      "placeholder": "Pièces jointes"
+    },
+    "systemPrompt": {
+      "name": "Prompt système personnalisé",
+      "desc": "Instructions supplémentaires ajoutées au prompt système par défaut"
+    },
+    "autoTitle": {
+      "name": "Générer automatiquement les titres de conversation",
+      "desc": "Génère automatiquement les titres de conversation après le premier message de l'utilisateur."
+    },
+    "titleModel": {
+      "name": "Modèle de génération de titre",
+      "desc": "Modèle utilisé pour générer automatiquement les titres de conversation.",
+      "auto": "Automatique (Haiku)"
+    },
+    "navMappings": {
+      "name": "Mappages de navigation style Vim",
+      "desc": "Un mappage par ligne. Format : \"map <touche> <action>\" (actions : scrollUp, scrollDown, focusInput).",
+      "placeholder": "Carte avec défilement\ndéfilement de la carte\ncarte sur laquelle je me concentre"
+    },
+    "requireCommandOrControlEnterToSend": {
+      "name": "Exiger Command/Ctrl+Entrée pour envoyer",
+      "desc": "Lorsque cette option est activée, Entrée insère une nouvelle ligne. Command+Entrée envoie sur macOS ; Ctrl+Entrée envoie sur Windows et Linux."
+    },
+    "hotkeys": "Raccourcis clavier",
+    "inlineEditHotkey": {
+      "name": "Édition en ligne",
+      "descWithKey": "Raccourci actuel : {hotkey}",
+      "descNoKey": "Aucun raccourci défini",
+      "btnChange": "Modifier",
+      "btnSet": "Définir"
+    },
+    "openChatHotkey": {
+      "name": "Ouvrir le chat",
+      "descWithKey": "Raccourci actuel : {hotkey}",
+      "descNoKey": "Aucun raccourci défini",
+      "btnChange": "Modifier",
+      "btnSet": "Définir"
+    },
+    "newSessionHotkey": {
+      "name": "Nouvelle session",
+      "descWithKey": "Raccourci actuel : {hotkey}",
+      "descNoKey": "Aucun raccourci défini",
+      "btnChange": "Modifier",
+      "btnSet": "Définir"
+    },
+    "newTabHotkey": {
+      "name": "Nouvel onglet",
+      "descWithKey": "Raccourci actuel : {hotkey}",
+      "descNoKey": "Aucun raccourci défini",
+      "btnChange": "Modifier",
+      "btnSet": "Définir"
+    },
+    "closeTabHotkey": {
+      "name": "Fermer l'onglet",
+      "descWithKey": "Raccourci actuel : {hotkey}",
+      "descNoKey": "Aucun raccourci défini",
+      "btnChange": "Modifier",
+      "btnSet": "Définir"
+    },
+    "slashCommands": {
+      "name": "Commandes et compétences",
+      "desc": "Gérez les commandes et compétences au niveau du vault stockées dans .claude/commands/ et .claude/skills/. Déclenchées par /nom."
+    },
+    "hiddenSlashCommands": {
+      "name": "Commandes et compétences masquées",
+      "desc": "Masquez des commandes et compétences spécifiques du menu déroulant. Utile pour masquer les entrées Claude Code qui ne sont pas pertinentes pour TyporAi. Saisissez les noms sans le slash initial, un par ligne.",
+      "placeholder": "commettre\nconstruire\ntester"
+    },
+    "mcpServers": {
+      "name": "Serveurs MCP",
+      "desc": "Gérez les configurations de serveurs MCP au niveau du vault stockées dans .claude/mcp.json. Les serveurs avec mode de sauvegarde de contexte nécessitent une @mention pour s'activer."
+    },
+    "plugins": {
+      "name": "Plugins Claude Code",
+      "desc": "Gérez les plugins Claude Code découverts dans ~/.claude/plugins. Les plugins activés sont stockés par vault dans .claude/settings.json."
+    },
+    "subagents": {
+      "name": "Sous-agents",
+      "desc": "Gérez les sous-agents au niveau du vault stockés dans .claude/agents/. Chaque fichier Markdown définit un agent personnalisé.",
+      "noAgents": "Aucun sous-agent configuré. Cliquez sur + pour en créer un.",
+      "deleteConfirm": "Supprimer le sous-agent \"{name}\" ?",
+      "saveFailed": "Échec de l’enregistrement du sous-agent : {message}",
+      "refreshFailed": "Échec de l’actualisation des subagents : {message}",
+      "deleteFailed": "Échec de la suppression du sous-agent : {message}",
+      "renameCleanupFailed": "Avertissement : impossible de supprimer l’ancien fichier pour \"{name}\"",
+      "created": "Sous-agent \"{name}\" créé",
+      "updated": "Sous-agent \"{name}\" mis à jour",
+      "deleted": "Sous-agent \"{name}\" supprimé",
+      "duplicateName": "Un agent nommé \"{name}\" existe déjà",
+      "descriptionRequired": "La description est obligatoire",
+      "promptRequired": "Le prompt système est obligatoire",
+      "modal": {
+        "titleEdit": "Modifier le sous-agent",
+        "titleAdd": "Ajouter un sous-agent",
+        "name": "Nom",
+        "nameDesc": "Lettres minuscules, chiffres et tirets uniquement",
+        "namePlaceholder": "réviseur de code",
+        "description": "Descriptif",
+        "descriptionDesc": "Brève description de cet agent",
+        "descriptionPlaceholder": "Examine le code pour détecter les bugs et les problèmes de style",
+        "advancedOptions": "Options avancées",
+        "model": "Modèle",
+        "modelDesc": "Modèle à utiliser pour cet agent",
+        "tools": "Outils",
+        "toolsDesc": "Liste des outils autorisés, séparés par des virgules (vide = tous)",
+        "disallowedTools": "Outils non autorisés",
+        "disallowedToolsDesc": "Liste des outils à interdire, séparés par des virgules",
+        "skills": "Compétences",
+        "skillsDesc": "Liste des compétences, séparées par des virgules",
+        "prompt": "Prompt système",
+        "promptDesc": "Instructions pour l’agent",
+        "promptPlaceholder": "Vous êtes un relecteur de code. Analysez le code fourni pour..."
+      },
+      "loadFailed": "Échec du chargement du sous-agent \"{name}\" : {message}",
+      "modelOptions": {
+        "inherit": "Hériter",
+        "sonnet": "Sonnet",
+        "opus": "Opus",
+        "haiku": "Haïku"
+      }
+    },
+    "safety": "Sécurité",
+    "loadUserSettings": {
+      "name": "Charger les paramètres utilisateur Claude",
+      "desc": "Charge ~/.claude/settings.json. Lorsqu'activé, les règles de permission de l'utilisateur peuvent contourner le mode sécurisé."
+    },
+    "claudeSafeMode": {
+      "name": "Mode sans échec",
+      "desc": "Mode d'autorisation utilisé lorsque la bascule Coffre-fort est active."
+    },
+    "codexSafeMode": {
+      "name": "Mode sans échec",
+      "desc": "Mode Sandbox utilisé lorsque la bascule Coffre-fort est active."
+    },
+    "environment": "Environnement",
+    "customVariables": {
+      "name": "Variables personnalisées",
+      "desc": "Variables d'environnement pour Claude SDK (format KEY=VALUE, une par ligne). Préfixe export supporté."
+    },
+    "envSnippets": {
+      "name": "Extraits",
+      "addBtn": "Ajouter un extrait",
+      "noSnippets": "Aucun extrait d'environnement enregistré. Cliquez sur + pour sauvegarder votre configuration actuelle.",
+      "nameRequired": "Veuillez entrer un nom pour l'extrait",
+      "modal": {
+        "titleEdit": "Modifier l'extrait",
+        "titleSave": "Sauvegarder l'extrait",
+        "name": "Nom",
+        "namePlaceholder": "Un nom descriptif pour cette configuration",
+        "description": "Descriptif",
+        "descPlaceholder": "Description optionnelle",
+        "envVars": "Variables d'environnement",
+        "envVarsPlaceholder": "Format KEY=VALUE, une par ligne (préfixe export supporté)",
+        "save": "Enregistrer",
+        "update": "Mettre à jour",
+        "cancel": "Annuler"
+      },
+      "insertFailed": "Échec de l'insertion de l'extrait",
+      "deleteFailed": "Échec de la suppression de l'extrait",
+      "deleteConfirm": "Supprimer l'extrait d'environnement \"{name}\" ?",
+      "saved": "Extrait d'environnement \"{name}\" enregistré",
+      "updated": "Extrait d'environnement \"{name}\" mis à jour",
+      "deleted": "Extrait d'environnement \"{name}\" supprimé",
+      "insertAria": "Insérer un extrait",
+      "aliasAria": "Alias 鈥嬧€媝our {modelId}",
+      "aliasTitle": "Étiquette personnalisée affichée dans le sélecteur de modèle. Laissez vide pour utiliser la valeur par défaut.",
+      "contextWindowAria": "Fenêtre contextuelle pour {modelId}",
+      "contextWindowPlaceholder": "200k"
+    },
+    "customModelOverrides": {
+      "name": "Remplacements de modèles personnalisés",
+      "desc": "Définissez les alias dans le sélecteur de modèle et les tailles de fenêtre de contexte pour les modèles personnalisés."
+    },
+    "customModelAliases": {
+      "placeholder": "Alias",
+      "ariaLabel": "Alias 鈥嬧€媝our {modelId}",
+      "aliasTitle": "Étiquette personnalisée affichée dans le sélecteur de modèle. Laissez vide pour utiliser la valeur par défaut."
+    },
+    "customContextLimits": {
+      "name": "Limites de contexte personnalisées",
+      "desc": "Définissez les tailles de fenêtre de contexte pour vos modèles personnalisés. Laissez vide pour utiliser la valeur par défaut (200k tokens).",
+      "invalid": "Format invalide. Utilisez : 256k, 1m ou nombre exact (1000-10000000).",
+      "ariaLabel": "Fenêtre contextuelle pour {modelId}"
+    },
+    "enableOpus1M": {
+      "name": "Fenêtre de contexte Opus 1M",
+      "desc": "Afficher Opus 1M dans le sélecteur de modèle. Inclus avec les plans Max, Team et Enterprise. Les utilisateurs API et Pro nécessitent une utilisation supplémentaire."
+    },
+    "enableSonnet1M": {
+      "name": "Fenêtre de contexte Sonnet 1M",
+      "desc": "Afficher Sonnet 1M dans le sélecteur de modèle. Nécessite une utilisation supplémentaire sur les plans Max, Team et Enterprise. Les utilisateurs API et Pro nécessitent une utilisation supplémentaire."
+    },
+    "customModels": {
+      "name": "Modèles personnalisés",
+      "desc": "Ajoutez des ID de modèle Claude supplémentaires au sélecteur, un par ligne. Les remplacements de modèle d'environnement remplacent toujours le sélecteur.",
+      "placeholder": "claude-opus-4-6\nclaude-opus-4-6[1m]\nclaude-opus-4-5-20251101"
+    },
+    "enableChrome": {
+      "name": "Activer l'extension Chrome",
+      "desc": "Permettre à Claude d'interagir avec Chrome via l'extension claude-in-chrome. L'extension doit être installée. Nécessite un redémarrage de session."
+    },
+    "enableBangBash": {
+      "name": "Activer le mode bash (!)",
+      "desc": "Saisissez ! dans un champ vide pour passer en mode bash. Exécute les commandes directement via le child_process de Node.js. Nécessite de rouvrir la vue.",
+      "validation": {
+        "noNode": "Node.js introuvable dans PATH. Installez Node.js ou vérifiez votre configuration PATH."
+      }
+    },
+    "maxTabs": {
+      "name": "Maximum d'onglets de chat",
+      "desc": "Nombre maximum d'onglets de chat simultanés (3-10). Chaque onglet utilise une session Claude séparée.",
+      "warning": "Plus de 5 onglets peut affecter les performances et l'utilisation de la mémoire."
+    },
+    "enableAutoScroll": {
+      "name": "Défilement automatique pendant le streaming",
+      "desc": "Défiler automatiquement vers le bas pendant que Claude diffuse les réponses. Désactiver pour rester en haut et lire depuis le début."
+    },
+    "deferMathRenderingDuringStreaming": {
+      "name": "Différer le rendu mathématique pendant le streaming",
+      "desc": "Afficher le LaTeX brut pendant la diffusion, puis rendre les formules une fois chaque bloc de texte terminé."
+    },
+    "expandFileEditsByDefault": {
+      "name": "Développer les modifications de fichiers par défaut",
+      "desc": "Afficher les diffs Write et Edit développés lors de leur première apparition."
+    },
+    "chatViewPlacement": {
+      "name": "Ouvrir TyporAi dans",
+      "desc": "Choisissez où le panneau de chat s'ouvre lors de sa création",
+      "rightSidebar": "Barre latérale droite",
+      "leftSidebar": "Barre latérale gauche",
+      "mainTab": "Onglet principal de l'éditeur"
+    },
+    "cliPath": {
+      "name": "Chemin CLI Claude",
+      "desc": "Chemin personnalisé vers Claude Code CLI. Laisser vide pour la détection automatique.",
+      "descWindows": "Pour l'installateur natif, utilisez claude.exe. Pour les installations npm/pnpm/yarn ou autres gestionnaires de paquets, utilisez le chemin cli-wrapper.cjs (pas claude.cmd).",
+      "descUnix": "Collez la sortie de \"which claude\" 鈥?fonctionne pour les installations natives et npm/pnpm/yarn.",
+      "validation": {
+        "notExist": "Le chemin n'existe pas",
+        "isDirectory": "Le chemin est un répertoire, pas un fichier"
+      }
+    },
+    "language": {
+      "name": "Langue",
+      "desc": "Changer la langue d'affichage de l'interface du plugin"
+    },
+    "claude": {
+      "enableProvider": {
+        "name": "Activer le fournisseur Claude",
+        "desc": "Lorsque cette option est activée, les modèles Claude apparaissent dans les nouvelles conversations. Activer Claude désactive Codex et OpenCode."
+      },
+      "plugins": {
+        "header": "Plugins Claude Code",
+        "refreshAria": "Actualiser les plugins",
+        "empty": "No Claude Code plugins discovered.",
+        "project": "Project",
+        "user": "User",
+        "disableAria": "Désactiver le plug-in",
+        "enableAria": "Activer le plug-in",
+        "refreshFailed": "Échec de l'actualisation des plugins : {message}",
+        "toggleFailed": "Échec du basculement du plugin : {message}",
+        "togglePartiallyFailed": "Le plugin a basculé, mais certains onglets n'ont pas pu redémarrer.",
+        "noticeToggledDisabled": "Plugin \"{id}\" désactivé",
+        "noticeToggledEnabled": "Plugin \"{id}\" activé",
+        "noticeRefreshed": "Liste des plugins actualisée"
+      },
+      "slashCommands": {
+        "type": {
+          "name": "Taper",
+          "desc": "Choisissez si cette entrée est une commande slash ou une compétence.",
+          "skillLabel": "Compétence",
+          "commandLabel": "Commande",
+          "commandOption": "Commande",
+          "skillOption": "Compétence"
+        },
+        "name": {
+          "name": "Nom",
+          "desc": "Lettres minuscules, chiffres et traits d'union uniquement.",
+          "placeholder": "revue-pr"
+        },
+        "description": {
+          "name": "Descriptif",
+          "desc": "Brève description affichée dans la liste des commandes slash."
+        },
+        "argumentHint": {
+          "name": "Indice d'argumentation",
+          "desc": "Texte d'espace réservé pour les arguments (par exemple, \"[file] [focus]\")"
+        },
+        "modelOverride": {
+          "name": "Remplacement du modèle",
+          "desc": "Modèle facultatif à utiliser pour cette commande.",
+          "placeholder": "Claude-sonnet-4-5"
+        },
+        "allowedTools": {
+          "name": "Outils autorisés",
+          "desc": "Liste des outils à autoriser, séparés par des virgules (vide = tous)."
+        },
+        "disableModelInvocation": {
+          "name": "Désactiver l'invocation du modèle",
+          "desc": "Empêchez le modèle d'invoquer cette commande lui-même."
+        },
+        "disableUserInvocation": {
+          "name": "Désactiver l'invocation de l'utilisateur",
+          "desc": "Empêchez l'utilisateur d'invoquer directement cette compétence."
+        },
+        "context": {
+          "name": "Contexte",
+          "desc": "Exécuter dans un sous-agent (fork)."
+        },
+        "agent": {
+          "name": "Profil agent",
+          "desc": "Type de sous-agent lorsque le contexte est fork.",
+          "placeholder": "Réviseur de code"
+        },
+        "prompt": {
+          "name": "Modèle d'invite",
+          "desc": "Utiliser $ARGUMENTS, $1, $2, @file, !`bash`."
+        },
+        "promptPlaceholder": "Vérifiez ce code pour :\n$ARGUMENTS\n\n@$1",
+        "advancedOptions": "Options avancées",
+        "promptRequired": "Un modèle d'invite est requis",
+        "duplicateName": "Une commande nommée \"/{name}\" existe déjà",
+        "saveFailed": "Échec de l'enregistrement de la commande slash",
+        "saveFailedSkill": "Échec de la sauvegarde de la compétence",
+        "saveFailedCommand": "Échec de l'enregistrement de la commande slash",
+        "deleteFailedSkill": "Échec de la suppression de la compétence",
+        "deleteFailedCommand": "Échec de la suppression de la commande slash",
+        "convertToSkillAria": "Convertir en compétence",
+        "convertFailed": "Échec de la conversion en compétence",
+        "converted": "Converti \"/{name}\" en compétence",
+        "skillBadge": "compétence",
+        "skillLabel": "Compétence",
+        "slashCommandLabel": "Commande barre oblique",
+        "created": "créé",
+        "updated": "mis à jour",
+        "deleted": "supprimé",
+        "unavailable": "Le catalogue de commandes Claude n'est pas disponible.",
+        "emptyCatalog": "Aucune commande ou compétence trouvée.",
+        "emptyNone": "Aucune commande ni compétence pour l'instant. Cliquez sur + pour en ajouter un.",
+        "learnMore": "Apprendre encore plus",
+        "duplicateSkillName": "Une compétence nommée \"/{name}\" existe déjà",
+        "saveFailedWithLabel": "Échec de l'enregistrement de {label}",
+        "deleteFailedWithLabel": "Échec de la suppression de {label}",
+        "noticeCreated": "{label} \"/{name}\" créé",
+        "noticeUpdated": "{label} \"/{name}\" mis à jour",
+        "noticeDeleted": "{label} \"/{name}\" supprimé"
+      },
+      "customVariables": {
+        "desc": "Variables d'exécution appartenant à Claude uniquement. Utilisez-le pour les bascules spécifiques à ANTHROPIC_* et Claude.",
+        "placeholder": "ANTHROPIC_API_KEY=your-key\nANTHROPIC_BASE_URL=https://api.example.com\nANTHROPIC_MODEL=custom-model\nCLAUDE_CODE_USE_BEDROCK=1"
+      }
+    },
+    "codex": {
+      "enable": {
+        "name": "Activer le fournisseur Codex",
+        "desc": "Lorsqu'ils sont activés, les modèles Codex apparaissent dans le sélecteur de modèles pour les nouvelles conversations. Les sessions Codex existantes sont préservées."
+      },
+      "installationMethod": {
+        "name": "Méthode d'installation",
+        "desc": "Comment TyporAi devrait lancer Codex sous Windows. Windows natif utilise un chemin d'exécutable Windows. WSL lance la CLI Linux dans une distribution sélectionnée.",
+        "nativeWindows": "Windows natif",
+        "wsl": "WSL"
+      },
+      "cliPath": {
+        "name": "Chemin CLI du Codex",
+        "desc": "Chemin personnalisé vers la CLI Codex.",
+        "placeholder": "Chemin d'accès à l'exécutable du codex",
+        "descNative": "Chemin personnalisé vers la CLI Codex locale. Laissez vide pour la détection automatique à partir de PATH.",
+        "descWsl": "Commande Codex côté Linux ou chemin absolu à exécuter dans WSL. Laissez vide pour la recherche PATH dans la distribution sélectionnée.",
+        "descWindows": "Chemin personnalisé vers le Codex local CLI. Laissez vide pour la détection automatique de PATH. Utilisez le chemin d'accès natif de l'exécutable Windows, généralement `codex.exe`.",
+        "placeholderNative": "/usr/local/bin/codex",
+        "placeholderWsl": "manuscrit",
+        "placeholderWindows": "C:\\Users\\you\\AppData\\Roaming\\npm\\codex.exe",
+        "wslModeError": "Le mode WSL attend une commande Linux ou un chemin absolu Linux, pas un chemin exécutable Windows."
+      },
+      "wslDistro": {
+        "name": "Remplacement de la distribution WSL",
+        "desc": "Remplacement avancé en option. Laissez vide pour déduire la distribution à partir d’un chemin d’espace de travail WSL lorsque cela est possible, sinon utilisez la distribution WSL par défaut.",
+        "placeholder": "Ubuntu"
+      },
+      "reasoningSummary": {
+        "name": "Résumé du raisonnement",
+        "desc": "Montrez un résumé du processus de raisonnement du modèle dans le bloc de réflexion.",
+        "auto": "Automatique",
+        "concise": "Concis",
+        "detailed": "Détaillé",
+        "none": "Aucun"
+      },
+      "skills": {
+        "heading": "Compétences du Codex",
+        "desc": "Gérez les compétences Codex au niveau du coffre-fort stockées dans .codex/skills/ ou .agents/skills/. Les compétences au niveau domestique sont exclues ici.",
+        "label": "Compétences du Codex",
+        "empty": "Aucune compétence Codex dans le coffre-fort. Cliquez sur + pour en créer un.",
+        "skillBadge": "compétence",
+        "deletedNotice": "Codex skill \"${name}\" deleted",
+        "createdNotice": "Codex skill \"${name}\" created",
+        "updatedNotice": "Codex skill \"${name}\" updated",
+        "saveFailed": "Échec de l'enregistrement de la compétence Codex",
+        "deleteFailed": "Échec de la suppression de la compétence Codex",
+        "instructionsRequired": "Des instructions sont nécessaires"
+      },
+      "hiddenSkills": {
+        "name": "Compétences cachées",
+        "desc": "Masquez les compétences spécifiques du Codex dans la liste déroulante. Entrez les noms des compétences sans le $ initial, un par ligne.",
+        "placeholder": "analyser\nexpliquer\nréparer"
+      },
+      "subagents": {
+        "heading": "Sous-agents du Codex",
+        "desc": "Gérez les sous-agents Codex au niveau du coffre-fort stockés dans .codex/agents/. Chaque fichier TOML définit un agent personnalisé.",
+        "label": "Sous-agents du Codex",
+        "empty": "Aucun sous-agent du Codex dans le coffre-fort. Cliquez sur + pour en créer un."
+      },
+      "safeMode": {
+        "workspaceWrite": "Écriture dans l'espace de travail",
+        "readOnly": "Lecture seule"
+      },
+      "env": {
+        "name": "Variables personnalisées",
+        "desc": "Variables d'environnement pour Codex (format KEY=VALUE, une par ligne). Préfixe d'exportation Shell pris en charge.",
+        "placeholder": "OPENAI_API_KEY=your-key\nOPENAI_BASE_URL=https://api.openai.com/v1"
+      },
+      "mcp": {
+        "notice": "Codex gère les serveurs MCP via sa propre CLI. Configurez avec `codex mcp` et ils seront disponibles en TyporAi.",
+        "learnMore": "Apprendre encore plus"
+      },
+      "customModels": {
+        "placeholder": "gpt-5.4\ngpt-5.3-codex-spark"
+      },
+      "skillModal": {
+        "titleAdd": "Ajouter une compétence Codex",
+        "titleEdit": "Modifier la compétence Codex",
+        "directory": {
+          "name": "Annuaire",
+          "desc": "Où stocker la compétence"
+        },
+        "name": {
+          "name": "Nom de la compétence",
+          "desc": "Le nom utilisé après $ (par exemple, « analyse » pour $analyze)",
+          "placeholder": "Analyser le code"
+        },
+        "description": {
+          "name": "Descriptif",
+          "desc": "Description facultative affichée dans la liste déroulante"
+        },
+        "instructions": {
+          "name": "Consignes",
+          "desc": "Les instructions de compétence (contenu SKILL.md)",
+          "placeholder": "Analysez le code pour..."
+        }
+      },
+      "subagentModal": {
+        "titleAdd": "Ajouter un sous-agent Codex",
+        "titleEdit": "Modifier le sous-agent Codex",
+        "advanced": "Options avancées",
+        "name": {
+          "name": "Nom",
+          "desc": "Nom de l'agent que Codex utilise lors de la génération (minuscules, traits d'union, traits de soulignement)",
+          "placeholder": "Code_reviewer"
+        },
+        "description": {
+          "name": "Descriptif",
+          "desc": "Quand le Codex doit utiliser cet agent",
+          "placeholder": "Examine le code pour en vérifier l'exactitude et la sécurité",
+          "required": "Une description est requise"
+        },
+        "model": {
+          "name": "Modèle",
+          "desc": "Remplacement du modèle (laisser vide pour hériter)"
+        },
+        "reasoningEffort": {
+          "name": "Effort de raisonnement",
+          "desc": "Niveau d’effort de raisonnement du modèle",
+          "inherit": "Hériter",
+          "low": "Faible",
+          "medium": "Moyen",
+          "high": "Haut",
+          "xhigh": "Très haut"
+        },
+        "sandboxMode": {
+          "name": "Mode bac à sable",
+          "desc": "Restriction du bac à sable pour cet agent",
+          "inherit": "Hériter",
+          "readOnly": "Lecture seule",
+          "dangerFullAccess": "Accès complet aux dangers",
+          "workspaceWrite": "Écriture dans l'espace de travail"
+        },
+        "nicknameCandidates": {
+          "name": "Surnoms des candidats",
+          "desc": "Surnoms d'affichage séparés par des virgules (par exemple, atlas, delta, echo)"
+        },
+        "developerInstructions": {
+          "name": "Instructions pour le développeur",
+          "desc": "Instructions de base qui définissent le comportement de l'agent",
+          "placeholder": "Révisez le code comme un propriétaire.\nDonnez la priorité à l’exactitude, à la sécurité et à la couverture de test manquante.",
+          "required": "Les instructions du développeur sont requises"
+        },
+        "errors": {
+          "duplicateName": "A subagent named \"${name}\" already exists",
+          "saveFailed": "Failed to save subagent: ${message}",
+          "deleteFailed": "Échec de la suppression du sous-agent",
+          "deletedNotice": "Subagent \"${name}\" deleted",
+          "createdNotice": "Subagent \"${name}\" created",
+          "updatedNotice": "Subagent \"${name}\" updated",
+          "deleteConfirm": "Delete subagent \"${name}\"?"
+        },
+        "validation": {
+          "nameRequired": "Le nom du sous-agent est requis",
+          "nameTooLong": "Le nom du sous-agent doit contenir au maximum des caractères {max}.",
+          "nameInvalid": "Le nom du sous-agent ne peut contenir que des lettres minuscules, des chiffres, des traits d'union et des traits de soulignement.",
+          "nicknameInvalid": "Les candidats surnoms ne peuvent contenir que des lettres ASCII, des chiffres, des espaces, des traits d'union et des traits de soulignement.",
+          "nicknameDuplicate": "Les candidats surnom doivent être uniques"
+        }
+      }
+    },
+    "opencode": {
+      "setup": {
+        "heading": "Installation"
+      },
+      "enable": {
+        "name": "Activer le fournisseur OpenCode",
+        "desc": "Lorsqu'ils sont activés, les modèles OpenCode apparaissent dans le sélecteur de modèles pour les nouvelles conversations."
+      },
+      "cliPath": {
+        "name": "OpenCode CLI path",
+        "desc": "Custom path to the local OpenCode CLI. Leave empty for auto-detection from PATH.",
+        "placeholder": "/usr/local/bin/opencode",
+        "validation": {
+          "notExist": "Le chemin n'existe pas",
+          "isFile": "Path is a directory, not a file",
+          "notFile": "Path is not a file",
+          "isDirectory": "Le chemin doit pointer vers un fichier"
+        },
+        "placeholderWin": "C:\\Users\\you\\AppData\\Roaming\\npm\\opencode.cmd",
+        "placeholderUnix": "/usr/local/bin/opencode"
+      },
+      "models": {
+        "heading": "Modèles",
+        "browse": "Browse",
+        "searchPlaceholder": "Rechercher des modèles...",
+        "empty": "Aucun modèle découvert.",
+        "loading": "Chargement des modèles...",
+        "loadFailed": "Échec du chargement des modèles.",
+        "startOpencode": "Démarrez OpenCode pour découvrir des modèles.",
+        "notReported": "Not reported by OpenCode",
+        "selectedCount": "{count} sélectionné",
+        "ofDiscovered": "de {total} découvert",
+        "noneDiscovered": "Aucun découvert",
+        "available": "Disponible",
+        "allProviders": "Tous les fournisseurs",
+        "removeAria": "Supprimer {label}",
+        "aliasAria": "Set alias for {name}",
+        "visibleLabel": "Modèles visibles",
+        "clearAllAria": "Effacer tous les modèles sélectionnés",
+        "emptyFiltered": "Aucun modèle ne correspond à votre recherche.",
+        "emptyLoading": "Chargement de modèles depuis OpenCode...",
+        "emptyLoadFailed": "Échec du chargement des modèles à partir d'OpenCode. Vérifiez le chemin CLI et réessayez.",
+        "emptyStartOpencode": "Démarrez OpenCode pour voir les modèles disponibles.",
+        "visible": {
+          "name": "Modèles visibles",
+          "desc": "Sélectionnez les modèles qui apparaissent dans le sélecteur. S'il est vide, tous les modèles découverts sont affichés."
+        },
+        "unavailableBadge": "Indisponible",
+        "unavailableTitle": "Ce modèle n'est actuellement pas disponible auprès d'OpenCode",
+        "allProvidersCount": "Tous les fournisseurs ({count})",
+        "providerOption": "{label} ({count})",
+        "aliasTitle": "Étiquette personnalisée affichée dans le sélecteur de modèle. Laissez vide pour utiliser la valeur par défaut."
+      },
+      "commands": {
+        "heading": "Commandes",
+        "desc": "Gérez les commandes OpenCode au niveau du coffre-fort."
+      },
+      "hiddenCommands": {
+        "name": "Commandes cachées",
+        "desc": "Masquez les commandes OpenCode spécifiques dans la liste déroulante. Saisissez les noms sans la barre oblique, un par ligne.",
+        "placeholder": "commande1\ncommande2"
+      },
+      "subagents": {
+        "heading": "Sous-agents",
+        "desc": "Gérez les sous-agents OpenCode au niveau du coffre-fort."
+      },
+      "env": {
+        "desc": "Environment variables for OpenCode (KEY=VALUE format, one per line). Shell export prefix supported.",
+        "heading": "Environnement",
+        "name": "Variables d'environnement",
+        "placeholder": "${defaultEnv}\nOPENCODE_DB=/path/to/opencode.db"
+      },
+      "agentModal": {
+        "titleAdd": "Ajouter un sous-agent OpenCode",
+        "titleEdit": "Modifier le sous-agent OpenCode",
+        "advanced": "Options avancées",
+        "name": {
+          "name": "Nom",
+          "desc": "Nom de l'agent OpenCode. Utilisez des segments séparés par des barres obliques pour les agents imbriqués.",
+          "placeholder": "Revoir",
+          "required": "Le nom de l'agent est requis",
+          "slashLeadingTrailing": "Le nom de l'agent doit utiliser des segments de chemin séparés par des barres obliques, sans barres obliques de début ou de fin.",
+          "segmentEmpty": "Les segments du chemin du nom de l'agent ne peuvent pas être vides ou contenir uniquement des espaces.",
+          "segmentWhitespace": "Les segments du chemin du nom de l'agent ne peuvent pas commencer ou se terminer par des espaces",
+          "dotSegment": "Le nom de l'agent ne peut pas inclure \".\" ou \"..\" segments de chemin",
+          "reservedChars": "Les segments du chemin du nom de l'agent ne peuvent pas contenir de caractères de nom de fichier réservés par Windows."
+        },
+        "description": {
+          "name": "Descriptif",
+          "desc": "Quand OpenCode doit utiliser ce sous-agent",
+          "placeholder": "Examine le code pour en vérifier l'exactitude et la maintenabilité",
+          "required": "Une description est requise"
+        },
+        "model": {
+          "name": "Modèle",
+          "desc": "Remplacement du modèle au format fournisseur/modèle",
+          "placeholder": "Anthropique/Claude-sonnet-4-20250514"
+        },
+        "variant": {
+          "name": "Variante",
+          "desc": "Remplacement de variante de modèle",
+          "placeholder": "Haut"
+        },
+        "temperature": {
+          "name": "Température",
+          "desc": "Température d'échantillonnage en option",
+          "placeholder": "0,1",
+          "invalid": "La température doit être un nombre valide"
+        },
+        "topP": {
+          "name": "Haut p",
+          "desc": "Valeur d'échantillonnage du noyau en option",
+          "placeholder": "0,9",
+          "invalid": "Le P supérieur doit être un numéro valide"
+        },
+        "color": {
+          "name": "Couleur",
+          "desc": "Jeton de couleur ou de thème hexadécimal",
+          "placeholder": "#Ff5733"
+        },
+        "steps": {
+          "name": "Mesures",
+          "desc": "Itérations agents maximales avant de forcer la sortie texte uniquement",
+          "placeholder": "10",
+          "invalid": "Les étapes doivent être un entier positif"
+        },
+        "hidden": {
+          "name": "Masquer de @mention",
+          "desc": "Masquer ce sous-agent dans le menu @ autocomplete"
+        },
+        "disable": {
+          "name": "Désactiver l'agent",
+          "desc": "Désactivez l'agent sans supprimer le fichier"
+        },
+        "tools": {
+          "name": "Outils activés (JSON)",
+          "desc": "Carte des outils obsolètes en option, par ex. {\"write\":false,\"edit\":false}",
+          "placeholder": "{\n  \"write\": false,\n  \"edit\": false\n}",
+          "invalid": "Les outils activés doivent mapper les noms d'outils à des valeurs booléennes"
+        },
+        "permission": {
+          "name": "Autorisation (JSON)",
+          "desc": "Configuration d'autorisation facultative, par ex. {\"edit\":\"deny\",\"bash\":\"allow\"}",
+          "placeholder": "{\n  \"edit\": \"deny\"\n}",
+          "invalid": "L'autorisation doit être un JSON valide"
+        },
+        "options": {
+          "name": "Parametres (JSON)",
+          "desc": "Options d'agent personnalisé facultatives",
+          "placeholder": "{\n  \"focus\": \"security\"\n}",
+          "invalid": "Les options doivent être un objet JSON"
+        },
+        "prompt": {
+          "name": "Rapide",
+          "desc": "Corps de démarque utilisé comme invite de l'agent",
+          "placeholder": "Examinez attentivement les modifications du code et signalez leur exactitude, les régressions et la couverture manquante.",
+          "required": "Une invite est requise"
+        },
+        "errors": {
+          "duplicate": "A subagent named \"${name}\" already exists",
+          "saveFailed": "Failed to save subagent: ${message}",
+          "deleteFailed": "Échec de la suppression du sous-agent",
+          "created": "Subagent \"${name}\" created",
+          "updated": "Subagent \"${name}\" updated",
+          "deleted": "Subagent \"${name}\" deleted"
+        }
+      },
+      "agentList": {
+        "label": "Sous-agents OpenCode",
+        "empty": "Aucun sous-agent OpenCode dans le coffre-fort. Cliquez sur + pour en créer un.",
+        "badgeSubagent": "sous-agent",
+        "refreshAria": "Rafraîchir",
+        "addAria": "Ajouter",
+        "editAria": "Modifier",
+        "deleteAria": "Supprimer",
+        "deleteConfirm": "Delete subagent \"${name}\"?"
+      }
+    },
+    "typora": {
+      "setup": {
+        "heading": "Installation"
+      },
+      "enable": {
+        "name": "Activer le fournisseur Typora",
+        "desc": "Lorsqu'il est activé, le fournisseur Typora peut être utilisé dans le sélecteur de modèle."
+      },
+      "api": {
+        "heading": "API"
+      },
+      "apiKey": {
+        "name": "Clé API",
+        "desc": "Clé API utilisée pour authentifier les requêtes auprès de l'API du fournisseur Typora."
+      },
+      "apiBaseUrl": {
+        "name": "URL de base de l'API",
+        "desc": "URL de base pour l'API du fournisseur Typora. Laissez vide par défaut."
+      },
+      "apiModel": {
+        "name": "Modèle API",
+        "desc": "ID de modèle à utiliser pour l'API du fournisseur Typora."
+      }
+    },
+    "mcp": {
+      "modal": {
+        "titleEdit": "Modifier le serveur MCP",
+        "titleAdd": "Ajouter un serveur MCP",
+        "serverName": {
+          "name": "Nom du serveur",
+          "desc": "Identifiant unique de ce serveur MCP.",
+          "placeholder": "mon-serveur-mcp"
+        },
+        "type": {
+          "name": "Taper",
+          "desc": "Choisissez comment le serveur MCP est lancé ou connecté.",
+          "stdio": "stdio (commande locale)",
+          "sse": "SSE (événements envoyés par le serveur)",
+          "http": "HTTP"
+        },
+        "enabled": {
+          "name": "Activé",
+          "desc": "Les serveurs désactivés ne sont pas démarrés et ne sont pas proposés au modèle."
+        },
+        "contextSaving": {
+          "name": "Sauvegarde du contexte",
+          "desc": "Lorsqu'il est activé, ce serveur ne s'active que lorsque vous le @-mention dans le chat, en enregistrant les jetons de contexte."
+        },
+        "command": {
+          "name": "Commande",
+          "desc": "Commande Shell qui lance le serveur MCP. Les arguments sont séparés par des espaces.",
+          "placeholder": "npx -y @my-org/serveur-mcp"
+        },
+        "env": {
+          "name": "Variables d'environnement",
+          "desc": "Une paire KEY=VALUE par ligne. Utilisez le préfixe `export` si votre shell l'exige.",
+          "placeholder": "API_KEY=your-key\nDEBUG=true"
+        },
+        "url": {
+          "name": "URL",
+          "desc": "Point de terminaison pour le serveur MCP.",
+          "sseDesc": "URL du point de terminaison des événements envoyés par le serveur.",
+          "httpDesc": "URL du point de terminaison HTTP.",
+          "placeholder": "https://example.com/mcp"
+        },
+        "headers": {
+          "name": "En-têtes",
+          "desc": "En-têtes HTTP personnalisés, un KEY=VALUE par ligne.",
+          "placeholder": "Autorisation=Porteur de votre jeton"
+        },
+        "nameRequired": "Veuillez entrer un nom de serveur",
+        "nameInvalid": "Le nom du serveur ne peut contenir que des lettres, des chiffres, des points, des traits d'union et des traits de soulignement.",
+        "commandRequired": "Veuillez entrer une commande",
+        "urlRequired": "Veuillez saisir une URL"
+      },
+      "empty": "Aucun serveur MCP configuré. Cliquez sur + pour en ajouter un.",
+      "addOptionStdio": "Stdio (commande locale)",
+      "addOptionHttp": "HTTP/ESS",
+      "addOptionImport": "Importer depuis le presse-papiers",
+      "contextSavingBadgeTitle": "Sauvegarde du contexte : mentionnez avec @{name} pour activer",
+      "verifyAria": "Vérifier (afficher les outils)",
+      "disableAria": "Désactiver",
+      "enableAria": "Activer",
+      "editAria": "Modifier",
+      "deleteAria": "Supprimer",
+      "alreadyExists": "Le serveur \"{name}\" existe déjà",
+      "updated": "Serveur MCP \"{name}\" mis à jour",
+      "added": "Serveur MCP \"{name}\" ajouté",
+      "enabled": "Serveur MCP \"{name}\" activé",
+      "disabled": "Serveur MCP \"{name}\" désactivé",
+      "deleted": "Serveur MCP \"{name}\" supprimé",
+      "deleteConfirm": "Supprimer le serveur MCP « {name} » ?",
+      "saveFailed": "Échec de l'enregistrement du serveur MCP",
+      "importEmpty": "Le presse-papiers est vide",
+      "importInvalid": "Aucune configuration mcp valide trouvée dans le presse-papiers",
+      "importFailed": "Échec de la lecture du presse-papiers",
+      "importEnterName": "Entrez un nom pour le serveur",
+      "importSuccess": "Serveur MCP {count} importé{plural}",
+      "importPartial": "Serveur MCP {count} importé{plural} ({skipped} ignoré)",
+      "importNone": "Aucun nouveau serveur mcp importé",
+      "reloadFailed": "Paramètre enregistré mais le rechargement a échoué. Les modifications s'appliqueront lors de la prochaine session.",
+      "verificationFailed": "La vérification a échoué",
+      "test": {
+        "toggleError": "Échec du basculement",
+        "permissionDenied": "Autorisation refusée. Vérifiez les autorisations de fichier de la commande.",
+        "diskFull": "Disque plein ou manque d'espace. Libérez de l'espace et réessayez.",
+        "configCorrupted": "La configuration MCP est corrompue. Veuillez vérifier et corriger le JSON.",
+        "title": "Vérifier : {name}",
+        "connecting": "De liaison...",
+        "connected": "Connecté avec succès",
+        "connectionFailed": "La connexion a échoué",
+        "availableTools": "Outils disponibles ({count})",
+        "noToolsInfo": "Aucune information sur les outils disponible. Les outils seront chargés lorsqu'ils seront utilisés dans le chat.",
+        "disableAll": "Désactiver tout",
+        "enableAll": "Activer tout",
+        "close": "Fermer",
+        "connectedTo": "Connecté avec succès à {name}",
+        "connectedToVersion": "Connecté avec succès à {name} v{version}"
+      }
+    },
+    "envReview": {
+      "heading": "Examen de l'environnement",
+      "message": "Vérifier la propriété de l’environnement pour : {keys}",
+      "keysFor": "Examiner la propriété de l'environnement pour : {keys}"
+    },
+    "hotkeySearch": "TyporAi",
+    "environmentShared": {
+      "name": "Environnement partagé",
+      "desc": "Variables d'exécution indépendantes du fournisseur partagées entre tous les fournisseurs. Utilisez-le pour les variables PATH, proxy, cert et temp.",
+      "placeholder": "PATH=/opt/homebrew/bin:/usr/local/bin\nHTTPS_PROXY=http://proxy.example.com:8080\nSSL_CERT_FILE=/path/to/cert.pem"
+    },
+    "storage": {
+      "tabLayout": {
+        "saveFailed": "Échec de l'enregistrement de la disposition des onglets"
+      }
+    }
+  },
+  "provider": {
+    "claude": "Claude",
+    "codex": "Codex",
+    "opencode": "OpenCode",
+    "typora": "Typora"
+  },
+  "quickActions": {
+    "toolbar": {
+      "ariaLabel": "Barre d'outils d'actions rapides"
+    },
+    "copy": "Copier",
+    "ask": "Demander",
+    "edit": "Modifier",
+    "quote": "Citer",
+    "working": "Fonctionnement...",
+    "noResult": "Aucun résultat",
+    "askInstruction": "Renseignez-vous sur le texte suivant",
+    "askPrompt": "Explique le texte sélectionné.",
+    "quotePreview": "{text} [{lineCount} lignes]",
+    "clearQuote": "Effacer la citation",
+    "actionFailed": "Action echouee"
+  },
+  "modal": {
+    "instruction": {
+      "yourInput": "Votre contribution",
+      "yourResponse": "Votre réponse",
+      "refinedSnippet": "Extrait affiné",
+      "preview": "Aperçu",
+      "edit": "Modifier",
+      "titleAdd": "Ajouter des instructions personnalisées",
+      "processing": "Traitement de votre instruction...",
+      "placeholder": "Fournissez plus de détails...",
+      "cancel": "Annuler",
+      "cancelAria": "Annuler",
+      "submit": "Soumettre",
+      "submitAria": "Soumettre la réponse",
+      "editAria": "Modifier les instructions",
+      "accept": "Accepter",
+      "acceptAria": "Accepter les instructions",
+      "processingInline": "Traitement..."
+    }
+  },
+  "renderer": {
+    "message": {
+      "interrupted": "Interrompu",
+      "interruptedHint": "· Que devrait faire TyporAi à la place ?",
+      "conversationCompacted": "Conversation compactée",
+      "bakedFor": "* {word} pour {duration}",
+      "baked": "Cuit",
+      "subagentTask": "Tâche de sous-agent",
+      "failedToRender": "Échec de l'affichage du contenu du message.",
+      "copied": "Copié!",
+      "copyMessageAria": "Copier le message",
+      "copyAria": "Copie",
+      "codeCopied": "Copié!",
+      "noResult": "Aucun résultat"
+    },
+    "thinking": {
+      "ariaExpand": "Réflexion approfondie - cliquez pour agrandir",
+      "elapsed": "Je pense à {seconds}s...",
+      "thoughtFor": "Pensée pour les {seconds}",
+      "thought": "Pensée"
+    },
+    "tool": {
+      "tasksProgress": "Tâches {completed}/{total}",
+      "tasks": "Tâches",
+      "enteringPlanMode": "Passer en mode Plan",
+      "planComplete": "Plan terminé",
+      "readFile": "Lire : {path}",
+      "writeFile": "Écrivez : {path}",
+      "editFile": "Modifier : {path}",
+      "command": "Coup : {command}",
+      "url": "WebFetch : {url}",
+      "file": "déposer",
+      "pattern": "Grep : {pattern}",
+      "skill": "Compétence : {name}",
+      "toolSearch": "Recherche d'outils : {query}",
+      "tools": "outils",
+      "toolSearchLabel": "Monde : {pattern}",
+      "agents": "{count} agent{plural}",
+      "noResult": "Aucun résultat",
+      "noMatchesFound": "Aucune correspondance trouvée",
+      "moreLines": "... {count} plus de lignes",
+      "moreChars": "... {count} caractères supplémentaires",
+      "fileDeleted": "Fichier supprimé",
+      "noTextualDiff": "Aucune différence textuelle disponible",
+      "changesAria": "Modifications : +{added} -{removed}",
+      "webSearch": "Recherche sur le Web : {query}",
+      "search": "recherche",
+      "openPage": "Ouvrir la page",
+      "findInPage": "Rechercher dans la page",
+      "findInPageWithPattern": "Recherchez \"{pattern}\"",
+      "urlUnavailable": "URL indisponible",
+      "patternLabel": "Modèle : {pattern}",
+      "queryLabel": "Requête : {query}",
+      "altQueryLabel": "Requête alternative : {query}",
+      "moreQueries": "... {count} plus de requêtes",
+      "bashPrefix": "$ {command}",
+      "tasksUpdated": "Tâches mises à jour",
+      "statusCompleted": "Statut : terminé",
+      "statusInProgress": "Statut : en cours",
+      "statusLabel": "Statut : {status}",
+      "running": "En cours d'exécution...",
+      "waitingForAnswer": "En attente de réponse...",
+      "notAnswered": "Pas de réponse",
+      "noOptionsRecorded": "Aucune option enregistrée",
+      "questionOption": "Choix",
+      "questionDefault": "Choix",
+      "reviewAnswer": "Révisez vos réponses",
+      "list": "LS : {path}"
+    },
+    "writeEdit": {
+      "statusRunning": "Statut : en cours d'exécution",
+      "statusError": "Statut : erreur",
+      "writing": "En écrivant...",
+      "done": "Terminé",
+      "error": "Erreur",
+      "defaultError": "Erreur"
+    },
+    "diff": {
+      "noChanges": "Aucun changement",
+      "moreLines": "... {count} plus de lignes",
+      "prefix": "+",
+      "ariaLabel": "Modifications : +{added} -{removed}"
+    },
+    "subagent": {
+      "subagentTask": "Tâche de sous-agent",
+      "backgroundTask": "Tâche en arrière-plan",
+      "prompt": "Consigne",
+      "result": "Résultat",
+      "noPromptProvided": "Aucune invite fournie",
+      "initializing": "Initialisation",
+      "runningInBackground": "Courir en arrière-plan",
+      "completed": "Complété",
+      "error": "Erreur",
+      "orphaned": "Orphelin",
+      "conversationEnded": "La conversation s'est terminée avant la fin de la tâche",
+      "clickToExpand": "cliquez pour agrandir",
+      "ariaHeader": "{type} : {description} - {status} - cliquez pour agrandir",
+      "ariaStatus": "Statut : {status}",
+      "statusPending": "en attente",
+      "statusRunning": "en cours d'exécution",
+      "statusCompleted": "complété",
+      "statusError": "erreur",
+      "statusOrphaned": "orphelin",
+      "backgroundTaskCompleted": "(tâche de fond terminée)",
+      "backgroundTaskRenderFailed": "Tâche en arrière-plan terminée, mais le résultat n'a pas pu être rendu."
+    },
+    "ask": {
+      "defaultTitle": "Demande",
+      "placeholderSecret": "Entrez secret.",
+      "placeholderCustom": "Tapez quelque chose.",
+      "submit": "Soumettre",
+      "submitAnswers": "Soumettre les réponses",
+      "cancel": "Annuler",
+      "reviewAnswers": "Révisez vos réponses",
+      "readyToSubmit": "Prêt à soumettre vos réponses ?",
+      "hints": "Entrée pour sélectionner · Touches Tab/Flèches pour naviguer · Échap pour annuler",
+      "hintsImmediate": "Entrée pour sélectionner · Touches fléchées pour naviguer · Échap pour annuler",
+      "notAnswered": "Pas de réponse",
+      "optionFallback": "Choix"
+    },
+    "plan": {
+      "title": "Plan terminé",
+      "requestedPermissions": "Autorisations demandées :",
+      "approveNewSession": "Approuver (nouvelle session)",
+      "approveCurrentSession": "Approuver (session en cours)",
+      "cancel": "Annuler",
+      "feedbackPlaceholder": "Saisissez vos commentaires pour continuer la planification...",
+      "readError": "Impossible de lire le fichier de plan : {error}. « Approuver (nouvelle session) » n'inclura pas les détails du plan.",
+      "hints": "Touches fléchées pour naviguer · Entrée pour sélectionner · Échap pour annuler"
+    },
+    "planApproval": {
+      "title": "Plan terminé",
+      "implement": "Mettre en œuvre",
+      "revise": "Réviser",
+      "cancel": "Annuler",
+      "feedbackPlaceholder": "Saisissez vos commentaires pour réviser le plan...",
+      "hints": "Touches fléchées pour naviguer · Entrée pour sélectionner · Échap pour annuler"
+    },
+    "history": {
+      "header": "Discussions",
+      "empty": "Aucune conversation",
+      "runningInAnotherPane": "Exécution dans un autre volet",
+      "openInAnotherPane": "Ouvrir dans un autre volet",
+      "running": "En cours d'exécution",
+      "runningInTab": "En cours d'exécution dans {tab}",
+      "currentTabIndex": "Onglet actuel {index}",
+      "currentSession": "Session en cours",
+      "openInTab": "Ouvert dans {tab}",
+      "tabIndex": "onglet {index}",
+      "currentTab": "onglet actuel",
+      "tab": "languette",
+      "generatingAria": "Génération du titre...",
+      "regenerateAria": "Régénérer le titre",
+      "openInNewTabAria": "Ouvrir dans un nouvel onglet",
+      "renameAria": "Rebaptiser",
+      "deleteAria": "Supprimer",
+      "openInNewTab": "Ouvrir dans un nouvel onglet",
+      "openInBackgroundTab": "Ouvrir dans l'onglet d'arrière-plan",
+      "switchToOpenSession": "Passer en session ouverte",
+      "rename": "Rebaptiser",
+      "delete": "Supprimer",
+      "loadFailed": "Échec du chargement de la conversation",
+      "deleteFailed": "Échec de la suppression de la conversation",
+      "regenerateFailed": "Échec de la régénération de la réponse",
+      "saveFailed": "Échec de l'enregistrement"
+    },
+    "renameFailed": "Échec du renommage de la conversation",
+    "rewind": {
+      "failed": "Échec du rembobinage : {error}",
+      "unavailableStreaming": "Impossible de revenir en arrière pendant que l'assistant diffuse",
+      "cannot": "Impossible de rembobiner : {error}",
+      "unsupportedProvider": "Le rembobinage n'est pas pris en charge par ce fournisseur.",
+      "errorMessageNotFound": "Message introuvable"
+    },
+    "greeting": {
+      "day": {
+        "sun": [
+          "Bon dimanche",
+          "Séance du dimanche ?",
+          "Bienvenue au week-end"
+        ],
+        "mon": [
+          "Bon lundi",
+          "Revenons-y",
+          "Revenons-y !"
+        ],
+        "tue": [
+          "Bon mardi"
+        ],
+        "wed": [
+          "Bon mercredi"
+        ],
+        "thu": [
+          "Bon jeudi"
+        ],
+        "fri": [
+          "Bon vendredi",
+          "Ce sentiment de vendredi"
+        ],
+        "sat": [
+          "Bon samedi",
+          "Bon samedi !",
+          "Bienvenue au week-end"
+        ]
+      },
+      "morning": [
+        "Bonjour",
+        "Café et TyporAi temps ?"
+      ],
+      "afternoon": [
+        "Bon après-midi",
+        "Salut",
+        "Comment ça va"
+      ],
+      "evening": [
+        "Bonne soirée",
+        "Soirée",
+        "Comment s'est passée ta journée"
+      ],
+      "night": [
+        "Bonjour, oiseau de nuit",
+        "Soirée"
+      ],
+      "general": [
+        "Salut",
+        "Salut {name}, comment vas-tu ?",
+        "Salut comment vas-tu?",
+        "Comment ça va ?",
+        "Content de te revoir!",
+        "Quoi de neuf?",
+        "{name} revient !",
+        "Vous avez tout à fait raison !"
+      ]
+    }
+  },
+  "inlineEdit": {
+    "unavailable": "Modification en ligne indisponible : impossible d'accéder à l'éditeur actif. Essayez de rouvrir la note.",
+    "workspaceLoadFailed": "Échec du chargement des fichiers de l'espace de travail. Les @-mentions de l’espace de travail peuvent être indisponibles.",
+    "invalidPath": "Échec de la pièce jointe : chemin non valide",
+    "placeholderInsert": "Insérer les instructions...",
+    "placeholderEdit": "Modifier les instructions...",
+    "replyPlaceholder": "Répondez pour continuer...",
+    "noResponse": "Aucune réponse de l'agent",
+    "errorRetry": "Erreur - réessayez",
+    "prompt": {
+      "ariaLabel": "Modifier les instructions",
+      "placeholder": "Décrire la modification",
+      "send": "Envoyer"
+    },
+    "unavailableMarkdownView": "Modification en ligne indisponible : impossible d'accéder à la vue Markdown active.",
+    "generating": "Generation...",
+    "actions": {
+      "accept": "Accepter",
+      "refine": "Affiner",
+      "reject": "Refuser",
+      "refinePrompt": "Affiner le texte de suggestion selectionne"
+    },
+    "errors": {
+      "documentEditingBlocked": "SAFE est activé. Désactivez-le pour autoriser l’IA à modifier le document actuel.",
+      "enterInstruction": "Saisissez une instruction de modification.",
+      "generationFailed": "La generation de la modification a echoue.",
+      "noReplacement": "La reponse de modification ne contient pas de texte de remplacement.",
+      "noCliProvider": "Aucun fournisseur CLI active nest configure. Activez et configurez Claude, Codex ou OpenCode dans les parametres.",
+      "refineFailed": "Laffinage a echoue.",
+      "refineNoReplacement": "La reponse daffinage ne contient pas de texte de remplacement.",
+      "selectSuggestionToRefine": "Selectionnez du texte dans le bloc de suggestion a affiner."
+    }
+  },
+  "validation": {
+    "slug": {
+      "required": "Le nom {label} est requis",
+      "tooLong": "Le nom {label} doit contenir {max} caractères ou moins.",
+      "invalidChars": "Le nom {label} peut only contenir des lettres minuscules, des chiffres et des traits d'union.",
+      "reservedWord": "Le nom {label} ne peut pas no être un YAML mot réservé (true, false, null, yes, no, on, off)",
+      "labelCommand": "Commande",
+      "labelAgent": "Profil agent",
+      "labelCodexSubagent": "Sous-agent du Codex",
+      "labelOpencodeSubagent": "Sous-agent OpenCode",
+      "labelCodexSkill": "Compétence du Codex"
+    }
+  },
+  "typora": {
+    "panel": {
+      "hideAria": "Masquer le panneau TyporAi",
+      "hideTitle": "Masquer le panneau",
+      "showAria": "Afficher le panneau TyporAi",
+      "showTitle": "Afficher TyporAi"
+    },
+    "settings": {
+      "openAria": "Ouvrir les parametres TyporAi",
+      "title": "Paramètres"
+    }
+  }
+}

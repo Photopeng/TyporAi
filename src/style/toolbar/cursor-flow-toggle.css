@@ -1,0 +1,43 @@
+/* Cursor Flow Toggle */
+.typorai-cursor-flow-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.typorai-cursor-flow-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.typorai-cursor-flow-tooltip {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 200px;
+  max-width: 300px;
+  padding: 6px 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 100;
+}
+
+.typorai-cursor-flow-toggle:hover .typorai-cursor-flow-tooltip {
+  opacity: 1;
+  visibility: visible;
+}

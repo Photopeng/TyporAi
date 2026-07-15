@@ -1,0 +1,56 @@
+/* Permission Mode Toggle */
+.typorai-permission-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding-left: 12px;
+  padding-right: 8px;
+}
+
+.typorai-permission-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 28px;
+}
+
+.typorai-permission-label.plan-active {
+  color: rgb(92, 148, 140);
+  font-weight: 600;
+}
+
+.typorai-toggle-switch {
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--background-modifier-border);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.typorai-toggle-switch::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.typorai-toggle-switch:hover {
+  background: var(--background-modifier-hover);
+}
+
+.typorai-toggle-switch.active {
+  background: color-mix(in srgb, var(--typorai-brand) 32%, var(--typorai-bg-primary));
+}
+
+.typorai-toggle-switch.active::after {
+  transform: translateX(14px);
+  background: var(--typorai-brand);
+}

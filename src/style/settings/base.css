@@ -1,0 +1,302 @@
+/* ── Settings tab navigation ── */
+
+.typorai-settings-tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 18px;
+  padding: 0 2px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--background-primary);
+}
+
+.typorai-settings-tab {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  margin-bottom: -1px;
+}
+
+.typorai-settings-tab:hover {
+  color: var(--text-normal);
+  background: var(--background-modifier-hover);
+}
+
+.typorai-settings-tab--active {
+  color: var(--text-normal);
+  background: var(--background-primary);
+  border-color: var(--background-modifier-border);
+  border-bottom-color: var(--background-primary);
+}
+
+.typorai-settings-tab-content {
+  display: none;
+}
+
+.typorai-settings-tab-content--active {
+  display: block;
+}
+
+/* Codex placeholder */
+.typorai-settings-codex-placeholder {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+/* Settings page - remove separator lines from setting items */
+.typorai-settings .setting-item {
+  border-top: none;
+  padding: 10px 0;
+  gap: 16px;
+}
+
+.typorai-settings .setting-item:not(.setting-item-heading) .setting-item-info {
+  flex: 1 1 55%;
+  min-width: 220px;
+}
+
+.typorai-settings .setting-item:not(.setting-item-heading) .setting-item-control {
+  flex: 0 1 360px;
+  justify-content: flex-end;
+}
+
+/* Settings section headings (via setHeading()) */
+.typorai-settings .setting-item-heading {
+  padding-top: 22px;
+  padding-bottom: 8px;
+  margin-top: 16px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.typorai-settings .setting-item-heading:first-child {
+  padding-top: 0;
+  margin-top: 0;
+  border-top: none;
+}
+
+.typorai-settings .setting-item-heading .setting-item-name {
+  font-size: var(--font-ui-medium);
+  font-weight: var(--font-semibold);
+  color: var(--text-normal);
+  letter-spacing: 0;
+}
+
+/* Custom section descriptions - align with items */
+.typorai-sp-settings-desc,
+.typorai-mcp-settings-desc,
+.typorai-plugin-settings-desc,
+.typorai-approved-desc {
+  padding: 0 12px;
+}
+
+/* Unified icon action buttons for settings */
+.typorai-settings-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.typorai-settings-action-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.typorai-settings-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.typorai-settings-delete-btn:hover {
+  color: var(--text-error);
+}
+
+.typorai-setting-validation {
+  font-size: var(--font-ui-smaller);
+  margin-top: -0.5em;
+  margin-bottom: 0.5em;
+}
+
+.typorai-setting-validation-error {
+  color: var(--text-error);
+}
+
+.typorai-setting-validation-warning {
+  color: var(--text-warning);
+}
+
+.typorai-settings-cli-path-input {
+  width: min(100%, 360px);
+}
+
+.typorai-settings-cli-path-input.typorai-input-error {
+  border-color: var(--text-error);
+}
+
+/* Media folder input width */
+.typorai-settings-media-input {
+  width: min(100%, 260px);
+}
+
+@media (max-width: 720px) {
+  .typorai-settings .setting-item:not(.setting-item-heading) {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .typorai-settings .setting-item:not(.setting-item-heading) .setting-item-control {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+/* ── Shared settings panel layout (used by slash-settings + agent-settings) ── */
+
+.typorai-sp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 12px;
+}
+
+.typorai-sp-label {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  font-weight: var(--font-medium);
+}
+
+.typorai-sp-header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.typorai-sp-empty-state {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.typorai-sp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.typorai-sp-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+}
+
+.typorai-sp-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.typorai-sp-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.typorai-sp-item-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.typorai-sp-item-name {
+  font-weight: 600;
+  font-family: var(--font-monospace);
+  color: var(--text-normal);
+}
+
+.typorai-sp-item-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.typorai-sp-item-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.typorai-sp-advanced-section {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 0 12px;
+  margin: 8px 0;
+}
+
+.typorai-sp-advanced-summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  font-weight: var(--font-medium);
+}
+
+.typorai-sp-advanced-section[open] .typorai-sp-advanced-summary {
+  margin-bottom: 4px;
+}
+
+.typorai-sp-modal .modal-content {
+  max-width: 600px;
+  width: auto;
+}
+
+.typorai-sp-content-area {
+  width: 100%;
+  font-family: var(--font-monospace);
+  font-size: 13px;
+  padding: 8px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  background: var(--background-primary);
+  color: var(--text-normal);
+  resize: vertical;
+  margin-top: 8px;
+}
+
+.typorai-sp-content-area:focus {
+  outline: none;
+  border-color: var(--interactive-accent);
+}
+
+.typorai-sp-modal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}

@@ -1,0 +1,374 @@
+/*
+ * Silent editorial rail: a neutral, provider-independent visual system.
+ * The message rail is the persistent recognition anchor; every other surface
+ * stays deliberately quiet until the user interacts with it.
+ */
+.typorai-container {
+  --typorai-brand: var(--primary-color, var(--text-color, #20201f));
+  --typorai-bg-primary: var(--bg-color, #fbfbfa);
+  --typorai-fg-primary: var(--text-color, #20201f);
+  --typorai-bg-secondary: color-mix(in srgb, var(--typorai-bg-primary) 92%, var(--typorai-fg-primary));
+  --typorai-bg-elevated: color-mix(in srgb, var(--typorai-bg-primary) 97%, var(--typorai-fg-primary));
+  --typorai-fg-muted: var(--control-text-color, color-mix(in srgb, var(--typorai-fg-primary) 62%, var(--typorai-bg-primary)));
+  --typorai-fg-faint: color-mix(in srgb, var(--typorai-fg-primary) 42%, var(--typorai-bg-primary));
+  --typorai-border: color-mix(in srgb, var(--typorai-fg-primary) 19%, var(--typorai-bg-primary));
+  --typorai-border-strong: color-mix(in srgb, var(--typorai-fg-primary) 31%, var(--typorai-bg-primary));
+  --typorai-hover-bg: var(--item-hover-bg-color, color-mix(in srgb, var(--typorai-fg-primary) 8%, var(--typorai-bg-primary)));
+  --typorai-code-bg: color-mix(in srgb, var(--typorai-bg-primary) 89%, var(--typorai-fg-primary));
+  --typorai-accent: var(--primary-color, var(--typorai-fg-primary));
+  --typorai-radius-control: 8px;
+  --typorai-radius-surface: 14px;
+  --typorai-radius-overlay: 18px;
+  --typorai-shadow-soft: 0 1px 2px rgba(22, 22, 20, 0.04), 0 10px 30px rgba(22, 22, 20, 0.07);
+  --typorai-font-body: var(--font-text, "Noto Sans SC", "Source Han Sans SC", "Segoe UI Variable", sans-serif);
+  --typorai-font-display: var(--font-text, "Iowan Old Style", "Source Han Serif SC", Georgia, serif);
+  --background-primary: var(--typorai-bg-primary);
+  --background-secondary: var(--typorai-bg-secondary);
+  --background-secondary-alt: var(--typorai-bg-secondary);
+  --background-modifier-hover: var(--typorai-hover-bg);
+  --background-modifier-border: var(--typorai-border);
+  --background-modifier-border-hover: var(--typorai-border-strong);
+  --text-normal: var(--typorai-fg-primary);
+  --text-muted: var(--typorai-fg-muted);
+  --text-faint: var(--typorai-fg-faint);
+  --text-accent: var(--typorai-accent);
+  --interactive-accent: var(--typorai-accent);
+  background: var(--typorai-bg-primary);
+  color: var(--typorai-fg-primary);
+  font-family: var(--typorai-font-body);
+  font-size: 13px;
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Provider choice never recolors the conversation surface. */
+.typorai-container[data-provider="claude"],
+.typorai-container[data-provider="codex"],
+.typorai-container[data-provider="opencode"],
+.typorai-container[data-provider="typora"] {
+  --typorai-brand: var(--typorai-accent);
+}
+
+.typorai-header {
+  min-height: 38px;
+  padding: 5px 8px 4px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--typorai-border) 62%, transparent);
+  background: color-mix(in srgb, var(--typorai-bg-primary) 95%, transparent);
+}
+
+.typorai-title-text {
+  font-family: var(--typorai-font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.typorai-header-action-btn,
+.typorai-input-nav-btn,
+.typorai-selection-preview-clear,
+.typorai-user-msg-actions span,
+.typorai-text-copy-btn {
+  position: relative;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: var(--typorai-radius-control);
+  transition-property: color, background-color, opacity, transform;
+  transition-duration: 130ms;
+  transition-timing-function: ease;
+}
+
+.typorai-header-action-btn:hover,
+.typorai-input-nav-btn:hover,
+.typorai-selection-preview-clear:hover,
+.typorai-user-msg-actions span:hover,
+.typorai-text-copy-btn:hover {
+  background: var(--typorai-hover-bg);
+}
+
+.typorai-header-action-btn:active,
+.typorai-input-nav-btn:active,
+.typorai-selection-preview-clear:active,
+button:active {
+  transform: scale(0.96);
+}
+
+.typorai-tab-badge-streaming,
+.typorai-tab-badge-streaming[data-provider] {
+  border-color: var(--typorai-accent);
+}
+
+.typorai-header-tabs .typorai-tab-badge-streaming::after,
+.typorai-header-tabs .typorai-tab-badge-active::after {
+  background: var(--typorai-accent);
+}
+
+.typorai-messages-wrapper {
+  position: relative;
+}
+
+.typorai-messages {
+  padding: 24px 16px 32px 34px;
+  scrollbar-gutter: stable;
+}
+
+.typorai-message {
+  max-width: 100%;
+  color: var(--typorai-fg-primary);
+  font-size: 13.5px;
+  line-height: 1.62;
+  text-wrap: pretty;
+}
+
+.typorai-message-user {
+  width: fit-content;
+  max-width: min(92%, 760px);
+  margin-inline-start: auto;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--typorai-border) 74%, transparent);
+  border-radius: var(--typorai-radius-surface) var(--typorai-radius-surface) 5px var(--typorai-radius-surface);
+  background: var(--typorai-bg-secondary);
+  box-shadow: 0 1px 1px rgba(18, 18, 16, 0.025);
+}
+
+.typorai-message-assistant {
+  width: 100%;
+  padding-inline: 1px;
+}
+
+.typorai-message-content h1,
+.typorai-message-content h2,
+.typorai-message-content h3,
+.typorai-message-content h4 {
+  color: var(--typorai-fg-primary);
+  font-family: var(--typorai-font-display);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.typorai-message-content pre,
+.typorai-tool-content,
+.typorai-thinking-content,
+.typorai-write-edit-content {
+  border: 1px solid color-mix(in srgb, var(--typorai-border) 72%, transparent);
+  border-radius: 10px;
+  background: var(--typorai-code-bg);
+}
+
+.typorai-message-content table {
+  overflow: hidden;
+  border: 1px solid var(--typorai-border);
+  border-radius: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.typorai-message-content th,
+.typorai-message-content td {
+  border: 0;
+  border-inline-end: 1px solid var(--typorai-border);
+  border-bottom: 1px solid var(--typorai-border);
+}
+
+.typorai-message-content tr:last-child td,
+.typorai-message-content th:last-child,
+.typorai-message-content td:last-child {
+  border-inline-end: 0;
+}
+
+.typorai-tool-call,
+.typorai-thinking-block,
+.typorai-subagent-container,
+.typorai-status-panel {
+  border-radius: var(--typorai-radius-surface);
+}
+
+.typorai-tool-header,
+.typorai-thinking-header,
+.typorai-subagent-header {
+  min-height: 32px;
+  padding: 5px 8px;
+  border-radius: 9px;
+  transition-property: background-color, color;
+  transition-duration: 130ms;
+  transition-timing-function: ease;
+}
+
+.typorai-tool-header:hover,
+.typorai-thinking-header:hover,
+.typorai-subagent-header:hover {
+  background: var(--typorai-hover-bg);
+  opacity: 1;
+}
+
+.typorai-tool-icon,
+.typorai-tool-status,
+.typorai-thinking-icon {
+  color: var(--typorai-fg-muted);
+}
+
+.typorai-input-footer {
+  padding: 8px 6px 10px;
+  background: linear-gradient(to bottom, transparent, var(--typorai-bg-primary) 18px);
+}
+
+.typorai-input-container {
+  padding: 0;
+}
+
+.typorai-input-wrapper {
+  min-height: 132px;
+  border: 1px solid var(--typorai-border);
+  border-radius: var(--typorai-radius-surface);
+  background: var(--typorai-bg-primary);
+  box-shadow: var(--typorai-shadow-soft);
+  transition-property: border-color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+.typorai-input-wrapper:focus-within {
+  border-color: var(--typorai-border-strong);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--typorai-accent) 8%, transparent), var(--typorai-shadow-soft);
+}
+
+.typorai-input-wrapper textarea.typorai-input {
+  padding: 12px 12px;
+  border-radius: var(--typorai-radius-surface);
+  font-family: var(--typorai-font-body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.typorai-input-toolbar {
+  min-height: 38px;
+  padding: 4px 6px 7px;
+  color: var(--typorai-fg-muted);
+}
+
+.typorai-selection-preview {
+  min-height: 32px;
+  margin: 0 2px 8px;
+  padding: 6px 8px 6px 11px;
+  border: 1px solid var(--typorai-border);
+  border-radius: 10px;
+  background: var(--typorai-bg-secondary);
+  color: var(--typorai-fg-muted);
+  box-shadow: 0 1px 1px rgba(18, 18, 16, 0.025);
+}
+
+.typorai-selection-preview-text {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typorai-selection-preview-clear {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+}
+
+.typorai-selection-preview-clear svg {
+  width: 13px;
+  height: 13px;
+}
+
+.typorai-file-chip,
+.typorai-image-chip {
+  border: 1px solid var(--typorai-border);
+  border-radius: 999px;
+  background: var(--typorai-bg-secondary);
+  box-shadow: none;
+}
+
+.typorai-mention-dropdown,
+.typorai-slash-command-dropdown,
+.typorai-resume-dropdown,
+.typorai-selectable-dropdown,
+.typorai-context-menu {
+  position: fixed;
+  z-index: 10050;
+  display: grid;
+  min-width: 180px;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--typorai-border) 75%, transparent);
+  border-radius: var(--typorai-radius-overlay, 18px);
+  background: var(--typorai-bg-elevated, var(--background-primary));
+  box-shadow: var(--typorai-shadow-soft, 0 12px 34px rgba(0, 0, 0, 0.14));
+}
+
+.typorai-context-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--typorai-fg-primary, var(--text-normal));
+  font: 12px/1.4 var(--typorai-font-body, sans-serif);
+  text-align: start;
+  cursor: pointer;
+}
+
+.typorai-context-menu-item:hover,
+.typorai-context-menu-item:focus-visible {
+  outline: 0;
+  background: var(--typorai-hover-bg, var(--background-modifier-hover));
+}
+
+.modal,
+.typorai-native-modal,
+.typorai-settings-modal {
+  border: 1px solid color-mix(in srgb, var(--typorai-border) 75%, transparent);
+  border-radius: 20px;
+  background: var(--typorai-bg-elevated, var(--background-primary));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+}
+
+.typorai-settings,
+.typorai-sp-panel {
+  color: var(--typorai-fg-primary);
+  font-family: var(--typorai-font-body);
+}
+
+.typorai-settings-tabs,
+.typorai-sp-tabs {
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--typorai-bg-secondary);
+}
+
+.setting-item,
+.typorai-sp-row {
+  border-color: color-mix(in srgb, var(--typorai-border) 72%, transparent);
+}
+
+.typorai-inline-icon {
+  flex: 0 0 auto;
+  stroke-width: 1.75;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .typorai-message-user:hover,
+  .typorai-input-wrapper:hover {
+    border-color: var(--typorai-border-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typorai-container *,
+  .typorai-container *::before,
+  .typorai-container *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+  }
+}

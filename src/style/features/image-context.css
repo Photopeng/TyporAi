@@ -1,0 +1,185 @@
+/* Image Context - Preview & Attachments */
+
+/* Image preview container (in input area) */
+.typorai-image-preview {
+  display: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  margin-bottom: 4px;
+}
+
+/* Individual image preview chip */
+.typorai-image-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  max-width: 200px;
+}
+
+.typorai-image-chip:hover {
+  border-color: var(--interactive-accent);
+}
+
+/* Image thumbnail */
+.typorai-image-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.typorai-image-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Image info */
+.typorai-image-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.typorai-image-name {
+  font-size: 12px;
+  color: var(--text-normal);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typorai-image-size {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Remove button */
+.typorai-image-remove {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+  font-size: 0; /* Hide text character */
+}
+
+.typorai-image-remove::before,
+.typorai-image-remove::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  background: var(--text-muted);
+  border-radius: 1px;
+  transition: background 0.15s ease;
+}
+
+.typorai-image-remove::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.typorai-image-remove::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.typorai-image-remove:hover {
+  background: var(--background-modifier-error);
+}
+
+.typorai-image-remove:hover::before,
+.typorai-image-remove:hover::after {
+  background: var(--text-on-accent);
+}
+
+/* Drop overlay - inside input wrapper */
+.typorai-drop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: color-mix(in srgb, var(--typorai-brand) 8%, var(--typorai-bg-primary));
+  border: 2px dashed var(--typorai-brand);
+  border-radius: 6px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.typorai-drop-overlay.visible {
+  display: flex;
+}
+
+.typorai-drop-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--typorai-brand);
+}
+
+.typorai-drop-content svg {
+  opacity: 0.7;
+}
+
+.typorai-drop-content span {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Images in Messages (displayed above user bubble) */
+
+/* Images container - right-aligned above user message */
+.typorai-message-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+  padding-right: 4px;
+}
+
+.typorai-message-user-stack .typorai-message-images {
+  align-self: flex-end;
+  margin-bottom: 0;
+  padding-right: 0;
+}
+
+/* Individual image in message - standardized size */
+.typorai-message-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+}
+
+.typorai-message-image:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.typorai-message-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

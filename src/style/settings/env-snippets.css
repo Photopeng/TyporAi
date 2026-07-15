@@ -1,0 +1,366 @@
+/* Context Limits Styles */
+.typorai-context-limits-container {
+  margin-top: 16px;
+}
+
+.typorai-context-limits-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  padding: 0 12px;
+}
+
+.typorai-context-limits-label {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  font-weight: var(--font-medium);
+}
+
+.typorai-context-limits-desc {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.typorai-context-limits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.typorai-context-limits-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.typorai-context-limits-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.typorai-context-limits-model {
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.typorai-context-limits-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.typorai-context-alias-input {
+  width: 180px;
+  padding: 4px 8px;
+  font-size: var(--font-ui-small);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+.typorai-context-alias-input:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
+.typorai-context-limits-input {
+  width: 80px;
+  padding: 4px 8px;
+  font-size: var(--font-ui-small);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  background: var(--background-primary);
+  color: var(--text-normal);
+}
+
+.typorai-context-limits-input:focus {
+  border-color: var(--interactive-accent);
+  outline: none;
+}
+
+.typorai-context-limits-input.typorai-input-error {
+  border-color: var(--text-error);
+}
+
+.typorai-context-limit-validation {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-error);
+  margin-left: 4px;
+}
+
+/* Environment Snippets Styles */
+.typorai-env-snippets-container {
+  margin-top: 16px;
+}
+
+.typorai-snippet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  margin-top: 16px;
+  padding: 0 12px;
+}
+
+.typorai-snippet-label {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  font-weight: var(--font-medium);
+}
+
+.typorai-save-env-btn {
+  padding: 6px 16px;
+  font-size: 13px;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.typorai-save-env-btn:hover {
+  opacity: 0.9;
+}
+
+.typorai-snippet-empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.typorai-snippet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.typorai-snippet-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.typorai-snippet-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.typorai-snippet-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.typorai-snippet-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.typorai-snippet-description {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.typorai-snippet-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.typorai-restore-snippet-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.typorai-restore-snippet-btn:hover {
+  opacity: 0.9;
+}
+
+.typorai-edit-snippet-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  background: var(--background-modifier-border);
+  color: var(--text-normal);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.typorai-edit-snippet-btn:hover {
+  background: var(--background-modifier-border-hover);
+}
+
+.typorai-delete-snippet-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  background: var(--background-modifier-error);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.typorai-delete-snippet-btn:hover {
+  opacity: 0.9;
+}
+
+/* Env Snippet Modal */
+.typorai-env-snippet-modal .modal-content {
+  max-width: 550px;
+  width: 550px;
+  padding: 16px;
+}
+
+.typorai-env-snippet-modal h2 {
+  margin: 0 0 16px 0;
+}
+
+.typorai-env-snippet-modal .setting-item {
+  padding: 8px 0;
+  margin: 0;
+}
+
+.typorai-env-snippet-modal .setting-item-info {
+  margin-bottom: 4px;
+}
+
+/* Full-width env vars textarea setting */
+.typorai-env-snippet-setting {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.typorai-env-snippet-setting .setting-item-info {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.typorai-env-snippet-control {
+  width: 100%;
+}
+
+.typorai-env-snippet-control textarea {
+  width: 100%;
+  min-width: 100%;
+  font-family: var(--font-monospace);
+  font-size: 12px;
+  resize: vertical;
+}
+
+.typorai-snippet-preview {
+  margin: 8px 0;
+  padding: 6px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+}
+
+.typorai-env-preview {
+  background: var(--background-primary);
+  padding: 6px;
+  border-radius: 4px;
+  font-family: var(--font-monospace);
+  font-size: 11px;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--text-muted);
+  max-height: 120px;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.typorai-snippet-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+.typorai-cancel-btn,
+.typorai-save-btn {
+  padding: 6px 16px;
+  font-size: 13px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.typorai-cancel-btn {
+  background: var(--background-modifier-border);
+  color: var(--text-normal);
+}
+
+.typorai-cancel-btn:hover {
+  background: var(--background-modifier-border-hover);
+}
+
+.typorai-save-btn {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.typorai-save-btn:hover {
+  opacity: 0.9;
+}
+
+/* Context limits section in snippet modal */
+.typorai-snippet-context-limits {
+  margin-top: 1em;
+}
+
+.typorai-snippet-context-limits .setting-item-description {
+  margin-bottom: 0.5em;
+}
+
+.typorai-snippet-limit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.typorai-snippet-limit-model {
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-small);
+}
+
+.typorai-snippet-limit-spacer {
+  flex: 1;
+}
+
+.typorai-snippet-limit-input {
+  width: 80px;
+}
+
+.typorai-snippet-alias-input {
+  width: 160px;
+}

@@ -1,0 +1,703 @@
+import type { AskUserQuestionItem, AskUserQuestionOption } from '../../../core/types/tools';
+import { t } from '../../../i18n/i18n';
+
+const HINTS_TEXT = t('renderer.ask.hints');
+const HINTS_TEXT_IMMEDIATE = t('renderer.ask.hintsImmediate');
+
+export interface InlineAskQuestionConfig {
+  title?: string;
+  headerEl?: HTMLElement;
+  showCustomInput?: boolean;
+  immediateSelect?: boolean;
+}
+
+export class InlineAskUserQuestion {
+  private containerEl: HTMLElement;
+  private input: Record<string, unknown>;
+  private resolveCallback: (result: Record<string, string | string[]> | null) => void;
+  private resolved = false;
+  private signal?: AbortSignal;
+  private config: Required<Omit<InlineAskQuestionConfig, 'headerEl'>> & { headerEl?: HTMLElement };
+
+  private questions: AskUserQuestionItem[] = [];
+  private answers = new Map<number, Set<string>>();
+  private customInputs = new Map<number, string>();
+
+  private activeTabIndex = 0;
+  private focusedItemIndex = 0;
+  private isInputFocused = false;
+
+  private rootEl!: HTMLElement;
+  private tabBar!: HTMLElement;
+  private contentArea!: HTMLElement;
+  private tabElements: HTMLElement[] = [];
+  private currentItems: HTMLElement[] = [];
+  private boundKeyDown: (e: KeyboardEvent) => void;
+  private abortHandler: (() => void) | null = null;
+
+  constructor(
+    containerEl: HTMLElement,
+    input: Record<string, unknown>,
+    resolve: (result: Record<string, string | string[]> | null) => void,
+    signal?: AbortSignal,
+    config?: InlineAskQuestionConfig,
+  ) {
+    this.containerEl = containerEl;
+    this.input = input;
+    this.resolveCallback = resolve;
+    this.signal = signal;
+    this.config = {
+      title: config?.title ?? t('renderer.ask.defaultTitle'),
+      headerEl: config?.headerEl,
+      showCustomInput: config?.showCustomInput ?? true,
+      immediateSelect: config?.immediateSelect ?? false,
+    };
+    this.boundKeyDown = (event) => this.handleKeyDown(event);
+  }
+
+  render(): void {
+    this.rootEl = this.containerEl.createDiv({ cls: 'typorai-ask-question-inline' });
+
+    const titleEl = this.rootEl.createDiv({ cls: 'typorai-ask-inline-title' });
+    titleEl.setText(this.config.title);
+
+    if (this.config.headerEl) {
+      this.rootEl.appendChild(this.config.headerEl);
+    }
+
+    this.questions = this.parseQuestions();
+
+    if (this.questions.length === 0) {
+      this.handleResolve(null);
+      return;
+    }
+
+    if (this.config.immediateSelect && this.questions.length !== 1) {
+      this.config.immediateSelect = false;
+    }
+
+    for (let i = 0; i < this.questions.length; i++) {
+      this.answers.set(i, new Set());
+      this.customInputs.set(i, '');
+    }
+
+    if (!this.config.immediateSelect) {
+      this.tabBar = this.rootEl.createDiv({ cls: 'typorai-ask-tab-bar' });
+      this.renderTabBar();
+    }
+    this.contentArea = this.rootEl.createDiv({ cls: 'typorai-ask-content' });
+    this.renderTabContent();
+
+    this.rootEl.setAttribute('tabindex', '0');
+    this.rootEl.addEventListener('keydown', this.boundKeyDown);
+
+    // Defer focus to after the element is in the DOM and laid out
+    window.requestAnimationFrame(() => {
+      this.rootEl.focus();
+      this.rootEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+
+    if (this.signal) {
+      this.abortHandler = () => this.handleResolve(null);
+      this.signal.addEventListener('abort', this.abortHandler, { once: true });
+    }
+  }
+
+  destroy(): void {
+    this.handleResolve(null);
+  }
+
+  private parseQuestions(): AskUserQuestionItem[] {
+    const raw = this.input.questions;
+    if (!Array.isArray(raw)) return [];
+
+    return (raw as unknown[])
+      .filter(
+        (q): q is {
+          question: string;
+          header?: string;
+          options?: unknown[] | null;
+          multiSelect?: boolean;
+          isOther?: boolean;
+          isSecret?: boolean;
+          id?: string;
+        } => {
+          if (!q || typeof q !== 'object' || Array.isArray(q)) {
+            return false;
+          }
+          const record = q as Record<string, unknown>;
+          return typeof record.question === 'string'
+            && ((Array.isArray(record.options) && record.options.length > 0) || record.isOther === true);
+        },
+      )
+      .map((q, idx) => ({
+        question: q.question,
+        id: typeof (q as Record<string, unknown>).id === 'string' ? (q as Record<string, unknown>).id as string : undefined,
+        header: typeof q.header === 'string' ? q.header.slice(0, 12) : `Q${idx + 1}`,
+        options: this.deduplicateOptions((q.options ?? []).map((o) => this.coerceOption(o))),
+        multiSelect: q.multiSelect === true,
+        isOther: q.isOther === true,
+        isSecret: q.isSecret === true,
+      }));
+  }
+
+  private coerceOption(opt: unknown): AskUserQuestionOption {
+    if (typeof opt === 'object' && opt !== null) {
+      const obj = opt as Record<string, unknown>;
+      const label = this.extractLabel(obj);
+      const description = typeof obj.description === 'string' ? obj.description : '';
+      const value = this.extractValue(obj, label);
+      return { label, description, ...(value !== label ? { value } : {}) };
+    }
+    return { label: this.stringifyOptionValue(opt), description: '' };
+  }
+
+  private deduplicateOptions(options: AskUserQuestionOption[]): AskUserQuestionOption[] {
+    const seen = new Set<string>();
+    return options.filter((o) => {
+      if (seen.has(o.label)) return false;
+      seen.add(o.label);
+      return true;
+    });
+  }
+
+  private extractLabel(obj: Record<string, unknown>): string {
+    if (typeof obj.label === 'string') return obj.label;
+    if (typeof obj.value === 'string') return obj.value;
+    if (typeof obj.text === 'string') return obj.text;
+    if (typeof obj.name === 'string') return obj.name;
+    return t('renderer.ask.optionFallback');
+  }
+
+  private stringifyOptionValue(value: unknown): string {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') {
+      return `${value}`;
+    }
+    return t('renderer.ask.optionFallback');
+  }
+
+  private extractValue(obj: Record<string, unknown>, fallback: string): string {
+    if (typeof obj.value === 'string') return obj.value;
+    if (typeof obj.id === 'string') return obj.id;
+    return fallback;
+  }
+
+  private renderTabBar(): void {
+    this.tabBar.empty();
+    this.tabElements = [];
+
+    for (let idx = 0; idx < this.questions.length; idx++) {
+      const answered = this.isQuestionAnswered(idx);
+      const tab = this.tabBar.createSpan({ cls: 'typorai-ask-tab' });
+      tab.createSpan({ text: this.questions[idx].header, cls: 'typorai-ask-tab-label' });
+      tab.createSpan({ text: answered ? ' \u2713' : '', cls: 'typorai-ask-tab-tick' });
+      tab.setAttribute('title', this.questions[idx].question);
+
+      if (idx === this.activeTabIndex) tab.addClass('is-active');
+      if (answered) tab.addClass('is-answered');
+      tab.addEventListener('click', () => this.switchTab(idx));
+      this.tabElements.push(tab);
+    }
+
+    const allAnswered = this.questions.every((_, i) => this.isQuestionAnswered(i));
+    const submitTab = this.tabBar.createSpan({ cls: 'typorai-ask-tab' });
+    submitTab.createSpan({ text: allAnswered ? ' \u2713' : '', cls: 'typorai-ask-tab-submit-check' });
+    submitTab.createSpan({ text: t('renderer.ask.submit'), cls: 'typorai-ask-tab-label' });
+    if (this.activeTabIndex === this.questions.length) submitTab.addClass('is-active');
+    submitTab.addEventListener('click', () => this.switchTab(this.questions.length));
+    this.tabElements.push(submitTab);
+  }
+
+  private isQuestionAnswered(idx: number): boolean {
+    return this.answers.get(idx)!.size > 0 || this.customInputs.get(idx)!.trim().length > 0;
+  }
+
+  private switchTab(index: number): void {
+    const clamped = Math.max(0, Math.min(index, this.questions.length));
+    if (clamped === this.activeTabIndex) return;
+    this.activeTabIndex = clamped;
+    this.focusedItemIndex = 0;
+    this.isInputFocused = false;
+    if (!this.config.immediateSelect) {
+      this.renderTabBar();
+    }
+    this.renderTabContent();
+    this.rootEl.focus();
+  }
+
+  private renderTabContent(): void {
+    this.contentArea.empty();
+    this.currentItems = [];
+
+    if (this.activeTabIndex < this.questions.length) {
+      this.renderQuestionTab(this.activeTabIndex);
+    } else {
+      this.renderSubmitTab();
+    }
+  }
+
+  private renderQuestionTab(idx: number): void {
+    const q = this.questions[idx];
+    const isMulti = q.multiSelect;
+    const selected = this.answers.get(idx)!;
+
+    this.contentArea.createDiv({
+      text: q.question,
+      cls: 'typorai-ask-question-text',
+    });
+
+    const listEl = this.contentArea.createDiv({ cls: 'typorai-ask-list' });
+
+    for (let optIdx = 0; optIdx < q.options.length; optIdx++) {
+      const option = q.options[optIdx];
+      const isFocused = optIdx === this.focusedItemIndex;
+      const optionValue = this.getOptionValue(option);
+      const isSelected = selected.has(optionValue);
+
+      const row = listEl.createDiv({ cls: 'typorai-ask-item' });
+      if (isFocused) row.addClass('is-focused');
+      if (isSelected) row.addClass('is-selected');
+
+      row.createSpan({ text: isFocused ? '\u203A' : '\u00A0', cls: 'typorai-ask-cursor' });
+      row.createSpan({ text: `${optIdx + 1}. `, cls: 'typorai-ask-item-num' });
+
+      if (isMulti) {
+        this.renderMultiSelectCheckbox(row, isSelected);
+      }
+
+      const labelBlock = row.createDiv({ cls: 'typorai-ask-item-content' });
+      const labelRow = labelBlock.createDiv({ cls: 'typorai-ask-label-row' });
+      labelRow.createSpan({ text: option.label, cls: 'typorai-ask-item-label' });
+
+      if (!isMulti && isSelected) {
+        labelRow.createSpan({ text: ' \u2713', cls: 'typorai-ask-check-mark' });
+      }
+
+      if (option.description) {
+        labelBlock.createDiv({ text: option.description, cls: 'typorai-ask-item-desc' });
+      }
+
+      row.addEventListener('click', () => {
+        this.focusedItemIndex = optIdx;
+        this.updateFocusIndicator();
+        this.selectOption(idx, option);
+      });
+
+      this.currentItems.push(row);
+    }
+
+    if (this.canShowCustomInputForQuestion(q)) {
+      const customIdx = q.options.length;
+      const customFocused = customIdx === this.focusedItemIndex;
+      const customText = this.customInputs.get(idx) ?? '';
+      const hasCustomText = customText.trim().length > 0;
+
+      const customRow = listEl.createDiv({ cls: 'typorai-ask-item typorai-ask-custom-item' });
+      if (customFocused) customRow.addClass('is-focused');
+
+      customRow.createSpan({ text: customFocused ? '\u203A' : '\u00A0', cls: 'typorai-ask-cursor' });
+      customRow.createSpan({ text: `${customIdx + 1}. `, cls: 'typorai-ask-item-num' });
+
+      if (isMulti) {
+        this.renderMultiSelectCheckbox(customRow, hasCustomText);
+      }
+
+      const inputEl = customRow.createEl('input', {
+        cls: 'typorai-ask-custom-text',
+        value: customText,
+      });
+      inputEl.setAttribute('type', q.isSecret ? 'password' : 'text');
+      inputEl.setAttribute('placeholder', q.isSecret ? t('renderer.ask.placeholderSecret') : t('renderer.ask.placeholderCustom'));
+
+      inputEl.addEventListener('input', () => {
+        this.customInputs.set(idx, inputEl.value);
+        if (!isMulti && inputEl.value.trim()) {
+          selected.clear();
+          this.updateOptionVisuals(idx);
+        }
+        this.updateTabIndicators();
+      });
+      inputEl.addEventListener('focus', () => {
+        this.isInputFocused = true;
+      });
+      inputEl.addEventListener('blur', () => {
+        this.isInputFocused = false;
+      });
+
+      customRow.addEventListener('click', () => {
+        this.focusedItemIndex = customIdx;
+        this.updateFocusIndicator();
+        inputEl.focus();
+      });
+
+      this.currentItems.push(customRow);
+    }
+
+    this.contentArea.createDiv({
+      text: this.config.immediateSelect ? HINTS_TEXT_IMMEDIATE : HINTS_TEXT,
+      cls: 'typorai-ask-hints',
+    });
+  }
+
+  private renderSubmitTab(): void {
+    this.contentArea.createDiv({
+      text: t('renderer.ask.reviewAnswers'),
+      cls: 'typorai-ask-review-title',
+    });
+
+    const reviewEl = this.contentArea.createDiv({ cls: 'typorai-ask-review' });
+
+    for (let idx = 0; idx < this.questions.length; idx++) {
+      const q = this.questions[idx];
+      const answerText = this.getAnswerText(idx);
+
+      const pairEl = reviewEl.createDiv({ cls: 'typorai-ask-review-pair' });
+      pairEl.createDiv({ text: `${idx + 1}.`, cls: 'typorai-ask-review-num' });
+      const bodyEl = pairEl.createDiv({ cls: 'typorai-ask-review-body' });
+      bodyEl.createDiv({ text: q.question, cls: 'typorai-ask-review-q-text' });
+      bodyEl.createDiv({
+        text: answerText || t('renderer.ask.notAnswered'),
+        cls: answerText ? 'typorai-ask-review-a-text' : 'typorai-ask-review-empty',
+      });
+      pairEl.addEventListener('click', () => this.switchTab(idx));
+    }
+
+    this.contentArea.createDiv({
+      text: t('renderer.ask.readyToSubmit'),
+      cls: 'typorai-ask-review-prompt',
+    });
+
+    const actionsEl = this.contentArea.createDiv({ cls: 'typorai-ask-list' });
+    const allAnswered = this.questions.every((_, i) => this.isQuestionAnswered(i));
+
+    const submitRow = actionsEl.createDiv({ cls: 'typorai-ask-item' });
+    if (this.focusedItemIndex === 0) submitRow.addClass('is-focused');
+    if (!allAnswered) submitRow.addClass('is-disabled');
+    submitRow.createSpan({ text: this.focusedItemIndex === 0 ? '\u203A' : '\u00A0', cls: 'typorai-ask-cursor' });
+    submitRow.createSpan({ text: '1. ', cls: 'typorai-ask-item-num' });
+    submitRow.createSpan({ text: t('renderer.ask.submitAnswers'), cls: 'typorai-ask-item-label' });
+    submitRow.addEventListener('click', () => {
+      this.focusedItemIndex = 0;
+      this.updateFocusIndicator();
+      this.handleSubmit();
+    });
+    this.currentItems.push(submitRow);
+
+    const cancelRow = actionsEl.createDiv({ cls: 'typorai-ask-item' });
+    if (this.focusedItemIndex === 1) cancelRow.addClass('is-focused');
+    cancelRow.createSpan({ text: this.focusedItemIndex === 1 ? '\u203A' : '\u00A0', cls: 'typorai-ask-cursor' });
+    cancelRow.createSpan({ text: '2. ', cls: 'typorai-ask-item-num' });
+    cancelRow.createSpan({ text: t('renderer.ask.cancel'), cls: 'typorai-ask-item-label' });
+    cancelRow.addEventListener('click', () => {
+      this.focusedItemIndex = 1;
+      this.handleResolve(null);
+    });
+    this.currentItems.push(cancelRow);
+
+    this.contentArea.createDiv({
+      text: HINTS_TEXT,
+      cls: 'typorai-ask-hints',
+    });
+  }
+
+  private getAnswerText(idx: number): string {
+    const selected = this.getSelectedLabels(idx);
+    const custom = this.customInputs.get(idx)!;
+    const parts: string[] = [];
+    if (selected.length > 0) parts.push(selected.join(', '));
+    if (custom.trim()) parts.push(custom.trim());
+    return parts.join(', ');
+  }
+
+  private selectOption(qIdx: number, option: AskUserQuestionOption): void {
+    const q = this.questions[qIdx];
+    const selected = this.answers.get(qIdx)!;
+    const isMulti = q.multiSelect;
+    const optionValue = this.getOptionValue(option);
+
+    if (isMulti) {
+      if (selected.has(optionValue)) {
+        selected.delete(optionValue);
+      } else {
+        selected.add(optionValue);
+      }
+    } else {
+      selected.clear();
+      selected.add(optionValue);
+      this.customInputs.set(qIdx, '');
+    }
+
+    this.updateOptionVisuals(qIdx);
+
+    if (this.config.immediateSelect) {
+      const key = q.id ?? q.question;
+      const result: Record<string, string> = {};
+      result[key] = optionValue;
+      this.handleResolve(result);
+      return;
+    }
+
+    this.updateTabIndicators();
+
+    if (!isMulti) {
+      this.switchTab(this.activeTabIndex + 1);
+    }
+  }
+
+  private renderMultiSelectCheckbox(parent: HTMLElement, checked: boolean): void {
+    parent.createSpan({
+      text: checked ? '[\u2713] ' : '[ ] ',
+      cls: `typorai-ask-check${checked ? ' is-checked' : ''}`,
+    });
+  }
+
+  private updateOptionVisuals(qIdx: number): void {
+    const q = this.questions[qIdx];
+    const selected = this.answers.get(qIdx)!;
+    const isMulti = q.multiSelect;
+
+    for (let i = 0; i < q.options.length; i++) {
+      const item = this.currentItems[i];
+      const isSelected = selected.has(this.getOptionValue(q.options[i]));
+
+      item.toggleClass('is-selected', isSelected);
+
+      if (isMulti) {
+        const checkSpan = item.querySelector('.typorai-ask-check');
+        if (checkSpan) {
+          checkSpan.textContent = isSelected ? '[\u2713] ' : '[ ] ';
+          checkSpan.toggleClass('is-checked', isSelected);
+        }
+      } else {
+        const labelRow = item.querySelector('.typorai-ask-label-row');
+        const existingMark = item.querySelector('.typorai-ask-check-mark');
+        if (isSelected && !existingMark && labelRow) {
+          labelRow.createSpan({ text: ' \u2713', cls: 'typorai-ask-check-mark' });
+        } else if (!isSelected && existingMark) {
+          existingMark.remove();
+        }
+      }
+    }
+  }
+
+  private updateFocusIndicator(): void {
+    for (let i = 0; i < this.currentItems.length; i++) {
+      const item = this.currentItems[i];
+      const cursor = item.querySelector('.typorai-ask-cursor');
+      if (i === this.focusedItemIndex) {
+        item.addClass('is-focused');
+        if (cursor) cursor.textContent = '\u203A';
+        item.scrollIntoView({ block: 'nearest' });
+      } else {
+        item.removeClass('is-focused');
+        if (cursor) cursor.textContent = '\u00A0';
+      }
+    }
+  }
+
+  private updateTabIndicators(): void {
+    for (let idx = 0; idx < this.questions.length; idx++) {
+      const tab = this.tabElements[idx];
+      const tick = tab.querySelector('.typorai-ask-tab-tick');
+      const answered = this.isQuestionAnswered(idx);
+      tab.toggleClass('is-answered', answered);
+      if (tick) tick.textContent = answered ? ' \u2713' : '';
+    }
+    const submitTab = this.tabElements[this.questions.length];
+    if (submitTab) {
+      const submitCheck = submitTab.querySelector('.typorai-ask-tab-submit-check');
+      const allAnswered = this.questions.every((_, i) => this.isQuestionAnswered(i));
+      if (submitCheck) submitCheck.textContent = allAnswered ? '\u2713 ' : '';
+    }
+  }
+
+  private handleNavigationKey(e: KeyboardEvent, maxFocusIndex: number): boolean {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        e.stopPropagation();
+        this.focusedItemIndex = Math.min(this.focusedItemIndex + 1, maxFocusIndex);
+        this.updateFocusIndicator();
+        return true;
+      case 'ArrowUp':
+        e.preventDefault();
+        e.stopPropagation();
+        this.focusedItemIndex = Math.max(this.focusedItemIndex - 1, 0);
+        this.updateFocusIndicator();
+        return true;
+      case 'ArrowLeft':
+        if (this.config.immediateSelect) return false;
+        e.preventDefault();
+        e.stopPropagation();
+        this.switchTab(this.activeTabIndex - 1);
+        return true;
+      case 'Tab':
+        if (this.config.immediateSelect) return false;
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.shiftKey) {
+          this.switchTab(this.activeTabIndex - 1);
+        } else {
+          this.switchTab(this.activeTabIndex + 1);
+        }
+        return true;
+      case 'Escape':
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleResolve(null);
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  private handleKeyDown(e: KeyboardEvent): void {
+    if (this.isInputFocused) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        this.isInputFocused = false;
+        (this.rootEl.ownerDocument.activeElement as HTMLElement | null)?.blur();
+        this.rootEl.focus();
+        return;
+      }
+      if (e.key === 'Tab' || e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        this.isInputFocused = false;
+        (this.rootEl.ownerDocument.activeElement as HTMLElement | null)?.blur();
+        if (e.key === 'Tab' && e.shiftKey) {
+          this.switchTab(this.activeTabIndex - 1);
+        } else {
+          this.switchTab(this.activeTabIndex + 1);
+        }
+        return;
+      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        e.stopPropagation();
+        (this.rootEl.ownerDocument.activeElement as HTMLElement | null)?.blur();
+        this.isInputFocused = false;
+        const q = this.questions[this.activeTabIndex];
+        const maxIdx = this.canShowCustomInputForQuestion(q) ? q.options.length : q.options.length - 1;
+        if (e.key === 'ArrowUp') {
+          this.focusedItemIndex = Math.max(this.focusedItemIndex - 1, 0);
+        } else {
+          this.focusedItemIndex = Math.min(this.focusedItemIndex + 1, maxIdx);
+        }
+        this.updateFocusIndicator();
+        this.rootEl.focus();
+        return;
+      }
+      return;
+    }
+
+    if (this.config.immediateSelect) {
+      const q = this.questions[this.activeTabIndex];
+      const maxIdx = q.options.length - 1;
+      if (this.handleNavigationKey(e, maxIdx)) return;
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.focusedItemIndex <= maxIdx) {
+          this.selectOption(this.activeTabIndex, q.options[this.focusedItemIndex]);
+        }
+      }
+      return;
+    }
+
+    const isSubmitTab = this.activeTabIndex === this.questions.length;
+    const q = this.questions[this.activeTabIndex];
+    const maxFocusIndex = isSubmitTab
+      ? 1
+      : (this.canShowCustomInputForQuestion(q) ? q.options.length : q.options.length - 1);
+
+    if (this.handleNavigationKey(e, maxFocusIndex)) return;
+
+    if (isSubmitTab) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.focusedItemIndex === 0) this.handleSubmit();
+        else this.handleResolve(null);
+      }
+      return;
+    }
+
+    // Question tab: ArrowRight and Enter
+    switch (e.key) {
+      case 'ArrowRight':
+        e.preventDefault();
+        e.stopPropagation();
+        this.switchTab(this.activeTabIndex + 1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.focusedItemIndex < q.options.length) {
+          this.selectOption(this.activeTabIndex, q.options[this.focusedItemIndex]);
+        } else if (this.canShowCustomInputForQuestion(q)) {
+          this.isInputFocused = true;
+          const customRow = this.currentItems[this.focusedItemIndex];
+          const input = customRow?.querySelector('.typorai-ask-custom-text') as HTMLInputElement;
+          input?.focus();
+        }
+        break;
+    }
+  }
+
+  private handleSubmit(): void {
+    const allAnswered = this.questions.every((_, i) => this.isQuestionAnswered(i));
+    if (!allAnswered) return;
+
+    const result: Record<string, string | string[]> = {};
+    for (let i = 0; i < this.questions.length; i++) {
+      const question = this.questions[i];
+      const key = question.id ?? question.question;
+      const selectedValues = [...this.answers.get(i)!];
+      const customInput = this.customInputs.get(i)!.trim();
+
+      if (question.multiSelect) {
+        const answers = [...selectedValues];
+        if (customInput) {
+          answers.push(customInput);
+        }
+        result[key] = answers;
+        continue;
+      }
+
+      result[key] = customInput || selectedValues[0] || '';
+    }
+    this.handleResolve(result);
+  }
+
+  private canShowCustomInputForQuestion(question: AskUserQuestionItem): boolean {
+    return this.config.showCustomInput && question.isOther === true;
+  }
+
+  private getOptionValue(option: AskUserQuestionOption): string {
+    return option.value ?? option.label;
+  }
+
+  private getSelectedLabels(idx: number): string[] {
+    const selected = this.answers.get(idx)!;
+    const question = this.questions[idx];
+    return question.options
+      .filter(option => selected.has(this.getOptionValue(option)))
+      .map(option => option.label);
+  }
+
+  private handleResolve(result: Record<string, string | string[]> | null): void {
+    if (!this.resolved) {
+      this.resolved = true;
+      this.rootEl?.removeEventListener('keydown', this.boundKeyDown);
+      if (this.signal && this.abortHandler) {
+        this.signal.removeEventListener('abort', this.abortHandler);
+        this.abortHandler = null;
+      }
+      this.rootEl?.remove();
+      this.resolveCallback(result);
+    }
+  }
+}

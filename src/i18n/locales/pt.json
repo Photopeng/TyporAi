@@ -1,0 +1,1386 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "remove": "Remover",
+    "clear": "Limpar",
+    "clearAll": "Limpar tudo",
+    "loading": "Carregando",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "confirm": "Confirmar",
+    "settings": "Configura莽玫es",
+    "advanced": "Avan莽ado",
+    "enabled": "Ativado",
+    "disabled": "Desativado",
+    "platform": "Plataforma",
+    "refresh": "Atualizar",
+    "rewind": "Retroceder",
+    "unknown": "Desconhecido",
+    "typorai": "TyporAi",
+    "close": "Fechar"
+  },
+  "chat": {
+    "rewind": {
+      "confirmMessage": "Retroceder at茅 este ponto? As altera莽玫es de arquivos ap贸s esta mensagem ser茫o revertidas. O retrocesso n茫o afeta arquivos editados manualmente ou via bash.",
+      "confirmMessageConversationOnly": "Retroceder a conversa at茅 este ponto? As altera莽玫es de arquivos ser茫o mantidas.",
+      "confirmButton": "Retroceder",
+      "ariaLabel": "Retroceder at茅 aqui",
+      "menuConversationOnly": "Retroceder somente conversa",
+      "menuCodeAndConversation": "Retroceder c贸digo + conversa",
+      "notice": "Retrocedido: {count} arquivo(s) revertido(s)",
+      "noticeConversationOnly": "Conversa retrocedida; altera莽玫es de arquivos mantidas",
+      "noticeSaveFailed": "Retrocedido: {count} arquivo(s) revertido(s), mas n茫o foi poss铆vel salvar o estado: {error}",
+      "noticeConversationOnlySaveFailed": "Conversa retrocedida, mas n茫o foi poss铆vel salvar o estado: {error}",
+      "failed": "Falha ao retroceder: {error}",
+      "cannot": "N茫o 茅 poss铆vel retroceder: {error}",
+      "unavailableStreaming": "N茫o 茅 poss铆vel retroceder durante a transmiss茫o",
+      "unavailableNoUuid": "N茫o 茅 poss铆vel retroceder: identificadores de mensagem ausentes"
+    },
+    "fork": {
+      "ariaLabel": "Bifurcar conversa",
+      "chooseTarget": "Bifurcar conversa",
+      "targetNewTab": "Nova aba",
+      "targetCurrentTab": "Aba atual",
+      "maxTabsReached": "N茫o 茅 poss铆vel bifurcar: m谩ximo de {count} abas atingido",
+      "notice": "Bifurcado para nova aba",
+      "noticeCurrentTab": "Bifurcado na aba atual",
+      "failed": "Falha ao bifurcar: {error}",
+      "unavailableStreaming": "N茫o 茅 poss铆vel bifurcar durante a transmiss茫o",
+      "unavailableNoUuid": "N茫o 茅 poss铆vel bifurcar: identificadores de mensagem ausentes",
+      "unavailableNoResponse": "N茫o 茅 poss铆vel bifurcar: nenhuma resposta para bifurcar",
+      "errorMessageNotFound": "Mensagem n茫o encontrada",
+      "errorNoSession": "Nenhum ID de sess茫o dispon铆vel",
+      "errorNoActiveTab": "Nenhuma aba ativa",
+      "commandNoMessages": "N茫o 茅 poss铆vel bifurcar: n茫o h谩 mensagens na conversa",
+      "commandNoAssistantUuid": "N茫o 茅 poss铆vel bifurcar: n茫o h谩 resposta do assistente com identificadores",
+      "notSupported": "Fork n茫o 茅 compat铆vel com este provedor.",
+      "notAvailable": "Garfo n茫o dispon铆vel."
+    },
+    "bangBash": {
+      "placeholder": "> Executar um comando bash...",
+      "commandPanel": "Painel de comandos",
+      "copyAriaLabel": "Copiar a sa铆da do comando mais recente",
+      "clearAriaLabel": "Limpar a sa铆da do bash",
+      "commandLabel": "{command}",
+      "statusLabel": "Estado: {status}",
+      "collapseOutput": "Recolher a sa铆da do comando",
+      "expandOutput": "Expandir a sa铆da do comando",
+      "running": "Executando...",
+      "copyFailed": "Falha ao copiar para a 谩rea de transfer锚ncia",
+      "commandFailed": "O comando falhou: {error}"
+    },
+    "toolbar": {
+      "safeLabel": "SAFE",
+      "yoloLabel": "YOLO",
+      "safeTooltip": "SAFE está ativo: todas as alterações da IA no documento atual são bloqueadas.",
+      "yoloTooltip": "YOLO está ativo: a IA pode modificar o documento atual por instruções do chat.",
+      "planMode": "PLANO",
+      "planModeTooltip": "Modo de plano: a IA pode analisar, mas não pode modificar o documento atual.",
+      "mcpClickToEnable": "Servidores MCP (clique para ativar)",
+      "unknownModel": "Desconhecido",
+      "addExternalContext": "Adicionar contextos externos (clique)",
+      "mcpServers": "Servidores MCP",
+      "noMcpServers": "Nenhum servidor MCP configurado",
+      "allMcpDisabled": "Todos os servidores MCP desativados",
+      "thinking": "Pensamento:",
+      "failedChangeModel": "Falha ao alterar o modelo",
+      "failedChangeMode": "Falha ao alterar o modo",
+      "failedChangeEffort": "Falha ao alterar o n铆vel de esfor莽o",
+      "failedChangeThinking": "Falha ao alterar o or莽amento de pensamento",
+      "failedChangePermission": "Falha ao alterar o modo de permiss茫o",
+      "failedChangeServiceTier": "Falha ao alterar o n铆vel de servi莽o",
+      "toggleFastMode": "Ativar/desativar modo r谩pido",
+      "mcpEnabled": "{count} MCP servidor{plural} ativado (clique para gerenciar)",
+      "contextSavingHint": "Economia de contexto: tamb茅m pode ser ativado via @{name}",
+      "cursorFlow": "Fluxo do cursor",
+      "cursorFlowTooltip": "Quando ativado, o cursor vai automaticamente para o campo de entrada após selecionar texto.",
+      "cursorFlowAriaLabel": "Quando ativado, o cursor vai automaticamente para o campo de entrada após selecionar texto."
+    },
+    "nav": {
+      "tocTitle": "脥ndice",
+      "noPrompts": "Ainda n茫o h谩 avisos",
+      "moreFiles": "+{count} outros",
+      "awaitingResponse": "Aguardando uma resposta…",
+      "jumpToMessage": "Ir para a mensagem {index}: {title}",
+      "messageRail": "Navegação de mensagens",
+      "untitledMessage": "Mensagem sem título"
+    },
+    "tab": {
+      "cannotSwitchProvider": "N茫o 茅 poss铆vel trocar de provedor em uma sess茫o vinculada. Em vez disso, inicie uma nova guia."
+    },
+    "input": {
+      "placeholder": "Como posso te ajudar hoje?",
+      "sendFailed": "Falha ao enviar mensagem",
+      "cancelFailed": "Falha ao cancelar a resposta",
+      "initFailed": "Falha ao inicializar o servi莽o de chat",
+      "renameFailed": "Falha ao renomear a conversa",
+      "resumeNoConversations": "N茫o h谩 conversas para retomar",
+      "steering": "Dire莽茫o...",
+      "steerNow": "Dirija agora",
+      "editQueued": "Editar mensagem na fila",
+      "discardQueued": "Descartar mensagem na fila",
+      "compacting": "Compactando...",
+      "planApproved": "O usu谩rio aprovou o plano e iniciou uma nova sess茫o.",
+      "planImplement": "Implemente o plano.",
+      "steerFailed": "Falha ao direcionar a mensagem do Codex na fila. Ainda est谩 dispon铆vel.",
+      "customSystemPromptAdded": "Instru莽茫o adicionada ao prompt personalizado do sistema",
+      "processingFailed": "Falha ao processar a resposta",
+      "refineFailed": "Falha ao refinar a instru莽茫o",
+      "noInstruction": "Nenhuma instru莽茫o recebida",
+      "agentInitFailed": "Falha ao inicializar o servi莽o do agente. Por favor, tente novamente.",
+      "agentNotAvailable": "Servi莽o de agente n茫o dispon铆vel. Por favor, recarregue o plugin.",
+      "providerUnavailable": "{provider} est谩 desativado ou n茫o configurado. Ative e configure-o nas configura莽玫es antes de conversar.",
+      "queuedPrefix": "Na fila:",
+      "errorWithMessage": "Erro: {error}",
+      "detachedInput": "A área de entrada não está disponível.",
+      "approvalAgent": "Agente: {agent}",
+      "commandUnsupported": "O provedor atual não oferece suporte a /{command}.",
+      "unknownCommand": "Comando desconhecido: {command}",
+      "openConversationFailed": "Não foi possível abrir a conversa: {error}"
+    },
+    "permission": {
+      "title": "Permiss茫o necess谩ria",
+      "question": "Permitir esta a莽茫o?",
+      "deny": "Negar",
+      "allowOnce": "Permitir uma vez",
+      "alwaysAllow": "Sempre permitir"
+    },
+    "approve": {
+      "approve": "Aprovar",
+      "reject": "Rejeitar"
+    },
+    "slashCommand": {
+      "noMatchingCommands": "Nenhum comando correspondente"
+    },
+    "imageAttachments": {
+      "unsupportedByProvider": "Anexos de imagem n茫o s茫o suportados por este provedor.",
+      "exceedsLimit": "A imagem excede o limite de {size}.",
+      "unsupportedType": "Tipo de imagem n茫o compat铆vel.",
+      "attachFailed": "Falha ao anexar imagem.",
+      "dropHere": "Soltar imagem aqui",
+      "remove": "Remover imagem",
+      "fileNotFound": "Arquivo não encontrado",
+      "permissionDenied": "Permissão negada"
+    },
+    "tabs": {
+      "switchFailed": "Falha ao mudar de guia",
+      "closeFailed": "Falha ao fechar guia",
+      "maxReached": "Máximo de {count} abas permitidas",
+      "createFailed": "Não foi possível criar a guia",
+      "newConversationFailed": "Não foi possível criar a conversa",
+      "historyToggleFailed": "Não foi possível alternar o histórico"
+    },
+    "forkUnsupported": "Fork n茫o 茅 compat铆vel com este provedor.",
+    "forkUnavailable": "Garfo n茫o dispon铆vel.",
+    "actions": {
+      "newTab": "Nova aba",
+      "newConversation": "Nova conversa",
+      "history": "Hist贸rico do chat"
+    },
+    "resume": {
+      "title": "Retomar conversa",
+      "empty": "Sem conversas",
+      "current": "Sessão atual"
+    },
+    "fileContext": {
+      "openNotFound": "Não foi possível abrir o arquivo: {path}",
+      "openFailed": "Falha ao abrir o arquivo: {error}"
+    }
+  },
+  "settings": {
+    "title": "Configura莽玫es do TyporAi",
+    "tabs": {
+      "general": "Geral",
+      "claude": "Claude",
+      "codex": "Codex"
+    },
+    "display": "Exibi莽茫o",
+    "conversations": "Conversas",
+    "content": "Conte煤do",
+    "input": "Entrada",
+    "setup": "Configura莽茫o",
+    "models": "Modelos",
+    "experimental": "Recursos experimentais",
+    "userName": {
+      "name": "Como o TyporAi deve cham谩-lo?",
+      "desc": "Seu nome para sauda莽玫es personalizadas (deixe vazio para sauda莽玫es gen茅ricas)"
+    },
+    "excludedTags": {
+      "name": "Tags exclu铆das",
+      "desc": "Notas com estas tags n茫o ser茫o carregadas automaticamente como contexto (uma por linha, sem #)",
+      "placeholder": "Sistema\nprivado\nrascunho"
+    },
+    "mediaFolder": {
+      "name": "Pasta de m铆dia",
+      "desc": "Pasta contendo anexos/imagens. Quando notas usam ![[image.jpg]], Claude procurar谩 aqui. Deixe vazio para a raiz do reposit贸rio.",
+      "placeholder": "Anexos"
+    },
+    "systemPrompt": {
+      "name": "Prompt de sistema personalizado",
+      "desc": "Instru莽玫es adicionais anexadas ao prompt de sistema padr茫o"
+    },
+    "autoTitle": {
+      "name": "Gerar automaticamente t铆tulos de conversa",
+      "desc": "Gera automaticamente t铆tulos de conversa ap贸s a primeira mensagem do usu谩rio."
+    },
+    "titleModel": {
+      "name": "Modelo de gera莽茫o de t铆tulo",
+      "desc": "Modelo usado para gerar automaticamente t铆tulos de conversa.",
+      "auto": "Autom谩tico (Haiku)"
+    },
+    "navMappings": {
+      "name": "Mapeamentos de navega莽茫o estilo Vim",
+      "desc": "Um mapeamento por linha. Formato: \"map <tecla> <a莽茫o>\" (a莽玫es: scrollUp, scrollDown, focusInput).",
+      "placeholder": "Mapa com rolagem para cima\nrolagem do mapa\nmapa eu focoinput"
+    },
+    "requireCommandOrControlEnterToSend": {
+      "name": "Exigir Command/Ctrl+Enter para enviar",
+      "desc": "Quando ativado, Enter insere uma quebra de linha. Command+Enter envia no macOS; Ctrl+Enter envia no Windows e Linux."
+    },
+    "hotkeys": "Atalhos",
+    "inlineEditHotkey": {
+      "name": "Edi莽茫o em linha",
+      "descWithKey": "Atalho atual: {hotkey}",
+      "descNoKey": "Nenhum atalho definido",
+      "btnChange": "Alterar",
+      "btnSet": "Definir"
+    },
+    "openChatHotkey": {
+      "name": "Abrir chat",
+      "descWithKey": "Atalho atual: {hotkey}",
+      "descNoKey": "Nenhum atalho definido",
+      "btnChange": "Alterar",
+      "btnSet": "Definir"
+    },
+    "newSessionHotkey": {
+      "name": "Nova sess茫o",
+      "descWithKey": "Atalho atual: {hotkey}",
+      "descNoKey": "Nenhum atalho definido",
+      "btnChange": "Alterar",
+      "btnSet": "Definir"
+    },
+    "newTabHotkey": {
+      "name": "Nova aba",
+      "descWithKey": "Atalho atual: {hotkey}",
+      "descNoKey": "Nenhum atalho definido",
+      "btnChange": "Alterar",
+      "btnSet": "Definir"
+    },
+    "closeTabHotkey": {
+      "name": "Fechar aba",
+      "descWithKey": "Atalho atual: {hotkey}",
+      "descNoKey": "Nenhum atalho definido",
+      "btnChange": "Alterar",
+      "btnSet": "Definir"
+    },
+    "slashCommands": {
+      "name": "Comandos e habilidades",
+      "desc": "Gerencie comandos e habilidades a n铆vel de vault armazenados em .claude/commands/ e .claude/skills/. Acionados por /nome."
+    },
+    "hiddenSlashCommands": {
+      "name": "Comandos e habilidades ocultos",
+      "desc": "Oculta comandos e habilidades espec铆ficos do menu suspenso. 脷til para ocultar entradas do Claude Code que n茫o s茫o relevantes para o TyporAi. Digite os nomes sem a barra inicial, um por linha.",
+      "placeholder": "comprometer\nconstruir\ntestar"
+    },
+    "mcpServers": {
+      "name": "Servidores MCP",
+      "desc": "Gerencie configura莽玫es de servidores MCP a n铆vel de vault armazenadas em .claude/mcp.json. Servidores com modo de salvamento de contexto exigem @mention para ativar."
+    },
+    "plugins": {
+      "name": "Plugins do Claude Code",
+      "desc": "Gerencie plugins do Claude Code descobertos em ~/.claude/plugins. Plugins ativados s茫o armazenados por vault em .claude/settings.json."
+    },
+    "subagents": {
+      "name": "Subagentes",
+      "desc": "Gerencie subagentes a n铆vel de vault armazenados em .claude/agents/. Cada arquivo Markdown define um agente personalizado.",
+      "noAgents": "Nenhum subagente configurado. Clique em + para criar um.",
+      "deleteConfirm": "Excluir o subagente \"{name}\"?",
+      "saveFailed": "Falha ao salvar o subagente: {message}",
+      "refreshFailed": "Falha ao atualizar subagentes: {message}",
+      "deleteFailed": "Falha ao excluir o subagente: {message}",
+      "renameCleanupFailed": "Aviso: n茫o foi poss铆vel remover o arquivo antigo de \"{name}\"",
+      "created": "Subagente \"{name}\" criado",
+      "updated": "Subagente \"{name}\" atualizado",
+      "deleted": "Subagente \"{name}\" exclu铆do",
+      "duplicateName": "J谩 existe um agente chamado \"{name}\"",
+      "descriptionRequired": "A descri莽茫o 茅 obrigat贸ria",
+      "promptRequired": "O prompt do sistema 茅 obrigat贸rio",
+      "modal": {
+        "titleEdit": "Editar subagente",
+        "titleAdd": "Adicionar subagente",
+        "name": "Nome",
+        "nameDesc": "Use apenas letras min煤sculas, n煤meros e h铆fens",
+        "namePlaceholder": "revisor de c贸digo",
+        "description": "Descri莽茫o",
+        "descriptionDesc": "Breve descri莽茫o deste agente",
+        "descriptionPlaceholder": "Revisa c贸digo em busca de bugs e estilo",
+        "advancedOptions": "Op莽玫es avan莽adas",
+        "model": "Modelo",
+        "modelDesc": "Substituir o modelo deste agente",
+        "tools": "Ferramentas",
+        "toolsDesc": "Lista de ferramentas permitidas separadas por v铆rgula (vazio = todas)",
+        "disallowedTools": "Ferramentas n茫o permitidas",
+        "disallowedToolsDesc": "Lista de ferramentas a desativar separadas por v铆rgula",
+        "skills": "Habilidades",
+        "skillsDesc": "Lista de habilidades separadas por v铆rgula",
+        "prompt": "Prompt do sistema",
+        "promptDesc": "Instru莽玫es para o agente",
+        "promptPlaceholder": "Voc锚 茅 um revisor de c贸digo. Analise o c贸digo fornecido para..."
+      },
+      "loadFailed": "Falha ao carregar o subagente \"{name}\": {message}",
+      "modelOptions": {
+        "inherit": "Herdar",
+        "sonnet": "Soneto",
+        "opus": "obra",
+        "haiku": "Haiku"
+      }
+    },
+    "safety": "Seguran莽a",
+    "loadUserSettings": {
+      "name": "Carregar configura莽玫es do usu谩rio Claude",
+      "desc": "Carrega ~/.claude/settings.json. Quando habilitado, as regras de permiss茫o do usu谩rio podem ignorar o modo seguro."
+    },
+    "claudeSafeMode": {
+      "name": "Modo de seguran莽a",
+      "desc": "Modo de permiss茫o usado quando a altern芒ncia Segura est谩 ativa."
+    },
+    "codexSafeMode": {
+      "name": "Modo de seguran莽a",
+      "desc": "Modo sandbox usado quando a altern芒ncia Safe est谩 ativa."
+    },
+    "environment": "Ambiente",
+    "customVariables": {
+      "name": "Vari谩veis personalizadas",
+      "desc": "Vari谩veis de ambiente para Claude SDK (formato KEY=VALUE, uma por linha). Prefixo export suportado."
+    },
+    "envSnippets": {
+      "name": "Trechos",
+      "addBtn": "Adicionar snippet",
+      "noSnippets": "Nenhum snippet de ambiente salvo. Clique em + para salvar sua configura莽茫o atual.",
+      "nameRequired": "Por favor, insira um nome para o snippet",
+      "modal": {
+        "titleEdit": "Editar snippet",
+        "titleSave": "Salvar snippet",
+        "name": "Nome",
+        "namePlaceholder": "Um nome descritivo para esta configura莽茫o",
+        "description": "Descri莽茫o",
+        "descPlaceholder": "Descri莽茫o opcional",
+        "envVars": "Vari谩veis de ambiente",
+        "envVarsPlaceholder": "Formato KEY=VALUE, uma por linha (prefixo export suportado)",
+        "save": "Salvar",
+        "update": "Atualizar",
+        "cancel": "Cancelar"
+      },
+      "insertFailed": "Falha ao inserir o snippet",
+      "deleteFailed": "Falha ao excluir o snippet",
+      "deleteConfirm": "Excluir o snippet de ambiente \"{name}\"?",
+      "saved": "Snippet de ambiente \"{name}\" salvo",
+      "updated": "Snippet de ambiente \"{name}\" atualizado",
+      "deleted": "Snippet de ambiente \"{name}\" exclu铆do",
+      "insertAria": "Inserir trecho",
+      "aliasAria": "Alias 鈥嬧€媝ara {modelId}",
+      "aliasTitle": "Etiqueta personalizada mostrada no seletor de modelo. Deixe em branco para usar o padr茫o.",
+      "contextWindowAria": "Janela de contexto para {modelId}",
+      "contextWindowPlaceholder": "200 mil"
+    },
+    "customModelOverrides": {
+      "name": "Substitui莽玫es de modelos personalizados",
+      "desc": "Defina aliases no seletor de modelos e tamanhos de janela de contexto para modelos personalizados."
+    },
+    "customModelAliases": {
+      "placeholder": "Alias",
+      "ariaLabel": "Alias 鈥嬧€媝ara {modelId}",
+      "aliasTitle": "Etiqueta personalizada mostrada no seletor de modelo. Deixe em branco para usar o padr茫o."
+    },
+    "customContextLimits": {
+      "name": "Limites de contexto personalizados",
+      "desc": "Defina tamanhos de janela de contexto para seus modelos personalizados. Deixe vazio para usar o padr茫o (200k tokens).",
+      "invalid": "Formato inv谩lido. Use: 256k, 1m ou n煤mero exato (1000-10000000).",
+      "ariaLabel": "Janela de contexto para {modelId}"
+    },
+    "enableOpus1M": {
+      "name": "Janela de contexto Opus 1M",
+      "desc": "Mostrar Opus 1M no seletor de modelos. Inclu铆do nos planos Max, Team e Enterprise. Usu谩rios de API e Pro precisam de uso adicional."
+    },
+    "enableSonnet1M": {
+      "name": "Janela de contexto Sonnet 1M",
+      "desc": "Mostrar Sonnet 1M no seletor de modelos. Requer uso adicional nos planos Max, Team e Enterprise. Usu谩rios de API e Pro precisam de uso adicional."
+    },
+    "customModels": {
+      "name": "Modelos personalizados",
+      "desc": "Anexe IDs de modelo Claude adicionais ao seletor, um por linha. As substitui莽玫es do modelo de ambiente ainda substituem o seletor.",
+      "placeholder": "claude-opus-4-6\nclaude-opus-4-6[1m]\nclaude-opus-4-5-20251101"
+    },
+    "enableChrome": {
+      "name": "Habilitar extens茫o do Chrome",
+      "desc": "Permitir que o Claude interaja com o Chrome atrav茅s da extens茫o claude-in-chrome. Requer que a extens茫o esteja instalada. Requer rein铆cio de sess茫o."
+    },
+    "enableBangBash": {
+      "name": "Ativar modo bash (!)",
+      "desc": "Digite ! com a entrada vazia para entrar no modo bash. Executa comandos diretamente via Node.js child_process. Requer reabrir a visualiza莽茫o.",
+      "validation": {
+        "noNode": "Node.js n茫o encontrado no PATH. Instale o Node.js ou verifique a configura莽茫o do PATH."
+      }
+    },
+    "maxTabs": {
+      "name": "M谩ximo de abas de chat",
+      "desc": "N煤mero m谩ximo de abas de chat simult芒neas (3-10). Cada aba usa uma sess茫o Claude separada.",
+      "warning": "Mais de 5 abas pode afetar o desempenho e o uso de mem贸ria."
+    },
+    "enableAutoScroll": {
+      "name": "Rolagem autom谩tica durante streaming",
+      "desc": "Rolar automaticamente para baixo enquanto o Claude transmite respostas. Desativar para ficar no topo e ler desde o in铆cio."
+    },
+    "deferMathRenderingDuringStreaming": {
+      "name": "Adiar renderiza莽茫o matem谩tica durante streaming",
+      "desc": "Mostrar LaTeX bruto enquanto a resposta 茅 transmitida e renderizar a matem谩tica uma vez quando cada bloco de texto terminar."
+    },
+    "expandFileEditsByDefault": {
+      "name": "Expandir edi莽玫es de arquivo por padr茫o",
+      "desc": "Mostrar os diffs de Write e Edit expandidos quando aparecerem pela primeira vez."
+    },
+    "chatViewPlacement": {
+      "name": "Abrir TyporAi em",
+      "desc": "Escolha onde o painel de chat abre quando 茅 criado",
+      "rightSidebar": "Barra lateral direita",
+      "leftSidebar": "Barra lateral esquerda",
+      "mainTab": "Aba do editor principal"
+    },
+    "cliPath": {
+      "name": "Caminho CLI Claude",
+      "desc": "Caminho personalizado para Claude Code CLI. Deixe vazio para detec莽茫o autom谩tica.",
+      "descWindows": "Para o instalador nativo, use claude.exe. Para instala莽玫es com npm/pnpm/yarn ou outros gerenciadores de pacotes, use o caminho cli-wrapper.cjs (n茫o claude.cmd).",
+      "descUnix": "Cole a sa铆da de \"which claude\" 鈥?funciona tanto para instala莽玫es nativas quanto npm/pnpm/yarn.",
+      "validation": {
+        "notExist": "Caminho n茫o existe",
+        "isDirectory": "Caminho 茅 um diret贸rio, n茫o um arquivo"
+      }
+    },
+    "language": {
+      "name": "Idioma",
+      "desc": "Alterar o idioma de exibi莽茫o da interface do plugin"
+    },
+    "claude": {
+      "enableProvider": {
+        "name": "Ativar provedor Claude",
+        "desc": "Quando ativado, modelos Claude aparecem em novas conversas. Ativar Claude desativa Codex e OpenCode."
+      },
+      "plugins": {
+        "header": "Plug-ins de c贸digo Claude",
+        "refreshAria": "Atualizar plug-ins",
+        "empty": "No Claude Code plugins discovered.",
+        "project": "Project",
+        "user": "User",
+        "disableAria": "Desativar plug-in",
+        "enableAria": "Habilitar plug-in",
+        "refreshFailed": "Falha ao atualizar plug-ins: {message}",
+        "toggleFailed": "Falha ao alternar o plugin: {message}",
+        "togglePartiallyFailed": "Plugin alternado, mas algumas guias n茫o foram reiniciadas.",
+        "noticeToggledDisabled": "Plug-in \"{id}\" desativado",
+        "noticeToggledEnabled": "Plug-in \"{id}\" ativado",
+        "noticeRefreshed": "Lista de plug-ins atualizada"
+      },
+      "slashCommands": {
+        "type": {
+          "name": "Tipo",
+          "desc": "Escolha se esta entrada 茅 um comando de barra ou uma habilidade.",
+          "skillLabel": "Habilidade",
+          "commandLabel": "Comando",
+          "commandOption": "Comando",
+          "skillOption": "Habilidade"
+        },
+        "name": {
+          "name": "Nome",
+          "desc": "Apenas letras min煤sculas, n煤meros e hifens.",
+          "placeholder": "revis茫o-pr"
+        },
+        "description": {
+          "name": "Descri莽茫o",
+          "desc": "Breve descri莽茫o mostrada na lista de comandos de barra."
+        },
+        "argumentHint": {
+          "name": "Dica de argumento",
+          "desc": "Texto de espa莽o reservado para argumentos (por exemplo, \"[arquivo] [foco]\")"
+        },
+        "modelOverride": {
+          "name": "Substitui莽茫o de modelo",
+          "desc": "Modelo opcional a ser usado para este comando.",
+          "placeholder": "Claude-soneto-4-5"
+        },
+        "allowedTools": {
+          "name": "Ferramentas permitidas",
+          "desc": "Lista separada por v铆rgulas de ferramentas a serem permitidas (vazia = todas)."
+        },
+        "disableModelInvocation": {
+          "name": "Desabilitar invoca莽茫o de modelo",
+          "desc": "Evite que o pr贸prio modelo invoque este comando."
+        },
+        "disableUserInvocation": {
+          "name": "Desabilitar invoca莽茫o de usu谩rio",
+          "desc": "Impedir que o usu谩rio invoque esta habilidade diretamente."
+        },
+        "context": {
+          "name": "Contexto",
+          "desc": "Execute em um subagente (fork)."
+        },
+        "agent": {
+          "name": "Agente",
+          "desc": "Tipo de subagente quando o contexto 茅 fork.",
+          "placeholder": "Revisor de c贸digo"
+        },
+        "prompt": {
+          "name": "Modelo de prompt",
+          "desc": "Use $ARGUMENTS, $1, $2, @arquivo, !`bash`."
+        },
+        "promptPlaceholder": "Revise este c贸digo para:\n$ARGUMENTS\n\n@$1",
+        "advancedOptions": "Op莽玫es avan莽adas",
+        "promptRequired": "O modelo de prompt 茅 obrigat贸rio",
+        "duplicateName": "Um comando chamado \"/{name}\" j谩 existe",
+        "saveFailed": "Falha ao salvar o comando de barra",
+        "saveFailedSkill": "Falha ao salvar habilidade",
+        "saveFailedCommand": "Falha ao salvar o comando de barra",
+        "deleteFailedSkill": "Falha ao excluir habilidade",
+        "deleteFailedCommand": "Falha ao excluir o comando de barra",
+        "convertToSkillAria": "Converter em habilidade",
+        "convertFailed": "Falha ao converter para habilidade",
+        "converted": "\"/{name}\" convertido em habilidade",
+        "skillBadge": "habilidade",
+        "skillLabel": "Habilidade",
+        "slashCommandLabel": "Comando de barra",
+        "created": "criado",
+        "updated": "atualizado",
+        "deleted": "exclu铆do",
+        "unavailable": "O cat谩logo de comandos Claude n茫o est谩 dispon铆vel.",
+        "emptyCatalog": "Nenhum comando ou habilidade encontrada.",
+        "emptyNone": "Nenhum comando ou habilidade ainda. Clique em + para adicionar um.",
+        "learnMore": "Saber mais",
+        "duplicateSkillName": "Uma habilidade chamada \"/{name}\" j谩 existe",
+        "saveFailedWithLabel": "Falha ao salvar {label}",
+        "deleteFailedWithLabel": "Falha ao excluir {label}",
+        "noticeCreated": "{label} \"/{name}\" criado",
+        "noticeUpdated": "{label} \"/{name}\" atualizado",
+        "noticeDeleted": "{label} \"/{name}\" exclu铆do"
+      },
+      "customVariables": {
+        "desc": "Somente vari谩veis 鈥嬧€媎e tempo de execu莽茫o de propriedade de Claude. Use isto para altern芒ncias espec铆ficas de ANTHROPIC_* e Claude.",
+        "placeholder": "ANTHROPIC_API_KEY=your-key\nANTHROPIC_BASE_URL=https://api.example.com\nANTHROPIC_MODEL=custom-model\nCLAUDE_CODE_USE_BEDROCK=1"
+      }
+    },
+    "codex": {
+      "enable": {
+        "name": "Habilitar provedor Codex",
+        "desc": "Quando ativado, os modelos Codex aparecem no seletor de modelos para novas conversas. As sess玫es existentes do Codex s茫o preservadas."
+      },
+      "installationMethod": {
+        "name": "M茅todo de instala莽茫o",
+        "desc": "Como TyporAi deve lan莽ar o Codex no Windows. O Windows nativo usa um caminho execut谩vel do Windows. WSL inicia a CLI do Linux dentro de uma distribui莽茫o selecionada.",
+        "nativeWindows": "Windows nativo",
+        "wsl": "WSL"
+      },
+      "cliPath": {
+        "name": "Caminho CLI do Codex",
+        "desc": "Caminho personalizado para a CLI do Codex.",
+        "placeholder": "Caminho para o execut谩vel do codex",
+        "descNative": "Caminho personalizado para a CLI local do Codex. Deixe em branco para detec莽茫o autom谩tica do PATH.",
+        "descWsl": "Comando Codex do lado Linux ou caminho absoluto para executar dentro do WSL. Deixe em branco para pesquisa PATH dentro da distro selecionada.",
+        "descWindows": "Caminho personalizado para o Codex local CLI. Deixe em branco para detec莽茫o autom谩tica de PATH. Use o caminho execut谩vel nativo do Windows, geralmente `codex.exe`.",
+        "placeholderNative": "/usr/local/bin/codex",
+        "placeholderWsl": "c贸dice",
+        "placeholderWindows": "C:\\Users\\you\\AppData\\Roaming\\npm\\codex.exe",
+        "wslModeError": "O modo WSL espera um comando Linux ou caminho absoluto do Linux, n茫o um caminho execut谩vel do Windows."
+      },
+      "wslDistro": {
+        "name": "Substitui莽茫o da distribui莽茫o WSL",
+        "desc": "Substitui莽茫o avan莽ada opcional. Deixe em branco para inferir a distribui莽茫o a partir de um caminho de espa莽o de trabalho WSL quando poss铆vel; caso contr谩rio, use a distribui莽茫o WSL padr茫o.",
+        "placeholder": "Ubuntu"
+      },
+      "reasoningSummary": {
+        "name": "Resumo do racioc铆nio",
+        "desc": "Mostre um resumo do processo de racioc铆nio do modelo no bloco de pensamento.",
+        "auto": "Automatico",
+        "concise": "Conciso",
+        "detailed": "Detalhado",
+        "none": "Nenhum"
+      },
+      "skills": {
+        "heading": "Habilidades do Codex",
+        "desc": "Gerencie habilidades do Codex no n铆vel do cofre armazenadas em .codex/skills/ ou .agents/skills/. As habilidades de n铆vel dom茅stico est茫o exclu铆das aqui.",
+        "label": "Habilidades do C贸dice",
+        "empty": "Nenhuma habilidade Codex no cofre. Clique em + para criar um.",
+        "skillBadge": "habilidade",
+        "deletedNotice": "Codex skill \"${name}\" deleted",
+        "createdNotice": "Codex skill \"${name}\" created",
+        "updatedNotice": "Codex skill \"${name}\" updated",
+        "saveFailed": "Falha ao salvar a habilidade Codex",
+        "deleteFailed": "Falha ao excluir a habilidade Codex",
+        "instructionsRequired": "S茫o necess谩rias instru莽玫es"
+      },
+      "hiddenSkills": {
+        "name": "Habilidades ocultas",
+        "desc": "Oculte habilidades espec铆ficas do Codex no menu suspenso. Insira os nomes das habilidades sem o $ inicial, um por linha.",
+        "placeholder": "analisar\nexplicar\nconsertar"
+      },
+      "subagents": {
+        "heading": "Subagentes do Codex",
+        "desc": "Gerencie subagentes Codex no n铆vel do cofre armazenados em .codex/agents/. Cada arquivo TOML define um agente personalizado.",
+        "label": "Subagentes do Codex",
+        "empty": "Nenhum subagente do Codex no cofre. Clique em + para criar um."
+      },
+      "safeMode": {
+        "workspaceWrite": "Grava莽茫o no espa莽o de trabalho",
+        "readOnly": "Somente leitura"
+      },
+      "env": {
+        "name": "Vari谩veis 鈥嬧€媝ersonalizadas",
+        "desc": "Vari谩veis 鈥嬧€媎e ambiente para Codex (formato KEY=VALUE, uma por linha). Prefixo de exporta莽茫o de shell suportado.",
+        "placeholder": "OPENAI_API_KEY=your-key\nOPENAI_BASE_URL=https://api.openai.com/v1"
+      },
+      "mcp": {
+        "notice": "Codex gerencia servidores MCP por meio de sua pr贸pria CLI. Configure com `codex mcp` e eles estar茫o dispon铆veis em TyporAi.",
+        "learnMore": "Saber mais"
+      },
+      "customModels": {
+        "placeholder": "gpt-5.4\ngpt-5.3-codex-spark"
+      },
+      "skillModal": {
+        "titleAdd": "Adicionar habilidade Codex",
+        "titleEdit": "Editar habilidade do Codex",
+        "directory": {
+          "name": "Diret贸rio",
+          "desc": "Onde armazenar a habilidade"
+        },
+        "name": {
+          "name": "Nome da habilidade",
+          "desc": "O nome usado depois de $ (por exemplo, \"analyze\" para $analyze)",
+          "placeholder": "C贸digo de an谩lise"
+        },
+        "description": {
+          "name": "Descri莽茫o",
+          "desc": "Descri莽茫o opcional mostrada no menu suspenso"
+        },
+        "instructions": {
+          "name": "Instru莽玫es",
+          "desc": "As instru莽玫es de habilidade (conte煤do SKILL.md)",
+          "placeholder": "Analise o c贸digo para..."
+        }
+      },
+      "subagentModal": {
+        "titleAdd": "Adicionar subagente Codex",
+        "titleEdit": "Editar subagente Codex",
+        "advanced": "Op莽玫es avan莽adas",
+        "name": {
+          "name": "Nome",
+          "desc": "Nome do agente que o Codex usa durante a gera莽茫o (min煤sculas, h铆fens, sublinhados)",
+          "placeholder": "Revisor de código"
+        },
+        "description": {
+          "name": "Descri莽茫o",
+          "desc": "Quando o Codex deve usar este agente",
+          "placeholder": "Revisa o c贸digo quanto 脿 corre莽茫o e seguran莽a",
+          "required": "A descri莽茫o 茅 obrigat贸ria"
+        },
+        "model": {
+          "name": "Modelo",
+          "desc": "Substitui莽茫o de modelo (deixe em branco para herdar)"
+        },
+        "reasoningEffort": {
+          "name": "Esfor莽o de racioc铆nio",
+          "desc": "N铆vel de esfor莽o de racioc铆nio do modelo",
+          "inherit": "Herdar",
+          "low": "Baixo",
+          "medium": "M茅dio",
+          "high": "Alto",
+          "xhigh": "Extra Alto"
+        },
+        "sandboxMode": {
+          "name": "Modo sandbox",
+          "desc": "Restri莽茫o de sandbox para este agente",
+          "inherit": "Herdar",
+          "readOnly": "Somente leitura",
+          "dangerFullAccess": "Acesso total ao perigo",
+          "workspaceWrite": "Grava莽茫o no espa莽o de trabalho"
+        },
+        "nicknameCandidates": {
+          "name": "Candidatos de apelido",
+          "desc": "Apelidos de exibi莽茫o separados por v铆rgula (por exemplo, atlas, delta, echo)"
+        },
+        "developerInstructions": {
+          "name": "Instru莽玫es do desenvolvedor",
+          "desc": "Instru莽玫es b谩sicas que definem o comportamento do agente",
+          "placeholder": "Revise o c贸digo como um propriet谩rio.\nPriorize a corre莽茫o, a seguran莽a e a cobertura de testes ausentes.",
+          "required": "As instru莽玫es do desenvolvedor s茫o obrigat贸rias"
+        },
+        "errors": {
+          "duplicateName": "A subagent named \"${name}\" already exists",
+          "saveFailed": "Failed to save subagent: ${message}",
+          "deleteFailed": "Falha ao excluir subagente",
+          "deletedNotice": "Subagent \"${name}\" deleted",
+          "createdNotice": "Subagent \"${name}\" created",
+          "updatedNotice": "Subagent \"${name}\" updated",
+          "deleteConfirm": "Delete subagent \"${name}\"?"
+        },
+        "validation": {
+          "nameRequired": "O nome do subagente 茅 obrigat贸rio",
+          "nameTooLong": "O nome do subagente deve ter caracteres {max} ou menos",
+          "nameInvalid": "O nome do subagente s贸 pode conter letras min煤sculas, n煤meros, hifens e sublinhados",
+          "nicknameInvalid": "Os candidatos a apelidos s贸 podem conter letras ASCII, n煤meros, espa莽os, hifens e sublinhados",
+          "nicknameDuplicate": "Os candidatos a apelidos devem ser exclusivos"
+        }
+      }
+    },
+    "opencode": {
+      "setup": {
+        "heading": "Configurar"
+      },
+      "enable": {
+        "name": "Habilitar provedor OpenCode",
+        "desc": "Quando habilitado, os modelos OpenCode aparecem no seletor de modelos para novas conversas."
+      },
+      "cliPath": {
+        "name": "OpenCode CLI path",
+        "desc": "Custom path to the local OpenCode CLI. Leave empty for auto-detection from PATH.",
+        "placeholder": "/usr/local/bin/opencode",
+        "validation": {
+          "notExist": "Caminho n茫o existe",
+          "isFile": "Path is a directory, not a file",
+          "notFile": "Path is not a file",
+          "isDirectory": "O caminho deve apontar para um arquivo"
+        },
+        "placeholderWin": "C:\\Users\\you\\AppData\\Roaming\\npm\\opencode.cmd",
+        "placeholderUnix": "/usr/local/bin/opencode"
+      },
+      "models": {
+        "heading": "Modelos",
+        "browse": "Browse",
+        "searchPlaceholder": "Pesquisar modelos...",
+        "empty": "Nenhum modelo descoberto.",
+        "loading": "Carregando modelos...",
+        "loadFailed": "Falha ao carregar modelos.",
+        "startOpencode": "Inicie o OpenCode para descobrir modelos.",
+        "notReported": "Not reported by OpenCode",
+        "selectedCount": "{count} selecionado",
+        "ofDiscovered": "de {total} descoberto",
+        "noneDiscovered": "Nenhum descoberto",
+        "available": "Dispon铆vel",
+        "allProviders": "Todos os provedores",
+        "removeAria": "Remover {label}",
+        "aliasAria": "Set alias for {name}",
+        "visibleLabel": "Modelos vis铆veis",
+        "clearAllAria": "Limpar todos os modelos selecionados",
+        "emptyFiltered": "Nenhum modelo corresponde 脿 sua pesquisa.",
+        "emptyLoading": "Carregando modelos do OpenCode...",
+        "emptyLoadFailed": "Falha ao carregar modelos do OpenCode. Verifique o caminho da CLI e tente novamente.",
+        "emptyStartOpencode": "Inicie o OpenCode para ver os modelos dispon铆veis.",
+        "visible": {
+          "name": "Modelos vis铆veis",
+          "desc": "Selecione quais modelos aparecem no seletor. Se estiver vazio, todos os modelos descobertos ser茫o mostrados."
+        },
+        "unavailableBadge": "Indispon铆vel",
+        "unavailableTitle": "Este modelo n茫o est谩 dispon铆vel atualmente no OpenCode",
+        "allProvidersCount": "Todos os provedores ({count})",
+        "providerOption": "{label} ({count})",
+        "aliasTitle": "Etiqueta personalizada mostrada no seletor de modelo. Deixe em branco para usar o padr茫o."
+      },
+      "commands": {
+        "heading": "Comandos",
+        "desc": "Gerencie comandos OpenCode no n铆vel do vault."
+      },
+      "hiddenCommands": {
+        "name": "Comandos ocultos",
+        "desc": "Oculte comandos espec铆ficos do OpenCode no menu suspenso. Insira nomes sem a barra inicial, um por linha.",
+        "placeholder": "comando1\ncomando2"
+      },
+      "subagents": {
+        "heading": "Subagentes",
+        "desc": "Gerencie subagentes OpenCode no n铆vel do vault."
+      },
+      "env": {
+        "desc": "Environment variables for OpenCode (KEY=VALUE format, one per line). Shell export prefix supported.",
+        "heading": "Ambiente",
+        "name": "Vari谩veis 鈥嬧€媎e ambiente",
+        "placeholder": "${defaultEnv}\nOPENCODE_DB=/path/to/opencode.db"
+      },
+      "agentModal": {
+        "titleAdd": "Adicionar subagente OpenCode",
+        "titleEdit": "Editar subagente OpenCode",
+        "advanced": "Op莽玫es avan莽adas",
+        "name": {
+          "name": "Nome",
+          "desc": "Nome do agente OpenCode. Use segmentos separados por barras para agentes aninhados.",
+          "placeholder": "An谩lise",
+          "required": "O nome do agente 茅 obrigat贸rio",
+          "slashLeadingTrailing": "O nome do agente deve usar segmentos de caminho separados por barras, sem barras iniciais ou finais",
+          "segmentEmpty": "Os segmentos do caminho do nome do agente n茫o podem estar vazios ou conter apenas espa莽os em branco",
+          "segmentWhitespace": "Os segmentos do caminho do nome do agente n茫o podem come莽ar ou terminar com espa莽os em branco",
+          "dotSegment": "O nome do agente n茫o pode incluir \".\" ou \"..\" segmentos de caminho",
+          "reservedChars": "Os segmentos do caminho do nome do agente n茫o podem conter caracteres de nome de arquivo reservados para Windows"
+        },
+        "description": {
+          "name": "Descri莽茫o",
+          "desc": "Quando o OpenCode deve usar este subagente",
+          "placeholder": "Revisa o c贸digo quanto 脿 corre莽茫o e manuten莽茫o",
+          "required": "A descri莽茫o 茅 obrigat贸ria"
+        },
+        "model": {
+          "name": "Modelo",
+          "desc": "Substitui莽茫o de modelo no formato provedor/modelo",
+          "placeholder": "Antr贸pico/Claude-soneto-4-20250514"
+        },
+        "variant": {
+          "name": "Variante",
+          "desc": "Substitui莽茫o de variante de modelo",
+          "placeholder": "Alto"
+        },
+        "temperature": {
+          "name": "Temperatura",
+          "desc": "Temperatura de amostragem opcional",
+          "placeholder": "0,1",
+          "invalid": "A temperatura deve ser um n煤mero v谩lido"
+        },
+        "topP": {
+          "name": "Parte superior",
+          "desc": "Valor de amostragem de n煤cleo opcional",
+          "placeholder": "0,9",
+          "invalid": "Top P deve ser um n煤mero v谩lido"
+        },
+        "color": {
+          "name": "Cor",
+          "desc": "Cor hexadecimal ou token de tema",
+          "placeholder": "#Ff5733"
+        },
+        "steps": {
+          "name": "Passos",
+          "desc": "M谩ximo de itera莽玫es de agente antes de for莽ar a sa铆da somente texto",
+          "placeholder": "10",
+          "invalid": "As etapas precisam ser um n煤mero inteiro positivo"
+        },
+        "hidden": {
+          "name": "Esconder-se de @mention",
+          "desc": "Oculte este subagente do menu @ autocomplete"
+        },
+        "disable": {
+          "name": "Desativar agente",
+          "desc": "Desative o agente sem excluir o arquivo"
+        },
+        "tools": {
+          "name": "Ferramentas habilitadas (JSON)",
+          "desc": "Mapa opcional de ferramentas obsoletas, por ex. {\"write\":false,\"edit\":false}",
+          "placeholder": "{\n  \"write\": false,\n  \"edit\": false\n}",
+          "invalid": "As ferramentas habilitadas devem mapear nomes de ferramentas para valores booleanos"
+        },
+        "permission": {
+          "name": "Permiss茫o (JSON)",
+          "desc": "Configura莽茫o de permiss茫o opcional, por exemplo. {\"edit\":\"deny\",\"bash\":\"allow\"}",
+          "placeholder": "{\n  \"edit\": \"deny\"\n}",
+          "invalid": "A permiss茫o deve ser JSON v谩lida"
+        },
+        "options": {
+          "name": "Op莽玫es (JSON)",
+          "desc": "Op莽玫es opcionais de agente personalizado",
+          "placeholder": "{\n  \"focus\": \"security\"\n}",
+          "invalid": "As op莽玫es devem ser um objeto JSON"
+        },
+        "prompt": {
+          "name": "Incitar",
+          "desc": "Corpo do Markdown usado como prompt do agente",
+          "placeholder": "Revise as altera莽玫es de c贸digo cuidadosamente e identifique corre莽玫es, regress玫es e cobertura ausente.",
+          "required": "A solicita莽茫o 茅 obrigat贸ria"
+        },
+        "errors": {
+          "duplicate": "A subagent named \"${name}\" already exists",
+          "saveFailed": "Failed to save subagent: ${message}",
+          "deleteFailed": "Falha ao excluir subagente",
+          "created": "Subagent \"${name}\" created",
+          "updated": "Subagent \"${name}\" updated",
+          "deleted": "Subagent \"${name}\" deleted"
+        }
+      },
+      "agentList": {
+        "label": "Subagentes OpenCode",
+        "empty": "Nenhum subagente OpenCode no vault. Clique em + para criar um.",
+        "badgeSubagent": "subagente",
+        "refreshAria": "Atualizar",
+        "addAria": "Adicionar",
+        "editAria": "Editar",
+        "deleteAria": "Excluir",
+        "deleteConfirm": "Delete subagent \"${name}\"?"
+      }
+    },
+    "typora": {
+      "setup": {
+        "heading": "Configurar"
+      },
+      "enable": {
+        "name": "Habilitar provedor Typora",
+        "desc": "Quando habilitado, o provedor Typora pode ser usado no seletor de modelo."
+      },
+      "api": {
+        "heading": "API"
+      },
+      "apiKey": {
+        "name": "Chave de API",
+        "desc": "Chave de API usada para autenticar solicita莽玫es para a API do provedor Typora."
+      },
+      "apiBaseUrl": {
+        "name": "URL base da API",
+        "desc": "URL base para a API do provedor Typora. Deixe em branco por padr茫o."
+      },
+      "apiModel": {
+        "name": "Modelo de API",
+        "desc": "ID do modelo a ser usado para a API do provedor Typora."
+      }
+    },
+    "mcp": {
+      "modal": {
+        "titleEdit": "Editar servidor MCP",
+        "titleAdd": "Adicionar servidor MCP",
+        "serverName": {
+          "name": "Nome do servidor",
+          "desc": "Identificador exclusivo para este servidor MCP.",
+          "placeholder": "meu-servidor mcp"
+        },
+        "type": {
+          "name": "Tipo",
+          "desc": "Escolha como o servidor MCP ser谩 iniciado ou conectado.",
+          "stdio": "stdio (comando local)",
+          "sse": "SSE (eventos enviados pelo servidor)",
+          "http": "HTTP"
+        },
+        "enabled": {
+          "name": "Habilitado",
+          "desc": "Os servidores desabilitados n茫o s茫o iniciados e n茫o s茫o oferecidos ao modelo."
+        },
+        "contextSaving": {
+          "name": "Economia de contexto",
+          "desc": "Quando habilitado, este servidor s贸 茅 ativado quando voc锚 o @-mention no chat, salvando tokens de contexto."
+        },
+        "command": {
+          "name": "Comando",
+          "desc": "Comando Shell que inicia o servidor MCP. Os argumentos s茫o separados por espa莽o.",
+          "placeholder": "npx -y @my-org/servidor mcp"
+        },
+        "env": {
+          "name": "Vari谩veis 鈥嬧€媎e ambiente",
+          "desc": "Um par KEY=VALUE por linha. Use o prefixo `export` se seu shell exigir.",
+          "placeholder": "API_KEY=your-key\nDEBUG=true"
+        },
+        "url": {
+          "name": "URL",
+          "desc": "Terminal para o servidor MCP.",
+          "sseDesc": "URL do endpoint de eventos enviados pelo servidor.",
+          "httpDesc": "URL do terminal HTTP.",
+          "placeholder": "https://example.com/mcp"
+        },
+        "headers": {
+          "name": "Cabe莽alhos",
+          "desc": "Cabe莽alhos HTTP personalizados, um KEY=VALUE por linha.",
+          "placeholder": "Autoriza莽茫o = Portador do seu token"
+        },
+        "nameRequired": "Por favor insira um nome de servidor",
+        "nameInvalid": "O nome do servidor s贸 pode conter letras, n煤meros, pontos, hifens e sublinhados",
+        "commandRequired": "Por favor insira um comando",
+        "urlRequired": "Insira um URL"
+      },
+      "empty": "Nenhum servidor MCP configurado. Clique em + para adicionar um.",
+      "addOptionStdio": "Stdio (comando local)",
+      "addOptionHttp": "HTTP/SSE",
+      "addOptionImport": "Importar da 谩rea de transfer锚ncia",
+      "contextSavingBadgeTitle": "Economia de contexto: mencione @{name} para ativar",
+      "verifyAria": "Verificar (mostrar ferramentas)",
+      "disableAria": "Desativar",
+      "enableAria": "Habilitar",
+      "editAria": "Editar",
+      "deleteAria": "Excluir",
+      "alreadyExists": "O servidor \"{name}\" j谩 existe",
+      "updated": "Servidor MCP \"{name}\" atualizado",
+      "added": "Servidor MCP \"{name}\" adicionado",
+      "enabled": "Servidor MCP \"{name}\" ativado",
+      "disabled": "Servidor MCP \"{name}\" desativado",
+      "deleted": "Servidor MCP \"{name}\" exclu铆do",
+      "deleteConfirm": "Excluir servidor MCP \"{name}\"?",
+      "saveFailed": "Falha ao salvar o servidor MCP",
+      "importEmpty": "A 谩rea de transfer锚ncia est谩 vazia",
+      "importInvalid": "Nenhuma configura莽茫o v谩lida de mcp encontrada na 谩rea de transfer锚ncia",
+      "importFailed": "Falha ao ler a 谩rea de transfer锚ncia",
+      "importEnterName": "Digite um nome para o servidor",
+      "importSuccess": "Servidor {count} MCP importado{plural}",
+      "importPartial": "Servidor MCP {count} importado{plural} ({skipped} ignorado)",
+      "importNone": "Nenhum novo servidor mcp importado",
+      "reloadFailed": "Configura莽茫o salva, mas falha no recarregamento. As altera莽玫es ser茫o aplicadas na pr贸xima sess茫o.",
+      "verificationFailed": "Falha na verifica莽茫o",
+      "test": {
+        "toggleError": "Falha ao alternar",
+        "permissionDenied": "Permiss茫o negada. Verifique as permiss玫es de arquivo do comando.",
+        "diskFull": "Disco cheio ou sem espa莽o. Libere espa莽o e tente novamente.",
+        "configCorrupted": "A configura莽茫o do MCP est谩 corrompida. Revise e corrija o JSON.",
+        "title": "Verifique: {name}",
+        "connecting": "Conectando...",
+        "connected": "Conectado com sucesso",
+        "connectionFailed": "Falha na conex茫o",
+        "availableTools": "Ferramentas Dispon铆veis ({count})",
+        "noToolsInfo": "Nenhuma informa莽茫o de ferramentas dispon铆vel. As ferramentas ser茫o carregadas quando usadas no chat.",
+        "disableAll": "Desativar tudo",
+        "enableAll": "Habilitar tudo",
+        "close": "Fechar",
+        "connectedTo": "Conectado com sucesso a {name}",
+        "connectedToVersion": "Conectado com sucesso a {name} v{version}"
+      }
+    },
+    "envReview": {
+      "heading": "Revis茫o ambiental",
+      "message": "Revisar a propriedade do ambiente para: {keys}",
+      "keysFor": "Revise a propriedade do ambiente para: {keys}"
+    },
+    "hotkeySearch": "TyporAi",
+    "environmentShared": {
+      "name": "Ambiente compartilhado",
+      "desc": "Vari谩veis 鈥嬧€媎e tempo de execu莽茫o neutras em rela莽茫o ao provedor compartilhadas entre todos os provedores. Use isto para vari谩veis 鈥嬧€婸ATH, proxy, certificado e tempor谩rias.",
+      "placeholder": "PATH=/opt/homebrew/bin:/usr/local/bin\nHTTPS_PROXY=http://proxy.example.com:8080\nSSL_CERT_FILE=/path/to/cert.pem"
+    },
+    "storage": {
+      "tabLayout": {
+        "saveFailed": "Falha ao salvar o layout da guia"
+      }
+    }
+  },
+  "provider": {
+    "claude": "Claude",
+    "codex": "Codex",
+    "opencode": "OpenCode",
+    "typora": "Typora"
+  },
+  "quickActions": {
+    "toolbar": {
+      "ariaLabel": "Barra de ferramentas de a莽玫es r谩pidas"
+    },
+    "copy": "Copiar",
+    "ask": "Perguntar",
+    "edit": "Editar",
+    "quote": "Citar",
+    "working": "Trabalhando...",
+    "noResult": "Nenhum resultado",
+    "askInstruction": "Pergunte sobre o seguinte texto",
+    "askPrompt": "Explique o texto selecionado.",
+    "quotePreview": "{text} [{lineCount} linhas]",
+    "clearQuote": "Limpar cita莽茫o",
+    "actionFailed": "Acao falhou"
+  },
+  "modal": {
+    "instruction": {
+      "yourInput": "Sua opini茫o",
+      "yourResponse": "Sua resposta",
+      "refinedSnippet": "Trecho refinado",
+      "preview": "Visualiza莽茫o",
+      "edit": "Editar",
+      "titleAdd": "Adicionar instru莽玫es personalizadas",
+      "processing": "Processando sua instru莽茫o...",
+      "placeholder": "Forne莽a mais detalhes...",
+      "cancel": "Cancelar",
+      "cancelAria": "Cancelar",
+      "submit": "Enviar",
+      "submitAria": "Enviar resposta",
+      "editAria": "Editar instru莽茫o",
+      "accept": "Aceitar",
+      "acceptAria": "Aceitar instru莽玫es",
+      "processingInline": "Processamento..."
+    }
+  },
+  "renderer": {
+    "message": {
+      "interrupted": "Interrompido",
+      "interruptedHint": "路 O que TyporAi deveria fazer em vez disso?",
+      "conversationCompacted": "Conversa compactada",
+      "bakedFor": "* {word} para {duration}",
+      "baked": "Cozido",
+      "subagentTask": "Tarefa de subagente",
+      "failedToRender": "Falha ao renderizar o conte煤do da mensagem.",
+      "copied": "Copiado!",
+      "copyMessageAria": "Copiar mensagem",
+      "copyAria": "C贸pia",
+      "codeCopied": "Copiado!",
+      "noResult": "Nenhum resultado"
+    },
+    "thinking": {
+      "ariaExpand": "Pensamento estendido - clique para expandir",
+      "elapsed": "Pensando em {seconds}s...",
+      "thoughtFor": "Pensado em {seconds}s",
+      "thought": "Pensamento"
+    },
+    "tool": {
+      "tasksProgress": "Tarefas {completed}/{total}",
+      "tasks": "Tarefas",
+      "enteringPlanMode": "Entrando no modo de plano",
+      "planComplete": "Plano conclu铆do",
+      "readFile": "Leia: {path}",
+      "writeFile": "Escreva: {path}",
+      "editFile": "Editar: {path}",
+      "command": "Bash: {command}",
+      "url": "WebFetch: {url}",
+      "file": "arquivo",
+      "pattern": "Grep: {pattern}",
+      "skill": "Habilidade: {name}",
+      "toolSearch": "Pesquisa de ferramentas: {query}",
+      "tools": "ferramentas",
+      "toolSearchLabel": "Globo: {pattern}",
+      "agents": "{count} agente{plural}",
+      "noResult": "Nenhum resultado",
+      "noMatchesFound": "Nenhuma correspond锚ncia encontrada",
+      "moreLines": "... {count} mais linhas",
+      "moreChars": "... {count} mais caracteres",
+      "fileDeleted": "Arquivo exclu铆do",
+      "noTextualDiff": "Nenhuma diferen莽a textual dispon铆vel",
+      "changesAria": "Mudan莽as: +{added} -{removed}",
+      "webSearch": "Pesquisa na Web: {query}",
+      "search": "procurar",
+      "openPage": "Abrir p谩gina",
+      "findInPage": "Encontrar na p谩gina",
+      "findInPageWithPattern": "Encontre \"{pattern}\"",
+      "urlUnavailable": "URL indispon铆vel",
+      "patternLabel": "Padr茫o: {pattern}",
+      "queryLabel": "Consulta: {query}",
+      "altQueryLabel": "Consulta alternativa: {query}",
+      "moreQueries": "... {count} mais consultas",
+      "bashPrefix": "$ {command}",
+      "tasksUpdated": "Tarefas atualizadas",
+      "statusCompleted": "Status: conclu铆do",
+      "statusInProgress": "Situa莽茫o: em andamento",
+      "statusLabel": "Estado: {status}",
+      "running": "Correndo...",
+      "waitingForAnswer": "Aguardando resposta...",
+      "notAnswered": "N茫o respondido",
+      "noOptionsRecorded": "Nenhuma op莽茫o registrada",
+      "questionOption": "Op莽茫o",
+      "questionDefault": "Op莽茫o",
+      "reviewAnswer": "Revise suas respostas",
+      "list": "LS: {path}"
+    },
+    "writeEdit": {
+      "statusRunning": "Estado: em execu莽茫o",
+      "statusError": "Estado: erro",
+      "writing": "Escrita...",
+      "done": "Concluido",
+      "error": "Erro",
+      "defaultError": "Erro"
+    },
+    "diff": {
+      "noChanges": "Sem altera莽玫es",
+      "moreLines": "... {count} mais linhas",
+      "prefix": "+",
+      "ariaLabel": "Mudan莽as: +{added} -{removed}"
+    },
+    "subagent": {
+      "subagentTask": "Tarefa de subagente",
+      "backgroundTask": "Tarefa em segundo plano",
+      "prompt": "Instrucao",
+      "result": "Resultado",
+      "noPromptProvided": "Nenhum aviso fornecido",
+      "initializing": "Inicializando",
+      "runningInBackground": "Executando em segundo plano",
+      "completed": "Conclu铆do",
+      "error": "Erro",
+      "orphaned": "脫rf茫o",
+      "conversationEnded": "A conversa terminou antes da conclus茫o da tarefa",
+      "clickToExpand": "clique para expandir",
+      "ariaHeader": "{type}: {description} - {status} - clique para expandir",
+      "ariaStatus": "Estado: {status}",
+      "statusPending": "pendente",
+      "statusRunning": "correndo",
+      "statusCompleted": "conclu铆do",
+      "statusError": "erro",
+      "statusOrphaned": "贸rf茫o",
+      "backgroundTaskCompleted": "(tarefa em segundo plano conclu铆da)",
+      "backgroundTaskRenderFailed": "Tarefa em segundo plano conclu铆da, mas o resultado n茫o p么de ser renderizado."
+    },
+    "ask": {
+      "defaultTitle": "Pergunta",
+      "placeholderSecret": "Digite segredo.",
+      "placeholderCustom": "Digite algo.",
+      "submit": "Enviar",
+      "submitAnswers": "Enviar respostas",
+      "cancel": "Cancelar",
+      "reviewAnswers": "Revise suas respostas",
+      "readyToSubmit": "Pronto para enviar suas respostas?",
+      "hints": "Enter para selecionar 路 Teclas Tab/Setas para navegar 路 Esc para cancelar",
+      "hintsImmediate": "Enter para selecionar 路 Teclas de seta para navegar 路 Esc para cancelar",
+      "notAnswered": "N茫o respondido",
+      "optionFallback": "Op莽茫o"
+    },
+    "plan": {
+      "title": "Plano conclu铆do",
+      "requestedPermissions": "Permiss玫es solicitadas:",
+      "approveNewSession": "Aprovar (nova sess茫o)",
+      "approveCurrentSession": "Aprovar (sess茫o atual)",
+      "cancel": "Cancelar",
+      "feedbackPlaceholder": "Insira coment谩rios para continuar planejando...",
+      "readError": "N茫o foi poss铆vel ler o arquivo de plano: {error}. \"Aprovar (nova sess茫o)\" n茫o incluir谩 detalhes do plano.",
+      "hints": "Teclas de seta para navegar 路 Enter para selecionar 路 Esc para cancelar"
+    },
+    "planApproval": {
+      "title": "Plano conclu铆do",
+      "implement": "Implementar",
+      "revise": "Rever",
+      "cancel": "Cancelar",
+      "feedbackPlaceholder": "Insira coment谩rios para revisar o plano...",
+      "hints": "Teclas de seta para navegar 路 Enter para selecionar 路 Esc para cancelar"
+    },
+    "history": {
+      "header": "Conversas",
+      "empty": "Sem conversas",
+      "runningInAnotherPane": "Executando em outro painel",
+      "openInAnotherPane": "Abrir em outro painel",
+      "running": "Correndo",
+      "runningInTab": "Executando em {tab}",
+      "currentTabIndex": "Guia atual {index}",
+      "currentSession": "Sess茫o atual",
+      "openInTab": "Abrir em {tab}",
+      "tabIndex": "guia {index}",
+      "currentTab": "guia atual",
+      "tab": "guia",
+      "generatingAria": "Gerando t铆tulo...",
+      "regenerateAria": "Regenerar t铆tulo",
+      "openInNewTabAria": "Abrir em nova aba",
+      "renameAria": "Renomear",
+      "deleteAria": "Excluir",
+      "openInNewTab": "Abrir em nova aba",
+      "openInBackgroundTab": "Abrir na guia em segundo plano",
+      "switchToOpenSession": "Mudar para sess茫o aberta",
+      "rename": "Renomear",
+      "delete": "Excluir",
+      "loadFailed": "Falha ao carregar a conversa",
+      "deleteFailed": "Falha ao excluir conversa",
+      "regenerateFailed": "Falha ao regenerar a resposta",
+      "saveFailed": "Falha ao salvar"
+    },
+    "renameFailed": "Falha ao renomear a conversa",
+    "rewind": {
+      "failed": "Falha ao retroceder: {error}",
+      "unavailableStreaming": "N茫o 茅 poss铆vel retroceder enquanto o assistente est谩 transmitindo",
+      "cannot": "N茫o 茅 poss铆vel retroceder: {error}",
+      "unsupportedProvider": "Retroceder n茫o 茅 compat铆vel com este provedor.",
+      "errorMessageNotFound": "Mensagem n茫o encontrada"
+    },
+    "greeting": {
+      "day": {
+        "sun": [
+          "Feliz domingo",
+          "Sess茫o de domingo?",
+          "Bem-vindo ao fim de semana"
+        ],
+        "mon": [
+          "Feliz segunda-feira",
+          "De volta ao assunto",
+          "De volta!"
+        ],
+        "tue": [
+          "Feliz ter莽a-feira"
+        ],
+        "wed": [
+          "Feliz quarta-feira"
+        ],
+        "thu": [
+          "Feliz quinta-feira"
+        ],
+        "fri": [
+          "Feliz sexta-feira",
+          "Aquela sensa莽茫o de sexta-feira"
+        ],
+        "sat": [
+          "Feliz s谩bado",
+          "Feliz s谩bado!",
+          "Bem-vindo ao fim de semana"
+        ]
+      },
+      "morning": [
+        "Bom dia",
+        "Caf茅 e TyporAi hora?"
+      ],
+      "afternoon": [
+        "Boa tarde",
+        "Ei",
+        "Como t谩 indo"
+      ],
+      "evening": [
+        "Boa noite",
+        "Noite",
+        "Como foi o seu dia"
+      ],
+      "night": [
+        "Ol谩, coruja noturna",
+        "Noite"
+      ],
+      "general": [
+        "Ei",
+        "Ol谩 {name}, tudo bem?",
+        "Oi, como vai?",
+        "Como t谩 indo?",
+        "Bem vindo de volta!",
+        "O que h谩 de novo?",
+        "{name} retorna!",
+        "Voc锚 est谩 absolutamente certo!"
+      ]
+    }
+  },
+  "inlineEdit": {
+    "unavailable": "Edi莽茫o in-line indispon铆vel: n茫o foi poss铆vel acessar o editor ativo. Tente reabrir a nota.",
+    "workspaceLoadFailed": "Falha ao carregar arquivos do espa莽o de trabalho. As @men莽玫es do espa莽o de trabalho podem estar indispon铆veis.",
+    "invalidPath": "Falha ao anexar arquivo: caminho inv谩lido",
+    "placeholderInsert": "Inserir instruções...",
+    "placeholderEdit": "Editar instruções...",
+    "replyPlaceholder": "Responda para continuar...",
+    "noResponse": "Nenhuma resposta do agente",
+    "errorRetry": "Erro - tente novamente",
+    "prompt": {
+      "ariaLabel": "Editar instru莽茫o",
+      "placeholder": "Descreva a edição",
+      "send": "Enviar"
+    },
+    "unavailableMarkdownView": "Edi莽茫o in-line indispon铆vel: n茫o foi poss铆vel acessar a visualiza莽茫o Markdown ativa.",
+    "generating": "Gerando...",
+    "actions": {
+      "accept": "Aceitar",
+      "refine": "Refinar",
+      "reject": "Rejeitar",
+      "refinePrompt": "Refinar o texto sugerido selecionado"
+    },
+    "errors": {
+      "documentEditingBlocked": "SAFE está ativo. Desative-o para permitir que a IA modifique o documento atual.",
+      "enterInstruction": "Digite uma instrucao de edicao.",
+      "generationFailed": "Falha ao gerar a edicao.",
+      "noReplacement": "A resposta de edicao nao incluiu texto de substituicao.",
+      "noCliProvider": "Nenhum provedor CLI habilitado esta configurado. Habilite e configure Claude, Codex ou OpenCode nas Configuracoes.",
+      "refineFailed": "Falha ao refinar.",
+      "refineNoReplacement": "A resposta de refinamento nao incluiu texto de substituicao.",
+      "selectSuggestionToRefine": "Selecione texto dentro do bloco de sugestao para refinar."
+    }
+  },
+  "validation": {
+    "slug": {
+      "required": "O nome {label} 茅 obrigat贸rio",
+      "tooLong": "O nome {label} deve ter {max} caracteres ou menos",
+      "invalidChars": "O nome {label} pode ons贸 conconter letras min煤sculas, n煤meros e hifens",
+      "reservedWord": "O nome {label} n茫o podenot ser uma palavra reservada YAML (true, false, null, yes, no, on, off)",
+      "labelCommand": "Comando",
+      "labelAgent": "Agente",
+      "labelCodexSubagent": "Subagente Codex",
+      "labelOpencodeSubagent": "Subagente OpenCode",
+      "labelCodexSkill": "Habilidade do C贸dice"
+    }
+  },
+  "typora": {
+    "panel": {
+      "hideAria": "Ocultar painel TyporAi",
+      "hideTitle": "Ocultar painel",
+      "showAria": "Mostrar painel TyporAi",
+      "showTitle": "Mostrar TyporAi"
+    },
+    "settings": {
+      "openAria": "Abra as configura莽玫es do TyporAi",
+      "title": "Configura莽玫es"
+    }
+  }
+}

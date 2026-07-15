@@ -1,0 +1,193 @@
+.typorai-tab-bar-container {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.typorai-tab-badges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.typorai-tab-badges::-webkit-scrollbar {
+  display: none;
+}
+
+.typorai-header-tabs .typorai-tab-bar-container {
+  justify-content: center;
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
+.typorai-header-tabs .typorai-tab-badges {
+  gap: 8px;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.typorai-tab-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 24px;
+  width: 24px;
+  max-width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+  padding: 0;
+  border-radius: 4px;
+  border: 2px solid var(--background-modifier-border);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: var(--background-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.typorai-header-tabs .typorai-tab-badge {
+  position: relative;
+  flex-basis: 18px;
+  width: 18px;
+  max-width: 18px;
+  height: 22px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-faint);
+  transition: color 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
+}
+
+.typorai-header-tabs .typorai-tab-badge::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 1px;
+  left: 4px;
+  height: 2px;
+  border-radius: 999px;
+  background: transparent;
+  transform: scaleX(0.45);
+  opacity: 0;
+  transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+.typorai-tab-badge-expanded {
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  width: auto;
+  max-width: none;
+  padding: 0 8px;
+}
+
+.typorai-header-tabs .typorai-tab-badge-expanded {
+  max-width: min(180px, 42vw);
+  padding: 0 4px;
+}
+
+.typorai-tab-badge:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.typorai-header-tabs .typorai-tab-badge:hover {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.typorai-header-tabs .typorai-tab-badge:active {
+  transform: scale(0.96);
+}
+
+.typorai-tab-badge-active {
+  border-color: var(--interactive-accent);
+  color: var(--text-normal);
+}
+
+.typorai-header-tabs .typorai-tab-badge-active {
+  background: transparent;
+  color: var(--text-normal);
+  box-shadow: none;
+  font-weight: 650;
+}
+
+.typorai-header-tabs .typorai-tab-badge-active::after {
+  background: var(--interactive-accent);
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.typorai-header-tabs .typorai-tab-badge-streaming::after {
+  background: var(--typorai-brand, #da7756);
+  opacity: 1;
+  transform: scaleX(0.7);
+}
+
+.typorai-header-tabs .typorai-tab-badge-attention::after {
+  background: var(--text-error);
+  opacity: 1;
+  transform: scaleX(0.7);
+}
+
+.typorai-tab-badge-streaming {
+  border-color: var(--typorai-brand, #da7756);
+}
+
+.typorai-tab-badge-streaming[data-provider="claude"] {
+  border-color: var(--typorai-brand-claude, #D97757);
+}
+
+.typorai-tab-badge-streaming[data-provider="codex"] {
+  border-color: var(--typorai-brand-codex, #d0d0d0);
+}
+
+.typorai-tab-badge-streaming[data-provider="opencode"] {
+  border-color: var(--typorai-brand-opencode, #C8C8C8);
+}
+
+.typorai-tab-badge-streaming[data-provider="pi"] {
+  border-color: var(--typorai-brand-pi, #ffffff);
+}
+
+.typorai-tab-badge-attention {
+  border-color: var(--text-error);
+}
+
+.typorai-tab-badge-idle {
+  border-color: var(--background-modifier-border);
+}
+
+.typorai-tab-content-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.typorai-tab-content {
+  position: relative; /* For scroll-to-bottom button positioning */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}

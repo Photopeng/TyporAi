@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["node"],
+    "moduleResolution": "bundler",
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/typora-dom.d.ts",
+    "src/core/engine-factory.ts",
+    "src/core/types/agent-engine.ts",
+    "src/engines/**/*.ts",
+    "src/typora/**/*.ts"
+  ],
+  "exclude": [
+    "tests",
+    "src/main.ts",
+    "src/features",
+    "src/providers",
+    "src/shared"
+  ]
+}

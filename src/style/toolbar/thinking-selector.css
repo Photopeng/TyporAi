@@ -1,0 +1,83 @@
+/* Thinking selector (effort for adaptive models, token budget for custom) */
+.typorai-thinking-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Effort / budget container (shared layout) */
+.typorai-thinking-effort,
+.typorai-thinking-budget {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.typorai-thinking-label-text {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.typorai-thinking-gears {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+/* Current selection (visible when collapsed) */
+.typorai-thinking-current {
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--typorai-brand);
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 3px;
+  white-space: nowrap;
+  background: transparent;
+}
+
+/* Options container - expands vertically upward */
+.typorai-thinking-options {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+/* Expand on hover */
+.typorai-thinking-gears:hover .typorai-thinking-options {
+  opacity: 1;
+  visibility: visible;
+}
+
+.typorai-thinking-gear {
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.1s ease, color 0.1s ease;
+  white-space: nowrap;
+}
+
+.typorai-thinking-gear:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.typorai-thinking-gear.selected {
+  background: color-mix(in srgb, var(--typorai-brand) 15%, var(--typorai-bg-primary));
+  color: var(--typorai-brand);
+  font-weight: 500;
+}

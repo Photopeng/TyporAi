@@ -1,0 +1,99 @@
+/* Model selector */
+.typorai-model-selector {
+  position: relative;
+}
+
+.typorai-model-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--typorai-brand);
+  font-size: 12px;
+}
+
+.typorai-model-label {
+  font-weight: 500;
+}
+
+.typorai-model-chevron {
+  display: flex;
+  align-items: center;
+}
+
+.typorai-model-chevron svg {
+  width: 12px;
+  height: 12px;
+}
+
+.typorai-model-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  width: max-content;
+  padding: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+.typorai-model-selector:hover .typorai-model-dropdown {
+  opacity: 1;
+  visibility: visible;
+}
+
+.typorai-model-group {
+  padding: 3px 8px;
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.typorai-model-group:not(:first-child) {
+  margin-top: 4px;
+  border-top: 1px solid var(--background-modifier-border);
+  padding-top: 6px;
+}
+
+.typorai-model-provider-icon {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.typorai-model-option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-radius: 3px;
+  transition: background 0.1s ease, color 0.1s ease;
+  white-space: nowrap;
+}
+
+.typorai-model-option:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.typorai-model-option.selected {
+  background: color-mix(in srgb, var(--typorai-brand) 15%, var(--typorai-bg-primary));
+  color: var(--typorai-brand);
+  font-weight: 500;
+}

@@ -1,0 +1,1386 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "clear": "Löschen",
+    "clearAll": "Alle löschen",
+    "loading": "Lädt",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "warning": "Warnung",
+    "confirm": "Bestätigen",
+    "settings": "Einstellungen",
+    "advanced": "Erweitert",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "platform": "Plattform",
+    "refresh": "Aktualisieren",
+    "rewind": "Zurückspulen",
+    "unknown": "Unbekannt",
+    "typorai": "TyporAi",
+    "close": "Schließen"
+  },
+  "chat": {
+    "rewind": {
+      "confirmMessage": "Zu diesem Punkt zurückspulen? Dateiänderungen nach dieser Nachricht werden rückgängig gemacht. Das Zurückspulen betrifft keine manuell oder über Bash bearbeiteten Dateien.",
+      "confirmMessageConversationOnly": "Konversation zu diesem Punkt zurückspulen? Dateiänderungen bleiben erhalten.",
+      "confirmButton": "Zurückspulen",
+      "ariaLabel": "Hierher zurückspulen",
+      "menuConversationOnly": "Nur Konversation zurückspulen",
+      "menuCodeAndConversation": "Code + Konversation zurückspulen",
+      "notice": "Zurückgespult: {count} Datei(en) wiederhergestellt",
+      "noticeConversationOnly": "Konversation zurückgespult; Dateiänderungen bleiben erhalten",
+      "noticeSaveFailed": "Zurückgespult: {count} Datei(en) wiederhergestellt, aber Status konnte nicht gespeichert werden: {error}",
+      "noticeConversationOnlySaveFailed": "Konversation zurückgespult, aber Status konnte nicht gespeichert werden: {error}",
+      "failed": "Zurückspulen fehlgeschlagen: {error}",
+      "cannot": "Zurückspulen nicht möglich: {error}",
+      "unavailableStreaming": "Zurückspulen während des Streamings nicht möglich",
+      "unavailableNoUuid": "Zurückspulen nicht möglich: Nachrichtenkennungen fehlen"
+    },
+    "fork": {
+      "ariaLabel": "Konversation verzweigen",
+      "chooseTarget": "Konversation verzweigen",
+      "targetNewTab": "Neuer Tab",
+      "targetCurrentTab": "Aktueller Tab",
+      "maxTabsReached": "Verzweigung nicht möglich: maximal {count} Tabs erreicht",
+      "notice": "In neuem Tab verzweigt",
+      "noticeCurrentTab": "Im aktuellen Tab verzweigt",
+      "failed": "Verzweigung fehlgeschlagen: {error}",
+      "unavailableStreaming": "Verzweigung während des Streamings nicht möglich",
+      "unavailableNoUuid": "Verzweigung nicht möglich: Nachrichtenkennungen fehlen",
+      "unavailableNoResponse": "Verzweigung nicht möglich: keine Antwort zum Verzweigen vorhanden",
+      "errorMessageNotFound": "Nachricht nicht gefunden",
+      "errorNoSession": "Keine Sitzungs-ID verfügbar",
+      "errorNoActiveTab": "Kein aktiver Tab",
+      "commandNoMessages": "Verzweigung nicht möglich: keine Nachrichten in der Konversation",
+      "commandNoAssistantUuid": "Verzweigung nicht möglich: keine Assistentenantwort mit Kennungen",
+      "notSupported": "Fork wird von diesem Anbieter nicht unterstützt.",
+      "notAvailable": "Gabel nicht verfügbar."
+    },
+    "bangBash": {
+      "placeholder": "> Einen Bash-Befehl ausführen...",
+      "commandPanel": "Befehlspanel",
+      "copyAriaLabel": "Neueste Befehlsausgabe kopieren",
+      "clearAriaLabel": "Bash-Ausgabe löschen",
+      "commandLabel": "{command}",
+      "statusLabel": "Status des Befehls: {status}",
+      "collapseOutput": "Befehlsausgabe einklappen",
+      "expandOutput": "Befehlsausgabe ausklappen",
+      "running": "Wird ausgeführt...",
+      "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen",
+      "commandFailed": "Befehl fehlgeschlagen: {error}"
+    },
+    "toolbar": {
+      "safeLabel": "SAFE",
+      "yoloLabel": "YOLO",
+      "safeTooltip": "SAFE ist aktiv: Alle KI-Änderungen am aktuellen Dokument werden blockiert.",
+      "yoloTooltip": "YOLO ist aktiv: Die KI darf das aktuelle Dokument per Chat-Anweisung ändern.",
+      "planMode": "PLANEN",
+      "planModeTooltip": "Planmodus: Die KI darf analysieren, aber das aktuelle Dokument nicht ändern.",
+      "mcpClickToEnable": "MCP-Server (zum Aktivieren klicken)",
+      "unknownModel": "Unbekannt",
+      "addExternalContext": "Externe Kontexte hinzufügen (klicken)",
+      "mcpServers": "Mcp-Server",
+      "noMcpServers": "Keine MCP Server konfiguriert",
+      "allMcpDisabled": "Alle MCP Server deaktiviert",
+      "thinking": "Denken:",
+      "failedChangeModel": "Modell konnte nicht geändert werden",
+      "failedChangeMode": "Der Modus konnte nicht geändert werden",
+      "failedChangeEffort": "Die Aufwandsstufe konnte nicht geändert werden",
+      "failedChangeThinking": "Das Budget konnte nicht geändert werden",
+      "failedChangePermission": "Der Berechtigungsmodus konnte nicht geändert werden",
+      "failedChangeServiceTier": "Die Dienstebene konnte nicht geändert werden",
+      "toggleFastMode": "Schalten Sie den Schnellmodus ein/aus",
+      "mcpEnabled": "{count} MCP Server{plural} aktiviert (zum Verwalten klicken)",
+      "contextSavingHint": "Kontextsparend: kann auch über @{name} aktiviert werden",
+      "cursorFlow": "Cursor-Flow",
+      "cursorFlowTooltip": "Wenn aktiviert, springt der Cursor nach einer Textauswahl automatisch in das Eingabefeld.",
+      "cursorFlowAriaLabel": "Wenn aktiviert, springt der Cursor nach einer Textauswahl automatisch in das Eingabefeld."
+    },
+    "nav": {
+      "tocTitle": "Inhaltsverzeichnis",
+      "noPrompts": "Noch keine Aufforderungen",
+      "moreFiles": "+{count} weitere",
+      "awaitingResponse": "Warten auf eine Antwort…",
+      "jumpToMessage": "Zu Nachricht {index} springen: {title}",
+      "messageRail": "Nachrichtennavigation",
+      "untitledMessage": "Unbenannte Nachricht"
+    },
+    "tab": {
+      "cannotSwitchProvider": "Der Anbieter kann in einer gebundenen Sitzung nicht gewechselt werden. Starten Sie stattdessen einen neuen Tab."
+    },
+    "input": {
+      "placeholder": "Wie kann ich Ihnen heute helfen?",
+      "sendFailed": "Nachricht konnte nicht gesendet werden",
+      "cancelFailed": "Antwort konnte nicht abgebrochen werden",
+      "initFailed": "Der Chat-Dienst konnte nicht initialisiert werden",
+      "renameFailed": "Konversation konnte nicht umbenannt werden",
+      "resumeNoConversations": "Keine Gespräche zum Fortsetzen",
+      "steering": "Lenkung...",
+      "steerNow": "Jetzt steuern",
+      "editQueued": "Bearbeiten Sie die Nachricht in der Warteschlange",
+      "discardQueued": "Nachricht in der Warteschlange verwerfen",
+      "compacting": "Verdichten...",
+      "planApproved": "Der Benutzer hat den Plan genehmigt und eine neue Sitzung gestartet.",
+      "planImplement": "Setzen Sie den Plan um.",
+      "steerFailed": "Die in der Warteschlange befindliche Codex-Nachricht konnte nicht gesteuert werden. Es ist noch verfügbar.",
+      "customSystemPromptAdded": "Anweisung zur benutzerdefinierten Systemaufforderung hinzugefügt",
+      "processingFailed": "Antwort konnte nicht verarbeitet werden",
+      "refineFailed": "Die Anleitung konnte nicht verfeinert werden",
+      "noInstruction": "Keine Anweisung erhalten",
+      "agentInitFailed": "Der Agent-Dienst konnte nicht initialisiert werden. Bitte versuchen Sie es erneut.",
+      "agentNotAvailable": "Agentendienst nicht verfügbar. Bitte laden Sie das Plugin neu.",
+      "providerUnavailable": "{provider} ist deaktiviert oder nicht konfiguriert. Aktivieren und konfigurieren Sie den Anbieter in den Einstellungen, bevor Sie chatten.",
+      "queuedPrefix": "In der Warteschlange:",
+      "errorWithMessage": "Fehler: {error}",
+      "detachedInput": "Der Eingabebereich ist nicht verfügbar.",
+      "approvalAgent": "Agent: {agent}",
+      "commandUnsupported": "Der aktuelle Anbieter unterstützt /{command} nicht.",
+      "unknownCommand": "Unbekannter Befehl: {command}",
+      "openConversationFailed": "Unterhaltung konnte nicht geöffnet werden: {error}"
+    },
+    "permission": {
+      "title": "Erlaubnis erforderlich",
+      "question": "Diese Aktion zulassen?",
+      "deny": "Leugnen",
+      "allowOnce": "Einmal zulassen",
+      "alwaysAllow": "Immer zulassen"
+    },
+    "approve": {
+      "approve": "Genehmigen",
+      "reject": "Ablehnen"
+    },
+    "slashCommand": {
+      "noMatchingCommands": "Keine passenden Befehle"
+    },
+    "imageAttachments": {
+      "unsupportedByProvider": "Bildanhänge werden von diesem Anbieter nicht unterstützt.",
+      "exceedsLimit": "Das Bild überschreitet das Limit von {size}.",
+      "unsupportedType": "Nicht unterstützter Bildtyp.",
+      "attachFailed": "Bild konnte nicht angehängt werden.",
+      "dropHere": "Bild hier ablegen",
+      "remove": "Bild entfernen",
+      "fileNotFound": "Datei nicht gefunden",
+      "permissionDenied": "Zugriff verweigert"
+    },
+    "tabs": {
+      "switchFailed": "Tab-Wechsel fehlgeschlagen",
+      "closeFailed": "Tab konnte nicht geschlossen werden",
+      "maxReached": "Maximal {count} Tabs erlaubt",
+      "createFailed": "Tab konnte nicht erstellt werden",
+      "newConversationFailed": "Unterhaltung konnte nicht erstellt werden",
+      "historyToggleFailed": "Chatverlauf konnte nicht umgeschaltet werden"
+    },
+    "forkUnsupported": "Fork wird von diesem Anbieter nicht unterstützt.",
+    "forkUnavailable": "Gabel nicht verfügbar.",
+    "actions": {
+      "newTab": "Neuer Tab",
+      "newConversation": "Neue Unterhaltung",
+      "history": "Chatverlauf"
+    },
+    "resume": {
+      "title": "Unterhaltung fortsetzen",
+      "empty": "Keine Unterhaltungen",
+      "current": "Aktuelle Sitzung"
+    },
+    "fileContext": {
+      "openNotFound": "Datei konnte nicht geöffnet werden: {path}",
+      "openFailed": "Fehler beim Öffnen der Datei: {error}"
+    }
+  },
+  "settings": {
+    "title": "TyporAi Einstellungen",
+    "tabs": {
+      "general": "Allgemein",
+      "claude": "Claude",
+      "codex": "Codex"
+    },
+    "display": "Anzeige",
+    "conversations": "Unterhaltungen",
+    "content": "Inhalte",
+    "input": "Eingabe",
+    "setup": "Einrichtung",
+    "models": "Modelle",
+    "experimental": "Experimentell",
+    "userName": {
+      "name": "Wie soll TyporAi dich nennen?",
+      "desc": "Dein Name für personalisierte Begrüßungen (leer lassen für allgemeine Begrüßungen)"
+    },
+    "excludedTags": {
+      "name": "Ausgeschlossene Tags",
+      "desc": "Notizen mit diesen Tags werden nicht automatisch als Kontext geladen (einer pro Zeile, ohne #)",
+      "placeholder": "System\nprivat\nEntwurf"
+    },
+    "mediaFolder": {
+      "name": "Medienordner",
+      "desc": "Ordner mit Anhängen/Bildern. Wenn Notizen ![[image.jpg]] verwenden, sucht Claude hier. Leer lassen für Vault-Stammverzeichnis.",
+      "placeholder": "Anhänge"
+    },
+    "systemPrompt": {
+      "name": "Benutzerdefinierter System-Prompt",
+      "desc": "Zusätzliche Anweisungen, die an den Standard-System-Prompt angehängt werden"
+    },
+    "autoTitle": {
+      "name": "Konversationstitel automatisch generieren",
+      "desc": "Generiert automatisch Konversationstitel nach der ersten Nutzernachricht."
+    },
+    "titleModel": {
+      "name": "Titel-Generierungsmodell",
+      "desc": "Modell zur automatischen Generierung von Konversationstiteln.",
+      "auto": "Automatisch (Haiku)"
+    },
+    "navMappings": {
+      "name": "Vim-Style Navigationszuordnungen",
+      "desc": "Eine Zuordnung pro Zeile. Format: \"map <Taste> <Aktion>\" (Aktionen: scrollUp, scrollDown, focusInput).",
+      "placeholder": "Karte mit Scrollup\nScrollen Sie nach unten auf der Karte\nKarte i focusinput"
+    },
+    "requireCommandOrControlEnterToSend": {
+      "name": "Command/Ctrl+Enter zum Senden erfordern",
+      "desc": "Wenn aktiviert, fügt Enter einen Zeilenumbruch ein. Command+Enter sendet unter macOS; Ctrl+Enter sendet unter Windows und Linux."
+    },
+    "hotkeys": "Tastenkürzel",
+    "inlineEditHotkey": {
+      "name": "Inline-Bearbeitung",
+      "descWithKey": "Aktuelles Tastenkürzel: {hotkey}",
+      "descNoKey": "Kein Tastenkürzel festgelegt",
+      "btnChange": "Ändern",
+      "btnSet": "Festlegen"
+    },
+    "openChatHotkey": {
+      "name": "Chat öffnen",
+      "descWithKey": "Aktuelles Tastenkürzel: {hotkey}",
+      "descNoKey": "Kein Tastenkürzel festgelegt",
+      "btnChange": "Ändern",
+      "btnSet": "Festlegen"
+    },
+    "newSessionHotkey": {
+      "name": "Neue Sitzung",
+      "descWithKey": "Aktuelles Tastenkürzel: {hotkey}",
+      "descNoKey": "Kein Tastenkürzel festgelegt",
+      "btnChange": "Ändern",
+      "btnSet": "Festlegen"
+    },
+    "newTabHotkey": {
+      "name": "Neuer Tab",
+      "descWithKey": "Aktuelles Tastenkürzel: {hotkey}",
+      "descNoKey": "Kein Tastenkürzel festgelegt",
+      "btnChange": "Ändern",
+      "btnSet": "Festlegen"
+    },
+    "closeTabHotkey": {
+      "name": "Tab schließen",
+      "descWithKey": "Aktuelles Tastenkürzel: {hotkey}",
+      "descNoKey": "Kein Tastenkürzel festgelegt",
+      "btnChange": "Ändern",
+      "btnSet": "Festlegen"
+    },
+    "slashCommands": {
+      "name": "Befehle und Fähigkeiten",
+      "desc": "Verwalte Vault-Befehle und -Fähigkeiten in .claude/commands/ und .claude/skills/. Ausgelöst durch /Name."
+    },
+    "hiddenSlashCommands": {
+      "name": "Ausgeblendete Befehle und Fähigkeiten",
+      "desc": "Bestimmte Befehle und Fähigkeiten aus dem Dropdown ausblenden. Nützlich, um Claude Code-Einträge auszublenden, die für TyporAi nicht relevant sind. Gib Namen ohne führenden Schrägstrich ein, einen pro Zeile.",
+      "placeholder": "begehen\nbauen\ntesten"
+    },
+    "mcpServers": {
+      "name": "MCP-Server",
+      "desc": "Verwalte Vault-MCP-Serverkonfigurationen in .claude/mcp.json. Server mit Kontext-Speichermodus benötigen @mention zur Aktivierung."
+    },
+    "plugins": {
+      "name": "Claude Code-Plugins",
+      "desc": "Verwalte Claude Code Plugins aus ~/.claude/plugins. Aktivierte Plugins werden pro Vault in .claude/settings.json gespeichert."
+    },
+    "subagents": {
+      "name": "Sub-Agenten",
+      "desc": "Verwalte Vault-Sub-Agenten in .claude/agents/. Jede Markdown-Datei definiert einen benutzerdefinierten Agenten.",
+      "noAgents": "Keine Sub-Agenten konfiguriert. Klicke auf +, um einen zu erstellen.",
+      "deleteConfirm": "Sub-Agent \"{name}\" löschen?",
+      "saveFailed": "Sub-Agent konnte nicht gespeichert werden: {message}",
+      "refreshFailed": "Sub-Agenten konnten nicht aktualisiert werden: {message}",
+      "deleteFailed": "Sub-Agent konnte nicht gelöscht werden: {message}",
+      "renameCleanupFailed": "Warnung: Alte Datei für \"{name}\" konnte nicht entfernt werden",
+      "created": "Sub-Agent \"{name}\" erstellt",
+      "updated": "Sub-Agent \"{name}\" aktualisiert",
+      "deleted": "Sub-Agent \"{name}\" gelöscht",
+      "duplicateName": "Ein Agent mit dem Namen \"{name}\" existiert bereits",
+      "descriptionRequired": "Beschreibung ist erforderlich",
+      "promptRequired": "System-Prompt ist erforderlich",
+      "modal": {
+        "titleEdit": "Sub-Agent bearbeiten",
+        "titleAdd": "Sub-Agent hinzufügen",
+        "name": "Bezeichnung",
+        "nameDesc": "Nur Kleinbuchstaben, Zahlen und Bindestriche",
+        "namePlaceholder": "Code-Reviewer",
+        "description": "Beschreibung",
+        "descriptionDesc": "Kurzbeschreibung dieses Agenten",
+        "descriptionPlaceholder": "Prüft Code auf Fehler und Stil",
+        "advancedOptions": "Erweiterte Optionen",
+        "model": "Modell",
+        "modelDesc": "Modellüberschreibung für diesen Agenten",
+        "tools": "Werkzeuge",
+        "toolsDesc": "Kommagetrennte Liste zulässiger Tools (leer = alle)",
+        "disallowedTools": "Nicht erlaubte Tools",
+        "disallowedToolsDesc": "Kommagetrennte Liste der zu verbietenden Tools",
+        "skills": "Fähigkeiten",
+        "skillsDesc": "Kommagetrennte Liste von Fähigkeiten",
+        "prompt": "System-Prompt",
+        "promptDesc": "Anweisungen für den Agenten",
+        "promptPlaceholder": "Du bist ein Code-Reviewer. Analysiere den angegebenen Code auf..."
+      },
+      "loadFailed": "Der Subagent „{name}“ konnte nicht geladen werden: {message}",
+      "modelOptions": {
+        "inherit": "Erben",
+        "sonnet": "Sonett",
+        "opus": "Opus",
+        "haiku": "Haiku"
+      }
+    },
+    "safety": "Sicherheit",
+    "loadUserSettings": {
+      "name": "Benutzer-Claude-Einstellungen laden",
+      "desc": "Lädt ~/.claude/settings.json. Wenn aktiviert, können Benutzer-Claude-Code-Berechtigungsregeln den Sicherheitsmodus umgehen."
+    },
+    "claudeSafeMode": {
+      "name": "Abgesicherter Modus",
+      "desc": "Berechtigungsmodus, der verwendet wird, wenn die sichere Umschaltung aktiv ist."
+    },
+    "codexSafeMode": {
+      "name": "Abgesicherter Modus",
+      "desc": "Sandbox-Modus, der verwendet wird, wenn der Safe-Schalter aktiv ist."
+    },
+    "environment": "Umgebung",
+    "customVariables": {
+      "name": "Benutzerdefinierte Variablen",
+      "desc": "Umgebungsvariablen für Claude SDK (KEY=VALUE-Format, eine pro Zeile). Export-Präfix unterstützt."
+    },
+    "envSnippets": {
+      "name": "Ausschnitte",
+      "addBtn": "Snippet hinzufügen",
+      "noSnippets": "Keine gespeicherten Umgebungsvariablen-Snippets. Klicken Sie auf +, um Ihre aktuelle Konfiguration zu speichern.",
+      "nameRequired": "Bitte geben Sie einen Namen für das Snippet ein",
+      "modal": {
+        "titleEdit": "Snippet bearbeiten",
+        "titleSave": "Snippet speichern",
+        "name": "Bezeichnung",
+        "namePlaceholder": "Ein beschreibender Name für diese Umgebungskonfiguration",
+        "description": "Beschreibung",
+        "descPlaceholder": "Optionale Beschreibung",
+        "envVars": "Umgebungsvariablen",
+        "envVarsPlaceholder": "KEY=VALUE-Format, eine pro Zeile (export-Präfix unterstützt)",
+        "save": "Speichern",
+        "update": "Aktualisieren",
+        "cancel": "Abbrechen"
+      },
+      "insertFailed": "Snippet konnte nicht eingefügt werden",
+      "deleteFailed": "Snippet konnte nicht gelöscht werden",
+      "deleteConfirm": "Umgebungsausschnitt „{name}“ löschen?",
+      "saved": "Umgebungsausschnitt „{name}“ gespeichert",
+      "updated": "Umgebungsausschnitt „{name}“ aktualisiert",
+      "deleted": "Umgebungsausschnitt „{name}“ gelöscht",
+      "insertAria": "Ausschnitt einfügen",
+      "aliasAria": "Alias ​​für {modelId}",
+      "aliasTitle": "Benutzerdefiniertes Etikett wird in der Modellauswahl angezeigt. Lassen Sie das Feld leer, um die Standardeinstellung zu verwenden.",
+      "contextWindowAria": "Kontextfenster für {modelId}",
+      "contextWindowPlaceholder": "200.000"
+    },
+    "customModelOverrides": {
+      "name": "Benutzerdefinierte Modellüberschreibungen",
+      "desc": "Legen Sie Aliasnamen in der Modellauswahl und Kontextfenstergrößen für benutzerdefinierte Modelle fest."
+    },
+    "customModelAliases": {
+      "placeholder": "Alias",
+      "ariaLabel": "Alias ​​für {modelId}",
+      "aliasTitle": "Benutzerdefiniertes Etikett wird in der Modellauswahl angezeigt. Lassen Sie das Feld leer, um die Standardeinstellung zu verwenden."
+    },
+    "customContextLimits": {
+      "name": "Benutzerdefinierte Kontextlimits",
+      "desc": "Legen Sie die Kontextfenstergrößen für Ihre benutzerdefinierten Modelle fest. Leer lassen für den Standardwert (200k Token).",
+      "invalid": "Ungültiges Format. Verwenden Sie: 256k, 1m oder exakte Anzahl (1000-10000000).",
+      "ariaLabel": "Kontextfenster für {modelId}"
+    },
+    "enableOpus1M": {
+      "name": "Opus 1M Kontextfenster",
+      "desc": "Opus 1M in der Modellauswahl anzeigen. In Max-, Team- und Enterprise-Plänen enthalten. API- und Pro-Nutzer benötigen zusätzliche Nutzung."
+    },
+    "enableSonnet1M": {
+      "name": "Sonnet 1M Kontextfenster",
+      "desc": "Sonnet 1M in der Modellauswahl anzeigen. Erfordert zusätzliche Nutzung bei Max-, Team- und Enterprise-Plänen. API- und Pro-Nutzer benötigen zusätzliche Nutzung."
+    },
+    "customModels": {
+      "name": "Kundenspezifische Modelle",
+      "desc": "Fügen Sie der Auswahl zusätzliche Claude-Modell-IDs hinzu, eine pro Zeile. Umgebungsmodellüberschreibungen ersetzen weiterhin den Picker.",
+      "placeholder": "claude-opus-4-6\nclaude-opus-4-6[1m]\nclaude-opus-4-5-20251101"
+    },
+    "enableChrome": {
+      "name": "Chrome-Erweiterung aktivieren",
+      "desc": "Erlaubt Claude die Interaktion mit Chrome über die claude-in-chrome-Erweiterung. Die Erweiterung muss installiert sein. Erfordert Neustart der Sitzung."
+    },
+    "enableBangBash": {
+      "name": "Bash-Modus (!) aktivieren",
+      "desc": "Gib ! in ein leeres Eingabefeld ein, um den Bash-Modus zu starten. Führt Befehle direkt über Node.js child_process aus. Die Ansicht muss neu geöffnet werden.",
+      "validation": {
+        "noNode": "Node.js wurde auf PATH nicht gefunden. Installiere Node.js oder prüfe deine PATH-Konfiguration."
+      }
+    },
+    "maxTabs": {
+      "name": "Maximale Chat-Tabs",
+      "desc": "Maximale Anzahl gleichzeitiger Chat-Tabs (3-10). Jeder Tab verwendet eine separate Claude-Sitzung.",
+      "warning": "Mehr als 5 Tabs können Leistung und Speichernutzung beeinträchtigen."
+    },
+    "enableAutoScroll": {
+      "name": "Automatisches Scrollen während Streaming",
+      "desc": "Automatisch nach unten scrollen, während Claude Antworten streamt. Deaktivieren, um oben zu bleiben und von Anfang an zu lesen."
+    },
+    "deferMathRenderingDuringStreaming": {
+      "name": "Mathe-Rendering während Streaming aufschieben",
+      "desc": "LaTeX während des Streamings roh anzeigen und Mathematik einmal rendern, wenn der Textblock abgeschlossen ist."
+    },
+    "expandFileEditsByDefault": {
+      "name": "Dateibearbeitungen standardmäßig ausklappen",
+      "desc": "Write- und Edit-Diffs beim ersten Erscheinen ausgeklappt anzeigen."
+    },
+    "chatViewPlacement": {
+      "name": "TyporAi öffnen in",
+      "desc": "Wählen Sie, wo das Chat-Panel beim Erstellen geöffnet wird",
+      "rightSidebar": "Rechte Seitenleiste",
+      "leftSidebar": "Linke Seitenleiste",
+      "mainTab": "Haupteditor-Tab"
+    },
+    "cliPath": {
+      "name": "Claude CLI-Pfad",
+      "desc": "Benutzerdefinierter Pfad zum Claude Code CLI. Leer lassen für automatische Erkennung.",
+      "descWindows": "Für den nativen Installer verwenden Sie claude.exe. Für npm/pnpm/yarn oder andere Paketmanager-Installationen verwenden Sie den cli-wrapper.cjs-Pfad (nicht claude.cmd).",
+      "descUnix": "Fügen Sie die Ausgabe von \"which claude\" ein — funktioniert sowohl für native als auch npm/pnpm/yarn-Installationen.",
+      "validation": {
+        "notExist": "Pfad existiert nicht",
+        "isDirectory": "Pfad ist ein Verzeichnis, keine Datei"
+      }
+    },
+    "language": {
+      "name": "Sprache",
+      "desc": "Anzeigesprache der Plugin-Oberfläche ändern"
+    },
+    "claude": {
+      "enableProvider": {
+        "name": "Claude-Anbieter aktivieren",
+        "desc": "Wenn aktiviert, erscheinen Claude-Modelle in neuen Unterhaltungen. Das Aktivieren von Claude deaktiviert Codex und OpenCode."
+      },
+      "plugins": {
+        "header": "Claude-Code-Plugins",
+        "refreshAria": "Plugins aktualisieren",
+        "empty": "No Claude Code plugins discovered.",
+        "project": "Project",
+        "user": "User",
+        "disableAria": "Plugin deaktivieren",
+        "enableAria": "Plugin aktivieren",
+        "refreshFailed": "Aktualisierung der Plugins fehlgeschlagen: {message}",
+        "toggleFailed": "Plugin konnte nicht umgeschaltet werden: {message}",
+        "togglePartiallyFailed": "Das Plugin wurde umgeschaltet, aber einige Tabs konnten nicht neu gestartet werden.",
+        "noticeToggledDisabled": "Plugin „{id}“ deaktiviert",
+        "noticeToggledEnabled": "Plugin „{id}“ aktiviert",
+        "noticeRefreshed": "Plugin-Liste aktualisiert"
+      },
+      "slashCommands": {
+        "type": {
+          "name": "Typ",
+          "desc": "Wählen Sie, ob es sich bei diesem Eintrag um einen Schrägstrichbefehl oder eine Fertigkeit handelt.",
+          "skillLabel": "Fähigkeit",
+          "commandLabel": "Befehl",
+          "commandOption": "Befehl",
+          "skillOption": "Fähigkeit"
+        },
+        "name": {
+          "name": "Bezeichnung",
+          "desc": "Nur Kleinbuchstaben, Zahlen und Bindestriche.",
+          "placeholder": "Rezension-pr"
+        },
+        "description": {
+          "name": "Beschreibung",
+          "desc": "Kurze Beschreibung, die in der Slash-Befehlsliste angezeigt wird."
+        },
+        "argumentHint": {
+          "name": "Argumentationshinweis",
+          "desc": "Platzhaltertext für Argumente (z. B. „[Datei] [Fokus]“)"
+        },
+        "modelOverride": {
+          "name": "Modellüberschreibung",
+          "desc": "Optionales Modell, das für diesen Befehl verwendet werden soll.",
+          "placeholder": "Claude-sonett-4-5"
+        },
+        "allowedTools": {
+          "name": "Erlaubte Werkzeuge",
+          "desc": "Durch Kommas getrennte Liste der zulässigen Tools (leer = alle)."
+        },
+        "disableModelInvocation": {
+          "name": "Modellaufruf deaktivieren",
+          "desc": "Verhindern Sie, dass das Modell diesen Befehl selbst aufruft."
+        },
+        "disableUserInvocation": {
+          "name": "Benutzeraufruf deaktivieren",
+          "desc": "Verhindern Sie, dass der Benutzer diesen Skill direkt aufruft."
+        },
+        "context": {
+          "name": "Kontext",
+          "desc": "Führen Sie einen Subagenten (Fork) aus."
+        },
+        "agent": {
+          "name": "Agentenprofil",
+          "desc": "Subagententyp, wenn der Kontext Fork ist.",
+          "placeholder": "Code-Reviewer"
+        },
+        "prompt": {
+          "name": "Prompt-Vorlage",
+          "desc": "Verwenden Sie $ARGUMENTS, $1, $2, @file, !`bash`."
+        },
+        "promptPlaceholder": "Überprüfen Sie diesen Code auf:\n$ARGUMENTS\n\n@$1",
+        "advancedOptions": "Erweiterte Optionen",
+        "promptRequired": "Eine zeitnahe Vorlage ist erforderlich",
+        "duplicateName": "Ein Befehl mit dem Namen „/{name}“ ist bereits vorhanden",
+        "saveFailed": "Der Slash-Befehl konnte nicht gespeichert werden",
+        "saveFailedSkill": "Fertigkeit konnte nicht gespeichert werden",
+        "saveFailedCommand": "Der Slash-Befehl konnte nicht gespeichert werden",
+        "deleteFailedSkill": "Der Skill konnte nicht gelöscht werden",
+        "deleteFailedCommand": "Der Schrägstrichbefehl konnte nicht gelöscht werden",
+        "convertToSkillAria": "In Fertigkeit umwandeln",
+        "convertFailed": "Konvertierung in Fertigkeit fehlgeschlagen",
+        "converted": "„/{name}“ in Fertigkeit umgewandelt",
+        "skillBadge": "Fähigkeit",
+        "skillLabel": "Fähigkeit",
+        "slashCommandLabel": "Slash-Befehl",
+        "created": "erstellt",
+        "updated": "aktualisiert",
+        "deleted": "gelöscht",
+        "unavailable": "Der Claude-Befehlskatalog ist nicht verfügbar.",
+        "emptyCatalog": "Keine Befehle oder Fertigkeiten gefunden.",
+        "emptyNone": "Noch keine Befehle oder Fähigkeiten. Klicken Sie auf +, um eines hinzuzufügen.",
+        "learnMore": "Erfahren Sie mehr",
+        "duplicateSkillName": "Ein Skill mit dem Namen „/{name}“ ist bereits vorhanden",
+        "saveFailedWithLabel": "{label} konnte nicht gespeichert werden",
+        "deleteFailedWithLabel": "{label} konnte nicht gelöscht werden",
+        "noticeCreated": "{label} „/{name}“ erstellt",
+        "noticeUpdated": "{label} „/{name}“ aktualisiert",
+        "noticeDeleted": "{label} „/{name}“ gelöscht"
+      },
+      "customVariables": {
+        "desc": "Nur Claude-eigene Laufzeitvariablen. Verwenden Sie dies für ANTHROPIC_*- und Claude-spezifische Umschalter.",
+        "placeholder": "ANTHROPIC_API_KEY=your-key\nANTHROPIC_BASE_URL=https://api.example.com\nANTHROPIC_MODEL=custom-model\nCLAUDE_CODE_USE_BEDROCK=1"
+      }
+    },
+    "codex": {
+      "enable": {
+        "name": "Codex-Anbieter aktivieren",
+        "desc": "Wenn diese Option aktiviert ist, werden Codex-Modelle in der Modellauswahl für neue Konversationen angezeigt. Vorhandene Codex-Sitzungen bleiben erhalten."
+      },
+      "installationMethod": {
+        "name": "Installationsmethode",
+        "desc": "Wie TyporAi Codex unter Windows starten sollte. Natives Windows verwendet einen ausführbaren Windows-Pfad. WSL startet die Linux-CLI in einer ausgewählten Distribution.",
+        "nativeWindows": "Natives Windows",
+        "wsl": "WSL"
+      },
+      "cliPath": {
+        "name": "Codex-CLI-Pfad",
+        "desc": "Benutzerdefinierter Pfad zur Codex-CLI.",
+        "placeholder": "Pfad zur ausführbaren Codex-Datei",
+        "descNative": "Benutzerdefinierter Pfad zur lokalen Codex-CLI. Für die automatische Erkennung aus PATH leer lassen.",
+        "descWsl": "Linux-seitiger Codex-Befehl oder absoluter Pfad zur Ausführung innerhalb der WSL. Für die PATH-Suche innerhalb der ausgewählten Distribution leer lassen.",
+        "descWindows": "Benutzerdefinierter Pfad zum lokalen Codex CLI. Für die automatische Erkennung von PATH leer lassen. Verwenden Sie den nativen Windows-Ausführungspfad, normalerweise `codex.exe`.",
+        "placeholderNative": "/usr/local/bin/codex",
+        "placeholderWsl": "Kodex",
+        "placeholderWindows": "C:\\Users\\you\\AppData\\Roaming\\npm\\codex.exe",
+        "wslModeError": "Der WSL-Modus erwartet einen Linux-Befehl oder einen absoluten Linux-Pfad, keinen ausführbaren Windows-Pfad."
+      },
+      "wslDistro": {
+        "name": "Überschreibung der WSL-Distribution",
+        "desc": "Optionale erweiterte Überschreibung. Lassen Sie das Feld leer, um die Distribution nach Möglichkeit aus einem WSL-Arbeitsbereichspfad abzuleiten. Andernfalls verwenden Sie die Standard-WSL-Distribution.",
+        "placeholder": "Ubuntu"
+      },
+      "reasoningSummary": {
+        "name": "Zusammenfassung der Begründung",
+        "desc": "Zeigen Sie im Denkblock eine Zusammenfassung des Argumentationsprozesses des Modells an.",
+        "auto": "Automatisch",
+        "concise": "Prägnant",
+        "detailed": "Ausführlich",
+        "none": "Keiner"
+      },
+      "skills": {
+        "heading": "Codex-Fähigkeiten",
+        "desc": "Verwalten Sie Codex-Fähigkeiten auf Tresorebene, die in .codex/skills/ oder .agents/skills/ gespeichert sind. Hiervon ausgenommen sind Fertigkeiten auf häuslicher Ebene.",
+        "label": "Codex-Fähigkeiten",
+        "empty": "Keine Codex-Fähigkeiten im Tresor. Klicken Sie auf +, um eines zu erstellen.",
+        "skillBadge": "Fähigkeit",
+        "deletedNotice": "Codex skill \"${name}\" deleted",
+        "createdNotice": "Codex skill \"${name}\" created",
+        "updatedNotice": "Codex skill \"${name}\" updated",
+        "saveFailed": "Codex-Fertigkeit konnte nicht gespeichert werden",
+        "deleteFailed": "Codex-Skill konnte nicht gelöscht werden",
+        "instructionsRequired": "Anweisungen sind erforderlich"
+      },
+      "hiddenSkills": {
+        "name": "Verborgene Fähigkeiten",
+        "desc": "Verstecken Sie bestimmte Codex-Fertigkeiten im Dropdown-Menü. Geben Sie Fertigkeitsnamen ohne das führende $ ein, einen pro Zeile.",
+        "placeholder": "analysieren\nerklären\nbeheben"
+      },
+      "subagents": {
+        "heading": "Codex-Subagenten",
+        "desc": "Verwalten Sie Codex-Subagenten auf Tresorebene, die in .codex/agents/ gespeichert sind. Jede TOML-Datei definiert einen benutzerdefinierten Agenten.",
+        "label": "Codex-Subagenten",
+        "empty": "Keine Codex-Subagenten im Tresor. Klicken Sie auf +, um eines zu erstellen."
+      },
+      "safeMode": {
+        "workspaceWrite": "Arbeitsbereich schreiben",
+        "readOnly": "Nur lesen"
+      },
+      "env": {
+        "name": "Benutzerdefinierte Variablen",
+        "desc": "Umgebungsvariablen für Codex (Format KEY=VALUE, eine pro Zeile). Shell-Exportpräfix wird unterstützt.",
+        "placeholder": "OPENAI_API_KEY=your-key\nOPENAI_BASE_URL=https://api.openai.com/v1"
+      },
+      "mcp": {
+        "notice": "Codex verwaltet MCP-Server über seine eigene CLI. Konfigurieren Sie mit `codex mcp` und sie werden in TyporAi verfügbar sein.",
+        "learnMore": "Erfahren Sie mehr"
+      },
+      "customModels": {
+        "placeholder": "gpt-5.4\ngpt-5.3-codex-spark"
+      },
+      "skillModal": {
+        "titleAdd": "Codex-Fähigkeit hinzufügen",
+        "titleEdit": "Codex-Fertigkeit bearbeiten",
+        "directory": {
+          "name": "Verzeichnis",
+          "desc": "Wo soll der Skill gespeichert werden?"
+        },
+        "name": {
+          "name": "Fähigkeitsname",
+          "desc": "Der nach $ verwendete Name (z. B. „analyze“ für $analyze)",
+          "placeholder": "Code analysieren"
+        },
+        "description": {
+          "name": "Beschreibung",
+          "desc": "Optionale Beschreibung im Dropdown-Menü angezeigt"
+        },
+        "instructions": {
+          "name": "Anweisungen",
+          "desc": "Die Skill-Anweisungen (SKILL.md-Inhalt)",
+          "placeholder": "Analysieren Sie den Code auf ..."
+        }
+      },
+      "subagentModal": {
+        "titleAdd": "Codex-Subagent hinzufügen",
+        "titleEdit": "Codex-Subagent bearbeiten",
+        "advanced": "Erweiterte Optionen",
+        "name": {
+          "name": "Bezeichnung",
+          "desc": "Agentenname, den Codex beim Spawnen verwendet (Kleinbuchstaben, Bindestriche, Unterstriche)",
+          "placeholder": "Code_reviewer"
+        },
+        "description": {
+          "name": "Beschreibung",
+          "desc": "Wann Codex diesen Agenten verwenden sollte",
+          "placeholder": "Überprüft den Code auf Richtigkeit und Sicherheit",
+          "required": "Beschreibung ist erforderlich"
+        },
+        "model": {
+          "name": "Modell",
+          "desc": "Modellüberschreibung (zum Erben leer lassen)"
+        },
+        "reasoningEffort": {
+          "name": "Argumentationsaufwand",
+          "desc": "Aufwandsniveau des Modellschlusses",
+          "inherit": "Erben",
+          "low": "Niedrig",
+          "medium": "Mittel",
+          "high": "Hoch",
+          "xhigh": "Extra hoch"
+        },
+        "sandboxMode": {
+          "name": "Sandbox-Modus",
+          "desc": "Sandbox-Einschränkung für diesen Agenten",
+          "inherit": "Erben",
+          "readOnly": "Nur lesen",
+          "dangerFullAccess": "Gefahr voller Zugriff",
+          "workspaceWrite": "Arbeitsbereich schreiben"
+        },
+        "nicknameCandidates": {
+          "name": "Spitznamenkandidaten",
+          "desc": "Durch Kommas getrennte Anzeige-Spitznamen (z. B. Atlas, Delta, Echo)"
+        },
+        "developerInstructions": {
+          "name": "Entwickleranweisungen",
+          "desc": "Kernanweisungen, die das Verhalten des Agenten definieren",
+          "placeholder": "Überprüfen Sie den Code wie ein Eigentümer.\nPriorisieren Sie Korrektheit, Sicherheit und fehlende Testabdeckung.",
+          "required": "Anweisungen des Entwicklers sind erforderlich"
+        },
+        "errors": {
+          "duplicateName": "A subagent named \"${name}\" already exists",
+          "saveFailed": "Failed to save subagent: ${message}",
+          "deleteFailed": "Subagent konnte nicht gelöscht werden",
+          "deletedNotice": "Subagent \"${name}\" deleted",
+          "createdNotice": "Subagent \"${name}\" created",
+          "updatedNotice": "Subagent \"${name}\" updated",
+          "deleteConfirm": "Delete subagent \"${name}\"?"
+        },
+        "validation": {
+          "nameRequired": "Der Name des Subagenten ist erforderlich",
+          "nameTooLong": "Der Name des Subagenten darf höchstens {max} Zeichen lang sein",
+          "nameInvalid": "Der Name des Subagenten darf nur Kleinbuchstaben, Zahlen, Bindestriche und Unterstriche enthalten",
+          "nicknameInvalid": "Spitznamenkandidaten dürfen nur ASCII-Buchstaben, Zahlen, Leerzeichen, Bindestriche und Unterstriche enthalten",
+          "nicknameDuplicate": "Spitznamenkandidaten müssen eindeutig sein"
+        }
+      }
+    },
+    "opencode": {
+      "setup": {
+        "heading": "Aufstellen"
+      },
+      "enable": {
+        "name": "Aktivieren Sie den OpenCode-Anbieter",
+        "desc": "Wenn diese Option aktiviert ist, werden OpenCode-Modelle in der Modellauswahl für neue Konversationen angezeigt."
+      },
+      "cliPath": {
+        "name": "OpenCode CLI path",
+        "desc": "Custom path to the local OpenCode CLI. Leave empty for auto-detection from PATH.",
+        "placeholder": "/usr/local/bin/opencode",
+        "validation": {
+          "notExist": "Pfad existiert nicht",
+          "isFile": "Path is a directory, not a file",
+          "notFile": "Path is not a file",
+          "isDirectory": "Der Pfad muss auf eine Datei verweisen"
+        },
+        "placeholderWin": "C:\\Users\\you\\AppData\\Roaming\\npm\\opencode.cmd",
+        "placeholderUnix": "/usr/local/bin/opencode"
+      },
+      "models": {
+        "heading": "Modelle",
+        "browse": "Browse",
+        "searchPlaceholder": "Modelle suchen...",
+        "empty": "Keine Modelle entdeckt.",
+        "loading": "Modelle werden geladen...",
+        "loadFailed": "Modelle konnten nicht geladen werden.",
+        "startOpencode": "Starten Sie OpenCode, um Modelle zu entdecken.",
+        "notReported": "Not reported by OpenCode",
+        "selectedCount": "{count} ausgewählt",
+        "ofDiscovered": "von {total} entdeckt",
+        "noneDiscovered": "Keine entdeckt",
+        "available": "Verfügbar",
+        "allProviders": "Alle Anbieter",
+        "removeAria": "{label} entfernen",
+        "aliasAria": "Set alias for {name}",
+        "visibleLabel": "Sichtbare Modelle",
+        "clearAllAria": "Alle ausgewählten Modelle löschen",
+        "emptyFiltered": "Keine Modelle entsprechen Ihrer Suche.",
+        "emptyLoading": "Modelle aus OpenCode werden geladen...",
+        "emptyLoadFailed": "Modelle konnten nicht aus OpenCode geladen werden. Überprüfen Sie den CLI-Pfad und versuchen Sie es erneut.",
+        "emptyStartOpencode": "Starten Sie OpenCode, um verfügbare Modelle anzuzeigen.",
+        "visible": {
+          "name": "Sichtbare Modelle",
+          "desc": "Wählen Sie aus, welche Modelle in der Auswahl angezeigt werden. Wenn leer, werden alle erkannten Modelle angezeigt."
+        },
+        "unavailableBadge": "Nicht verfügbar",
+        "unavailableTitle": "Dieses Modell ist derzeit nicht bei OpenCode verfügbar",
+        "allProvidersCount": "Alle Anbieter ({count})",
+        "providerOption": "{label} ({count})",
+        "aliasTitle": "Benutzerdefiniertes Etikett wird in der Modellauswahl angezeigt. Lassen Sie das Feld leer, um die Standardeinstellung zu verwenden."
+      },
+      "commands": {
+        "heading": "Befehle",
+        "desc": "Verwalten Sie OpenCode-Befehle auf Tresorebene."
+      },
+      "hiddenCommands": {
+        "name": "Versteckte Befehle",
+        "desc": "Verstecken Sie bestimmte OpenCode-Befehle im Dropdown-Menü. Geben Sie Namen ohne den führenden Schrägstrich ein, einen pro Zeile.",
+        "placeholder": "Befehl1\nBefehl2"
+      },
+      "subagents": {
+        "heading": "Subagenten",
+        "desc": "Verwalten Sie OpenCode-Subagenten auf Tresorebene."
+      },
+      "env": {
+        "desc": "Environment variables for OpenCode (KEY=VALUE format, one per line). Shell export prefix supported.",
+        "heading": "Umfeld",
+        "name": "Umgebungsvariablen",
+        "placeholder": "${defaultEnv}\nOPENCODE_DB=/path/to/opencode.db"
+      },
+      "agentModal": {
+        "titleAdd": "OpenCode-Subagent hinzufügen",
+        "titleEdit": "Bearbeiten Sie den OpenCode-Subagenten",
+        "advanced": "Erweiterte Optionen",
+        "name": {
+          "name": "Bezeichnung",
+          "desc": "Name des OpenCode-Agenten. Verwenden Sie durch Schrägstriche getrennte Segmente für verschachtelte Agenten.",
+          "placeholder": "Rezension",
+          "required": "Der Name des Agenten ist erforderlich",
+          "slashLeadingTrailing": "Der Agentenname muss durch Schrägstriche getrennte Pfadsegmente ohne führende oder abschließende Schrägstriche verwenden",
+          "segmentEmpty": "Pfadsegmente für Agentennamen dürfen nicht leer sein oder nur Leerzeichen enthalten",
+          "segmentWhitespace": "Pfadsegmente für Agentennamen dürfen nicht mit Leerzeichen beginnen oder enden",
+          "dotSegment": "Der Name des Agenten darf „.“ nicht enthalten. oder „..“ Pfadsegmente",
+          "reservedChars": "Pfadsegmente für Agentennamen dürfen keine für Windows reservierten Dateinamenzeichen enthalten"
+        },
+        "description": {
+          "name": "Beschreibung",
+          "desc": "Wann OpenCode diesen Subagenten verwenden soll",
+          "placeholder": "Überprüft den Code auf Korrektheit und Wartbarkeit",
+          "required": "Beschreibung ist erforderlich"
+        },
+        "model": {
+          "name": "Modell",
+          "desc": "Modellüberschreibung im Anbieter-/Modellformat",
+          "placeholder": "Anthropisch/Claude-sonett-4-20250514"
+        },
+        "variant": {
+          "name": "Variante",
+          "desc": "Modellvariantenüberschreibung",
+          "placeholder": "Hoch"
+        },
+        "temperature": {
+          "name": "Temperatur",
+          "desc": "Optionale Probentemperatur",
+          "placeholder": "0,1",
+          "invalid": "Die Temperatur muss eine gültige Zahl sein"
+        },
+        "topP": {
+          "name": "Oben S",
+          "desc": "Optionaler Kernprobenwert",
+          "placeholder": "0,9",
+          "invalid": "Top P muss eine gültige Zahl sein"
+        },
+        "color": {
+          "name": "Farbe",
+          "desc": "Hex-Farb- oder Thementoken",
+          "placeholder": "#Ff5733"
+        },
+        "steps": {
+          "name": "Schritte",
+          "desc": "Maximale Agentiterationen, bevor eine Nur-Text-Ausgabe erzwungen wird",
+          "placeholder": "10",
+          "invalid": "Schritte müssen eine positive Ganzzahl sein"
+        },
+        "hidden": {
+          "name": "Vor @mention verstecken",
+          "desc": "Blenden Sie diesen Subagenten im @-Autocomplete-Menü aus"
+        },
+        "disable": {
+          "name": "Agent deaktivieren",
+          "desc": "Deaktivieren Sie den Agenten, ohne die Datei zu löschen"
+        },
+        "tools": {
+          "name": "Aktivierte Tools (JSON)",
+          "desc": "Optionale Karte veralteter Tools, z. B. {\"write\":false,\"edit\":false}",
+          "placeholder": "{\n  \"write\": false,\n  \"edit\": false\n}",
+          "invalid": "Aktivierte Werkzeuge müssen Werkzeugnamen booleschen Werten zuordnen"
+        },
+        "permission": {
+          "name": "Berechtigung (JSON)",
+          "desc": "Optionale Berechtigungskonfiguration, z. B. {\"edit\":\"deny\",\"bash\":\"allow\"}",
+          "placeholder": "{\n  \"edit\": \"deny\"\n}",
+          "invalid": "Die Berechtigung muss gültiges JSON sein"
+        },
+        "options": {
+          "name": "Optionen (JSON)",
+          "desc": "Optionale benutzerdefinierte Agentenoptionen",
+          "placeholder": "{\n  \"focus\": \"security\"\n}",
+          "invalid": "Optionen müssen ein JSON-Objekt sein"
+        },
+        "prompt": {
+          "name": "Eingabeaufforderung",
+          "desc": "Markdown-Text, der als Agent-Eingabeaufforderung verwendet wird",
+          "placeholder": "Überprüfen Sie Codeänderungen sorgfältig und weisen Sie auf Korrektheit, Regressionen und fehlende Abdeckung hin.",
+          "required": "Prompt ist erforderlich"
+        },
+        "errors": {
+          "duplicate": "A subagent named \"${name}\" already exists",
+          "saveFailed": "Failed to save subagent: ${message}",
+          "deleteFailed": "Subagent konnte nicht gelöscht werden",
+          "created": "Subagent \"${name}\" created",
+          "updated": "Subagent \"${name}\" updated",
+          "deleted": "Subagent \"${name}\" deleted"
+        }
+      },
+      "agentList": {
+        "label": "OpenCode-Subagenten",
+        "empty": "Keine OpenCode-Subagenten im Tresor. Klicken Sie auf +, um eines zu erstellen.",
+        "badgeSubagent": "Subagent",
+        "refreshAria": "Aktualisieren",
+        "addAria": "Hinzufügen",
+        "editAria": "Bearbeiten",
+        "deleteAria": "Löschen",
+        "deleteConfirm": "Delete subagent \"${name}\"?"
+      }
+    },
+    "typora": {
+      "setup": {
+        "heading": "Aufstellen"
+      },
+      "enable": {
+        "name": "Aktivieren Sie den Typora-Anbieter",
+        "desc": "Wenn aktiviert, kann der Typora-Anbieter in der Modellauswahl verwendet werden."
+      },
+      "api": {
+        "heading": "API"
+      },
+      "apiKey": {
+        "name": "API-Schlüssel",
+        "desc": "API-Schlüssel zur Authentifizierung von Anfragen an die Typora-Anbieter-API."
+      },
+      "apiBaseUrl": {
+        "name": "API-Basis-URL",
+        "desc": "Basis-URL für die Typora-Anbieter-API. Als Standardwert leer lassen."
+      },
+      "apiModel": {
+        "name": "API-Modell",
+        "desc": "Modell-ID zur Verwendung für die Typora-Anbieter-API."
+      }
+    },
+    "mcp": {
+      "modal": {
+        "titleEdit": "Bearbeiten Sie den MCP-Server",
+        "titleAdd": "MCP-Server hinzufügen",
+        "serverName": {
+          "name": "Servername",
+          "desc": "Eindeutiger Bezeichner für diesen MCP-Server.",
+          "placeholder": "mein-mcp-server"
+        },
+        "type": {
+          "name": "Typ",
+          "desc": "Wählen Sie aus, wie der MCP-Server gestartet oder verbunden wird.",
+          "stdio": "stdio (lokaler Befehl)",
+          "sse": "SSE (vom Server gesendete Ereignisse)",
+          "http": "HTTP"
+        },
+        "enabled": {
+          "name": "Ermöglicht",
+          "desc": "Deaktivierte Server werden nicht gestartet und dem Modell nicht angeboten."
+        },
+        "contextSaving": {
+          "name": "Kontextspeicherung",
+          "desc": "Wenn diese Option aktiviert ist, wird dieser Server nur aktiviert, wenn Sie ihn im Chat @-mention verwenden, wodurch Kontexttokens gespeichert werden."
+        },
+        "command": {
+          "name": "Befehl",
+          "desc": "Shell-Befehl, der den MCP-Server startet. Argumente werden durch Leerzeichen getrennt.",
+          "placeholder": "npx -y @my-org/mcp-server"
+        },
+        "env": {
+          "name": "Umgebungsvariablen",
+          "desc": "Ein KEY=VALUE Paar pro Zeile. Verwenden Sie das Präfix `export`, wenn Ihre Shell dies erfordert.",
+          "placeholder": "API_KEY=your-key\nDEBUG=true"
+        },
+        "url": {
+          "name": "URL",
+          "desc": "Endpunkt für den MCP-Server.",
+          "sseDesc": "Endpunkt-URL für vom Server gesendete Ereignisse.",
+          "httpDesc": "HTTP-Endpunkt-URL.",
+          "placeholder": "https://example.com/mcp"
+        },
+        "headers": {
+          "name": "Überschriften",
+          "desc": "Benutzerdefinierte HTTP-Header, ein KEY=VALUE pro Zeile.",
+          "placeholder": "Autorisierung = Inhaber Ihres Tokens"
+        },
+        "nameRequired": "Bitte geben Sie einen Servernamen ein",
+        "nameInvalid": "Der Servername darf nur Buchstaben, Zahlen, Punkte, Bindestriche und Unterstriche enthalten",
+        "commandRequired": "Bitte geben Sie einen Befehl ein",
+        "urlRequired": "Bitte geben Sie eine URL ein"
+      },
+      "empty": "Keine MCP-Server konfiguriert. Klicken Sie auf +, um eines hinzuzufügen.",
+      "addOptionStdio": "Stdio (lokaler Befehl)",
+      "addOptionHttp": "HTTP / SSE",
+      "addOptionImport": "Aus der Zwischenablage importieren",
+      "contextSavingBadgeTitle": "Kontextsparend: zum Aktivieren mit @{name} erwähnen",
+      "verifyAria": "Überprüfen (Tools anzeigen)",
+      "disableAria": "Deaktivieren",
+      "enableAria": "Aktivieren",
+      "editAria": "Bearbeiten",
+      "deleteAria": "Löschen",
+      "alreadyExists": "Der Server „{name}“ existiert bereits",
+      "updated": "MCP-Server „{name}“ aktualisiert",
+      "added": "MCP-Server „{name}“ hinzugefügt",
+      "enabled": "MCP-Server „{name}“ aktiviert",
+      "disabled": "MCP-Server „{name}“ deaktiviert",
+      "deleted": "MCP-Server „{name}“ gelöscht",
+      "deleteConfirm": "MCP-Server „{name}“ löschen?",
+      "saveFailed": "Der MCP-Server konnte nicht gespeichert werden",
+      "importEmpty": "Die Zwischenablage ist leer",
+      "importInvalid": "In der Zwischenablage wurde keine gültige MCP-Konfiguration gefunden",
+      "importFailed": "Zwischenablage konnte nicht gelesen werden",
+      "importEnterName": "Geben Sie einen Namen für den Server ein",
+      "importSuccess": "Importierter {count} MCP-Server{plural}",
+      "importPartial": "Importierter {count} MCP-Server{plural} ({skipped} übersprungen)",
+      "importNone": "Keine neuen MCP-Server importiert",
+      "reloadFailed": "Einstellung gespeichert, aber Neuladen fehlgeschlagen. Änderungen werden in der nächsten Sitzung wirksam.",
+      "verificationFailed": "Die Überprüfung ist fehlgeschlagen",
+      "test": {
+        "toggleError": "Umschalten fehlgeschlagen",
+        "permissionDenied": "Zugriff verweigert. Überprüfen Sie die Dateiberechtigungen des Befehls.",
+        "diskFull": "Festplatte voll oder nicht genügend Speicherplatz vorhanden. Geben Sie Speicherplatz frei und versuchen Sie es erneut.",
+        "configCorrupted": "Die MCP-Konfiguration ist beschädigt. Bitte überprüfen und korrigieren Sie den JSON.",
+        "title": "Überprüfen Sie: {name}",
+        "connecting": "Verbinden...",
+        "connected": "Erfolgreich verbunden",
+        "connectionFailed": "Verbindung fehlgeschlagen",
+        "availableTools": "Verfügbare Werkzeuge ({count})",
+        "noToolsInfo": "Keine Werkzeuginformationen verfügbar. Tools werden geladen, wenn sie im Chat verwendet werden.",
+        "disableAll": "Alle deaktivieren",
+        "enableAll": "Alle aktivieren",
+        "close": "Schließen",
+        "connectedTo": "Erfolgreich verbunden mit {name}",
+        "connectedToVersion": "Erfolgreich verbunden mit {name} v{version}"
+      }
+    },
+    "envReview": {
+      "heading": "Umweltüberprüfung",
+      "message": "Umgebungszuständigkeit prüfen für: {keys}",
+      "keysFor": "Überprüfen Sie den Besitz der Umgebung für: {keys}"
+    },
+    "hotkeySearch": "TyporAi",
+    "environmentShared": {
+      "name": "Gemeinsame Umgebung",
+      "desc": "Anbieterneutrale Laufzeitvariablen, die von allen Anbietern gemeinsam genutzt werden. Verwenden Sie dies für PATH, Proxy-, Zertifikats- und temporäre Variablen.",
+      "placeholder": "PATH=/opt/homebrew/bin:/usr/local/bin\nHTTPS_PROXY=http://proxy.example.com:8080\nSSL_CERT_FILE=/path/to/cert.pem"
+    },
+    "storage": {
+      "tabLayout": {
+        "saveFailed": "Das Tab-Layout konnte nicht gespeichert werden"
+      }
+    }
+  },
+  "provider": {
+    "claude": "Claude",
+    "codex": "Codex",
+    "opencode": "OpenCode",
+    "typora": "Typora"
+  },
+  "quickActions": {
+    "toolbar": {
+      "ariaLabel": "Symbolleiste für Schnellaktionen"
+    },
+    "copy": "Kopieren",
+    "ask": "Fragen",
+    "edit": "Bearbeiten",
+    "quote": "Zitieren",
+    "working": "Arbeiten...",
+    "noResult": "Kein Ergebnis",
+    "askInstruction": "Fragen Sie nach dem folgenden Text",
+    "askPrompt": "Bitte erkläre den ausgewählten Text.",
+    "quotePreview": "{text} [{lineCount} Zeilen]",
+    "clearQuote": "Zitat entfernen",
+    "actionFailed": "Aktion fehlgeschlagen"
+  },
+  "modal": {
+    "instruction": {
+      "yourInput": "Ihr Beitrag",
+      "yourResponse": "Ihre Antwort",
+      "refinedSnippet": "Verfeinerter Ausschnitt",
+      "preview": "Vorschau",
+      "edit": "Bearbeiten",
+      "titleAdd": "Fügen Sie eine benutzerdefinierte Anweisung hinzu",
+      "processing": "Ihre Anweisung wird bearbeitet...",
+      "placeholder": "Geben Sie weitere Details an...",
+      "cancel": "Stornieren",
+      "cancelAria": "Stornieren",
+      "submit": "Einreichen",
+      "submitAria": "Antwort senden",
+      "editAria": "Anweisung bearbeiten",
+      "accept": "Akzeptieren",
+      "acceptAria": "Anweisung annehmen",
+      "processingInline": "Verarbeitung..."
+    }
+  },
+  "renderer": {
+    "message": {
+      "interrupted": "Unterbrochen",
+      "interruptedHint": "· Was sollte TyporAi stattdessen tun?",
+      "conversationCompacted": "Gespräch verdichtet",
+      "bakedFor": "* {word} für {duration}",
+      "baked": "Gebacken",
+      "subagentTask": "Subagentenaufgabe",
+      "failedToRender": "Der Nachrichteninhalt konnte nicht gerendert werden.",
+      "copied": "Kopiert!",
+      "copyMessageAria": "Nachricht kopieren",
+      "copyAria": "Kopie",
+      "codeCopied": "Kopiert!",
+      "noResult": "Kein Ergebnis"
+    },
+    "thinking": {
+      "ariaExpand": "Erweitertes Denken – zum Vergrößern klicken",
+      "elapsed": "Ich denke {seconds}s...",
+      "thoughtFor": "Gedacht für {seconds}s",
+      "thought": "Gedanke"
+    },
+    "tool": {
+      "tasksProgress": "Aufgaben {completed}/{total}",
+      "tasks": "Aufgaben",
+      "enteringPlanMode": "Eintritt in den Planmodus",
+      "planComplete": "Plan abgeschlossen",
+      "readFile": "Lesen: {path}",
+      "writeFile": "Schreiben Sie: {path}",
+      "editFile": "Bearbeiten: {path}",
+      "command": "Bash: {command}",
+      "url": "WebFetch: {url}",
+      "file": "Datei",
+      "pattern": "Grep: {pattern}",
+      "skill": "Fähigkeit: {name}",
+      "toolSearch": "Werkzeugsuche: {query}",
+      "tools": "Werkzeuge",
+      "toolSearchLabel": "Glob: {pattern}",
+      "agents": "{count} Agent{plural}",
+      "noResult": "Kein Ergebnis",
+      "noMatchesFound": "Keine Übereinstimmungen gefunden",
+      "moreLines": "... {count} weitere Zeilen",
+      "moreChars": "... {count} weitere Zeichen",
+      "fileDeleted": "Datei gelöscht",
+      "noTextualDiff": "Kein Textunterschied verfügbar",
+      "changesAria": "Änderungen: +{added} -{removed}",
+      "webSearch": "WebSuche: {query}",
+      "search": "suchen",
+      "openPage": "Seite öffnen",
+      "findInPage": "Auf der Seite finden",
+      "findInPageWithPattern": "Suchen Sie nach „{pattern}“",
+      "urlUnavailable": "URL nicht verfügbar",
+      "patternLabel": "Muster: {pattern}",
+      "queryLabel": "Abfrage: {query}",
+      "altQueryLabel": "Alt-Abfrage: {query}",
+      "moreQueries": "... {count} weitere Abfragen",
+      "bashPrefix": "$ {command}",
+      "tasksUpdated": "Aufgaben aktualisiert",
+      "statusCompleted": "Status: abgeschlossen",
+      "statusInProgress": "Status: in Bearbeitung",
+      "statusLabel": "Zustand: {status}",
+      "running": "Läuft...",
+      "waitingForAnswer": "Warte auf Antwort...",
+      "notAnswered": "Nicht beantwortet",
+      "noOptionsRecorded": "Keine Optionen aufgezeichnet",
+      "questionOption": "Auswahl",
+      "questionDefault": "Auswahl",
+      "reviewAnswer": "Überprüfen Sie Ihre Antworten",
+      "list": "LS: {path}"
+    },
+    "writeEdit": {
+      "statusRunning": "Status: läuft",
+      "statusError": "Status: Fehler",
+      "writing": "Schreiben...",
+      "done": "Fertig",
+      "error": "Fehler",
+      "defaultError": "Fehler"
+    },
+    "diff": {
+      "noChanges": "Keine Änderungen",
+      "moreLines": "... {count} weitere Zeilen",
+      "prefix": "+",
+      "ariaLabel": "Änderungen: +{added} -{removed}"
+    },
+    "subagent": {
+      "subagentTask": "Subagentenaufgabe",
+      "backgroundTask": "Hintergrundaufgabe",
+      "prompt": "Eingabeaufforderung",
+      "result": "Ergebnis",
+      "noPromptProvided": "Keine Aufforderung bereitgestellt",
+      "initializing": "Initialisierung",
+      "runningInBackground": "Läuft im Hintergrund",
+      "completed": "Vollendet",
+      "error": "Fehler",
+      "orphaned": "Verwaist",
+      "conversationEnded": "Das Gespräch wurde beendet, bevor die Aufgabe abgeschlossen war",
+      "clickToExpand": "Klicken Sie zum Erweitern",
+      "ariaHeader": "{type}: {description} – {status} – zum Erweitern klicken",
+      "ariaStatus": "Zustand: {status}",
+      "statusPending": "ausstehend",
+      "statusRunning": "läuft",
+      "statusCompleted": "vollendet",
+      "statusError": "Fehler",
+      "statusOrphaned": "verwaist",
+      "backgroundTaskCompleted": "(Hintergrundaufgabe abgeschlossen)",
+      "backgroundTaskRenderFailed": "Hintergrundaufgabe abgeschlossen, aber das Ergebnis konnte nicht gerendert werden."
+    },
+    "ask": {
+      "defaultTitle": "Frage",
+      "placeholderSecret": "Geheimnis eingeben.",
+      "placeholderCustom": "Geben Sie etwas ein.",
+      "submit": "Einreichen",
+      "submitAnswers": "Antworten einreichen",
+      "cancel": "Stornieren",
+      "reviewAnswers": "Überprüfen Sie Ihre Antworten",
+      "readyToSubmit": "Sind Sie bereit, Ihre Antworten einzureichen?",
+      "hints": "Eingabetaste zum Auswählen · Tab-/Pfeiltasten zum Navigieren · Esc zum Abbrechen",
+      "hintsImmediate": "Eingabetaste zum Auswählen · Pfeiltasten zum Navigieren · Esc zum Abbrechen",
+      "notAnswered": "Nicht beantwortet",
+      "optionFallback": "Auswahl"
+    },
+    "plan": {
+      "title": "Plan abgeschlossen",
+      "requestedPermissions": "Angeforderte Berechtigungen:",
+      "approveNewSession": "Genehmigen (neue Sitzung)",
+      "approveCurrentSession": "Genehmigen (aktuelle Sitzung)",
+      "cancel": "Stornieren",
+      "feedbackPlaceholder": "Geben Sie Feedback ein, um mit der Planung fortzufahren...",
+      "readError": "Plandatei konnte nicht gelesen werden: {error}. „Genehmigen (neue Sitzung)“ enthält keine Plandetails.",
+      "hints": "Pfeiltasten zum Navigieren · Eingabetaste zum Auswählen · Esc zum Abbrechen"
+    },
+    "planApproval": {
+      "title": "Plan abgeschlossen",
+      "implement": "Implementieren",
+      "revise": "Überarbeiten",
+      "cancel": "Stornieren",
+      "feedbackPlaceholder": "Geben Sie Feedback ein, um den Plan zu überarbeiten...",
+      "hints": "Pfeiltasten zum Navigieren · Eingabetaste zum Auswählen · Esc zum Abbrechen"
+    },
+    "history": {
+      "header": "Gespräche",
+      "empty": "Keine Gespräche",
+      "runningInAnotherPane": "Wird in einem anderen Bereich ausgeführt",
+      "openInAnotherPane": "In einem anderen Bereich öffnen",
+      "running": "Läuft",
+      "runningInTab": "Läuft in {tab}",
+      "currentTabIndex": "Aktueller Tab {index}",
+      "currentSession": "Aktuelle Sitzung",
+      "openInTab": "Öffnen in {tab}",
+      "tabIndex": "Registerkarte {index}",
+      "currentTab": "aktuelle Registerkarte",
+      "tab": "Tab",
+      "generatingAria": "Titel wird generiert...",
+      "regenerateAria": "Titel neu generieren",
+      "openInNewTabAria": "In neuem Tab öffnen",
+      "renameAria": "Umbenennen",
+      "deleteAria": "Löschen",
+      "openInNewTab": "In neuem Tab öffnen",
+      "openInBackgroundTab": "Im Hintergrund-Tab öffnen",
+      "switchToOpenSession": "Wechseln Sie zur offenen Sitzung",
+      "rename": "Umbenennen",
+      "delete": "Löschen",
+      "loadFailed": "Konversation konnte nicht geladen werden",
+      "deleteFailed": "Konversation konnte nicht gelöscht werden",
+      "regenerateFailed": "Die Antwort konnte nicht neu generiert werden",
+      "saveFailed": "Speichern fehlgeschlagen"
+    },
+    "renameFailed": "Konversation konnte nicht umbenannt werden",
+    "rewind": {
+      "failed": "Zurückspulen fehlgeschlagen: {error}",
+      "unavailableStreaming": "Während der Assistent streamt, kann nicht zurückgespult werden",
+      "cannot": "Zurückspulen nicht möglich: {error}",
+      "unsupportedProvider": "Rewind wird von diesem Anbieter nicht unterstützt.",
+      "errorMessageNotFound": "Nachricht nicht gefunden"
+    },
+    "greeting": {
+      "day": {
+        "sun": [
+          "Schönen Sonntag",
+          "Sonntagssitzung?",
+          "Willkommen am Wochenende"
+        ],
+        "mon": [
+          "Schönen Montag",
+          "Zurück zur Sache",
+          "Zurück!"
+        ],
+        "tue": [
+          "Schönen Dienstag"
+        ],
+        "wed": [
+          "Schönen Mittwoch"
+        ],
+        "thu": [
+          "Schönen Donnerstag"
+        ],
+        "fri": [
+          "Schönen Freitag",
+          "Dieses Freitagsgefühl"
+        ],
+        "sat": [
+          "Schönen Samstag",
+          "Schönen Samstag!",
+          "Willkommen am Wochenende"
+        ]
+      },
+      "morning": [
+        "Guten Morgen",
+        "Kaffee und TyporAi Zeit?"
+      ],
+      "afternoon": [
+        "Guten Tag",
+        "Hallo",
+        "Wie geht's"
+      ],
+      "evening": [
+        "Guten Abend",
+        "Abend",
+        "Wie war dein Tag?"
+      ],
+      "night": [
+        "Hallo Nachteule",
+        "Abend"
+      ],
+      "general": [
+        "Hallo",
+        "Hallo {name}, wie geht es dir?",
+        "Hallo, wie geht es dir?",
+        "Wie geht's?",
+        "Willkommen zurück!",
+        "Was ist neu?",
+        "{name} kehrt zurück!",
+        "Du hast vollkommen recht!"
+      ]
+    }
+  },
+  "inlineEdit": {
+    "unavailable": "Inline-Bearbeitung nicht verfügbar: Auf den aktiven Editor konnte nicht zugegriffen werden. Versuchen Sie, die Notiz erneut zu öffnen.",
+    "workspaceLoadFailed": "Arbeitsbereichsdateien konnten nicht geladen werden. Workspace-@-Erwähnungen sind möglicherweise nicht verfügbar.",
+    "invalidPath": "Datei konnte nicht angehängt werden: ungültiger Pfad",
+    "placeholderInsert": "Anweisungen einfügen...",
+    "placeholderEdit": "Anweisungen bearbeiten...",
+    "replyPlaceholder": "Antworten, um fortzufahren...",
+    "noResponse": "Keine Antwort vom Agenten",
+    "errorRetry": "Fehler – versuchen Sie es erneut",
+    "prompt": {
+      "ariaLabel": "Anweisung bearbeiten",
+      "placeholder": "Beschreiben Sie die Bearbeitung",
+      "send": "Schicken"
+    },
+    "unavailableMarkdownView": "Inline-Bearbeitung nicht verfügbar: Auf die aktive Markdown-Ansicht konnte nicht zugegriffen werden.",
+    "generating": "Wird generiert...",
+    "actions": {
+      "accept": "Annehmen",
+      "refine": "Verfeinern",
+      "reject": "Ablehnen",
+      "refinePrompt": "Ausgewaehlten Vorschlagstext verfeinern"
+    },
+    "errors": {
+      "documentEditingBlocked": "SAFE ist aktiv. Schalten Sie SAFE aus, damit die KI das aktuelle Dokument ändern darf.",
+      "enterInstruction": "Bearbeitungsanweisung eingeben.",
+      "generationFailed": "Bearbeitung konnte nicht erzeugt werden.",
+      "noReplacement": "Die Antwort enthaelt keinen Ersatztext.",
+      "noCliProvider": "Kein aktivierter CLI-Anbieter ist konfiguriert. Claude, Codex oder OpenCode in den Einstellungen aktivieren und konfigurieren.",
+      "refineFailed": "Verfeinern fehlgeschlagen.",
+      "refineNoReplacement": "Die Verfeinerungsantwort enthaelt keinen Ersatztext.",
+      "selectSuggestionToRefine": "Text im Vorschlagsblock zum Verfeinern auswaehlen."
+    }
+  },
+  "validation": {
+    "slug": {
+      "required": "Der Name {label} ist erforderlich",
+      "tooLong": "Der Name {label} darf höchstens {max} Zeichen lang sein",
+      "invalidChars": "{label} Name kann onnur conKleinbuchstaben, Zahlen und Bindestriche enthalten",
+      "reservedWord": "{label} Name kannno kein YAML reserviertes Wort sein (true, false, null, yes, no, on, off)",
+      "labelCommand": "Befehl",
+      "labelAgent": "Agentenprofil",
+      "labelCodexSubagent": "Codex-Subagent",
+      "labelOpencodeSubagent": "OpenCode-Subagent",
+      "labelCodexSkill": "Kodex-Fähigkeit"
+    }
+  },
+  "typora": {
+    "panel": {
+      "hideAria": "TyporAi-Panel ausblenden",
+      "hideTitle": "Panel ausblenden",
+      "showAria": "TyporAi-Panel anzeigen",
+      "showTitle": "TyporAi anzeigen"
+    },
+    "settings": {
+      "openAria": "Öffnen Sie die TyporAi-Einstellungen",
+      "title": "Einstellungen"
+    }
+  }
+}

@@ -1,0 +1,119 @@
+/* Resume Session Dropdown */
+.typorai-resume-dropdown {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 4px;
+  background: var(--background-secondary);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.typorai-resume-dropdown.visible {
+  display: block;
+}
+
+.typorai-resume-header {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.typorai-resume-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.typorai-resume-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.typorai-resume-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--background-modifier-border);
+  transition: background 0.1s ease;
+}
+
+.typorai-resume-item:last-child {
+  border-bottom: none;
+}
+
+.typorai-resume-item:hover,
+.typorai-resume-item.selected {
+  background: var(--background-modifier-hover);
+}
+
+.typorai-resume-item.current {
+  background: var(--background-secondary);
+  border-inline-start: 2px solid var(--interactive-accent);
+  padding-inline-start: 10px;
+}
+
+.typorai-resume-item-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.typorai-resume-item-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.typorai-resume-item.current .typorai-resume-item-icon {
+  color: var(--interactive-accent);
+}
+
+.typorai-resume-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.typorai-resume-item-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-normal);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.typorai-resume-item-date {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+/* Scrollbar */
+.typorai-resume-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.typorai-resume-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.typorai-resume-list::-webkit-scrollbar-thumb {
+  background: var(--background-modifier-border);
+  border-radius: 3px;
+}

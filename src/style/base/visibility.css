@@ -1,0 +1,15 @@
+/*
+ * Visibility utilities are imported late so they can override component display
+ * defaults without importance flags.
+ */
+.typorai-hidden.typorai-hidden {
+  display: none;
+}
+
+.typorai-visible-block.typorai-visible-block {
+  display: block;
+}
+
+.typorai-visible-flex.typorai-visible-flex {
+  display: flex;
+}

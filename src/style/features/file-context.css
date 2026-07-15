@@ -1,0 +1,188 @@
+/* @ Mention dropdown */
+.typorai-mention-dropdown {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 4px;
+  background: var(--background-secondary);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.typorai-mention-dropdown.visible {
+  display: block;
+}
+
+/* Fixed positioning for inline editor */
+.typorai-mention-dropdown-fixed {
+  position: fixed;
+  bottom: var(--typorai-fixed-dropdown-bottom);
+  left: var(--typorai-fixed-dropdown-left);
+  right: auto;
+  width: var(--typorai-fixed-dropdown-width);
+  z-index: 10001;
+}
+
+.typorai-mention-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.typorai-mention-item:hover,
+.typorai-mention-item.selected {
+  background: var(--background-modifier-hover);
+}
+
+.typorai-mention-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.typorai-mention-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.typorai-mention-path {
+  font-size: 13px;
+  color: var(--text-normal);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typorai-mention-empty {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Scrollbar for mention dropdown */
+.typorai-mention-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.typorai-mention-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.typorai-mention-dropdown::-webkit-scrollbar-thumb {
+  background: var(--background-modifier-border);
+  border-radius: 3px;
+}
+
+/* MCP items in @-mention dropdown */
+.typorai-mention-item.mcp-server .typorai-mention-icon {
+  color: var(--interactive-accent);
+}
+
+.typorai-mention-item.vault-folder .typorai-mention-icon {
+  color: var(--text-muted);
+}
+
+.typorai-mention-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.typorai-mention-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--interactive-accent);
+}
+
+.typorai-mention-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Context file items in @-mention dropdown */
+.typorai-mention-item.context-file .typorai-mention-icon {
+  color: var(--typorai-brand);
+}
+
+.typorai-mention-item.context-file .typorai-mention-text {
+  flex-direction: row;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.typorai-mention-item.context-file .typorai-mention-name-context {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Context folder filter items in @-mention dropdown */
+.typorai-mention-item.context-folder .typorai-mention-icon {
+  color: var(--text-muted);
+}
+
+.typorai-mention-name-folder {
+  color: var(--text-normal);
+  font-weight: 500;
+}
+
+.typorai-mention-name-context {
+  color: var(--text-normal);
+}
+
+/* Agent folder items in @-mention dropdown */
+.typorai-mention-item.agent-folder .typorai-mention-icon {
+  color: var(--link-color);
+}
+
+.typorai-mention-name-agent-folder {
+  color: var(--link-color);
+  font-weight: 600;
+}
+
+/* Agent items in @-mention dropdown (inside @Agents/) */
+.typorai-mention-item.agent .typorai-mention-icon {
+  color: var(--link-color);
+}
+
+.typorai-mention-item.agent .typorai-mention-text {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.typorai-mention-item.agent .typorai-mention-name-agent {
+  color: var(--text-normal);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.typorai-mention-item.agent .typorai-mention-agent-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}

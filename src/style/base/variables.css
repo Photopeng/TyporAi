@@ -1,0 +1,37 @@
+/* Brand & semantic color tokens */
+.typorai-container {
+  --typorai-brand: #D97757;
+  --typorai-brand-rgb: 217, 119, 87;
+  --typorai-brand-claude: #D97757;
+  --typorai-brand-claude-rgb: 217, 119, 87;
+  --typorai-brand-codex: #d0d0d0;
+  --typorai-brand-codex-rgb: 208, 208, 208;
+  --typorai-brand-opencode: #B8B8B8;
+  --typorai-brand-opencode-rgb: 184, 184, 184;
+  --typorai-error: #dc3545;
+  --typorai-error-rgb: 220, 53, 69;
+  --typorai-compact: #5bc0de;
+}
+
+body.theme-light .typorai-container {
+  --typorai-brand-codex: #000000;
+  --typorai-brand-codex-rgb: 0, 0, 0;
+  --typorai-brand-opencode: #707070;
+  --typorai-brand-opencode-rgb: 112, 112, 112;
+}
+
+/* Active-provider alias for single-provider surfaces. */
+.typorai-container[data-provider="claude"] {
+  --typorai-brand: var(--typorai-brand-claude);
+  --typorai-brand-rgb: var(--typorai-brand-claude-rgb);
+}
+
+.typorai-container[data-provider="codex"] {
+  --typorai-brand: var(--typorai-brand-codex);
+  --typorai-brand-rgb: var(--typorai-brand-codex-rgb);
+}
+
+.typorai-container[data-provider="opencode"] {
+  --typorai-brand: var(--typorai-brand-opencode);
+  --typorai-brand-rgb: var(--typorai-brand-opencode-rgb);
+}

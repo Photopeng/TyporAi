@@ -1,0 +1,1386 @@
+{
+  "common": {
+    "save": "儲存",
+    "cancel": "取消",
+    "delete": "刪除",
+    "edit": "編輯",
+    "add": "新增",
+    "remove": "移除",
+    "clear": "清除",
+    "clearAll": "全部清除",
+    "loading": "載入中",
+    "error": "錯誤",
+    "success": "成功",
+    "warning": "警告",
+    "confirm": "確認",
+    "settings": "設定",
+    "advanced": "高階",
+    "enabled": "已啟用",
+    "disabled": "已禁用",
+    "platform": "平臺",
+    "refresh": "重新整理",
+    "rewind": "回退",
+    "unknown": "未知",
+    "typorai": "TyporAi",
+    "close": "關閉"
+  },
+  "chat": {
+    "slashCommand": {
+      "noMatchingCommands": "沒有匹配的命令"
+    },
+    "imageAttachments": {
+      "unsupportedByProvider": "此提供商不支援圖片附件。",
+      "exceedsLimit": "圖片超出 {size} 限制。",
+      "unsupportedType": "不支援的圖片型別。",
+      "attachFailed": "附加圖片失敗。",
+      "dropHere": "拖放圖片到此處",
+      "remove": "移除圖片",
+      "fileNotFound": "檔案未找到",
+      "permissionDenied": "許可權被拒絕"
+    },
+    "tabs": {
+      "switchFailed": "切換標籤頁失敗",
+      "closeFailed": "關閉標籤頁失敗",
+      "maxReached": "最多允許 {count} 個標籤頁",
+      "createFailed": "無法建立分頁",
+      "newConversationFailed": "無法建立對話",
+      "historyToggleFailed": "無法切換聊天記錄"
+    },
+    "forkUnsupported": "此提供商不支援分叉功能。",
+    "forkUnavailable": "分叉不可用。",
+    "rewind": {
+      "confirmMessage": "回退到此點？此訊息之後的檔案更改將被撤銷。回退不會影響手動編輯或透過 bash 編輯的檔案。",
+      "confirmMessageConversationOnly": "將對話回退到此點？檔案更改將被保留。",
+      "confirmButton": "回退",
+      "ariaLabel": "回退到這裡",
+      "menuConversationOnly": "僅回退對話",
+      "menuCodeAndConversation": "回退程式碼 + 對話",
+      "notice": "已回退：{count} 個檔案已撤銷",
+      "noticeConversationOnly": "已回退對話；檔案更改已保留",
+      "noticeSaveFailed": "已回退：{count} 個檔案已撤銷，但儲存狀態失敗：{error}",
+      "noticeConversationOnlySaveFailed": "已回退對話，但儲存狀態失敗：{error}",
+      "failed": "回退失敗：{error}",
+      "cannot": "無法回退：{error}",
+      "unavailableStreaming": "流式傳輸時無法回退",
+      "unavailableNoUuid": "無法回退：缺少訊息識別符號"
+    },
+    "fork": {
+      "ariaLabel": "分叉對話",
+      "chooseTarget": "分叉對話",
+      "targetNewTab": "新標籤頁",
+      "targetCurrentTab": "當前標籤頁",
+      "maxTabsReached": "無法分叉：已達最大標籤頁數量 {count}",
+      "notice": "已分叉到新標籤頁",
+      "noticeCurrentTab": "已在當前標籤頁分叉",
+      "failed": "分叉失敗：{error}",
+      "unavailableStreaming": "流式傳輸時無法分叉",
+      "unavailableNoUuid": "無法分叉：缺少訊息識別符號",
+      "unavailableNoResponse": "無法分叉：沒有可分叉的響應",
+      "errorMessageNotFound": "未找到訊息",
+      "errorNoSession": "沒有可用的會話 ID",
+      "errorNoActiveTab": "沒有活動標籤頁",
+      "commandNoMessages": "無法分叉：對話中沒有訊息",
+      "commandNoAssistantUuid": "無法分叉：沒有帶識別符號的助手響應",
+      "notSupported": "此提供商不支援分叉功能。",
+      "notAvailable": "分叉不可用。"
+    },
+    "tab": {
+      "cannotSwitchProvider": "無法在繫結的會話上切換提供商。請改為建立新標籤頁。"
+    },
+    "input": {
+      "placeholder": "今天我能幫您做什麼？",
+      "sendFailed": "傳送訊息失敗",
+      "cancelFailed": "取消響應失敗",
+      "initFailed": "初始化聊天服務失敗",
+      "renameFailed": "重新命名對話失敗",
+      "resumeNoConversations": "沒有可恢復的對話",
+      "steering": "引導中...",
+      "steerNow": "立即引導",
+      "queuedPrefix": "佇列中：",
+      "editQueued": "編輯佇列中的訊息",
+      "discardQueued": "丟棄佇列中的訊息",
+      "compacting": "壓縮中...",
+      "planApproved": "使用者已批准計劃並開始了新會話。",
+      "planImplement": "實施該計劃。",
+      "steerFailed": "引導佇列中的 Codex 訊息失敗。訊息仍然可用。",
+      "customSystemPromptAdded": "指令已新增到自定義系統提示詞",
+      "processingFailed": "處理響應失敗",
+      "refineFailed": "最佳化指令失敗",
+      "noInstruction": "未收到指令",
+      "agentInitFailed": "初始化代理服務失敗。請重試。",
+      "agentNotAvailable": "代理服務不可用。請重新載入外掛。",
+      "providerUnavailable": "{provider} 已禁用或未配置。請在設定中啟用並配置後再進行聊天。",
+      "errorWithMessage": "錯誤：{error}",
+      "detachedInput": "輸入區域目前無法使用。",
+      "approvalAgent": "代理：{agent}",
+      "commandUnsupported": "目前的服務提供者不支援 /{command}。",
+      "unknownCommand": "未知指令：{command}",
+      "openConversationFailed": "無法開啟對話：{error}"
+    },
+    "permission": {
+      "title": "需要許可權",
+      "question": "允許此操作？",
+      "deny": "拒絕",
+      "allowOnce": "允許一次",
+      "alwaysAllow": "始終允許"
+    },
+    "approve": {
+      "approve": "批准",
+      "reject": "拒絕"
+    },
+    "bangBash": {
+      "placeholder": "> 執行 bash 命令...",
+      "commandPanel": "命令面板",
+      "copyAriaLabel": "複製最新命令輸出",
+      "clearAriaLabel": "清除 bash 輸出",
+      "commandLabel": "{command}",
+      "statusLabel": "狀態：{status}",
+      "collapseOutput": "摺疊命令輸出",
+      "expandOutput": "展開命令輸出",
+      "running": "執行中...",
+      "copyFailed": "複製到剪貼簿失敗",
+      "commandFailed": "命令失敗：{error}"
+    },
+    "toolbar": {
+      "safeLabel": "SAFE",
+      "yoloLabel": "YOLO",
+      "safeTooltip": "SAFE 已開啟：攔截 AI 對目前文件的所有修改。",
+      "yoloTooltip": "YOLO 已開啟：允許 AI 根據對話指令修改目前文件。",
+      "planMode": "計畫",
+      "planModeTooltip": "計畫模式：AI 可以分析，但不能修改目前文件。",
+      "mcpClickToEnable": "MCP 伺服器（按一下啟用）",
+      "unknownModel": "未知",
+      "addExternalContext": "新增外部上下文（點選）",
+      "mcpServers": "MCP 伺服器",
+      "noMcpServers": "未配置 MCP 伺服器",
+      "allMcpDisabled": "所有 MCP 伺服器已禁用",
+      "thinking": "思考：",
+      "failedChangeModel": "更改模型失敗",
+      "failedChangeMode": "更改模式失敗",
+      "failedChangeEffort": "更改努力程度失敗",
+      "failedChangeThinking": "更改思考預算失敗",
+      "failedChangePermission": "更改許可權模式失敗",
+      "failedChangeServiceTier": "更改服務層級失敗",
+      "toggleFastMode": "切換快速模式",
+      "mcpEnabled": "{count} 個 MCP 伺服器{plural}已啟用（點選管理）",
+      "contextSavingHint": "上下文節省：也可透過 @{name} 啟用",
+      "cursorFlow": "游標流轉",
+      "cursorFlowTooltip": "啟用後，選擇文字時游標會自動聚焦到輸入框。",
+      "cursorFlowAriaLabel": "啟用後，選擇文字時游標會自動聚焦到輸入框。"
+    },
+    "nav": {
+      "tocTitle": "目錄",
+      "noPrompts": "暫無提示詞",
+      "moreFiles": "另有 {count} 個",
+      "awaitingResponse": "正在等待回覆…",
+      "jumpToMessage": "跳至第 {index} 則訊息：{title}",
+      "messageRail": "訊息導覽",
+      "untitledMessage": "未命名訊息"
+    },
+    "actions": {
+      "newTab": "新標籤頁",
+      "newConversation": "新對話",
+      "history": "聊天曆史"
+    },
+    "resume": {
+      "title": "恢復對話",
+      "empty": "暫無對話",
+      "current": "當前會話"
+    },
+    "fileContext": {
+      "openNotFound": "無法開啟檔案：{path}",
+      "openFailed": "開啟檔案失敗：{error}"
+    }
+  },
+  "quickActions": {
+    "toolbar": {
+      "ariaLabel": "快捷操作工具欄"
+    },
+    "copy": "複製",
+    "ask": "提問",
+    "edit": "編輯",
+    "quote": "引用",
+    "working": "處理中...",
+    "noResult": "無結果",
+    "askInstruction": "詢問以下文字",
+    "askPrompt": "請解釋選中的文字。",
+    "quotePreview": "{text} [{lineCount} 行]",
+    "clearQuote": "清除引用",
+    "actionFailed": "操作失敗"
+  },
+  "modal": {
+    "instruction": {
+      "yourInput": "您的輸入",
+      "yourResponse": "您的響應",
+      "refinedSnippet": "最佳化後的程式碼片段",
+      "preview": "預覽",
+      "edit": "編輯",
+      "titleAdd": "新增自定義指令",
+      "processing": "正在處理您的指令...",
+      "placeholder": "提供更多細節...",
+      "cancel": "取消",
+      "cancelAria": "取消",
+      "submit": "提交",
+      "submitAria": "提交響應",
+      "editAria": "編輯指令",
+      "accept": "接受",
+      "acceptAria": "接受指令",
+      "processingInline": "處理中..."
+    }
+  },
+  "inlineEdit": {
+    "unavailable": "內聯編輯不可用：無法訪問活動編輯器。請嘗試重新開啟筆記。",
+    "workspaceLoadFailed": "載入工作區檔案失敗。工作區 @提及可能不可用。",
+    "placeholderInsert": "輸入指令...",
+    "placeholderEdit": "編輯指令...",
+    "replyPlaceholder": "回覆以繼續...",
+    "noResponse": "代理無響應",
+    "errorRetry": "出錯 - 請重試",
+    "invalidPath": "附加檔案失敗：路徑無效",
+    "prompt": {
+      "ariaLabel": "編輯指令",
+      "placeholder": "描述編輯內容",
+      "send": "傳送"
+    },
+    "unavailableMarkdownView": "內聯編輯不可用：無法訪問活動 Markdown 檢視。",
+    "generating": "生成中...",
+    "actions": {
+      "accept": "接受",
+      "refine": "最佳化",
+      "reject": "拒絕",
+      "refinePrompt": "最佳化選中的建議文字"
+    },
+    "errors": {
+      "documentEditingBlocked": "SAFE 已開啟。請關閉 SAFE 後再允許 AI 修改目前文件。",
+      "enterInstruction": "請輸入編輯指令。",
+      "generationFailed": "編輯生成失敗。",
+      "noReplacement": "編輯響應未包含替換文字。",
+      "noCliProvider": "未配置已啟用的 CLI 提供商。請在設定中啟用並配置 Claude、Codex 或 OpenCode。",
+      "refineFailed": "最佳化失敗。",
+      "refineNoReplacement": "最佳化響應未包含替換文字。",
+      "selectSuggestionToRefine": "請選擇建議塊內的文字進行最佳化。"
+    }
+  },
+  "typora": {
+    "panel": {
+      "hideAria": "隱藏 TyporAi 面板",
+      "hideTitle": "隱藏面板",
+      "showAria": "顯示 TyporAi 面板",
+      "showTitle": "顯示 TyporAi"
+    },
+    "settings": {
+      "openAria": "開啟 TyporAi 設定",
+      "title": "設定"
+    }
+  },
+  "validation": {
+    "slug": {
+      "required": "{label} 名稱不能為空",
+      "tooLong": "{label} 名稱不能超過 {max} 個字元",
+      "invalidChars": "{label} 名稱只能包含小寫字母、數字和連字元",
+      "reservedWord": "{label} 名稱不能是 YAML 保留字（true、false、null、yes、no、on、off）",
+      "labelCommand": "命令",
+      "labelAgent": "代理",
+      "labelCodexSubagent": "Codex 子代理",
+      "labelOpencodeSubagent": "OpenCode 子代理",
+      "labelCodexSkill": "Codex 技能"
+    }
+  },
+  "renderer": {
+    "message": {
+      "interrupted": "已中斷",
+      "interruptedHint": "TyporAi 應該怎麼處理？",
+      "conversationCompacted": "對話已壓縮",
+      "bakedFor": "* {word} 用於 {duration}",
+      "baked": "已烘焙",
+      "subagentTask": "子代理任務",
+      "failedToRender": "渲染訊息內容失敗。",
+      "copied": "已複製！",
+      "copyMessageAria": "複製訊息",
+      "copyAria": "複製",
+      "codeCopied": "已複製！",
+      "noResult": "無結果"
+    },
+    "thinking": {
+      "ariaExpand": "擴充套件思考 - 點選展開",
+      "elapsed": "思考中 {seconds}秒...",
+      "thoughtFor": "思考了 {seconds}秒",
+      "thought": "思考"
+    },
+    "tool": {
+      "tasksProgress": "任務 {completed}/{total}",
+      "tasks": "任務",
+      "enteringPlanMode": "進入計劃模式",
+      "planComplete": "計劃完成",
+      "readFile": "讀取：{path}",
+      "writeFile": "寫入：{path}",
+      "editFile": "編輯：{path}",
+      "command": "Bash：{command}",
+      "url": "WebFetch：{url}",
+      "file": "檔案",
+      "pattern": "Grep：{pattern}",
+      "skill": "技能：{name}",
+      "toolSearch": "ToolSearch：{query}",
+      "tools": "工具",
+      "toolSearchLabel": "Glob：{pattern}",
+      "agents": "{count} 個代理{plural}",
+      "noResult": "無結果",
+      "noMatchesFound": "未找到匹配項",
+      "moreLines": "... 還有 {count} 行",
+      "moreChars": "... 還有 {count} 個字元",
+      "fileDeleted": "檔案已刪除",
+      "noTextualDiff": "無文字差異可用",
+      "changesAria": "更改：+{added} -{removed}",
+      "webSearch": "WebSearch：{query}",
+      "search": "搜尋",
+      "openPage": "開啟頁面",
+      "findInPage": "在頁面中查詢",
+      "findInPageWithPattern": "查詢 \"{pattern}\"",
+      "list": "LS：{path}",
+      "urlUnavailable": "URL 不可用",
+      "patternLabel": "模式：{pattern}",
+      "queryLabel": "查詢：{query}",
+      "altQueryLabel": "替代查詢：{query}",
+      "moreQueries": "... 還有 {count} 個查詢",
+      "bashPrefix": "$ {command}",
+      "tasksUpdated": "任務已更新",
+      "statusCompleted": "狀態：已完成",
+      "statusInProgress": "狀態：進行中",
+      "statusLabel": "狀態：{status}",
+      "running": "執行中...",
+      "waitingForAnswer": "等待回答...",
+      "notAnswered": "未回答",
+      "noOptionsRecorded": "未記錄選項",
+      "questionOption": "選項",
+      "questionDefault": "選項",
+      "reviewAnswer": "檢查您的答案"
+    },
+    "writeEdit": {
+      "statusRunning": "狀態：執行中",
+      "statusError": "狀態：錯誤",
+      "writing": "寫入中...",
+      "done": "完成",
+      "error": "錯誤",
+      "defaultError": "錯誤"
+    },
+    "diff": {
+      "noChanges": "無更改",
+      "moreLines": "... 還有 {count} 行",
+      "prefix": "+",
+      "ariaLabel": "更改：+{added} -{removed}"
+    },
+    "subagent": {
+      "subagentTask": "子代理任務",
+      "backgroundTask": "後臺任務",
+      "backgroundTaskCompleted": "（後臺任務已完成）",
+      "backgroundTaskRenderFailed": "後臺任務已完成，但無法渲染結果。",
+      "prompt": "提示詞",
+      "result": "結果",
+      "noPromptProvided": "未提供提示詞",
+      "initializing": "初始化中",
+      "runningInBackground": "在後臺執行",
+      "completed": "已完成",
+      "error": "錯誤",
+      "orphaned": "孤立",
+      "conversationEnded": "對話在任務完成前已結束",
+      "clickToExpand": "點選展開",
+      "ariaHeader": "{type}：{description} - {status} - 點選展開",
+      "ariaStatus": "狀態：{status}",
+      "statusPending": "等待中",
+      "statusRunning": "執行中",
+      "statusCompleted": "已完成",
+      "statusError": "錯誤",
+      "statusOrphaned": "孤立"
+    },
+    "ask": {
+      "defaultTitle": "問題",
+      "placeholderSecret": "輸入金鑰。",
+      "placeholderCustom": "輸入內容。",
+      "submit": "提交",
+      "submitAnswers": "提交答案",
+      "cancel": "取消",
+      "reviewAnswers": "檢查您的答案",
+      "readyToSubmit": "準備好提交答案了嗎？",
+      "hints": "回車選擇 · Tab/方向鍵導航 · Esc 取消",
+      "hintsImmediate": "回車選擇 · 方向鍵導航 · Esc 取消",
+      "notAnswered": "未回答",
+      "optionFallback": "選項"
+    },
+    "plan": {
+      "title": "計劃完成",
+      "requestedPermissions": "請求的許可權：",
+      "approveNewSession": "批准（新會話）",
+      "approveCurrentSession": "批准（當前會話）",
+      "cancel": "取消",
+      "feedbackPlaceholder": "輸入反饋以繼續規劃...",
+      "readError": "無法讀取計劃檔案：{error}。\"批准（新會話）\"將不包含計劃詳情。",
+      "hints": "方向鍵導航 · 回車選擇 · Esc 取消"
+    },
+    "planApproval": {
+      "title": "計劃完成",
+      "implement": "實施",
+      "revise": "修改",
+      "cancel": "取消",
+      "feedbackPlaceholder": "輸入反饋以修改計劃...",
+      "hints": "方向鍵導航 · 回車選擇 · Esc 取消"
+    },
+    "history": {
+      "header": "對話",
+      "empty": "暫無對話",
+      "runningInAnotherPane": "在另一個窗格中執行",
+      "openInAnotherPane": "在另一個窗格中開啟",
+      "running": "執行中",
+      "runningInTab": "在 {tab} 中執行",
+      "currentTabIndex": "當前標籤頁 {index}",
+      "currentSession": "當前會話",
+      "openInTab": "在 {tab} 中開啟",
+      "tabIndex": "標籤頁 {index}",
+      "currentTab": "當前標籤頁",
+      "tab": "標籤頁",
+      "generatingAria": "生成標題中...",
+      "regenerateAria": "重新生成標題",
+      "openInNewTabAria": "在新標籤頁中開啟",
+      "renameAria": "重新命名",
+      "deleteAria": "刪除",
+      "openInNewTab": "在新標籤頁中開啟",
+      "openInBackgroundTab": "在後臺標籤頁中開啟",
+      "switchToOpenSession": "切換到開啟的會話",
+      "rename": "重新命名",
+      "delete": "刪除",
+      "loadFailed": "載入對話失敗",
+      "deleteFailed": "刪除對話失敗",
+      "regenerateFailed": "重新生成響應失敗",
+      "saveFailed": "儲存失敗"
+    },
+    "renameFailed": "重新命名對話失敗",
+    "rewind": {
+      "failed": "回退失敗：{error}",
+      "unavailableStreaming": "助手流式傳輸時無法回退",
+      "cannot": "無法回退：{error}",
+      "unsupportedProvider": "此提供商不支援回退功能。",
+      "errorMessageNotFound": "未找到訊息"
+    },
+    "greeting": {
+      "day": {
+        "sun": [
+          "週日快樂",
+          "週日時光？",
+          "歡迎來到週末"
+        ],
+        "mon": [
+          "週一快樂",
+          "繼續加油",
+          "繼續加油！"
+        ],
+        "tue": [
+          "週二快樂"
+        ],
+        "wed": [
+          "週三快樂"
+        ],
+        "thu": [
+          "週四快樂"
+        ],
+        "fri": [
+          "週五快樂",
+          "週五的感覺"
+        ],
+        "sat": [
+          "週六快樂",
+          "週六快樂！",
+          "歡迎來到週末"
+        ]
+      },
+      "morning": [
+        "早上好",
+        "咖啡和 TyporAi 時間？"
+      ],
+      "afternoon": [
+        "下午好",
+        "你好",
+        "過得怎麼樣"
+      ],
+      "evening": [
+        "晚上好",
+        "晚上好",
+        "今天過得怎麼樣"
+      ],
+      "night": [
+        "你好，夜貓子",
+        "晚上好"
+      ],
+      "general": [
+        "你好",
+        "嗨 {name}，你好嗎？",
+        "你好，你好嗎？",
+        "過得怎麼樣？",
+        "歡迎回來！",
+        "有什麼新鮮事？",
+        "{name} 回來了！",
+        "你說得太對了！"
+      ]
+    }
+  },
+  "settings": {
+    "title": "TyporAi 設定",
+    "storage": {
+      "tabLayout": {
+        "saveFailed": "儲存標籤頁佈局失敗"
+      }
+    },
+    "tabs": {
+      "general": "通用",
+      "claude": "Claude",
+      "codex": "Codex"
+    },
+    "display": "顯示",
+    "conversations": "對話",
+    "content": "內容",
+    "input": "輸入",
+    "setup": "設定",
+    "models": "模型",
+    "experimental": "實驗性",
+    "userName": {
+      "name": "TyporAi 應該怎麼稱呼您？",
+      "desc": "用於個性化問候語的名稱（留空則使用通用問候語）"
+    },
+    "excludedTags": {
+      "name": "排除的標籤",
+      "desc": "帶有這些標籤的筆記不會自動載入為上下文（每行一個，不帶 #）",
+      "placeholder": "系統\n私密\n草稿"
+    },
+    "mediaFolder": {
+      "name": "媒體資料夾",
+      "desc": "包含附件/圖片的資料夾。當筆記使用 ![[image.jpg]] 時，Claude 會在此處查詢。留空則使用保險庫根目錄。",
+      "placeholder": "附件"
+    },
+    "systemPrompt": {
+      "name": "自定義系統提示詞",
+      "desc": "附加到預設系統提示詞的額外指令"
+    },
+    "autoTitle": {
+      "name": "自動生成對話標題",
+      "desc": "在傳送第一條使用者訊息後自動生成對話標題。"
+    },
+    "titleModel": {
+      "name": "標題生成模型",
+      "desc": "用於自動生成對話標題的模型。",
+      "auto": "自動 (Haiku)"
+    },
+    "navMappings": {
+      "name": "Vim 風格導航對映",
+      "desc": "每行一個對映。格式：\"map <key> <action>\"（操作：scrollUp、scrollDown、focusInput）。",
+      "placeholder": "map w scrollup\nmap s scrolldown\nmap i focusinput"
+    },
+    "requireCommandOrControlEnterToSend": {
+      "name": "需要 Command/Ctrl+Enter 傳送",
+      "desc": "啟用後，Enter 插入換行符。macOS 上 Command+Enter 傳送；Windows 和 Linux 上 Ctrl+Enter 傳送。"
+    },
+    "hotkeys": "快捷鍵",
+    "inlineEditHotkey": {
+      "name": "內聯編輯",
+      "descWithKey": "當前快捷鍵：{hotkey}",
+      "descNoKey": "未設定快捷鍵",
+      "btnChange": "更改",
+      "btnSet": "設定快捷鍵"
+    },
+    "openChatHotkey": {
+      "name": "開啟聊天",
+      "descWithKey": "當前快捷鍵：{hotkey}",
+      "descNoKey": "未設定快捷鍵",
+      "btnChange": "更改",
+      "btnSet": "設定快捷鍵"
+    },
+    "newSessionHotkey": {
+      "name": "新建會話",
+      "descWithKey": "當前快捷鍵：{hotkey}",
+      "descNoKey": "未設定快捷鍵",
+      "btnChange": "更改",
+      "btnSet": "設定快捷鍵"
+    },
+    "newTabHotkey": {
+      "name": "新建標籤頁",
+      "descWithKey": "當前快捷鍵：{hotkey}",
+      "descNoKey": "未設定快捷鍵",
+      "btnChange": "更改",
+      "btnSet": "設定快捷鍵"
+    },
+    "closeTabHotkey": {
+      "name": "關閉標籤頁",
+      "descWithKey": "當前快捷鍵：{hotkey}",
+      "descNoKey": "未設定快捷鍵",
+      "btnChange": "更改",
+      "btnSet": "設定快捷鍵"
+    },
+    "hotkeySearch": "TyporAi",
+    "slashCommands": {
+      "name": "命令和技能",
+      "desc": "管理儲存在 .claude/commands/ 和 .claude/skills/ 中的保險庫級別命令和技能。透過 /name 觸發。"
+    },
+    "hiddenSlashCommands": {
+      "name": "隱藏的命令和技能",
+      "desc": "從下拉選單中隱藏特定命令和技能。適用於隱藏與 TyporAi 無關的 Claude Code 條目。輸入不帶前導斜槓的名稱，每行一個。",
+      "placeholder": "提交\n建造\n測試"
+    },
+    "mcpServers": {
+      "name": "MCP 伺服器",
+      "desc": "管理儲存在 .claude/mcp.json 中的保險庫級別 MCP 伺服器配置。具有上下文節省模式的伺服器需要 @提及來啟用。"
+    },
+    "plugins": {
+      "name": "Claude Code 外掛",
+      "desc": "管理從 ~/.claude/plugins 發現的 Claude Code 外掛。已啟用的外掛按保險庫儲存在 .claude/settings.json 中。"
+    },
+    "subagents": {
+      "name": "子代理",
+      "desc": "管理儲存在 .claude/agents/ 中的保險庫級別子代理。每個 Markdown 檔案定義一個自定義代理。",
+      "noAgents": "未配置子代理。點選 + 建立一個。",
+      "deleteConfirm": "刪除子代理 \"{name}\"？",
+      "saveFailed": "儲存子代理失敗：{message}",
+      "refreshFailed": "重新整理子代理失敗：{message}",
+      "deleteFailed": "刪除子代理失敗：{message}",
+      "renameCleanupFailed": "警告：無法刪除 \"{name}\" 的舊檔案",
+      "created": "子代理 \"{name}\" 已建立",
+      "updated": "子代理 \"{name}\" 已更新",
+      "deleted": "子代理 \"{name}\" 已刪除",
+      "duplicateName": "名為 \"{name}\" 的代理已存在",
+      "descriptionRequired": "描述是必需的",
+      "promptRequired": "系統提示詞是必需的",
+      "loadFailed": "載入子代理 \"{name}\" 失敗：{message}",
+      "modelOptions": {
+        "inherit": "繼承",
+        "sonnet": "十四行詩",
+        "opus": "作品",
+        "haiku": "俳句"
+      },
+      "modal": {
+        "titleEdit": "編輯子代理",
+        "titleAdd": "新增子代理",
+        "name": "名稱",
+        "nameDesc": "僅限小寫字母、數字和連字元",
+        "namePlaceholder": "程式碼審查者",
+        "description": "描述",
+        "descriptionDesc": "此代理的簡要描述",
+        "descriptionPlaceholder": "審查程式碼中的錯誤和風格問題",
+        "advancedOptions": "高階選項",
+        "model": "模型",
+        "modelDesc": "此代理的模型覆蓋",
+        "tools": "工具",
+        "toolsDesc": "逗號分隔的允許工具列表（空 = 全部）",
+        "disallowedTools": "禁用的工具",
+        "disallowedToolsDesc": "逗號分隔的禁用工具列表",
+        "skills": "技能",
+        "skillsDesc": "逗號分隔的技能列表",
+        "prompt": "系統提示詞",
+        "promptDesc": "代理的指令",
+        "promptPlaceholder": "你是一個程式碼審查員。分析給定程式碼中的..."
+      }
+    },
+    "safety": "安全",
+    "loadUserSettings": {
+      "name": "載入使用者 Claude 設定",
+      "desc": "載入 ~/.claude/settings.json。啟用後，使用者的 Claude Code 許可權規則可能會繞過安全模式。"
+    },
+    "claudeSafeMode": {
+      "name": "安全模式",
+      "desc": "安全切換啟用時使用的許可權模式。"
+    },
+    "codexSafeMode": {
+      "name": "安全模式",
+      "desc": "安全切換啟用時使用的沙箱模式。"
+    },
+    "environment": "環境",
+    "environmentShared": {
+      "name": "共享環境",
+      "desc": "跨所有提供商共享的提供商中立執行時變數。用於 PATH、代理、證書和臨時變數。",
+      "placeholder": "PATH=/opt/homebrew/bin:/usr/local/bin\nHTTPS_PROXY=http://proxy.example.com:8080\nSSL_CERT_FILE=/path/to/cert.pem"
+    },
+    "customVariables": {
+      "name": "自定義變數",
+      "desc": "Claude SDK 的環境變數（KEY=VALUE 格式，每行一個）。支援 shell export 字首。"
+    },
+    "envSnippets": {
+      "name": "程式碼片段",
+      "addBtn": "新增片段",
+      "noSnippets": "暫無儲存的環境片段。點選 + 儲存當前環境配置。",
+      "nameRequired": "請輸入片段名稱",
+      "insertFailed": "插入片段失敗",
+      "deleteFailed": "刪除片段失敗",
+      "deleteConfirm": "刪除環境片段 \"{name}\"？",
+      "saved": "環境片段 \"{name}\" 已儲存",
+      "updated": "環境片段 \"{name}\" 已更新",
+      "deleted": "環境片段 \"{name}\" 已刪除",
+      "insertAria": "插入片段",
+      "aliasAria": "{modelId} 的別名",
+      "aliasTitle": "模型選擇器中顯示的自定義標籤。留空則使用預設值。",
+      "contextWindowAria": "{modelId} 的上下文視窗",
+      "contextWindowPlaceholder": "20萬",
+      "modal": {
+        "titleEdit": "編輯片段",
+        "titleSave": "儲存片段",
+        "name": "名稱",
+        "namePlaceholder": "此環境配置的描述性名稱",
+        "description": "描述",
+        "descPlaceholder": "可選描述",
+        "envVars": "環境變數",
+        "envVarsPlaceholder": "KEY=VALUE 格式，每行一個（支援 export 字首）",
+        "save": "儲存",
+        "update": "更新",
+        "cancel": "取消"
+      }
+    },
+    "customModelOverrides": {
+      "name": "自定義模型覆蓋",
+      "desc": "為自定義模型設定模型選擇器別名和上下文視窗大小。"
+    },
+    "customModelAliases": {
+      "placeholder": "別名",
+      "ariaLabel": "{modelId} 的別名",
+      "aliasTitle": "模型選擇器中顯示的自定義標籤。留空則使用預設值。"
+    },
+    "customContextLimits": {
+      "name": "自定義上下文限制",
+      "desc": "為自定義模型設定上下文視窗大小。留空則使用預設值（200k tokens）。",
+      "ariaLabel": "{modelId} 的上下文視窗",
+      "invalid": "格式無效。請使用：256k、1m 或確切數量（1000-10000000）。"
+    },
+    "enableOpus1M": {
+      "name": "Opus 1M 上下文視窗",
+      "desc": "在模型選擇器中顯示 Opus 1M。包含在 Max、Team 和 Enterprise 計劃中。API 和 Pro 使用者需要額外用量。"
+    },
+    "enableSonnet1M": {
+      "name": "Sonnet 1M 上下文視窗",
+      "desc": "在模型選擇器中顯示 Sonnet 1M。需要 Max、Team 和 Enterprise 計劃的額外用量。API 和 Pro 使用者需要額外用量。"
+    },
+    "customModels": {
+      "name": "自定義模型",
+      "desc": "在選擇器中追加額外的 Claude 模型 ID，每行一個。環境模型覆蓋仍會替換選擇器。",
+      "placeholder": "claude-opus-4-6\nclaude-opus-4-6[1m]\nclaude-opus-4-5-20251101"
+    },
+    "enableChrome": {
+      "name": "啟用 Chrome 擴充套件",
+      "desc": "允許 Claude 透過 claude-in-chrome 擴充套件與 Chrome 互動。需要安裝該擴充套件。需要重啟會話。"
+    },
+    "enableBangBash": {
+      "name": "啟用 bash 模式 (!)",
+      "desc": "在空輸入時輸入 ! 進入 bash 模式。透過 Node.js child_process 直接執行命令。需要重新開啟檢視。",
+      "validation": {
+        "noNode": "PATH 中未找到 Node.js。請安裝 Node.js 或檢查 PATH 配置。"
+      }
+    },
+    "maxTabs": {
+      "name": "最大聊天標籤頁數",
+      "desc": "最大併發聊天標籤頁數（3-10）。每個標籤頁使用單獨的 Claude 會話。",
+      "warning": "超過 5 個標籤頁可能會影響效能和記憶體使用。"
+    },
+    "enableAutoScroll": {
+      "name": "流式傳輸時自動滾動",
+      "desc": "Claude 流式傳輸響應時自動滾動到底部。禁用可停留在頂部從頭開始閱讀。"
+    },
+    "deferMathRenderingDuringStreaming": {
+      "name": "流式傳輸時延遲數學渲染",
+      "desc": "響應流式傳輸時顯示原始 LaTeX，每個文字塊完成後一次性渲染數學公式。"
+    },
+    "expandFileEditsByDefault": {
+      "name": "預設展開檔案編輯",
+      "desc": "Write 和 Edit 差異首次出現時展開顯示。"
+    },
+    "chatViewPlacement": {
+      "name": "在何處開啟 TyporAi",
+      "desc": "選擇聊天面板建立時開啟的位置",
+      "rightSidebar": "右側邊欄",
+      "leftSidebar": "左側邊欄",
+      "mainTab": "主編輯器標籤頁"
+    },
+    "cliPath": {
+      "name": "Claude CLI 路徑",
+      "desc": "Claude Code CLI 的自定義路徑。留空則自動檢測。",
+      "descWindows": "對於原生安裝程式，使用 claude.exe。對於 npm/pnpm/yarn 或其他包管理器安裝，使用 cli-wrapper.cjs 路徑（不是 claude.cmd）。",
+      "descUnix": "貼上 \"which claude\" 的輸出——適用於原生和 npm/pnpm/yarn 安裝。",
+      "validation": {
+        "notExist": "路徑不存在",
+        "isDirectory": "路徑是目錄，不是檔案"
+      }
+    },
+    "language": {
+      "name": "語言",
+      "desc": "更改外掛介面的顯示語言"
+    },
+    "claude": {
+      "enableProvider": {
+        "name": "啟用 Claude 提供商",
+        "desc": "啟用後，Claude 模型會出現在新對話中。啟用 Claude 會禁用 Codex 和 OpenCode。"
+      },
+      "plugins": {
+        "header": "Claude Code 外掛",
+        "refreshAria": "重新整理外掛",
+        "empty": "未找到 Claude Code 外掛。透過 Claude CLI 啟用外掛。",
+        "project": "專案外掛",
+        "user": "使用者外掛",
+        "disableAria": "禁用外掛",
+        "enableAria": "啟用外掛",
+        "refreshFailed": "重新整理外掛失敗：{message}",
+        "toggleFailed": "切換外掛失敗：{message}",
+        "togglePartiallyFailed": "外掛已切換，但部分標籤頁重啟失敗。",
+        "noticeToggledDisabled": "外掛 \"{id}\" 已禁用",
+        "noticeToggledEnabled": "外掛 \"{id}\" 已啟用",
+        "noticeRefreshed": "外掛列表已重新整理"
+      },
+      "slashCommands": {
+        "type": {
+          "name": "型別",
+          "desc": "選擇此條目是斜槓命令還是技能。",
+          "skillLabel": "技能",
+          "commandLabel": "命令",
+          "commandOption": "命令",
+          "skillOption": "技能"
+        },
+        "name": {
+          "name": "名稱",
+          "desc": "僅限小寫字母、數字和連字元。",
+          "placeholder": "評論公關"
+        },
+        "description": {
+          "name": "描述",
+          "desc": "斜槓命令列表中顯示的簡要描述。"
+        },
+        "argumentHint": {
+          "name": "引數提示",
+          "desc": "引數的佔位符文字（例如 \"[file] [focus]\"）"
+        },
+        "modelOverride": {
+          "name": "模型覆蓋",
+          "desc": "此命令可選的模型。",
+          "placeholder": "Claude-sonnet-4-5"
+        },
+        "allowedTools": {
+          "name": "允許的工具",
+          "desc": "逗號分隔的允許工具列表（空 = 全部）。"
+        },
+        "disableModelInvocation": {
+          "name": "禁用模型呼叫",
+          "desc": "阻止模型自行呼叫此命令。"
+        },
+        "disableUserInvocation": {
+          "name": "禁用使用者呼叫",
+          "desc": "阻止使用者直接呼叫此技能。"
+        },
+        "context": {
+          "name": "上下文",
+          "desc": "在子代理（分叉）中執行。"
+        },
+        "agent": {
+          "name": "代理",
+          "desc": "上下文為分叉時的子代理型別。",
+          "placeholder": "程式碼審查者"
+        },
+        "prompt": {
+          "name": "提示詞模板",
+          "desc": "使用 $ARGUMENTS、$1、$2、@file、!`bash`。"
+        },
+        "promptPlaceholder": "審查此程式碼：\n$ARGUMENTS\n\n@$1",
+        "advancedOptions": "高階選項",
+        "promptRequired": "提示詞模板是必需的",
+        "duplicateName": "名為 \"/{name}\" 的命令已存在",
+        "saveFailed": "儲存斜槓命令失敗",
+        "saveFailedSkill": "儲存技能失敗",
+        "saveFailedCommand": "儲存斜槓命令失敗",
+        "deleteFailedSkill": "刪除技能失敗",
+        "deleteFailedCommand": "刪除斜槓命令失敗",
+        "convertToSkillAria": "轉換為技能",
+        "convertFailed": "轉換為技能失敗",
+        "converted": "已將 \"/{name}\" 轉換為技能",
+        "skillBadge": "技能",
+        "skillLabel": "技能",
+        "slashCommandLabel": "斜槓命令",
+        "created": "已建立",
+        "updated": "已更新",
+        "deleted": "已刪除",
+        "unavailable": "Claude 命令目錄不可用。",
+        "emptyCatalog": "未找到命令或技能。",
+        "emptyNone": "暫無命令或技能。點選 + 新增一個。",
+        "learnMore": "瞭解更多",
+        "duplicateSkillName": "名為 \"/{name}\" 的技能已存在",
+        "saveFailedWithLabel": "儲存 {label} 失敗",
+        "deleteFailedWithLabel": "刪除 {label} 失敗",
+        "noticeCreated": "{label} \"/{name}\" 已建立",
+        "noticeUpdated": "{label} \"/{name}\" 已更新",
+        "noticeDeleted": "{label} \"/{name}\" 已刪除"
+      },
+      "customVariables": {
+        "desc": "僅限 Claude 擁有的執行時變數。用於 ANTHROPIC_* 和 Claude 特定的開關。",
+        "placeholder": "ANTHROPIC_API_KEY=your-key\nANTHROPIC_BASE_URL=https://api.example.com\nANTHROPIC_MODEL=custom-model\nCLAUDE_CODE_USE_BEDROCK=1"
+      }
+    },
+    "codex": {
+      "enable": {
+        "name": "啟用 Codex 提供商",
+        "desc": "啟用後，Codex 模型會出現在新對話的模型選擇器中。現有的 Codex 會話將被保留。"
+      },
+      "installationMethod": {
+        "name": "安裝方式",
+        "desc": "TyporAi 在 Windows 上如何啟動 Codex。原生 Windows 使用 Windows 可執行檔案路徑。WSL 在選定的發行版內啟動 Linux CLI。",
+        "nativeWindows": "原生 Windows",
+        "wsl": "世界SL"
+      },
+      "cliPath": {
+        "name": "Codex CLI 路徑",
+        "desc": "Codex CLI 的自定義路徑。",
+        "placeholder": "Codex 可執行檔案路徑",
+        "descNative": "本地 Codex CLI 的自定義路徑。留空則從 PATH 自動檢測。",
+        "descWsl": "WSL 內執行的 Linux 端 Codex 命令或絕對路徑。留空則在選定發行版內查詢 PATH。",
+        "descWindows": "本地 Codex CLI 的自定義路徑。留空則從 PATH 自動檢測。使用原生 Windows 可執行檔案路徑，通常為 `codex.exe`。",
+        "placeholderNative": "/usr/local/bin/codex",
+        "placeholderWsl": "法典",
+        "placeholderWindows": "C:\\Users\\you\\AppData\\Roaming\\npm\\codex.exe",
+        "wslModeError": "WSL 模式需要 Linux 命令或 Linux 絕對路徑，而不是 Windows 可執行檔案路徑。"
+      },
+      "wslDistro": {
+        "name": "WSL 發行版覆蓋",
+        "desc": "可選的高階覆蓋。留空則在可能的情況下從 WSL 工作區路徑推斷髮行版，否則使用預設 WSL 發行版。",
+        "placeholder": "烏班圖"
+      },
+      "reasoningSummary": {
+        "name": "推理摘要",
+        "desc": "在思考塊中顯示模型推理過程的摘要。",
+        "auto": "自動",
+        "concise": "簡潔",
+        "detailed": "詳細",
+        "none": "無"
+      },
+      "customModels": {
+        "placeholder": "gpt-5.4\ngpt-5.3-codex-spark"
+      },
+      "skills": {
+        "heading": "Codex 技能",
+        "desc": "管理儲存在 .codex/skills/ 或 .agents/skills/ 中的保險庫級別 Codex 技能。此處排除主目錄級別的技能。",
+        "label": "Codex 技能",
+        "empty": "保險庫中沒有 Codex 技能。點選 + 建立一個。",
+        "skillBadge": "技能",
+        "deletedNotice": "Codex 技能 \"{name}\" 已刪除",
+        "createdNotice": "Codex 技能 \"{name}\" 已建立",
+        "updatedNotice": "Codex 技能 \"{name}\" 已更新",
+        "saveFailed": "儲存 Codex 技能失敗",
+        "deleteFailed": "刪除 Codex 技能失敗",
+        "instructionsRequired": "說明是必需的"
+      },
+      "hiddenSkills": {
+        "name": "隱藏的技能",
+        "desc": "從下拉選單中隱藏特定的 Codex 技能。輸入不帶前導 $ 的技能名稱，每行一個。",
+        "placeholder": "分析\n解釋一下\n修復"
+      },
+      "skillModal": {
+        "titleAdd": "新增 Codex 技能",
+        "titleEdit": "編輯 Codex 技能",
+        "directory": {
+          "name": "目錄",
+          "desc": "儲存技能的位置"
+        },
+        "name": {
+          "name": "技能名稱",
+          "desc": "在 $ 之後使用的名稱（例如 $analyze 中的 \"analyze\"）",
+          "placeholder": "分析程式碼"
+        },
+        "description": {
+          "name": "描述",
+          "desc": "下拉選單中顯示的可選描述"
+        },
+        "instructions": {
+          "name": "說明",
+          "desc": "技能說明（SKILL.md 內容）",
+          "placeholder": "分析程式碼中的..."
+        }
+      },
+      "subagents": {
+        "heading": "Codex 子代理",
+        "desc": "管理儲存在 .codex/agents/ 中的保險庫級別 Codex 子代理。每個 TOML 檔案定義一個自定義代理。",
+        "label": "Codex 子代理",
+        "empty": "保險庫中沒有 Codex 子代理。點選 + 建立一個。"
+      },
+      "subagentModal": {
+        "titleAdd": "新增 Codex 子代理",
+        "titleEdit": "編輯 Codex 子代理",
+        "advanced": "高階選項",
+        "name": {
+          "name": "名稱",
+          "desc": "Codex 生成時使用的代理名稱（小寫字母、連字元、下劃線）",
+          "placeholder": "程式碼審閱者"
+        },
+        "description": {
+          "name": "描述",
+          "desc": "Codex 何時使用此代理",
+          "placeholder": "審查程式碼的正確性和安全性",
+          "required": "描述是必需的"
+        },
+        "model": {
+          "name": "模型",
+          "desc": "模型覆蓋（留空則繼承）"
+        },
+        "reasoningEffort": {
+          "name": "推理努力程度",
+          "desc": "模型推理努力程度",
+          "inherit": "繼承",
+          "low": "低",
+          "medium": "中",
+          "high": "高",
+          "xhigh": "極高"
+        },
+        "sandboxMode": {
+          "name": "沙箱模式",
+          "desc": "此代理的沙箱限制",
+          "inherit": "繼承",
+          "readOnly": "只讀",
+          "dangerFullAccess": "危險完全訪問",
+          "workspaceWrite": "工作區寫入"
+        },
+        "nicknameCandidates": {
+          "name": "候選暱稱",
+          "desc": "逗號分隔的顯示暱稱（例如 atlas、delta、echo）"
+        },
+        "developerInstructions": {
+          "name": "開發者指令",
+          "desc": "定義代理行為的核心指令",
+          "placeholder": "像所有者一樣審查程式碼。\n優先考慮正確性、安全性和缺失的測試覆蓋。",
+          "required": "開發者指令是必需的"
+        },
+        "errors": {
+          "duplicateName": "名為 \"{name}\" 的子代理已存在",
+          "saveFailed": "儲存子代理失敗：{message}",
+          "deleteFailed": "刪除子代理失敗",
+          "deletedNotice": "子代理 \"{name}\" 已刪除",
+          "createdNotice": "子代理 \"{name}\" 已建立",
+          "updatedNotice": "子代理 \"{name}\" 已更新",
+          "deleteConfirm": "刪除子代理 \"{name}\"？"
+        },
+        "validation": {
+          "nameRequired": "子代理名稱是必需的",
+          "nameTooLong": "子代理名稱不能超過 {max} 個字元",
+          "nameInvalid": "子代理名稱只能包含小寫字母、數字、連字元和下劃線",
+          "nicknameInvalid": "候選暱稱只能包含 ASCII 字母、數字、空格、連字元和下劃線",
+          "nicknameDuplicate": "候選暱稱必須唯一"
+        }
+      },
+      "safeMode": {
+        "workspaceWrite": "工作區寫入",
+        "readOnly": "只讀"
+      },
+      "env": {
+        "name": "自定義變數",
+        "desc": "Codex 的環境變數（KEY=VALUE 格式，每行一個）。支援 shell export 字首。",
+        "placeholder": "OPENAI_API_KEY=your-key\nOPENAI_BASE_URL=https://api.openai.com/v1"
+      },
+      "mcp": {
+        "notice": "Codex 透過其自己的 CLI 管理 MCP 伺服器。使用 `codex mcp` 配置，它們將在 TyporAi 中可用。",
+        "learnMore": "瞭解更多"
+      }
+    },
+    "opencode": {
+      "setup": {
+        "heading": "設定"
+      },
+      "enable": {
+        "name": "啟用 OpenCode 提供商",
+        "desc": "啟用後，OpenCode 模型會出現在新對話的模型選擇器中。"
+      },
+      "cliPath": {
+        "name": "CLI 路徑",
+        "desc": "此計算機上 OpenCode CLI 的可選絕對路徑。留空則使用 PATH 中的 `opencode`。",
+        "placeholder": "開放程式碼",
+        "placeholderWin": "C:\\Users\\you\\AppData\\Roaming\\npm\\opencode.cmd",
+        "placeholderUnix": "/usr/local/bin/opencode",
+        "validation": {
+          "notExist": "路徑不存在",
+          "isDirectory": "路徑必須指向檔案",
+          "isFile": "路徑必須指向檔案",
+          "notFile": "路徑未指向檔案"
+        }
+      },
+      "models": {
+        "heading": "模型",
+        "browse": "瀏覽模型",
+        "searchPlaceholder": "搜尋模型...",
+        "empty": "未發現模型。",
+        "loading": "載入模型中...",
+        "loadFailed": "載入模型失敗。",
+        "startOpencode": "啟動 OpenCode 以發現模型。",
+        "notReported": "當前 OpenCode 未報告",
+        "selectedCount": "已選擇 {count}",
+        "ofDiscovered": "/ 共發現 {total}",
+        "noneDiscovered": "未發現",
+        "available": "可用",
+        "allProviders": "所有提供商",
+        "allProvidersCount": "所有提供商 ({count})",
+        "providerOption": "{label} ({count})",
+        "removeAria": "移除 {label}",
+        "aliasAria": "{name} 的別名",
+        "aliasTitle": "模型選擇器中顯示的自定義標籤。留空則使用預設值。",
+        "visibleLabel": "可見模型",
+        "clearAllAria": "清除所有選中的模型",
+        "emptyFiltered": "沒有匹配您搜尋的模型。",
+        "emptyLoading": "正在從 OpenCode 載入模型...",
+        "emptyLoadFailed": "從 OpenCode 載入模型失敗。請檢查 CLI 路徑並重試。",
+        "emptyStartOpencode": "啟動 OpenCode 以檢視可用模型。",
+        "visible": {
+          "name": "可見模型",
+          "desc": "選擇哪些模型出現在選擇器中。如果為空，則顯示所有發現的模型。"
+        },
+        "unavailableBadge": "不可用",
+        "unavailableTitle": "此模型當前從 OpenCode 不可用"
+      },
+      "commands": {
+        "heading": "命令",
+        "desc": "管理保險庫級別的 OpenCode 命令。"
+      },
+      "hiddenCommands": {
+        "name": "隱藏的命令",
+        "desc": "從下拉選單中隱藏特定的 OpenCode 命令。輸入不帶前導斜槓的名稱，每行一個。",
+        "placeholder": "命令1\n命令2"
+      },
+      "subagents": {
+        "heading": "子代理",
+        "desc": "管理保險庫級別的 OpenCode 子代理。"
+      },
+      "agentModal": {
+        "titleAdd": "新增 OpenCode 子代理",
+        "titleEdit": "編輯 OpenCode 子代理",
+        "advanced": "高階選項",
+        "name": {
+          "name": "名稱",
+          "desc": "OpenCode 代理名稱。使用斜槓分隔的段來表示巢狀代理。",
+          "placeholder": "審查",
+          "required": "代理名稱是必需的",
+          "slashLeadingTrailing": "代理名稱必須使用斜槓分隔的路徑段，不能有前導或尾隨斜槓",
+          "segmentEmpty": "代理名稱路徑段不能為空或僅包含空格",
+          "segmentWhitespace": "代理名稱路徑段不能以空格開頭或結尾",
+          "dotSegment": "代理名稱不能包含 \".\" 或 \"..\" 路徑段",
+          "reservedChars": "代理名稱路徑段不能包含 Windows 保留的檔名字元"
+        },
+        "description": {
+          "name": "描述",
+          "desc": "OpenCode 何時使用此子代理",
+          "placeholder": "審查程式碼的正確性和可維護性",
+          "required": "描述是必需的"
+        },
+        "model": {
+          "name": "模型",
+          "desc": "provider/model 格式的模型覆蓋",
+          "placeholder": "Anthropic/Claude-sonnet-4-20250514"
+        },
+        "variant": {
+          "name": "變體",
+          "desc": "模型變體覆蓋",
+          "placeholder": "高的"
+        },
+        "temperature": {
+          "name": "溫度",
+          "desc": "可選的取樣溫度",
+          "placeholder": "0.1",
+          "invalid": "溫度必須是有效數字"
+        },
+        "topP": {
+          "name": "頂部 p",
+          "desc": "可選的核取樣值",
+          "placeholder": "0.9",
+          "invalid": "Top P 必須是有效數字"
+        },
+        "color": {
+          "name": "顏色",
+          "desc": "十六進位制顏色或主題令牌",
+          "placeholder": "#FF5733"
+        },
+        "steps": {
+          "name": "步數",
+          "desc": "強制純文字輸出前的最大代理迭代次數",
+          "placeholder": "10",
+          "invalid": "步數必須是正整數"
+        },
+        "hidden": {
+          "name": "從 @提及中隱藏",
+          "desc": "從 @ 自動完成選單中隱藏此子代理"
+        },
+        "disable": {
+          "name": "禁用代理",
+          "desc": "在不刪除檔案的情況下禁用代理"
+        },
+        "tools": {
+          "name": "啟用的工具 (JSON)",
+          "desc": "可選的已棄用工具對映，例如 {\"write\":false,\"edit\":false}",
+          "placeholder": "{\n  \"write\": false,\n  \"edit\": false\n}",
+          "invalid": "啟用的工具必須將工具名稱對映到布林值"
+        },
+        "permission": {
+          "name": "許可權 (JSON)",
+          "desc": "可選的許可權配置，例如 {\"edit\":\"deny\",\"bash\":\"allow\"}",
+          "placeholder": "{\n  \"edit\": \"deny\"\n}",
+          "invalid": "許可權必須是有效的 JSON"
+        },
+        "options": {
+          "name": "選項 (JSON)",
+          "desc": "可選的自定義代理選項",
+          "placeholder": "{\n  \"focus\": \"security\"\n}",
+          "invalid": "選項必須是 JSON 物件"
+        },
+        "prompt": {
+          "name": "提示詞",
+          "desc": "用作代理提示詞的 Markdown 正文",
+          "placeholder": "仔細審查程式碼更改，指出正確性、迴歸和缺失的測試覆蓋。",
+          "required": "提示詞是必需的"
+        },
+        "errors": {
+          "duplicate": "名為 \"{name}\" 的子代理已存在",
+          "saveFailed": "儲存子代理失敗：{message}",
+          "deleteFailed": "刪除子代理失敗",
+          "created": "子代理 \"{name}\" 已建立",
+          "updated": "子代理 \"{name}\" 已更新",
+          "deleted": "子代理 \"{name}\" 已刪除"
+        }
+      },
+      "agentList": {
+        "label": "OpenCode 子代理",
+        "empty": "保險庫中沒有 OpenCode 子代理。點選 + 建立一個。",
+        "badgeSubagent": "子代理",
+        "refreshAria": "重新整理",
+        "addAria": "新增",
+        "editAria": "編輯",
+        "deleteAria": "刪除",
+        "deleteConfirm": "刪除子代理 \"{name}\"？"
+      },
+      "env": {
+        "heading": "環境",
+        "name": "環境變數",
+        "desc": "傳遞給 OpenCode 的額外環境變數。`OPENCODE_ENABLE_EXA=1` 預設啟用。",
+        "placeholder": "{defaultEnv}\nOPENCODE_DB=/path/to/opencode.db"
+      }
+    },
+    "typora": {
+      "setup": {
+        "heading": "設定"
+      },
+      "enable": {
+        "name": "啟用 Typora 提供商",
+        "desc": "啟用後，Typora 提供商可在模型選擇器中使用。"
+      },
+      "api": {
+        "heading": "應用程式介面"
+      },
+      "apiKey": {
+        "name": "API 金鑰",
+        "desc": "用於向 Typora 提供商 API 傳送請求的 API 金鑰。"
+      },
+      "apiBaseUrl": {
+        "name": "API 基礎 URL",
+        "desc": "Typora 提供商 API 的基礎 URL。留空則使用預設值。"
+      },
+      "apiModel": {
+        "name": "API 模型",
+        "desc": "Typora 提供商 API 使用的模型 ID。"
+      }
+    },
+    "mcp": {
+      "modal": {
+        "titleEdit": "編輯 MCP 伺服器",
+        "titleAdd": "新增 MCP 伺服器",
+        "serverName": {
+          "name": "伺服器名稱",
+          "desc": "此 MCP 伺服器的唯一識別符號。",
+          "placeholder": "我的 mcp 伺服器"
+        },
+        "type": {
+          "name": "型別",
+          "desc": "選擇 MCP 伺服器的啟動或連線方式。",
+          "stdio": "stdio（本地命令）",
+          "sse": "SSE（伺服器傳送事件）",
+          "http": "HTTP協定"
+        },
+        "enabled": {
+          "name": "已啟用",
+          "desc": "已禁用的伺服器不會啟動，也不會提供給模型。"
+        },
+        "contextSaving": {
+          "name": "上下文節省",
+          "desc": "啟用後，此伺服器僅在您在聊天中 @提及它時啟用，從而節省上下文 tokens。"
+        },
+        "command": {
+          "name": "命令",
+          "desc": "啟動 MCP 伺服器的 shell 命令。引數以空格分隔。",
+          "placeholder": "npx -y @my-org/mcp-server"
+        },
+        "env": {
+          "name": "環境變數",
+          "desc": "每行一個 KEY=VALUE 對。如果您的 shell 需要，請使用 `export` 字首。",
+          "placeholder": "API_KEY=your-key\nDEBUG=true"
+        },
+        "url": {
+          "name": "網址",
+          "desc": "MCP 伺服器的端點。",
+          "sseDesc": "伺服器傳送事件端點 URL。",
+          "httpDesc": "HTTP 端點 URL。",
+          "placeholder": "https://example.com/mcp"
+        },
+        "headers": {
+          "name": "請求頭",
+          "desc": "自定義 HTTP 請求頭，每行一個 KEY=VALUE。",
+          "placeholder": "Authorization=Bearer your-token"
+        },
+        "nameRequired": "請輸入伺服器名稱",
+        "nameInvalid": "伺服器名稱只能包含字母、數字、點、連字元和下劃線",
+        "commandRequired": "請輸入命令",
+        "urlRequired": "請輸入 URL"
+      },
+      "empty": "未配置 MCP 伺服器。點選 + 新增一個。",
+      "addOptionStdio": "Stdio（本地命令）",
+      "addOptionHttp": "HTTP/SSE",
+      "addOptionImport": "從剪貼簿匯入",
+      "contextSavingBadgeTitle": "上下文節省：透過 @{name} 提及以啟用",
+      "verifyAria": "驗證（顯示工具）",
+      "disableAria": "禁用",
+      "enableAria": "啟用",
+      "editAria": "編輯",
+      "deleteAria": "刪除",
+      "alreadyExists": "伺服器 \"{name}\" 已存在",
+      "updated": "MCP 伺服器 \"{name}\" 已更新",
+      "added": "MCP 伺服器 \"{name}\" 已新增",
+      "enabled": "MCP 伺服器 \"{name}\" 已啟用",
+      "disabled": "MCP 伺服器 \"{name}\" 已禁用",
+      "deleted": "MCP 伺服器 \"{name}\" 已刪除",
+      "deleteConfirm": "刪除 MCP 伺服器 \"{name}\"？",
+      "saveFailed": "儲存 MCP 伺服器失敗",
+      "importEmpty": "剪貼簿為空",
+      "importInvalid": "剪貼簿中未找到有效的 mcp 配置",
+      "importFailed": "讀取剪貼簿失敗",
+      "importEnterName": "輸入伺服器名稱",
+      "importSuccess": "已匯入 {count} 個 MCP 伺服器{plural}",
+      "importPartial": "已匯入 {count} 個 MCP 伺服器{plural}（{skipped} 個已跳過）",
+      "importNone": "未匯入新的 mcp 伺服器",
+      "reloadFailed": "設定已儲存但重新載入失敗。更改將在下次會話時生效。",
+      "verificationFailed": "驗證失敗",
+      "test": {
+        "toggleError": "切換失敗",
+        "permissionDenied": "許可權被拒絕。請檢查命令的檔案許可權。",
+        "diskFull": "磁碟已滿或空間不足。請釋放空間後重試。",
+        "configCorrupted": "MCP 配置已損壞。請檢查並修復 JSON。",
+        "title": "驗證：{name}",
+        "connecting": "連線中...",
+        "connected": "連線成功",
+        "connectedTo": "已成功連線到 {name}",
+        "connectedToVersion": "已成功連線到 {name} v{version}",
+        "connectionFailed": "連線失敗",
+        "availableTools": "可用工具 ({count})",
+        "noToolsInfo": "無工具資訊可用。工具將在聊天中使用時載入。",
+        "disableAll": "全部禁用",
+        "enableAll": "全部啟用",
+        "close": "關閉"
+      }
+    },
+    "envReview": {
+      "heading": "環境審查",
+      "message": "審查以下內容的環境所有權：{keys}",
+      "keysFor": "審查以下內容的環境所有權：{keys}"
+    }
+  },
+  "provider": {
+    "claude": "Claude",
+    "codex": "Codex",
+    "opencode": "OpenCode",
+    "typora": "Typora"
+  }
+}
