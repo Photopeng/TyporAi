@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {
   copyFileSync,
+  chmodSync,
   existsSync,
   mkdirSync,
   readFileSync,
@@ -9,7 +10,8 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { randomBytes } from 'node:crypto';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -27,7 +29,6 @@ const flags = new Set(args.filter(arg => arg.startsWith('--')));
 const deploymentPlatform = process.env.TYPORAI_DEPLOY_PLATFORM || process.platform;
 
 const paths = resolvePaths();
-const loader = buildLoader();
 
 try {
   run(requestedAction, {
@@ -70,6 +71,7 @@ function install(options) {
     if (existsSync(paths.stylesPath)) {
       copyFileSync(paths.stylesPath, paths.deployedStylesPath);
     }
+    if (deploymentPlatform === 'darwin') installMacosSidecar();
   }
 
   const windowHtml = readFileSync(paths.windowHtmlPath, 'utf8');
@@ -85,6 +87,7 @@ function install(options) {
   if (!options.dryRun) {
     createBackups();
     writeWindowHtmlSafely(nextWindowHtml);
+    if (deploymentPlatform === 'darwin') resignMacosApp();
   }
 
   console.log(`Copied bundle to ${paths.deployedBundlePath}`);
@@ -119,6 +122,10 @@ function uninstall(options) {
     }
     console.log(`Removed plugin files from ${paths.pluginDir}`);
   }
+
+  if (deploymentPlatform === 'darwin' && !options.dryRun) {
+    uninstallMacosSidecar(options.removePluginFiles);
+  }
 }
 
 function verifyInstall() {
@@ -130,6 +137,12 @@ function verifyInstall() {
   if (!existsSync(paths.deployedStylesPath)) {
     failures.push(`Missing deployed styles: ${paths.deployedStylesPath}`);
   }
+  if (deploymentPlatform === 'darwin') {
+    if (!existsSync(paths.deployedMacosRendererPath)) failures.push(`Missing macOS renderer: ${paths.deployedMacosRendererPath}`);
+    if (!existsSync(paths.deployedSidecarPath)) failures.push(`Missing sidecar: ${paths.deployedSidecarPath}`);
+    if (!existsSync(paths.sidecarTokenPath)) failures.push(`Missing sidecar token: ${paths.sidecarTokenPath}`);
+    if (!existsSync(paths.launchAgentPath)) failures.push(`Missing LaunchAgent: ${paths.launchAgentPath}`);
+  }
   if (!existsSync(paths.windowHtmlPath)) {
     failures.push(`Missing Typora window.html: ${paths.windowHtmlPath}`);
   } else {
@@ -137,7 +150,8 @@ function verifyInstall() {
     if (!hasLoader(windowHtml)) {
       failures.push(`Missing TyporAi loader marker in ${paths.windowHtmlPath}`);
     }
-    if (!windowHtml.includes('"plugins", "typorai", "typora-typorai.js"')) {
+    const expectedBundle = deploymentPlatform === 'darwin' ? 'typorai-macos-renderer.js' : 'typora-typorai.js';
+    if (!windowHtml.includes(expectedBundle)) {
       failures.push('Loader does not point at the Typora plugin directory.');
     }
     if (hasLegacyLoader(windowHtml)) {
@@ -152,6 +166,10 @@ function verifyInstall() {
   console.log('TyporAi deployment verified.');
   console.log(`Bundle: ${paths.deployedBundlePath}`);
   console.log(`Styles: ${paths.deployedStylesPath}`);
+  if (deploymentPlatform === 'darwin') {
+    console.log(`Renderer: ${paths.deployedMacosRendererPath}`);
+    console.log(`Sidecar: ${paths.deployedSidecarPath}`);
+  }
   console.log(`Loader: ${paths.windowHtmlPath}`);
 }
 
@@ -161,6 +179,10 @@ function assertInstallInputs() {
   }
   if (!existsSync(paths.stylesPath)) {
     throw new Error(`Missing Typora styles: ${paths.stylesPath}. Run npm run build:typora first.`);
+  }
+  if (deploymentPlatform === 'darwin') {
+    if (!existsSync(paths.macosRendererPath)) throw new Error(`Missing macOS renderer: ${paths.macosRendererPath}. Run npm run build:typora first.`);
+    if (!existsSync(paths.sidecarPath)) throw new Error(`Missing sidecar: ${paths.sidecarPath}. Run npm run build:typora first.`);
   }
   assertWindowHtmlExists();
 }
@@ -260,6 +282,7 @@ function writeWindowHtmlSafely(contents) {
 }
 
 function upsertLoader(windowHtml) {
+  const loader = buildLoader(paths);
   const pattern = markerPattern();
   if (pattern.test(windowHtml)) {
     return windowHtml.replace(pattern, loader);
@@ -294,7 +317,8 @@ function legacyMarkerPattern() {
   return new RegExp(`${escapeRegExp(legacyMarkerStart)}[\\s\\S]*?${escapeRegExp(legacyMarkerEnd)}`);
 }
 
-function buildLoader() {
+function buildLoader(resolvedPaths) {
+  if (deploymentPlatform === 'darwin') return buildMacosLoader(resolvedPaths);
   return `${markerStart}
 <script id="typorai-typora-loader">
 (function () {
@@ -331,6 +355,79 @@ function buildLoader() {
 ${markerEnd}`;
 }
 
+function buildMacosLoader(resolvedPaths) {
+  const bootstrap = JSON.stringify({
+    endpoint: `ws://127.0.0.1:${resolvedPaths.sidecarPort}/rpc`,
+    homeDirectory: resolvedPaths.deploymentHome,
+    protocolVersion: 1,
+    token: readSidecarToken(),
+  }).replace(/</g, '\\u003c');
+  const rendererUrl = pathToFileURL(resolvedPaths.deployedMacosRendererPath).href;
+  const stylesUrl = pathToFileURL(resolvedPaths.deployedStylesPath).href;
+  return `${markerStart}
+<link id="typorai-style" rel="stylesheet" href="${stylesUrl}">
+<script>window.__TYPORAI_BOOTSTRAP__ = ${bootstrap};</script>
+<script id="typorai-typora-runtime" defer src="${rendererUrl}"></script>
+${markerEnd}`;
+}
+
+function installMacosSidecar() {
+  mkdirSync(paths.sidecarDataDir, { recursive: true });
+  if (!existsSync(paths.sidecarTokenPath)) {
+    writeFileSync(paths.sidecarTokenPath, randomBytes(32).toString('hex'), { encoding: 'utf8', mode: 0o600 });
+  }
+  chmodSync(paths.sidecarTokenPath, 0o600);
+  copyFileSync(paths.macosRendererPath, paths.deployedMacosRendererPath);
+  copyFileSync(paths.sidecarPath, paths.deployedSidecarPath);
+  mkdirSync(path.dirname(paths.launchAgentPath), { recursive: true });
+  writeFileSync(paths.launchAgentPath, buildLaunchAgentPlist(), 'utf8');
+  if (process.platform === 'darwin') {
+    try { execFileSync('launchctl', ['bootout', `gui/${process.getuid?.() ?? 0}`, paths.launchAgentPath], { stdio: 'ignore' }); } catch {}
+    execFileSync('launchctl', ['bootstrap', `gui/${process.getuid?.() ?? 0}`, paths.launchAgentPath], { stdio: 'inherit' });
+    execFileSync('launchctl', ['kickstart', '-k', `gui/${process.getuid?.() ?? 0}/${paths.launchAgentLabel}`], { stdio: 'inherit' });
+  }
+}
+
+function uninstallMacosSidecar(removeData) {
+  if (process.platform === 'darwin') {
+    try { execFileSync('launchctl', ['bootout', `gui/${process.getuid?.() ?? 0}`, paths.launchAgentPath], { stdio: 'ignore' }); } catch {}
+  }
+  rmSync(paths.launchAgentPath, { force: true });
+  if (removeData) rmSync(paths.sidecarDataDir, { recursive: true, force: true });
+}
+
+function resignMacosApp() {
+  if (process.platform !== 'darwin') return;
+  execFileSync('codesign', ['--force', '--deep', '--sign', '-', paths.typoraInstallDir], { stdio: 'inherit' });
+}
+
+function readSidecarToken() {
+  return readFileSync(paths.sidecarTokenPath, 'utf8').trim();
+}
+
+function buildLaunchAgentPlist() {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>Label</key><string>${paths.launchAgentLabel}</string>
+<key>ProgramArguments</key><array><string>${escapeXml(process.execPath)}</string><string>${escapeXml(paths.deployedSidecarPath)}</string></array>
+<key>EnvironmentVariables</key><dict>
+<key>TYPORAI_SIDECAR_TOKEN_FILE</key><string>${escapeXml(paths.sidecarTokenPath)}</string>
+<key>TYPORAI_SIDECAR_DATA_DIR</key><string>${escapeXml(paths.sidecarDataDir)}</string>
+<key>TYPORAI_SIDECAR_PORT</key><string>${paths.sidecarPort}</string>
+<key>TYPORAI_ALLOWED_ROOTS</key><string>${escapeXml(paths.deploymentHome)}</string>
+<key>TYPORAI_VERSION</key><string>${escapeXml(readProjectVersion())}</string>
+</dict>
+<key>RunAtLoad</key><true/>
+<key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
+<key>StandardOutPath</key><string>${escapeXml(paths.sidecarLogPath)}</string>
+<key>StandardErrorPath</key><string>${escapeXml(paths.sidecarErrorLogPath)}</string>
+</dict></plist>`;
+}
+
+function escapeXml(value) { return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[character]); }
+function readProjectVersion() { return JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version; }
+
 function resolvePaths() {
   const platform = deploymentPlatform;
   const typoraInstallDir = resolveTyporaInstallDir(platform);
@@ -339,17 +436,33 @@ function resolvePaths() {
   const appData = resolveTyporaUserDataDir(platform);
   const typoraUserDataDir = path.join(appData, platform === 'darwin' ? 'abnerworks.Typora' : 'Typora');
   const pluginDir = path.join(typoraUserDataDir, 'plugins', 'typorai');
+  const deploymentHome = platform === 'darwin'
+    ? path.dirname(path.dirname(appData))
+    : resolveDeploymentHome(platform);
+  const sidecarDataDir = path.join(deploymentHome, 'Library', 'Application Support', 'TyporAi', 'sidecar');
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
   return {
     appData,
     bundlePath: path.join(root, 'typora-typorai.js'),
+    deployedMacosRendererPath: path.join(pluginDir, 'typorai-macos-renderer.js'),
+    deployedSidecarPath: path.join(pluginDir, 'typorai-sidecar.cjs'),
     deployedBundlePath: path.join(pluginDir, 'typora-typorai.js'),
     deployedStylesPath: path.join(pluginDir, 'styles.css'),
     pluginDir,
     pluginsRoot: path.join(typoraUserDataDir, 'plugins'),
     stableBackupPath: `${windowHtmlPath}.typorai.bak`,
     stylesPath: path.join(root, 'styles.css'),
+    macosRendererPath: path.join(root, 'typorai-macos-renderer.js'),
+    sidecarPath: path.join(root, 'typorai-sidecar.cjs'),
+    sidecarDataDir,
+    sidecarErrorLogPath: path.join(deploymentHome, 'Library', 'Logs', 'TyporAi', 'sidecar-error.log'),
+    sidecarLogPath: path.join(deploymentHome, 'Library', 'Logs', 'TyporAi', 'sidecar.log'),
+    sidecarPort: Number(process.env.TYPORAI_SIDECAR_PORT ?? '17328'),
+    sidecarTokenPath: path.join(sidecarDataDir, 'auth-token'),
+    launchAgentLabel: 'com.photopeng.typorai.sidecar',
+    launchAgentPath: path.join(deploymentHome, 'Library', 'LaunchAgents', 'com.photopeng.typorai.sidecar.plist'),
+    deploymentHome,
     timestampBackupPath: `${windowHtmlPath}.typorai-backup-${timestamp}`,
     typoraInstallDir,
     typoraResourcesDir,

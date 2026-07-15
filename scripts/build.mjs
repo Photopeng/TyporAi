@@ -17,3 +17,5 @@ execSync('node scripts/build-css.mjs', { cwd: ROOT, stdio: 'inherit' });
 // Run esbuild with args passed through
 const args = process.argv.slice(2).join(' ');
 execSync(`node esbuild.config.mjs ${args}`, { cwd: ROOT, stdio: 'inherit' });
+execSync(`node esbuild.macos-renderer.config.mjs ${args}`, { cwd: ROOT, stdio: 'inherit' });
+execSync(`node esbuild.sidecar.config.mjs ${args}`, { cwd: ROOT, stdio: 'inherit' });
