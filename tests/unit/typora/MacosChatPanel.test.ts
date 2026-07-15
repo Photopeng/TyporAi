@@ -3,7 +3,7 @@
  */
 
 import { TyporaEditorApi } from '@/typora/editor-api';
-import { MacosChatPanel } from '@/typora/MacosChatPanel';
+import { buildMacosAgentPrompt, MacosChatPanel } from '@/typora/MacosChatPanel';
 
 describe('MacosChatPanel', () => {
   it('limits the provider picker to agents reported by the Sidecar', async () => {
@@ -47,5 +47,15 @@ describe('MacosChatPanel', () => {
 
     expect(root.textContent).toContain('Summarize this note');
     expect(root.textContent).toContain('Here is the summary.');
+  });
+});
+
+describe('buildMacosAgentPrompt', () => {
+  it('preserves the recent conversation before the latest user prompt', () => {
+    expect(buildMacosAgentPrompt([
+      { providerId: 'codex', role: 'user', text: 'Explain this file.' },
+      { providerId: 'codex', role: 'assistant', text: 'It handles deployment.' },
+      { providerId: 'codex', role: 'user', text: 'What about macOS?' },
+    ], 'What about macOS?')).toContain('Assistant: It handles deployment.');
   });
 });

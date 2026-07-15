@@ -108,7 +108,11 @@ export class MacosChatPanel {
     const response = this.appendMessage('', 'assistant', providerId);
     try {
       const cwd = this.editor.getWorkspacePath() || await this.client.call<string>('environment.homeDirectory');
-      const result = await this.client.call<AgentStartResult>('agent.start', { cwd, prompt, providerId });
+      const result = await this.client.call<AgentStartResult>('agent.start', {
+        cwd,
+        prompt: buildMacosAgentPrompt(this.getRecentMessages(), prompt),
+        providerId,
+      });
       this.activeSessionId = result.sessionId;
       response.dataset.sessionId = result.sessionId;
     } catch (error) {
@@ -183,6 +187,16 @@ export class MacosChatPanel {
       .slice(-200);
     await this.settings.set(HISTORY_STORAGE_KEY, history);
   }
+
+  private getRecentMessages(): StoredMessage[] {
+    return Array.from(this.messages.querySelectorAll<HTMLElement>('[data-role]'))
+      .map(message => ({
+        providerId: message.dataset.providerId as AgentId,
+        role: message.dataset.role as 'assistant' | 'user',
+        text: message.textContent ?? '',
+      }))
+      .slice(-20);
+  }
 }
 
 function element(tagName: string, className: string, text?: string): HTMLElement {
@@ -203,6 +217,12 @@ function button(text: string, onClick: () => void): HTMLButtonElement {
 
 function providerLabel(providerId: AgentId): string {
   return providerId === 'opencode' ? 'OpenCode' : providerId[0].toUpperCase() + providerId.slice(1);
+}
+
+export function buildMacosAgentPrompt(messages: readonly StoredMessage[], latestPrompt: string): string {
+  const previous = messages.slice(0, -1).map(message => `${message.role === 'user' ? 'User' : 'Assistant'}: ${message.text}`);
+  if (previous.length === 0) return latestPrompt;
+  return `Continue this conversation. Reply to the final user message.\n\n${previous.join('\n\n')}\n\nUser: ${latestPrompt}`;
 }
 
 function isStoredMessage(value: unknown): value is StoredMessage {
