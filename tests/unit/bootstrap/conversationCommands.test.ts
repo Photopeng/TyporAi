@@ -77,7 +77,7 @@ describe('registerConversationCommands', () => {
 
     registerConversationCommands({ commandRegistry, hotkey }, host);
 
-    expect(hotkey.register).toHaveBeenCalledWith('panel', 'Ctrl+Enter', expect.any(Function));
+    expect(hotkey.register).toHaveBeenCalledWith('panel', 'Mod+Enter', expect.any(Function));
     expect(hotkey.register).toHaveBeenCalledWith('panel', 'Escape', expect.any(Function));
   });
 });

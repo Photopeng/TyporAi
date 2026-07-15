@@ -95,9 +95,29 @@ describe('deploy-typora script', () => {
     expect(existsSync(pluginDir)).toBe(false);
   });
 
-  it('rejects macOS deployment explicitly', () => {
-    expect(() => runDeployWithEnv({ TYPORAI_DEPLOY_PLATFORM: 'darwin' }, 'install'))
-      .toThrow(/macOS deployment is not supported/);
+  it('installs into the macOS application bundle and Typora user data directory', () => {
+    installDir = path.join(tempRoot, 'Applications', 'Typora.app');
+    appDataDir = path.join(tempRoot, 'Library', 'Application Support');
+    windowHtmlPath = path.join(installDir, 'Contents', 'Resources', 'TypeMark', 'index.html');
+    pluginDir = path.join(appDataDir, 'abnerworks.Typora', 'plugins', 'typorai');
+    mkdirSync(path.dirname(windowHtmlPath), { recursive: true });
+    writeFileSync(windowHtmlPath, '<html><body>Typora</body></html>', 'utf8');
+
+    runDeployWithEnv({
+      TYPORAI_DEPLOY_PLATFORM: 'darwin',
+      TYPORA_INSTALL_DIR: installDir,
+      TYPORA_USER_DATA_DIR: appDataDir,
+    }, 'install');
+
+    expect(readWindowHtml()).toContain(markerStart);
+    expect(readWindowHtml()).toContain('abnerworks.Typora');
+    expect(existsSync(path.join(pluginDir, 'typora-typorai.js'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
+    runDeployWithEnv({
+      TYPORAI_DEPLOY_PLATFORM: 'darwin',
+      TYPORA_INSTALL_DIR: installDir,
+      TYPORA_USER_DATA_DIR: appDataDir,
+    }, 'verify');
   });
 
   it('detects Linux resources and XDG config plugin directory', () => {

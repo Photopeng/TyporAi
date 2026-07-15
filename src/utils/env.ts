@@ -121,6 +121,7 @@ function getExtraBinaryPaths(): string[] {
   } else {
     // Unix paths
     const paths = [
+      ...(process.platform === 'darwin' ? ['/opt/homebrew/bin', '/opt/local/bin'] : []),
       '/usr/local/bin',
       '/usr/bin',
       '/bin',
@@ -156,6 +157,9 @@ function getExtraBinaryPaths(): string[] {
       paths.push(joinPosixPath(home, '.asdf', 'shims'));
       paths.push(joinPosixPath(home, '.asdf', 'bin'));
       paths.push(joinPosixPath(home, '.fnm'));
+      if (process.platform === 'darwin') {
+        paths.push(joinPosixPath(home, '.local', 'share', 'mise', 'shims'));
+      }
 
       // NVM: use NVM_BIN if set, otherwise resolve default version from filesystem
       const nvmBin = process.env.NVM_BIN;

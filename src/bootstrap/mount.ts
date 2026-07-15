@@ -53,6 +53,7 @@ export async function mountApp(): Promise<void> {
     panelRoot: document.getElementById('typorai-typora-root'),
     editorRoot: document.querySelector<HTMLElement>('#write')
       ?? document.querySelector<HTMLElement>('content'),
+    platform: typoraRuntime?.applicationRuntime?.host.platform.operatingSystem,
   });
   const resolveActiveProviderId = () => {
     const activeTab = typoraRuntime?.view?.getActiveTab?.();

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-TyporAi is a Typora-only plugin for Windows and Linux that embeds provider-backed chat runtimes in a sidebar and inline-edit flow. Claude is the default provider. Codex is optional and joins the same conversation model through `Conversation.providerId` plus provider-owned `providerState`.
+TyporAi is a Typora-only plugin for Windows, macOS 14+, and Linux that embeds provider-backed chat runtimes in a sidebar and inline-edit flow. Claude is the default provider. Codex is optional and joins the same conversation model through `Conversation.providerId` plus provider-owned `providerState`.
 
 ## Architecture Status
 

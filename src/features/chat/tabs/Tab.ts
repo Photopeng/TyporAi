@@ -238,24 +238,33 @@ function isEnterWithoutShiftOrComposition(e: KeyboardEvent): boolean {
   return true;
 }
 
-function hasPlatformSendModifier(e: KeyboardEvent): boolean {
-  return e.ctrlKey === true && !e.metaKey && !e.altKey;
+function hasPlatformSendModifier(
+  e: KeyboardEvent,
+  platform: TabData['platform'],
+): boolean {
+  return platform === 'macos'
+    ? e.metaKey === true && !e.ctrlKey && !e.altKey
+    : e.ctrlKey === true && !e.metaKey && !e.altKey;
 }
 
-function shouldSendMessageFromExplicitEnterShortcut(e: KeyboardEvent): boolean {
-  return isEnterWithoutShiftOrComposition(e) && hasPlatformSendModifier(e);
+function shouldSendMessageFromExplicitEnterShortcut(
+  e: KeyboardEvent,
+  platform: TabData['platform'],
+): boolean {
+  return isEnterWithoutShiftOrComposition(e) && hasPlatformSendModifier(e, platform);
 }
 
 function shouldSendMessageFromEnterKey(
   e: KeyboardEvent,
   settings: Pick<TyporAiSettings, 'requireCommandOrControlEnterToSend'>,
+  platform: TabData['platform'],
 ): boolean {
   if (!isEnterWithoutShiftOrComposition(e)) {
     return false;
   }
 
   if (settings.requireCommandOrControlEnterToSend === true) {
-    return hasPlatformSendModifier(e);
+    return hasPlatformSendModifier(e, platform);
   }
 
   return true;
@@ -295,7 +304,7 @@ export function sendTabInputMessageFromExplicitEnterShortcut(
   e: KeyboardEvent,
   options?: { requireInputFocus?: boolean },
 ): boolean {
-  if (!shouldSendMessageFromExplicitEnterShortcut(e)) {
+  if (!shouldSendMessageFromExplicitEnterShortcut(e, tab.platform)) {
     return false;
   }
 
@@ -307,7 +316,7 @@ function sendTabInputMessageFromEnterKey(
   settings: Pick<TyporAiSettings, 'requireCommandOrControlEnterToSend'>,
   e: KeyboardEvent,
 ): boolean {
-  if (!shouldSendMessageFromEnterKey(e, settings)) {
+  if (!shouldSendMessageFromEnterKey(e, settings, tab.platform)) {
     return false;
   }
 

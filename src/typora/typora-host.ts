@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 import type { TyporaEventRef, TyporaHostApp, TyporaMetadataIndex, TyporaWorkspace, TyporaWorkspaceApi,WorkspaceFileAdapter } from '@/typora/platform';
@@ -1445,11 +1446,18 @@ function getRuntimeDirectory(): string {
     const winPath = pathname.replace(/^\/([A-Za-z]:)/, '$1').replace(/\//g, path.sep);
     return path.dirname(winPath);
   }
-  return path.join(process.env.APPDATA ?? '', 'Typora', 'plugins', 'typorai');
+
+  if (process.platform === 'darwin') {
+    return path.join(os.homedir(), 'Library', 'Application Support', 'abnerworks.Typora', 'plugins', 'typorai');
+  }
+  if (process.platform === 'linux') {
+    return path.join(process.env.XDG_CONFIG_HOME ?? path.join(os.homedir(), '.config'), 'Typora', 'plugins', 'typorai');
+  }
+  return path.join(process.env.APPDATA ?? path.join(os.homedir(), 'AppData', 'Roaming'), 'Typora', 'plugins', 'typorai');
 }
 
 function getWorkspaceBasePath(): string {
-  const fallback = process.env.USERPROFILE ?? process.cwd();
+  const fallback = process.env.HOME ?? process.env.USERPROFILE ?? process.cwd();
   try {
     const currentFile = new TyporaEditorApi().getCurrentFilePath();
     if (currentFile) return path.dirname(currentFile);
