@@ -1,5 +1,3 @@
-import path from 'node:path';
-
 import type { CursorContext } from '../utils/editor';
 
 type TyporaFileApi = {
@@ -31,9 +29,9 @@ export class TyporaEditorApi {
   getWorkspacePath(): string {
     const currentFilePath = this.getCurrentFilePath();
     if (currentFilePath) {
-      return path.dirname(currentFilePath);
+      return dirname(currentFilePath);
     }
-    return process.cwd();
+    return globalThis.document?.body?.getAttribute('data-workspace-path') ?? '';
   }
 
   getCurrentFilePath(): string | null {
@@ -146,4 +144,12 @@ export class TyporaEditorApi {
     }
     return false;
   }
+}
+
+function dirname(value: string): string {
+  const index = Math.max(value.lastIndexOf('/'), value.lastIndexOf('\\'));
+  if (index < 0) return '';
+  if (index === 0) return value[0];
+  if (index === 2 && value[1] === ':') return value.slice(0, 3);
+  return value.slice(0, index);
 }
