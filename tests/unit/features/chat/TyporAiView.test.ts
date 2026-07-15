@@ -85,13 +85,13 @@ describe('TyporAiView tab controls', () => {
     expect(view.tabBarContainerEl.hasClass('typorai-header-tab-bar-container')).toBe(true);
     expect(header.children[2].children[0].getAttribute('data-icon')).toBe('message-square-dot');
     expect(header.children[2].children[0].getAttribute('aria-label')).toBe('\u65b0\u5bf9\u8bdd');
-    expect(header.children[2].children[0].title).toBe('\u65b0\u5bf9\u8bdd');
+    expect(header.children[2].children[0].getAttribute('data-typorai-tooltip')).toBe('\u65b0\u5bf9\u8bdd');
     expect(header.children[2].children[1].getAttribute('data-icon')).toBe('square-plus');
     expect(header.children[2].children[1].getAttribute('aria-label')).toBe('\u65b0\u6807\u7b7e\u9875');
-    expect(header.children[2].children[1].title).toBe('\u65b0\u6807\u7b7e\u9875');
+    expect(header.children[2].children[1].getAttribute('data-typorai-tooltip')).toBe('\u65b0\u6807\u7b7e\u9875');
     expect(header.children[2].children[2].children[0].getAttribute('data-icon')).toBe('clock');
     expect(header.children[2].children[2].children[0].getAttribute('aria-label')).toBe('\u804a\u5929\u5386\u53f2');
-    expect(header.children[2].children[2].children[0].title).toBe('\u804a\u5929\u5386\u53f2');
+    expect(header.children[2].children[2].children[0].getAttribute('data-typorai-tooltip')).toBe('\u804a\u5929\u5386\u53f2');
   });
 
   it('moves only the active tab input into the stable input slot', () => {
