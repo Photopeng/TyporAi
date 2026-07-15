@@ -35,13 +35,42 @@ function dedupePaths(entries: string[], isWindows: boolean): string[] {
   });
 }
 
+function candidatePathVariants(filePath: string, platform: 'win32' | 'linux' | 'darwin'): string[] {
+  if (platform !== 'win32') {
+    return [filePath];
+  }
+
+  const variants = [
+    filePath,
+    filePath.replace(/\\/g, '/'),
+    filePath.replace(/\//g, '\\'),
+  ];
+  return dedupePaths(variants, true);
+}
+
+function findExistingFilePath(filePath: string, fileProbe: FileProbe | undefined, platform: 'win32' | 'linux' | 'darwin'): string | null {
+  if (!fileProbe) return null;
+  for (const candidate of candidatePathVariants(filePath, platform)) {
+    try {
+      if (fileProbe.exists(candidate) && fileProbe.isFile(candidate)) {
+        return candidate;
+      }
+    } catch {
+      // Try the next separator-normalized variant.
+    }
+  }
+  return null;
+}
+
 function findFirstExistingPath(entries: string[], candidates: string[], options: ClaudeCliDiscoveryOptions): string | null {
+  const platform = options.platform ?? runtimePlatform();
   for (const dir of entries) {
     if (!dir) continue;
     for (const candidate of candidates) {
-      const fullPath = joinPath(options.platform ?? runtimePlatform(), dir, candidate);
-      if (isExistingFile(fullPath, options.fileProbe)) {
-        return fullPath;
+      const fullPath = joinPath(platform, dir, candidate);
+      const existingPath = findExistingFilePath(fullPath, options.fileProbe, platform);
+      if (existingPath) {
+        return existingPath;
       }
     }
   }
@@ -49,19 +78,16 @@ function findFirstExistingPath(entries: string[], candidates: string[], options:
 }
 
 function isExistingFile(filePath: string, fileProbe?: FileProbe): boolean {
-  if (!fileProbe) return false;
-  try {
-    return fileProbe.exists(filePath) && fileProbe.isFile(filePath);
-  } catch {
-    return false;
-  }
+  return findExistingFilePath(filePath, fileProbe, runtimePlatform()) !== null;
 }
 
 function findClaudeCodeNodeEntrypoint(packageRoot: string, options: ClaudeCliDiscoveryOptions): string | null {
+  const platform = options.platform ?? runtimePlatform();
   for (const entrypoint of CLAUDE_CODE_NODE_ENTRYPOINTS) {
-    const candidate = joinPath(options.platform ?? runtimePlatform(), packageRoot, entrypoint);
-    if (isExistingFile(candidate, options.fileProbe)) {
-      return candidate;
+    const candidate = joinPath(platform, packageRoot, entrypoint);
+    const existingPath = findExistingFilePath(candidate, options.fileProbe, platform);
+    if (existingPath) {
+      return existingPath;
     }
   }
 
@@ -220,15 +246,17 @@ export function findClaudeCLIPath(pathValue?: string, options: ClaudeCliDiscover
     ];
 
     for (const p of exePaths) {
-      if (isExistingFile(p, resolvedOptions.fileProbe)) {
-        return p;
+      const existingPath = findExistingFilePath(p, resolvedOptions.fileProbe, platform);
+      if (existingPath) {
+        return existingPath;
       }
     }
 
     const packageEntrypointPaths = getNpmClaudeCodeEntrypointPaths(resolvedOptions);
     for (const p of packageEntrypointPaths) {
-      if (isExistingFile(p, resolvedOptions.fileProbe)) {
-        return p;
+      const existingPath = findExistingFilePath(p, resolvedOptions.fileProbe, platform);
+      if (existingPath) {
+        return existingPath;
       }
     }
 
@@ -258,16 +286,18 @@ export function findClaudeCLIPath(pathValue?: string, options: ClaudeCliDiscover
   }
 
   for (const p of commonPaths) {
-    if (isExistingFile(p, resolvedOptions.fileProbe)) {
-      return p;
+    const existingPath = findExistingFilePath(p, resolvedOptions.fileProbe, platform);
+    if (existingPath) {
+      return existingPath;
     }
   }
 
   if (!isWindows) {
     const packageEntrypointPaths = getNpmClaudeCodeEntrypointPaths(resolvedOptions);
     for (const p of packageEntrypointPaths) {
-      if (isExistingFile(p, resolvedOptions.fileProbe)) {
-        return p;
+      const existingPath = findExistingFilePath(p, resolvedOptions.fileProbe, platform);
+      if (existingPath) {
+        return existingPath;
       }
     }
   }

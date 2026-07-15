@@ -130,6 +130,7 @@ describe('deploy-typora script', () => {
     return runDeployWithEnv({
       APPDATA: appDataDir,
       TYPORA_INSTALL_DIR: installDir,
+      TYPORAI_DEPLOY_PLATFORM: 'win32',
     }, ...args);
   }
 

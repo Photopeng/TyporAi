@@ -4,12 +4,14 @@ const TOOLTIP_ATTR = 'data-typorai-tooltip';
 const TOOLTIP_SHOW_DELAY_MS = 300;
 
 export function setTyporAiTooltip(element: HTMLElement, text: string | null | undefined): void {
-  element.removeAttribute('title');
   if (!text) {
+    element.title = '';
+    element.removeAttribute('title');
     element.removeAttribute(TOOLTIP_ATTR);
     return;
   }
 
+  element.title = text;
   element.setAttribute(TOOLTIP_ATTR, text);
 }
 
