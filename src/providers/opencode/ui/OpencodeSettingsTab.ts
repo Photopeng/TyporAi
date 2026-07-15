@@ -3,6 +3,7 @@ import type { ProviderSettingsTabRenderer } from '../../../core/providers/types'
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 import { getHostnameKey } from '../../../utils/env';
 import { expandHomePath } from '../../../utils/path';
 import { maybeGetOpencodeWorkspaceServices } from '../app/OpencodeWorkspaceServices';
@@ -365,7 +366,7 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
         aliasInput.placeholder = defaultLabel;
         aliasInput.value = current.modelAliases[rawId] ?? '';
         aliasInput.setAttribute('aria-label', t('settings.opencode.models.aliasAria', { name: defaultLabel }));
-        aliasInput.title = t('settings.opencode.models.aliasTitle');
+        setTyporAiTooltip(aliasInput, t('settings.opencode.models.aliasTitle'));
 
         const commitAlias = (): void => {
           const latest = getOpencodeProviderSettings(settingsBag);
@@ -466,7 +467,7 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
         if (isSelected) {
           rowEl.classList.add('typorai-opencode-model-picker-row--selected');
         }
-        rowEl.title = model.rawId;
+        setTyporAiTooltip(rowEl, model.rawId);
 
         const checkboxEl = appendElement(rowEl, 'input', { type: 'checkbox' });
         checkboxEl.checked = isSelected;
@@ -493,7 +494,7 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
         if (!model.isAvailable) {
           badgeEl.classList.add('typorai-opencode-model-picker-row-badge--unavailable');
           badgeEl.textContent = t('settings.opencode.models.unavailableBadge');
-          badgeEl.title = t('settings.opencode.models.unavailableTitle');
+          setTyporAiTooltip(badgeEl, t('settings.opencode.models.unavailableTitle'));
         }
 
         appendElement(textEl, 'div', { className: 'typorai-opencode-model-picker-row-meta', text: model.rawId });

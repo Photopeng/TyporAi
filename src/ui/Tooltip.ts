@@ -4,14 +4,13 @@ const TOOLTIP_ATTR = 'data-typorai-tooltip';
 const TOOLTIP_SHOW_DELAY_MS = 500;
 
 export function setTyporAiTooltip(element: HTMLElement, text: string | null | undefined): void {
+  element.title = '';
+  element.removeAttribute('title');
   if (!text) {
-    element.title = '';
-    element.removeAttribute('title');
     element.removeAttribute(TOOLTIP_ATTR);
     return;
   }
 
-  element.title = text;
   element.setAttribute(TOOLTIP_ATTR, text);
 }
 
@@ -40,6 +39,8 @@ export function installTyporAiTooltips(root: HTMLElement | Document = document):
     if (!(target instanceof Element)) return null;
     const host = target.closest<HTMLElement>(`[${TOOLTIP_ATTR}]`);
     if (!host) return null;
+    host.title = '';
+    host.removeAttribute('title');
     return host;
   };
 
