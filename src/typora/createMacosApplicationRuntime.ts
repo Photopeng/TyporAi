@@ -12,6 +12,7 @@ import { TyporaDocumentService } from './TyporaDocumentService';
 export interface MacosApplicationRuntime {
   readonly client: BridgeClient;
   readonly runtime: ApplicationRuntime;
+  readonly settings: BridgeSettingsStorageAdapter;
   dispose(): Promise<void>;
 }
 
@@ -47,6 +48,7 @@ export function createMacosApplicationRuntime(
   return {
     client,
     runtime,
+    settings: storage,
     async dispose(): Promise<void> {
       storage?.dispose();
       await runtime.dispose();

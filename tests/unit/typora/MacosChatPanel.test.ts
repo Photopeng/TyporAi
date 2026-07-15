@@ -16,7 +16,8 @@ describe('MacosChatPanel', () => {
       ]),
       on: jest.fn(),
     };
-    const panel = new MacosChatPanel(root, client as never, new TyporaEditorApi());
+    const settings = { get: jest.fn().mockResolvedValue(null), set: jest.fn(), subscribe: jest.fn() };
+    const panel = new MacosChatPanel(root, client as never, new TyporaEditorApi(), settings);
 
     await panel.initialize();
 
@@ -24,5 +25,27 @@ describe('MacosChatPanel', () => {
     expect(provider?.value).toBe('codex');
     expect(provider?.querySelector<HTMLOptionElement>('option[value="claude"]')?.disabled).toBe(true);
     expect(provider?.querySelector<HTMLOptionElement>('option[value="codex"]')?.disabled).toBe(false);
+  });
+
+  it('restores valid messages from Bridge-backed settings storage', async () => {
+    const root = document.createElement('section');
+    const client = {
+      call: jest.fn().mockResolvedValue([{ available: true, providerId: 'codex' }]),
+      on: jest.fn(),
+    };
+    const settings = {
+      get: jest.fn().mockResolvedValue([
+        { providerId: 'codex', role: 'user', text: 'Summarize this note' },
+        { providerId: 'codex', role: 'assistant', text: 'Here is the summary.' },
+      ]),
+      set: jest.fn(),
+      subscribe: jest.fn(),
+    };
+    const panel = new MacosChatPanel(root, client as never, new TyporaEditorApi(), settings);
+
+    await panel.initialize();
+
+    expect(root.textContent).toContain('Summarize this note');
+    expect(root.textContent).toContain('Here is the summary.');
   });
 });

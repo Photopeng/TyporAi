@@ -21,7 +21,7 @@ async function boot(): Promise<void> {
   const application = createMacosApplicationRuntime(editor, bootstrap);
   const health = await application.client.call<{ version: string }>('system.health');
   await application.client.call('system.rendererReady', { version: health.version });
-  const panel = new MacosChatPanel(root, application.client, editor);
+  const panel = new MacosChatPanel(root, application.client, editor, application.settings);
   await panel.initialize();
   root.dataset.typoraiSidecar = 'connected';
   root.dataset.typoraiVersion = health.version;
