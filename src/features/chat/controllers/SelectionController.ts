@@ -117,7 +117,7 @@ export class SelectionController {
       return;
     }
 
-    // Reading/preview mode has no usable CM6 selection ? use DOM selection instead
+    // Reading/preview mode has no usable CM6 selection — use DOM selection instead
     if (view.getMode() === 'preview') {
       this.pollReadingMode(view);
       return;
@@ -449,11 +449,11 @@ export class SelectionController {
     // Edit mode: prefer native CM6 unfocused selection (.cm-selectionBackground)
     if (sel.editorView && sel.from !== undefined && sel.to !== undefined) {
       if (this.isNativeEditorSelectionVisible(sel)) {
-        // Native is showing ? clear any stale mock
+        // Native is showing — clear any stale mock
         hideSelectionHighlight(sel.editorView);
         return;
       }
-      // Native selection not visible (e.g., input has focus) ? show mock
+      // Native selection not visible (e.g., input has focus) — show mock
       showSelectionHighlight(sel.editorView, sel.from, sel.to);
       return;
     }
@@ -461,11 +461,11 @@ export class SelectionController {
     // Preview mode: prefer native DOM selection (::selection)
     if (sel.domRanges?.length) {
       if (this.isNativePreviewSelectionVisible(sel.domRanges)) {
-        // Native is showing ? clear any stale mock
+        // Native is showing — clear any stale mock
         this.cssHighlights?.delete(HIGHLIGHT_KEY);
         return;
       }
-      // Native selection not visible (e.g., input has focus) ? show mock
+      // Native selection not visible (e.g., input has focus) — show mock
       const validRanges = sel.domRanges.filter(r => r.startContainer.isConnected);
       const HighlightCtor = this.highlightConstructor;
       if (validRanges.length && HighlightCtor) {

@@ -1,1380 +1,1380 @@
 {
   "common": {
-    "save": "??",
-    "cancel": "??",
-    "delete": "??",
-    "edit": "??",
-    "add": "??",
-    "remove": "??",
-    "clear": "??",
-    "clearAll": "????",
-    "loading": "???",
-    "error": "??",
-    "success": "??",
-    "warning": "??",
-    "confirm": "??",
-    "settings": "??",
-    "advanced": "??",
-    "enabled": "???",
-    "disabled": "???",
-    "platform": "??",
-    "refresh": "??",
-    "rewind": "??",
-    "unknown": "??",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "remove": "移除",
+    "clear": "清除",
+    "clearAll": "全部清除",
+    "loading": "加载中",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "confirm": "确认",
+    "settings": "设置",
+    "advanced": "高级",
+    "enabled": "已启用",
+    "disabled": "已禁用",
+    "platform": "平台",
+    "refresh": "刷新",
+    "rewind": "回退",
+    "unknown": "未知",
     "typorai": "TyporAi",
-    "close": "??"
+    "close": "关闭"
   },
   "chat": {
     "slashCommand": {
-      "noMatchingCommands": "???????"
+      "noMatchingCommands": "没有匹配的命令"
     },
     "imageAttachments": {
-      "unsupportedByProvider": "????????????",
-      "exceedsLimit": "???? {size} ???",
-      "unsupportedType": "?????????",
-      "attachFailed": "???????",
-      "dropHere": "???????",
-      "remove": "????",
-      "fileNotFound": "?????",
-      "permissionDenied": "?????"
+      "unsupportedByProvider": "此提供商不支持图片附件。",
+      "exceedsLimit": "图片超出 {size} 限制。",
+      "unsupportedType": "不支持的图片类型。",
+      "attachFailed": "附加图片失败。",
+      "dropHere": "拖放图片到此处",
+      "remove": "移除图片",
+      "fileNotFound": "文件未找到",
+      "permissionDenied": "权限被拒绝"
     },
     "tabs": {
-      "switchFailed": "???????",
-      "closeFailed": "???????",
-      "maxReached": "???? {count} ????",
-      "createFailed": "???????",
-      "newConversationFailed": "??????",
-      "historyToggleFailed": "????????"
+      "switchFailed": "切换标签页失败",
+      "closeFailed": "关闭标签页失败",
+      "maxReached": "最多允许 {count} 个标签页",
+      "createFailed": "无法新建标签页",
+      "newConversationFailed": "无法新建对话",
+      "historyToggleFailed": "无法切换聊天历史"
     },
-    "forkUnsupported": "????????????",
-    "forkUnavailable": "??????",
+    "forkUnsupported": "此提供商不支持分叉功能。",
+    "forkUnavailable": "分叉不可用。",
     "rewind": {
-      "confirmMessage": "?????????????????????????????????? bash ??????",
-      "confirmMessageConversationOnly": "??????????????????",
-      "confirmButton": "??",
-      "ariaLabel": "?????",
-      "menuConversationOnly": "?????",
-      "menuCodeAndConversation": "???? + ??",
-      "notice": "????{count} ??????",
-      "noticeConversationOnly": "?????????????",
-      "noticeSaveFailed": "????{count} ???????????????{error}",
-      "noticeConversationOnlySaveFailed": "??????????????{error}",
-      "failed": "?????{error}",
-      "cannot": "?????{error}",
-      "unavailableStreaming": "?????????",
-      "unavailableNoUuid": "????????????"
+      "confirmMessage": "回退到此点？此消息之后的文件更改将被撤销。回退不会影响手动编辑或通过 bash 编辑的文件。",
+      "confirmMessageConversationOnly": "将对话回退到此点？文件更改将被保留。",
+      "confirmButton": "回退",
+      "ariaLabel": "回退到这里",
+      "menuConversationOnly": "仅回退对话",
+      "menuCodeAndConversation": "回退代码 + 对话",
+      "notice": "已回退：{count} 个文件已撤销",
+      "noticeConversationOnly": "已回退对话；文件更改已保留",
+      "noticeSaveFailed": "已回退：{count} 个文件已撤销，但保存状态失败：{error}",
+      "noticeConversationOnlySaveFailed": "已回退对话，但保存状态失败：{error}",
+      "failed": "回退失败：{error}",
+      "cannot": "无法回退：{error}",
+      "unavailableStreaming": "流式传输时无法回退",
+      "unavailableNoUuid": "无法回退：缺少消息标识符"
     },
     "fork": {
-      "ariaLabel": "????",
-      "chooseTarget": "????",
-      "targetNewTab": "????",
-      "targetCurrentTab": "?????",
-      "maxTabsReached": "?????????????? {count}",
-      "notice": "????????",
-      "noticeCurrentTab": "?????????",
-      "failed": "?????{error}",
-      "unavailableStreaming": "?????????",
-      "unavailableNoUuid": "????????????",
-      "unavailableNoResponse": "?????????????",
-      "errorMessageNotFound": "?????",
-      "errorNoSession": "??????? ID",
-      "errorNoActiveTab": "???????",
-      "commandNoMessages": "????????????",
-      "commandNoAssistantUuid": "????????????????",
-      "notSupported": "????????????",
-      "notAvailable": "??????"
+      "ariaLabel": "分叉对话",
+      "chooseTarget": "分叉对话",
+      "targetNewTab": "新标签页",
+      "targetCurrentTab": "当前标签页",
+      "maxTabsReached": "无法分叉：已达最大标签页数量 {count}",
+      "notice": "已分叉到新标签页",
+      "noticeCurrentTab": "已在当前标签页分叉",
+      "failed": "分叉失败：{error}",
+      "unavailableStreaming": "流式传输时无法分叉",
+      "unavailableNoUuid": "无法分叉：缺少消息标识符",
+      "unavailableNoResponse": "无法分叉：没有可分叉的响应",
+      "errorMessageNotFound": "未找到消息",
+      "errorNoSession": "没有可用的会话 ID",
+      "errorNoActiveTab": "没有活动标签页",
+      "commandNoMessages": "无法分叉：对话中没有消息",
+      "commandNoAssistantUuid": "无法分叉：没有带标识符的助手响应",
+      "notSupported": "此提供商不支持分叉功能。",
+      "notAvailable": "分叉不可用。"
     },
     "tab": {
-      "cannotSwitchProvider": "?????????????????????????"
+      "cannotSwitchProvider": "无法在绑定的会话上切换提供商。请改为创建新标签页。"
     },
     "input": {
-      "placeholder": "??????????",
-      "sendFailed": "??????",
-      "cancelFailed": "??????",
-      "initFailed": "?????????",
-      "renameFailed": "???????",
-      "resumeNoConversations": "????????",
-      "steering": "???...",
-      "steerNow": "????",
-      "queuedPrefix": "????",
-      "editQueued": "????????",
-      "discardQueued": "????????",
-      "compacting": "???...",
-      "planApproved": "???????????????",
-      "planImplement": "??????",
-      "steerFailed": "?????? Codex ????????????",
-      "customSystemPromptAdded": "??????????????",
-      "processingFailed": "??????",
-      "refineFailed": "??????",
-      "noInstruction": "?????",
-      "agentInitFailed": "??????????????",
-      "agentNotAvailable": "????????????????",
-      "providerUnavailable": "{provider} ?????????????????????????",
-      "errorWithMessage": "???{error}",
-      "detachedInput": "??????????",
-      "approvalAgent": "????{agent}",
-      "commandUnsupported": "???????? /{command}?",
-      "unknownCommand": "?????{command}",
-      "openConversationFailed": "???????{error}"
+      "placeholder": "今天我能帮您做什么？",
+      "sendFailed": "发送消息失败",
+      "cancelFailed": "取消响应失败",
+      "initFailed": "初始化聊天服务失败",
+      "renameFailed": "重命名对话失败",
+      "resumeNoConversations": "没有可恢复的对话",
+      "steering": "引导中...",
+      "steerNow": "立即引导",
+      "queuedPrefix": "队列中：",
+      "editQueued": "编辑队列中的消息",
+      "discardQueued": "丢弃队列中的消息",
+      "compacting": "压缩中...",
+      "planApproved": "用户已批准计划并开始了新会话。",
+      "planImplement": "实施该计划。",
+      "steerFailed": "引导队列中的 Codex 消息失败。消息仍然可用。",
+      "customSystemPromptAdded": "指令已添加到自定义系统提示词",
+      "processingFailed": "处理响应失败",
+      "refineFailed": "优化指令失败",
+      "noInstruction": "未收到指令",
+      "agentInitFailed": "初始化代理服务失败。请重试。",
+      "agentNotAvailable": "代理服务不可用。请重新加载插件。",
+      "providerUnavailable": "{provider} 已禁用或未配置。请在设置中启用并配置后再进行聊天。",
+      "errorWithMessage": "错误：{error}",
+      "detachedInput": "输入区域当前不可用。",
+      "approvalAgent": "智能体：{agent}",
+      "commandUnsupported": "当前服务商不支持 /{command}。",
+      "unknownCommand": "未知命令：{command}",
+      "openConversationFailed": "无法打开对话：{error}"
     },
     "permission": {
-      "title": "????",
-      "question": "??????",
-      "deny": "??",
-      "allowOnce": "????",
-      "alwaysAllow": "????"
+      "title": "需要权限",
+      "question": "允许此操作？",
+      "deny": "拒绝",
+      "allowOnce": "允许一次",
+      "alwaysAllow": "始终允许"
     },
     "approve": {
-      "approve": "??",
-      "reject": "??"
+      "approve": "批准",
+      "reject": "拒绝"
     },
     "bangBash": {
-      "placeholder": "> ?? bash ??...",
-      "commandPanel": "????",
-      "copyAriaLabel": "????????",
-      "clearAriaLabel": "?? bash ??",
+      "placeholder": "> 运行 bash 命令...",
+      "commandPanel": "命令面板",
+      "copyAriaLabel": "复制最新命令输出",
+      "clearAriaLabel": "清除 bash 输出",
       "commandLabel": "{command}",
-      "statusLabel": "???{status}",
-      "collapseOutput": "??????",
-      "expandOutput": "??????",
-      "running": "???...",
-      "copyFailed": "????????",
-      "commandFailed": "?????{error}"
+      "statusLabel": "状态：{status}",
+      "collapseOutput": "折叠命令输出",
+      "expandOutput": "展开命令输出",
+      "running": "运行中...",
+      "copyFailed": "复制到剪贴板失败",
+      "commandFailed": "命令失败：{error}"
     },
     "toolbar": {
       "safeLabel": "SAFE",
       "yoloLabel": "YOLO",
-      "safeTooltip": "SAFE ?????? AI ???????????",
-      "yoloTooltip": "YOLO ?????? AI ?????????????",
-      "planMode": "??",
-      "planModeTooltip": "?????AI ???????????????",
-      "mcpClickToEnable": "MCP ?????????",
-      "unknownModel": "??",
-      "addExternalContext": "???????????",
-      "mcpServers": "MCP ???",
-      "noMcpServers": "??? MCP ???",
-      "allMcpDisabled": "?? MCP ??????",
-      "thinking": "???",
-      "failedChangeModel": "??????",
-      "failedChangeMode": "??????",
-      "failedChangeEffort": "????????",
-      "failedChangeThinking": "????????",
-      "failedChangePermission": "????????",
-      "failedChangeServiceTier": "????????",
-      "toggleFastMode": "??????",
-      "mcpEnabled": "{count} ? MCP ???{plural}?????????",
-      "contextSavingHint": "?????????? @{name} ??",
-      "cursorFlow": "????",
-      "cursorFlowTooltip": "?????????????????????",
-      "cursorFlowAriaLabel": "?????????????????????"
+      "safeTooltip": "SAFE 已打开：拦截 AI 对当前文档的所有修改。",
+      "yoloTooltip": "YOLO 已打开：允许 AI 根据对话指令修改当前文档。",
+      "planMode": "计划",
+      "planModeTooltip": "计划模式：AI 可以分析，但不能修改当前文档。",
+      "mcpClickToEnable": "MCP 服务器（点击启用）",
+      "unknownModel": "未知",
+      "addExternalContext": "添加外部上下文（点击）",
+      "mcpServers": "MCP 服务器",
+      "noMcpServers": "未配置 MCP 服务器",
+      "allMcpDisabled": "所有 MCP 服务器已禁用",
+      "thinking": "思考：",
+      "failedChangeModel": "更改模型失败",
+      "failedChangeMode": "更改模式失败",
+      "failedChangeEffort": "更改努力程度失败",
+      "failedChangeThinking": "更改思考预算失败",
+      "failedChangePermission": "更改权限模式失败",
+      "failedChangeServiceTier": "更改服务层级失败",
+      "toggleFastMode": "切换快速模式",
+      "mcpEnabled": "{count} 个 MCP 服务器{plural}已启用（点击管理）",
+      "contextSavingHint": "上下文节省：也可通过 @{name} 启用",
+      "cursorFlow": "光标流转",
+      "cursorFlowTooltip": "启用后，选择文本时光标会自动聚焦到输入框。",
+      "cursorFlowAriaLabel": "启用后，选择文本时光标会自动聚焦到输入框。"
     },
     "nav": {
-      "tocTitle": "??",
-      "noPrompts": "?????",
-      "moreFiles": "?? {count} ?",
-      "awaitingResponse": "???????",
-      "jumpToMessage": "???? {index} ????{title}",
-      "messageRail": "????",
-      "untitledMessage": "?????"
+      "tocTitle": "目录",
+      "noPrompts": "暂无提示词",
+      "moreFiles": "另有 {count} 个",
+      "awaitingResponse": "正在等待回复…",
+      "jumpToMessage": "跳转到第 {index} 条消息：{title}",
+      "messageRail": "消息导航",
+      "untitledMessage": "未命名消息"
     },
     "actions": {
-      "newTab": "????",
-      "newConversation": "???",
-      "history": "????"
+      "newTab": "新标签页",
+      "newConversation": "新对话",
+      "history": "聊天历史"
     },
     "resume": {
-      "title": "????",
-      "empty": "????",
-      "current": "????"
+      "title": "恢复对话",
+      "empty": "暂无对话",
+      "current": "当前会话"
     },
     "fileContext": {
-      "openNotFound": "???????{path}",
-      "openFailed": "???????{error}"
+      "openNotFound": "无法打开文件：{path}",
+      "openFailed": "打开文件失败：{error}"
     }
   },
   "quickActions": {
     "toolbar": {
-      "ariaLabel": "???????"
+      "ariaLabel": "快捷操作工具栏"
     },
-    "copy": "??",
-    "ask": "??",
-    "edit": "??",
-    "quote": "??",
-    "working": "???...",
-    "noResult": "???",
-    "askInstruction": "??????",
-    "askPrompt": "?????????",
-    "quotePreview": "{text} [{lineCount} ?]",
-    "clearQuote": "????",
-    "actionFailed": "????"
+    "copy": "复制",
+    "ask": "提问",
+    "edit": "编辑",
+    "quote": "引用",
+    "working": "处理中...",
+    "noResult": "无结果",
+    "askInstruction": "询问以下文本",
+    "askPrompt": "请解释选中的文本。",
+    "quotePreview": "{text} [{lineCount} 行]",
+    "clearQuote": "清除引用",
+    "actionFailed": "操作失败"
   },
   "modal": {
     "instruction": {
-      "yourInput": "????",
-      "yourResponse": "????",
-      "refinedSnippet": "????????",
-      "preview": "??",
-      "edit": "??",
-      "titleAdd": "???????",
-      "processing": "????????...",
-      "placeholder": "??????...",
-      "cancel": "??",
-      "cancelAria": "??",
-      "submit": "??",
-      "submitAria": "????",
-      "editAria": "????",
-      "accept": "??",
-      "acceptAria": "????",
-      "processingInline": "???..."
+      "yourInput": "您的输入",
+      "yourResponse": "您的响应",
+      "refinedSnippet": "优化后的代码片段",
+      "preview": "预览",
+      "edit": "编辑",
+      "titleAdd": "添加自定义指令",
+      "processing": "正在处理您的指令...",
+      "placeholder": "提供更多细节...",
+      "cancel": "取消",
+      "cancelAria": "取消",
+      "submit": "提交",
+      "submitAria": "提交响应",
+      "editAria": "编辑指令",
+      "accept": "接受",
+      "acceptAria": "接受指令",
+      "processingInline": "处理中..."
     }
   },
   "inlineEdit": {
-    "unavailable": "????????????????????????????",
-    "workspaceLoadFailed": "????????????? @????????",
-    "placeholderInsert": "????...",
-    "placeholderEdit": "????...",
-    "replyPlaceholder": "?????...",
-    "noResponse": "?????",
-    "errorRetry": "?? - ???",
-    "invalidPath": "???????????",
+    "unavailable": "内联编辑不可用：无法访问活动编辑器。请尝试重新打开笔记。",
+    "workspaceLoadFailed": "加载工作区文件失败。工作区 @提及可能不可用。",
+    "placeholderInsert": "输入指令...",
+    "placeholderEdit": "编辑指令...",
+    "replyPlaceholder": "回复以继续...",
+    "noResponse": "代理无响应",
+    "errorRetry": "出错 - 请重试",
+    "invalidPath": "附加文件失败：路径无效",
     "prompt": {
-      "ariaLabel": "????",
-      "placeholder": "??????",
-      "send": "??"
+      "ariaLabel": "编辑指令",
+      "placeholder": "描述编辑内容",
+      "send": "发送"
     },
-    "unavailableMarkdownView": "?????????????? Markdown ???",
-    "generating": "???...",
+    "unavailableMarkdownView": "内联编辑不可用：无法访问活动 Markdown 视图。",
+    "generating": "生成中...",
     "actions": {
-      "accept": "??",
-      "refine": "??",
-      "reject": "??",
-      "refinePrompt": "?????????"
+      "accept": "接受",
+      "refine": "优化",
+      "reject": "拒绝",
+      "refinePrompt": "优化选中的建议文本"
     },
     "errors": {
-      "documentEditingBlocked": "???? SAFE ???????? YOLO ?????????",
-      "enterInstruction": "????????",
-      "generationFailed": "???????",
-      "noReplacement": "????????????",
-      "noCliProvider": "??????? CLI ?????????????? Claude?Codex ? OpenCode?",
-      "refineFailed": "?????",
-      "refineNoReplacement": "????????????",
-      "selectSuggestionToRefine": "???????????????"
+      "documentEditingBlocked": "当前处于 SAFE 模式，只有切换到 YOLO 模式才可修改文件。",
+      "enterInstruction": "请输入编辑指令。",
+      "generationFailed": "编辑生成失败。",
+      "noReplacement": "编辑响应未包含替换文本。",
+      "noCliProvider": "未配置已启用的 CLI 提供商。请在设置中启用并配置 Claude、Codex 或 OpenCode。",
+      "refineFailed": "优化失败。",
+      "refineNoReplacement": "优化响应未包含替换文本。",
+      "selectSuggestionToRefine": "请选择建议块内的文本进行优化。"
     }
   },
   "typora": {
     "panel": {
-      "hideAria": "?? TyporAi ??",
-      "hideTitle": "????",
-      "showAria": "?? TyporAi ??",
-      "showTitle": "?? TyporAi"
+      "hideAria": "隐藏 TyporAi 面板",
+      "hideTitle": "隐藏面板",
+      "showAria": "显示 TyporAi 面板",
+      "showTitle": "显示 TyporAi"
     },
     "settings": {
-      "openAria": "?? TyporAi ??",
-      "title": "??"
+      "openAria": "打开 TyporAi 设置",
+      "title": "设置"
     }
   },
   "validation": {
     "slug": {
-      "required": "{label} ??????",
-      "tooLong": "{label} ?????? {max} ???",
-      "invalidChars": "{label} ?????????????????",
-      "reservedWord": "{label} ????? YAML ????true?false?null?yes?no?on?off?",
-      "labelCommand": "??",
-      "labelAgent": "??",
-      "labelCodexSubagent": "Codex ???",
-      "labelOpencodeSubagent": "OpenCode ???",
-      "labelCodexSkill": "Codex ??"
+      "required": "{label} 名称不能为空",
+      "tooLong": "{label} 名称不能超过 {max} 个字符",
+      "invalidChars": "{label} 名称只能包含小写字母、数字和连字符",
+      "reservedWord": "{label} 名称不能是 YAML 保留字（true、false、null、yes、no、on、off）",
+      "labelCommand": "命令",
+      "labelAgent": "代理",
+      "labelCodexSubagent": "Codex 子代理",
+      "labelOpencodeSubagent": "OpenCode 子代理",
+      "labelCodexSkill": "Codex 技能"
     }
   },
   "renderer": {
     "message": {
-      "interrupted": "???",
-      "interruptedHint": "TyporAi ???????",
-      "conversationCompacted": "?????",
-      "bakedFor": "* {word} ?? {duration}",
-      "baked": "???",
-      "subagentTask": "?????",
-      "failedToRender": "?????????",
-      "copied": "????",
-      "copyMessageAria": "????",
-      "copyAria": "??",
-      "codeCopied": "????",
-      "noResult": "???"
+      "interrupted": "已中断",
+      "interruptedHint": "TyporAi 应该怎么处理？",
+      "conversationCompacted": "对话已压缩",
+      "bakedFor": "* {word} 用于 {duration}",
+      "baked": "已烘焙",
+      "subagentTask": "子代理任务",
+      "failedToRender": "渲染消息内容失败。",
+      "copied": "已复制！",
+      "copyMessageAria": "复制消息",
+      "copyAria": "复制",
+      "codeCopied": "已复制！",
+      "noResult": "无结果"
     },
     "thinking": {
-      "ariaExpand": "???? - ????",
-      "elapsed": "??? {seconds}?...",
-      "thoughtFor": "??? {seconds}?",
-      "thought": "??"
+      "ariaExpand": "扩展思考 - 点击展开",
+      "elapsed": "思考中 {seconds}秒...",
+      "thoughtFor": "思考了 {seconds}秒",
+      "thought": "思考"
     },
     "tool": {
-      "tasksProgress": "?? {completed}/{total}",
-      "tasks": "??",
-      "enteringPlanMode": "??????",
-      "planComplete": "????",
-      "readFile": "???{path}",
-      "writeFile": "???{path}",
-      "editFile": "???{path}",
-      "command": "Bash?{command}",
-      "url": "WebFetch?{url}",
-      "file": "??",
-      "pattern": "Grep?{pattern}",
-      "skill": "???{name}",
-      "toolSearch": "ToolSearch?{query}",
-      "tools": "??",
-      "toolSearchLabel": "Glob?{pattern}",
-      "agents": "{count} ???{plural}",
-      "noResult": "???",
-      "noMatchesFound": "??????",
-      "moreLines": "... ?? {count} ?",
-      "moreChars": "... ?? {count} ???",
-      "fileDeleted": "?????",
-      "noTextualDiff": "???????",
-      "changesAria": "???+{added} -{removed}",
-      "webSearch": "WebSearch?{query}",
-      "search": "??",
-      "openPage": "????",
-      "findInPage": "??????",
-      "findInPageWithPattern": "?? \"{pattern}\"",
-      "list": "LS?{path}",
-      "urlUnavailable": "URL ???",
-      "patternLabel": "???{pattern}",
-      "queryLabel": "???{query}",
-      "altQueryLabel": "?????{query}",
-      "moreQueries": "... ?? {count} ???",
+      "tasksProgress": "任务 {completed}/{total}",
+      "tasks": "任务",
+      "enteringPlanMode": "进入计划模式",
+      "planComplete": "计划完成",
+      "readFile": "读取：{path}",
+      "writeFile": "写入：{path}",
+      "editFile": "编辑：{path}",
+      "command": "Bash：{command}",
+      "url": "WebFetch：{url}",
+      "file": "文件",
+      "pattern": "Grep：{pattern}",
+      "skill": "技能：{name}",
+      "toolSearch": "ToolSearch：{query}",
+      "tools": "工具",
+      "toolSearchLabel": "Glob：{pattern}",
+      "agents": "{count} 个代理{plural}",
+      "noResult": "无结果",
+      "noMatchesFound": "未找到匹配项",
+      "moreLines": "... 还有 {count} 行",
+      "moreChars": "... 还有 {count} 个字符",
+      "fileDeleted": "文件已删除",
+      "noTextualDiff": "无文本差异可用",
+      "changesAria": "更改：+{added} -{removed}",
+      "webSearch": "WebSearch：{query}",
+      "search": "搜索",
+      "openPage": "打开页面",
+      "findInPage": "在页面中查找",
+      "findInPageWithPattern": "查找 \"{pattern}\"",
+      "list": "LS：{path}",
+      "urlUnavailable": "URL 不可用",
+      "patternLabel": "模式：{pattern}",
+      "queryLabel": "查询：{query}",
+      "altQueryLabel": "替代查询：{query}",
+      "moreQueries": "... 还有 {count} 个查询",
       "bashPrefix": "$ {command}",
-      "tasksUpdated": "?????",
-      "statusCompleted": "??????",
-      "statusInProgress": "??????",
-      "statusLabel": "???{status}",
-      "running": "???...",
-      "waitingForAnswer": "????...",
-      "notAnswered": "???",
-      "noOptionsRecorded": "?????",
-      "questionOption": "??",
-      "questionDefault": "??",
-      "reviewAnswer": "??????"
+      "tasksUpdated": "任务已更新",
+      "statusCompleted": "状态：已完成",
+      "statusInProgress": "状态：进行中",
+      "statusLabel": "状态：{status}",
+      "running": "运行中...",
+      "waitingForAnswer": "等待回答...",
+      "notAnswered": "未回答",
+      "noOptionsRecorded": "未记录选项",
+      "questionOption": "选项",
+      "questionDefault": "选项",
+      "reviewAnswer": "检查您的答案"
     },
     "writeEdit": {
-      "statusRunning": "??????",
-      "statusError": "?????",
-      "writing": "???...",
-      "done": "??",
-      "error": "??",
-      "defaultError": "??"
+      "statusRunning": "状态：运行中",
+      "statusError": "状态：错误",
+      "writing": "写入中...",
+      "done": "完成",
+      "error": "错误",
+      "defaultError": "错误"
     },
     "diff": {
-      "noChanges": "???",
-      "moreLines": "... ?? {count} ?",
+      "noChanges": "无更改",
+      "moreLines": "... 还有 {count} 行",
       "prefix": "+",
-      "ariaLabel": "???+{added} -{removed}"
+      "ariaLabel": "更改：+{added} -{removed}"
     },
     "subagent": {
-      "subagentTask": "?????",
-      "backgroundTask": "????",
-      "backgroundTaskCompleted": "?????????",
-      "backgroundTaskRenderFailed": "????????????????",
-      "prompt": "???",
-      "result": "??",
-      "noPromptProvided": "??????",
-      "initializing": "????",
-      "runningInBackground": "?????",
-      "completed": "???",
-      "error": "??",
-      "orphaned": "??",
-      "conversationEnded": "???????????",
-      "clickToExpand": "????",
-      "ariaHeader": "{type}?{description} - {status} - ????",
-      "ariaStatus": "???{status}",
-      "statusPending": "???",
-      "statusRunning": "???",
-      "statusCompleted": "???",
-      "statusError": "??",
-      "statusOrphaned": "??"
+      "subagentTask": "子代理任务",
+      "backgroundTask": "后台任务",
+      "backgroundTaskCompleted": "（后台任务已完成）",
+      "backgroundTaskRenderFailed": "后台任务已完成，但无法渲染结果。",
+      "prompt": "提示词",
+      "result": "结果",
+      "noPromptProvided": "未提供提示词",
+      "initializing": "初始化中",
+      "runningInBackground": "在后台运行",
+      "completed": "已完成",
+      "error": "错误",
+      "orphaned": "孤立",
+      "conversationEnded": "对话在任务完成前已结束",
+      "clickToExpand": "点击展开",
+      "ariaHeader": "{type}：{description} - {status} - 点击展开",
+      "ariaStatus": "状态：{status}",
+      "statusPending": "等待中",
+      "statusRunning": "运行中",
+      "statusCompleted": "已完成",
+      "statusError": "错误",
+      "statusOrphaned": "孤立"
     },
     "ask": {
-      "defaultTitle": "??",
-      "placeholderSecret": "?????",
-      "placeholderCustom": "?????",
-      "submit": "??",
-      "submitAnswers": "????",
-      "cancel": "??",
-      "reviewAnswers": "??????",
-      "readyToSubmit": "??????????",
-      "hints": "???? ? Tab/????? ? Esc ??",
-      "hintsImmediate": "???? ? ????? ? Esc ??",
-      "notAnswered": "???",
-      "optionFallback": "??"
+      "defaultTitle": "问题",
+      "placeholderSecret": "输入密钥。",
+      "placeholderCustom": "输入内容。",
+      "submit": "提交",
+      "submitAnswers": "提交答案",
+      "cancel": "取消",
+      "reviewAnswers": "检查您的答案",
+      "readyToSubmit": "准备好提交答案了吗？",
+      "hints": "回车选择 · Tab/方向键导航 · Esc 取消",
+      "hintsImmediate": "回车选择 · 方向键导航 · Esc 取消",
+      "notAnswered": "未回答",
+      "optionFallback": "选项"
     },
     "plan": {
-      "title": "????",
-      "requestedPermissions": "??????",
-      "approveNewSession": "???????",
-      "approveCurrentSession": "????????",
-      "cancel": "??",
-      "feedbackPlaceholder": "?????????...",
-      "readError": "?????????{error}?\"???????\"?????????",
-      "hints": "????? ? ???? ? Esc ??"
+      "title": "计划完成",
+      "requestedPermissions": "请求的权限：",
+      "approveNewSession": "批准（新会话）",
+      "approveCurrentSession": "批准（当前会话）",
+      "cancel": "取消",
+      "feedbackPlaceholder": "输入反馈以继续规划...",
+      "readError": "无法读取计划文件：{error}。\"批准（新会话）\"将不包含计划详情。",
+      "hints": "方向键导航 · 回车选择 · Esc 取消"
     },
     "planApproval": {
-      "title": "????",
-      "implement": "??",
-      "revise": "??",
-      "cancel": "??",
-      "feedbackPlaceholder": "?????????...",
-      "hints": "????? ? ???? ? Esc ??"
+      "title": "计划完成",
+      "implement": "实施",
+      "revise": "修改",
+      "cancel": "取消",
+      "feedbackPlaceholder": "输入反馈以修改计划...",
+      "hints": "方向键导航 · 回车选择 · Esc 取消"
     },
     "history": {
-      "header": "??",
-      "empty": "????",
-      "runningInAnotherPane": "?????????",
-      "openInAnotherPane": "?????????",
-      "running": "???",
-      "runningInTab": "? {tab} ???",
-      "currentTabIndex": "????? {index}",
-      "currentSession": "????",
-      "openInTab": "? {tab} ???",
-      "tabIndex": "??? {index}",
-      "currentTab": "?????",
-      "tab": "???",
-      "generatingAria": "?????...",
-      "regenerateAria": "??????",
-      "openInNewTabAria": "????????",
-      "renameAria": "???",
-      "deleteAria": "??",
-      "openInNewTab": "????????",
-      "openInBackgroundTab": "?????????",
-      "switchToOpenSession": "????????",
-      "rename": "???",
-      "delete": "??",
-      "loadFailed": "??????",
-      "deleteFailed": "??????",
-      "regenerateFailed": "????????",
-      "saveFailed": "????"
+      "header": "对话",
+      "empty": "暂无对话",
+      "runningInAnotherPane": "在另一个窗格中运行",
+      "openInAnotherPane": "在另一个窗格中打开",
+      "running": "运行中",
+      "runningInTab": "在 {tab} 中运行",
+      "currentTabIndex": "当前标签页 {index}",
+      "currentSession": "当前会话",
+      "openInTab": "在 {tab} 中打开",
+      "tabIndex": "标签页 {index}",
+      "currentTab": "当前标签页",
+      "tab": "标签页",
+      "generatingAria": "生成标题中...",
+      "regenerateAria": "重新生成标题",
+      "openInNewTabAria": "在新标签页中打开",
+      "renameAria": "重命名",
+      "deleteAria": "删除",
+      "openInNewTab": "在新标签页中打开",
+      "openInBackgroundTab": "在后台标签页中打开",
+      "switchToOpenSession": "切换到打开的会话",
+      "rename": "重命名",
+      "delete": "删除",
+      "loadFailed": "加载对话失败",
+      "deleteFailed": "删除对话失败",
+      "regenerateFailed": "重新生成响应失败",
+      "saveFailed": "保存失败"
     },
-    "renameFailed": "???????",
+    "renameFailed": "重命名对话失败",
     "rewind": {
-      "failed": "?????{error}",
-      "unavailableStreaming": "???????????",
-      "cannot": "?????{error}",
-      "unsupportedProvider": "????????????",
-      "errorMessageNotFound": "?????"
+      "failed": "回退失败：{error}",
+      "unavailableStreaming": "助手流式传输时无法回退",
+      "cannot": "无法回退：{error}",
+      "unsupportedProvider": "此提供商不支持回退功能。",
+      "errorMessageNotFound": "未找到消息"
     },
     "greeting": {
       "day": {
         "sun": [
-          "????",
-          "?????",
-          "??????"
+          "周日快乐",
+          "周日时光？",
+          "欢迎来到周末"
         ],
         "mon": [
-          "????",
-          "????",
-          "?????"
+          "周一快乐",
+          "继续加油",
+          "继续加油！"
         ],
         "tue": [
-          "????"
+          "周二快乐"
         ],
         "wed": [
-          "????"
+          "周三快乐"
         ],
         "thu": [
-          "????"
+          "周四快乐"
         ],
         "fri": [
-          "????",
-          "?????"
+          "周五快乐",
+          "周五的感觉"
         ],
         "sat": [
-          "????",
-          "?????",
-          "??????"
+          "周六快乐",
+          "周六快乐！",
+          "欢迎来到周末"
         ]
       },
       "morning": [
-        "???",
-        "??? TyporAi ???"
+        "早上好",
+        "咖啡和 TyporAi 时间？"
       ],
       "afternoon": [
-        "???",
-        "??",
-        "?????"
+        "下午好",
+        "你好",
+        "过得怎么样"
       ],
       "evening": [
-        "???",
-        "???",
-        "???????"
+        "晚上好",
+        "晚上好",
+        "今天过得怎么样"
       ],
       "night": [
-        "??????",
-        "???"
+        "你好，夜猫子",
+        "晚上好"
       ],
       "general": [
-        "??",
-        "? {name}?????",
-        "???????",
-        "??????",
-        "?????",
-        "???????",
-        "{name} ????",
-        "???????"
+        "你好",
+        "嗨 {name}，你好吗？",
+        "你好，你好吗？",
+        "过得怎么样？",
+        "欢迎回来！",
+        "有什么新鲜事？",
+        "{name} 回来了！",
+        "你说得太对了！"
       ]
     }
   },
   "settings": {
-    "title": "TyporAi ??",
+    "title": "TyporAi 设置",
     "storage": {
       "tabLayout": {
-        "saveFailed": "?????????"
+        "saveFailed": "保存标签页布局失败"
       }
     },
     "tabs": {
-      "general": "??",
+      "general": "通用",
       "claude": "Claude",
       "codex": "Codex"
     },
-    "display": "??",
-    "conversations": "??",
-    "content": "??",
-    "input": "??",
-    "setup": "??",
-    "models": "??",
-    "experimental": "???",
+    "display": "显示",
+    "conversations": "对话",
+    "content": "内容",
+    "input": "输入",
+    "setup": "设置",
+    "models": "模型",
+    "experimental": "实验性",
     "userName": {
-      "name": "TyporAi ????????",
-      "desc": "???????????????????????"
+      "name": "TyporAi 应该怎么称呼您？",
+      "desc": "用于个性化问候语的名称（留空则使用通用问候语）"
     },
     "excludedTags": {
-      "name": "?????",
-      "desc": "??????????????????????????? #?",
-      "placeholder": "??\n??\n??"
+      "name": "排除的标签",
+      "desc": "带有这些标签的笔记不会自动加载为上下文（每行一个，不带 #）",
+      "placeholder": "系统\n私密\n草稿"
     },
     "mediaFolder": {
-      "name": "?????",
-      "desc": "????/???????????? ![[image.jpg]] ??Claude ???????????????????",
-      "placeholder": "??"
+      "name": "媒体文件夹",
+      "desc": "包含附件/图片的文件夹。当笔记使用 ![[image.jpg]] 时，Claude 会在此处查找。留空则使用保险库根目录。",
+      "placeholder": "附件"
     },
     "systemPrompt": {
-      "name": "????????",
-      "desc": "???????????????"
+      "name": "自定义系统提示词",
+      "desc": "附加到默认系统提示词的额外指令"
     },
     "autoTitle": {
-      "name": "????????",
-      "desc": "????????????????????"
+      "name": "自动生成对话标题",
+      "desc": "在发送第一条用户消息后自动生成对话标题。"
     },
     "titleModel": {
-      "name": "??????",
-      "desc": "??????????????",
-      "auto": "?? (Haiku)"
+      "name": "标题生成模型",
+      "desc": "用于自动生成对话标题的模型。",
+      "auto": "自动 (Haiku)"
     },
     "navMappings": {
-      "name": "Vim ??????",
-      "desc": "??????????\"map <key> <action>\"????scrollUp?scrollDown?focusInput??",
+      "name": "Vim 风格导航映射",
+      "desc": "每行一个映射。格式：\"map <key> <action>\"（操作：scrollUp、scrollDown、focusInput）。",
       "placeholder": "map w scrollup\nmap s scrolldown\nmap i focusinput"
     },
     "requireCommandOrControlEnterToSend": {
-      "name": "?? Command/Ctrl+Enter ??",
-      "desc": "????Enter ??????macOS ? Command+Enter ???Windows ? Linux ? Ctrl+Enter ???"
+      "name": "需要 Command/Ctrl+Enter 发送",
+      "desc": "启用后，Enter 插入换行符。macOS 上 Command+Enter 发送；Windows 和 Linux 上 Ctrl+Enter 发送。"
     },
-    "hotkeys": "???",
+    "hotkeys": "快捷键",
     "inlineEditHotkey": {
-      "name": "????",
-      "descWithKey": "??????{hotkey}",
-      "descNoKey": "??????",
-      "btnChange": "??",
-      "btnSet": "?????"
+      "name": "内联编辑",
+      "descWithKey": "当前快捷键：{hotkey}",
+      "descNoKey": "未设置快捷键",
+      "btnChange": "更改",
+      "btnSet": "设置快捷键"
     },
     "openChatHotkey": {
-      "name": "????",
-      "descWithKey": "??????{hotkey}",
-      "descNoKey": "??????",
-      "btnChange": "??",
-      "btnSet": "?????"
+      "name": "打开聊天",
+      "descWithKey": "当前快捷键：{hotkey}",
+      "descNoKey": "未设置快捷键",
+      "btnChange": "更改",
+      "btnSet": "设置快捷键"
     },
     "newSessionHotkey": {
-      "name": "????",
-      "descWithKey": "??????{hotkey}",
-      "descNoKey": "??????",
-      "btnChange": "??",
-      "btnSet": "?????"
+      "name": "新建会话",
+      "descWithKey": "当前快捷键：{hotkey}",
+      "descNoKey": "未设置快捷键",
+      "btnChange": "更改",
+      "btnSet": "设置快捷键"
     },
     "newTabHotkey": {
-      "name": "?????",
-      "descWithKey": "??????{hotkey}",
-      "descNoKey": "??????",
-      "btnChange": "??",
-      "btnSet": "?????"
+      "name": "新建标签页",
+      "descWithKey": "当前快捷键：{hotkey}",
+      "descNoKey": "未设置快捷键",
+      "btnChange": "更改",
+      "btnSet": "设置快捷键"
     },
     "closeTabHotkey": {
-      "name": "?????",
-      "descWithKey": "??????{hotkey}",
-      "descNoKey": "??????",
-      "btnChange": "??",
-      "btnSet": "?????"
+      "name": "关闭标签页",
+      "descWithKey": "当前快捷键：{hotkey}",
+      "descNoKey": "未设置快捷键",
+      "btnChange": "更改",
+      "btnSet": "设置快捷键"
     },
     "hotkeySearch": "TyporAi",
     "slashCommands": {
-      "name": "?????",
-      "desc": "????? .claude/commands/ ? .claude/skills/ ??????????????? /name ???"
+      "name": "命令和技能",
+      "desc": "管理存储在 .claude/commands/ 和 .claude/skills/ 中的保险库级别命令和技能。通过 /name 触发。"
     },
     "hiddenSlashCommands": {
-      "name": "????????",
-      "desc": "?????????????????????? TyporAi ??? Claude Code ????????????????????",
-      "placeholder": "??\n??\n??"
+      "name": "隐藏的命令和技能",
+      "desc": "从下拉菜单中隐藏特定命令和技能。适用于隐藏与 TyporAi 无关的 Claude Code 条目。输入不带前导斜杠的名称，每行一个。",
+      "placeholder": "提交\n建造\n测试"
     },
     "mcpServers": {
-      "name": "MCP ???",
-      "desc": "????? .claude/mcp.json ??????? MCP ????????????????????? @??????"
+      "name": "MCP 服务器",
+      "desc": "管理存储在 .claude/mcp.json 中的保险库级别 MCP 服务器配置。具有上下文节省模式的服务器需要 @提及来激活。"
     },
     "plugins": {
-      "name": "Claude Code ??",
-      "desc": "??? ~/.claude/plugins ??? Claude Code ???????????????? .claude/settings.json ??"
+      "name": "Claude Code 插件",
+      "desc": "管理从 ~/.claude/plugins 发现的 Claude Code 插件。已启用的插件按保险库存储在 .claude/settings.json 中。"
     },
     "subagents": {
-      "name": "???",
-      "desc": "????? .claude/agents/ ????????????? Markdown ????????????",
-      "noAgents": "????????? + ?????",
-      "deleteConfirm": "????? \"{name}\"?",
-      "saveFailed": "????????{message}",
-      "refreshFailed": "????????{message}",
-      "deleteFailed": "????????{message}",
-      "renameCleanupFailed": "??????? \"{name}\" ????",
-      "created": "??? \"{name}\" ???",
-      "updated": "??? \"{name}\" ???",
-      "deleted": "??? \"{name}\" ???",
-      "duplicateName": "?? \"{name}\" ??????",
-      "descriptionRequired": "??????",
-      "promptRequired": "?????????",
-      "loadFailed": "????? \"{name}\" ???{message}",
+      "name": "子代理",
+      "desc": "管理存储在 .claude/agents/ 中的保险库级别子代理。每个 Markdown 文件定义一个自定义代理。",
+      "noAgents": "未配置子代理。点击 + 创建一个。",
+      "deleteConfirm": "删除子代理 \"{name}\"？",
+      "saveFailed": "保存子代理失败：{message}",
+      "refreshFailed": "刷新子代理失败：{message}",
+      "deleteFailed": "删除子代理失败：{message}",
+      "renameCleanupFailed": "警告：无法删除 \"{name}\" 的旧文件",
+      "created": "子代理 \"{name}\" 已创建",
+      "updated": "子代理 \"{name}\" 已更新",
+      "deleted": "子代理 \"{name}\" 已删除",
+      "duplicateName": "名为 \"{name}\" 的代理已存在",
+      "descriptionRequired": "描述是必需的",
+      "promptRequired": "系统提示词是必需的",
+      "loadFailed": "加载子代理 \"{name}\" 失败：{message}",
       "modelOptions": {
-        "inherit": "??",
-        "sonnet": "????",
-        "opus": "??",
-        "haiku": "??"
+        "inherit": "继承",
+        "sonnet": "十四行诗",
+        "opus": "作品",
+        "haiku": "俳句"
       },
       "modal": {
-        "titleEdit": "?????",
-        "titleAdd": "?????",
-        "name": "??",
-        "nameDesc": "?????????????",
-        "namePlaceholder": "?????",
-        "description": "??",
-        "descriptionDesc": "????????",
-        "descriptionPlaceholder": "?????????????",
-        "advancedOptions": "????",
-        "model": "??",
-        "modelDesc": "????????",
-        "tools": "??",
-        "toolsDesc": "????????????? = ???",
-        "disallowedTools": "?????",
-        "disallowedToolsDesc": "???????????",
-        "skills": "??",
-        "skillsDesc": "?????????",
-        "prompt": "?????",
-        "promptDesc": "?????",
-        "promptPlaceholder": "??????????????????..."
+        "titleEdit": "编辑子代理",
+        "titleAdd": "添加子代理",
+        "name": "名称",
+        "nameDesc": "仅限小写字母、数字和连字符",
+        "namePlaceholder": "代码审查者",
+        "description": "描述",
+        "descriptionDesc": "此代理的简要描述",
+        "descriptionPlaceholder": "审查代码中的错误和风格问题",
+        "advancedOptions": "高级选项",
+        "model": "模型",
+        "modelDesc": "此代理的模型覆盖",
+        "tools": "工具",
+        "toolsDesc": "逗号分隔的允许工具列表（空 = 全部）",
+        "disallowedTools": "禁用的工具",
+        "disallowedToolsDesc": "逗号分隔的禁用工具列表",
+        "skills": "技能",
+        "skillsDesc": "逗号分隔的技能列表",
+        "prompt": "系统提示词",
+        "promptDesc": "代理的指令",
+        "promptPlaceholder": "你是一个代码审查员。分析给定代码中的..."
       }
     },
-    "safety": "??",
+    "safety": "安全",
     "loadUserSettings": {
-      "name": "???? Claude ??",
-      "desc": "?? ~/.claude/settings.json???????? Claude Code ??????????????"
+      "name": "加载用户 Claude 设置",
+      "desc": "加载 ~/.claude/settings.json。启用后，用户的 Claude Code 权限规则可能会绕过安全模式。"
     },
     "claudeSafeMode": {
-      "name": "????",
-      "desc": "???????????????"
+      "name": "安全模式",
+      "desc": "安全切换激活时使用的权限模式。"
     },
     "codexSafeMode": {
-      "name": "????",
-      "desc": "???????????????"
+      "name": "安全模式",
+      "desc": "安全切换激活时使用的沙箱模式。"
     },
-    "environment": "??",
+    "environment": "环境",
     "environmentShared": {
-      "name": "????",
-      "desc": "?????????????????????? PATH????????????",
+      "name": "共享环境",
+      "desc": "跨所有提供商共享的提供商中立运行时变量。用于 PATH、代理、证书和临时变量。",
       "placeholder": "PATH=/opt/homebrew/bin:/usr/local/bin\nHTTPS_PROXY=http://proxy.example.com:8080\nSSL_CERT_FILE=/path/to/cert.pem"
     },
     "customVariables": {
-      "name": "?????",
-      "desc": "Claude SDK ??????KEY=VALUE ??????????? shell export ???"
+      "name": "自定义变量",
+      "desc": "Claude SDK 的环境变量（KEY=VALUE 格式，每行一个）。支持 shell export 前缀。"
     },
     "envSnippets": {
-      "name": "????",
-      "addBtn": "????",
-      "noSnippets": "???????????? + ?????????",
-      "nameRequired": "???????",
-      "insertFailed": "??????",
-      "deleteFailed": "??????",
-      "deleteConfirm": "?????? \"{name}\"?",
-      "saved": "???? \"{name}\" ???",
-      "updated": "???? \"{name}\" ???",
-      "deleted": "???? \"{name}\" ???",
-      "insertAria": "????",
-      "aliasAria": "{modelId} ???",
-      "aliasTitle": "????????????????????????",
-      "contextWindowAria": "{modelId} ??????",
-      "contextWindowPlaceholder": "20?",
+      "name": "代码片段",
+      "addBtn": "添加片段",
+      "noSnippets": "暂无保存的环境片段。点击 + 保存当前环境配置。",
+      "nameRequired": "请输入片段名称",
+      "insertFailed": "插入片段失败",
+      "deleteFailed": "删除片段失败",
+      "deleteConfirm": "删除环境片段 \"{name}\"？",
+      "saved": "环境片段 \"{name}\" 已保存",
+      "updated": "环境片段 \"{name}\" 已更新",
+      "deleted": "环境片段 \"{name}\" 已删除",
+      "insertAria": "插入片段",
+      "aliasAria": "{modelId} 的别名",
+      "aliasTitle": "模型选择器中显示的自定义标签。留空则使用默认值。",
+      "contextWindowAria": "{modelId} 的上下文窗口",
+      "contextWindowPlaceholder": "20万",
       "modal": {
-        "titleEdit": "????",
-        "titleSave": "????",
-        "name": "??",
-        "namePlaceholder": "???????????",
-        "description": "??",
-        "descPlaceholder": "????",
-        "envVars": "????",
-        "envVarsPlaceholder": "KEY=VALUE ?????????? export ???",
-        "save": "??",
-        "update": "??",
-        "cancel": "??"
+        "titleEdit": "编辑片段",
+        "titleSave": "保存片段",
+        "name": "名称",
+        "namePlaceholder": "此环境配置的描述性名称",
+        "description": "描述",
+        "descPlaceholder": "可选描述",
+        "envVars": "环境变量",
+        "envVarsPlaceholder": "KEY=VALUE 格式，每行一个（支持 export 前缀）",
+        "save": "保存",
+        "update": "更新",
+        "cancel": "取消"
       }
     },
     "customModelOverrides": {
-      "name": "???????",
-      "desc": "????????????????????????"
+      "name": "自定义模型覆盖",
+      "desc": "为自定义模型设置模型选择器别名和上下文窗口大小。"
     },
     "customModelAliases": {
-      "placeholder": "??",
-      "ariaLabel": "{modelId} ???",
-      "aliasTitle": "????????????????????????"
+      "placeholder": "别名",
+      "ariaLabel": "{modelId} 的别名",
+      "aliasTitle": "模型选择器中显示的自定义标签。留空则使用默认值。"
     },
     "customContextLimits": {
-      "name": "????????",
-      "desc": "?????????????????????????200k tokens??",
-      "ariaLabel": "{modelId} ??????",
-      "invalid": "?????????256k?1m ??????1000-10000000??"
+      "name": "自定义上下文限制",
+      "desc": "为自定义模型设置上下文窗口大小。留空则使用默认值（200k tokens）。",
+      "ariaLabel": "{modelId} 的上下文窗口",
+      "invalid": "格式无效。请使用：256k、1m 或确切数量（1000-10000000）。"
     },
     "enableOpus1M": {
-      "name": "Opus 1M ?????",
-      "desc": "????????? Opus 1M???? Max?Team ? Enterprise ????API ? Pro ?????????"
+      "name": "Opus 1M 上下文窗口",
+      "desc": "在模型选择器中显示 Opus 1M。包含在 Max、Team 和 Enterprise 计划中。API 和 Pro 用户需要额外用量。"
     },
     "enableSonnet1M": {
-      "name": "Sonnet 1M ?????",
-      "desc": "????????? Sonnet 1M??? Max?Team ? Enterprise ????????API ? Pro ?????????"
+      "name": "Sonnet 1M 上下文窗口",
+      "desc": "在模型选择器中显示 Sonnet 1M。需要 Max、Team 和 Enterprise 计划的额外用量。API 和 Pro 用户需要额外用量。"
     },
     "customModels": {
-      "name": "?????",
-      "desc": "?????????? Claude ?? ID????????????????????",
+      "name": "自定义模型",
+      "desc": "在选择器中追加额外的 Claude 模型 ID，每行一个。环境模型覆盖仍会替换选择器。",
       "placeholder": "claude-opus-4-6\nclaude-opus-4-6[1m]\nclaude-opus-4-5-20251101"
     },
     "enableChrome": {
-      "name": "?? Chrome ??",
-      "desc": "?? Claude ?? claude-in-chrome ??? Chrome ??????????????????"
+      "name": "启用 Chrome 扩展",
+      "desc": "允许 Claude 通过 claude-in-chrome 扩展与 Chrome 交互。需要安装该扩展。需要重启会话。"
     },
     "enableBangBash": {
-      "name": "?? bash ?? (!)",
-      "desc": "??????? ! ?? bash ????? Node.js child_process ????????????????",
+      "name": "启用 bash 模式 (!)",
+      "desc": "在空输入时输入 ! 进入 bash 模式。通过 Node.js child_process 直接运行命令。需要重新打开视图。",
       "validation": {
-        "noNode": "PATH ???? Node.js???? Node.js ??? PATH ???"
+        "noNode": "PATH 中未找到 Node.js。请安装 Node.js 或检查 PATH 配置。"
       }
     },
     "maxTabs": {
-      "name": "????????",
-      "desc": "???????????3-10???????????? Claude ???",
-      "warning": "?? 5 ?????????????????"
+      "name": "最大聊天标签页数",
+      "desc": "最大并发聊天标签页数（3-10）。每个标签页使用单独的 Claude 会话。",
+      "warning": "超过 5 个标签页可能会影响性能和内存使用。"
     },
     "enableAutoScroll": {
-      "name": "?????????",
-      "desc": "Claude ??????????????????????????????"
+      "name": "流式传输时自动滚动",
+      "desc": "Claude 流式传输响应时自动滚动到底部。禁用可停留在顶部从头开始阅读。"
     },
     "deferMathRenderingDuringStreaming": {
-      "name": "???????????",
-      "desc": "??????????? LaTeX???????????????????"
+      "name": "流式传输时延迟数学渲染",
+      "desc": "响应流式传输时显示原始 LaTeX，每个文本块完成后一次性渲染数学公式。"
     },
     "expandFileEditsByDefault": {
-      "name": "????????",
-      "desc": "Write ? Edit ????????????"
+      "name": "默认展开文件编辑",
+      "desc": "Write 和 Edit 差异首次出现时展开显示。"
     },
     "chatViewPlacement": {
-      "name": "????? TyporAi",
-      "desc": "??????????????",
-      "rightSidebar": "????",
-      "leftSidebar": "????",
-      "mainTab": "???????"
+      "name": "在何处打开 TyporAi",
+      "desc": "选择聊天面板创建时打开的位置",
+      "rightSidebar": "右侧边栏",
+      "leftSidebar": "左侧边栏",
+      "mainTab": "主编辑器标签页"
     },
     "cliPath": {
-      "name": "Claude CLI ??",
-      "desc": "Claude Code CLI ???????????????",
-      "descWindows": "??????????? claude.exe??? npm/pnpm/yarn ???????????? cli-wrapper.cjs ????? claude.cmd??",
-      "descUnix": "?? \"which claude\" ??????????? npm/pnpm/yarn ???",
+      "name": "Claude CLI 路径",
+      "desc": "Claude Code CLI 的自定义路径。留空则自动检测。",
+      "descWindows": "对于原生安装程序，使用 claude.exe。对于 npm/pnpm/yarn 或其他包管理器安装，使用 cli-wrapper.cjs 路径（不是 claude.cmd）。",
+      "descUnix": "粘贴 \"which claude\" 的输出——适用于原生和 npm/pnpm/yarn 安装。",
       "validation": {
-        "notExist": "?????",
-        "isDirectory": "??????????"
+        "notExist": "路径不存在",
+        "isDirectory": "路径是目录，不是文件"
       }
     },
     "language": {
-      "name": "??",
-      "desc": "???????????"
+      "name": "语言",
+      "desc": "更改插件界面的显示语言"
     },
     "claude": {
       "enableProvider": {
-        "name": "?? Claude ???",
-        "desc": "????Claude ????????????? Claude ??? Codex ? OpenCode?"
+        "name": "启用 Claude 提供商",
+        "desc": "启用后，Claude 模型会出现在新对话中。启用 Claude 会禁用 Codex 和 OpenCode。"
       },
       "plugins": {
-        "header": "Claude Code ??",
-        "refreshAria": "????",
-        "empty": "??? Claude Code ????? Claude CLI ?????",
-        "project": "????",
-        "user": "????",
-        "disableAria": "????",
-        "enableAria": "????",
-        "refreshFailed": "???????{message}",
-        "toggleFailed": "???????{message}",
-        "togglePartiallyFailed": "?????????????????",
-        "noticeToggledDisabled": "?? \"{id}\" ???",
-        "noticeToggledEnabled": "?? \"{id}\" ???",
-        "noticeRefreshed": "???????"
+        "header": "Claude Code 插件",
+        "refreshAria": "刷新插件",
+        "empty": "未找到 Claude Code 插件。通过 Claude CLI 启用插件。",
+        "project": "项目插件",
+        "user": "用户插件",
+        "disableAria": "禁用插件",
+        "enableAria": "启用插件",
+        "refreshFailed": "刷新插件失败：{message}",
+        "toggleFailed": "切换插件失败：{message}",
+        "togglePartiallyFailed": "插件已切换，但部分标签页重启失败。",
+        "noticeToggledDisabled": "插件 \"{id}\" 已禁用",
+        "noticeToggledEnabled": "插件 \"{id}\" 已启用",
+        "noticeRefreshed": "插件列表已刷新"
       },
       "slashCommands": {
         "type": {
-          "name": "??",
-          "desc": "???????????????",
-          "skillLabel": "??",
-          "commandLabel": "??",
-          "commandOption": "??",
-          "skillOption": "??"
+          "name": "类型",
+          "desc": "选择此条目是斜杠命令还是技能。",
+          "skillLabel": "技能",
+          "commandLabel": "命令",
+          "commandOption": "命令",
+          "skillOption": "技能"
         },
         "name": {
-          "name": "??",
-          "desc": "??????????????",
-          "placeholder": "????"
+          "name": "名称",
+          "desc": "仅限小写字母、数字和连字符。",
+          "placeholder": "评论公关"
         },
         "description": {
-          "name": "??",
-          "desc": "???????????????"
+          "name": "描述",
+          "desc": "斜杠命令列表中显示的简要描述。"
         },
         "argumentHint": {
-          "name": "????",
-          "desc": "??????????? \"[file] [focus]\"?"
+          "name": "参数提示",
+          "desc": "参数的占位符文本（例如 \"[file] [focus]\"）"
         },
         "modelOverride": {
-          "name": "????",
-          "desc": "?????????",
+          "name": "模型覆盖",
+          "desc": "此命令可选的模型。",
           "placeholder": "Claude-sonnet-4-5"
         },
         "allowedTools": {
-          "name": "?????",
-          "desc": "????????????? = ????"
+          "name": "允许的工具",
+          "desc": "逗号分隔的允许工具列表（空 = 全部）。"
         },
         "disableModelInvocation": {
-          "name": "??????",
-          "desc": "????????????"
+          "name": "禁用模型调用",
+          "desc": "阻止模型自行调用此命令。"
         },
         "disableUserInvocation": {
-          "name": "??????",
-          "desc": "????????????"
+          "name": "禁用用户调用",
+          "desc": "阻止用户直接调用此技能。"
         },
         "context": {
-          "name": "???",
-          "desc": "????????????"
+          "name": "上下文",
+          "desc": "在子代理（分叉）中运行。"
         },
         "agent": {
-          "name": "??",
-          "desc": "??????????????",
-          "placeholder": "?????"
+          "name": "代理",
+          "desc": "上下文为分叉时的子代理类型。",
+          "placeholder": "代码审查者"
         },
         "prompt": {
-          "name": "?????",
-          "desc": "?? $ARGUMENTS?$1?$2?@file?!`bash`?"
+          "name": "提示词模板",
+          "desc": "使用 $ARGUMENTS、$1、$2、@file、!`bash`。"
         },
-        "promptPlaceholder": "??????\n$ARGUMENTS\n\n@$1",
-        "advancedOptions": "????",
-        "promptRequired": "?????????",
-        "duplicateName": "?? \"/{name}\" ??????",
-        "saveFailed": "????????",
-        "saveFailedSkill": "??????",
-        "saveFailedCommand": "????????",
-        "deleteFailedSkill": "??????",
-        "deleteFailedCommand": "????????",
-        "convertToSkillAria": "?????",
-        "convertFailed": "???????",
-        "converted": "?? \"/{name}\" ?????",
-        "skillBadge": "??",
-        "skillLabel": "??",
-        "slashCommandLabel": "????",
-        "created": "???",
-        "updated": "???",
-        "deleted": "???",
-        "unavailable": "Claude ????????",
-        "emptyCatalog": "?????????",
-        "emptyNone": "?????????? + ?????",
-        "learnMore": "????",
-        "duplicateSkillName": "?? \"/{name}\" ??????",
-        "saveFailedWithLabel": "?? {label} ??",
-        "deleteFailedWithLabel": "?? {label} ??",
-        "noticeCreated": "{label} \"/{name}\" ???",
-        "noticeUpdated": "{label} \"/{name}\" ???",
-        "noticeDeleted": "{label} \"/{name}\" ???"
+        "promptPlaceholder": "审查此代码：\n$ARGUMENTS\n\n@$1",
+        "advancedOptions": "高级选项",
+        "promptRequired": "提示词模板是必需的",
+        "duplicateName": "名为 \"/{name}\" 的命令已存在",
+        "saveFailed": "保存斜杠命令失败",
+        "saveFailedSkill": "保存技能失败",
+        "saveFailedCommand": "保存斜杠命令失败",
+        "deleteFailedSkill": "删除技能失败",
+        "deleteFailedCommand": "删除斜杠命令失败",
+        "convertToSkillAria": "转换为技能",
+        "convertFailed": "转换为技能失败",
+        "converted": "已将 \"/{name}\" 转换为技能",
+        "skillBadge": "技能",
+        "skillLabel": "技能",
+        "slashCommandLabel": "斜杠命令",
+        "created": "已创建",
+        "updated": "已更新",
+        "deleted": "已删除",
+        "unavailable": "Claude 命令目录不可用。",
+        "emptyCatalog": "未找到命令或技能。",
+        "emptyNone": "暂无命令或技能。点击 + 添加一个。",
+        "learnMore": "了解更多",
+        "duplicateSkillName": "名为 \"/{name}\" 的技能已存在",
+        "saveFailedWithLabel": "保存 {label} 失败",
+        "deleteFailedWithLabel": "删除 {label} 失败",
+        "noticeCreated": "{label} \"/{name}\" 已创建",
+        "noticeUpdated": "{label} \"/{name}\" 已更新",
+        "noticeDeleted": "{label} \"/{name}\" 已删除"
       },
       "customVariables": {
-        "desc": "?? Claude ??????????? ANTHROPIC_* ? Claude ??????",
+        "desc": "仅限 Claude 拥有的运行时变量。用于 ANTHROPIC_* 和 Claude 特定的开关。",
         "placeholder": "ANTHROPIC_API_KEY=your-key\nANTHROPIC_BASE_URL=https://api.example.com\nANTHROPIC_MODEL=custom-model\nCLAUDE_CODE_USE_BEDROCK=1"
       }
     },
     "codex": {
       "enable": {
-        "name": "?? Codex ???",
-        "desc": "????Codex ???????????????????? Codex ???????"
+        "name": "启用 Codex 提供商",
+        "desc": "启用后，Codex 模型会出现在新对话的模型选择器中。现有的 Codex 会话将被保留。"
       },
       "installationMethod": {
-        "name": "????",
-        "desc": "TyporAi ? Windows ????? Codex??? Windows ?? Windows ????????WSL ?????????? Linux CLI?",
-        "nativeWindows": "?? Windows",
-        "wsl": "??SL"
+        "name": "安装方式",
+        "desc": "TyporAi 在 Windows 上如何启动 Codex。原生 Windows 使用 Windows 可执行文件路径。WSL 在选定的发行版内启动 Linux CLI。",
+        "nativeWindows": "原生 Windows",
+        "wsl": "世界SL"
       },
       "cliPath": {
-        "name": "Codex CLI ??",
-        "desc": "Codex CLI ???????",
-        "placeholder": "Codex ???????",
-        "descNative": "?? Codex CLI ??????????? PATH ?????",
-        "descWsl": "WSL ???? Linux ? Codex ???????????????????? PATH?",
-        "descWindows": "?? Codex CLI ??????????? PATH ????????? Windows ??????????? `codex.exe`?",
+        "name": "Codex CLI 路径",
+        "desc": "Codex CLI 的自定义路径。",
+        "placeholder": "Codex 可执行文件路径",
+        "descNative": "本地 Codex CLI 的自定义路径。留空则从 PATH 自动检测。",
+        "descWsl": "WSL 内运行的 Linux 端 Codex 命令或绝对路径。留空则在选定发行版内查找 PATH。",
+        "descWindows": "本地 Codex CLI 的自定义路径。留空则从 PATH 自动检测。使用原生 Windows 可执行文件路径，通常为 `codex.exe`。",
         "placeholderNative": "/usr/local/bin/codex",
-        "placeholderWsl": "??",
+        "placeholderWsl": "法典",
         "placeholderWindows": "C:\\Users\\you\\AppData\\Roaming\\npm\\codex.exe",
-        "wslModeError": "WSL ???? Linux ??? Linux ???????? Windows ????????"
+        "wslModeError": "WSL 模式需要 Linux 命令或 Linux 绝对路径，而不是 Windows 可执行文件路径。"
       },
       "wslDistro": {
-        "name": "WSL ?????",
-        "desc": "??????????????????? WSL ????????????????? WSL ????",
-        "placeholder": "???"
+        "name": "WSL 发行版覆盖",
+        "desc": "可选的高级覆盖。留空则在可能的情况下从 WSL 工作区路径推断发行版，否则使用默认 WSL 发行版。",
+        "placeholder": "乌班图"
       },
       "reasoningSummary": {
-        "name": "????",
-        "desc": "?????????????????",
-        "auto": "??",
-        "concise": "??",
-        "detailed": "??",
-        "none": "?"
+        "name": "推理摘要",
+        "desc": "在思考块中显示模型推理过程的摘要。",
+        "auto": "自动",
+        "concise": "简洁",
+        "detailed": "详细",
+        "none": "无"
       },
       "customModels": {
         "placeholder": "gpt-5.4\ngpt-5.3-codex-spark"
       },
       "skills": {
-        "heading": "Codex ??",
-        "desc": "????? .codex/skills/ ? .agents/skills/ ??????? Codex ????????????????",
-        "label": "Codex ??",
-        "empty": "?????? Codex ????? + ?????",
-        "skillBadge": "??",
-        "deletedNotice": "Codex ?? \"{name}\" ???",
-        "createdNotice": "Codex ?? \"{name}\" ???",
-        "updatedNotice": "Codex ?? \"{name}\" ???",
-        "saveFailed": "?? Codex ????",
-        "deleteFailed": "?? Codex ????",
-        "instructionsRequired": "??????"
+        "heading": "Codex 技能",
+        "desc": "管理存储在 .codex/skills/ 或 .agents/skills/ 中的保险库级别 Codex 技能。此处排除主目录级别的技能。",
+        "label": "Codex 技能",
+        "empty": "保险库中没有 Codex 技能。点击 + 创建一个。",
+        "skillBadge": "技能",
+        "deletedNotice": "Codex 技能 \"{name}\" 已删除",
+        "createdNotice": "Codex 技能 \"{name}\" 已创建",
+        "updatedNotice": "Codex 技能 \"{name}\" 已更新",
+        "saveFailed": "保存 Codex 技能失败",
+        "deleteFailed": "删除 Codex 技能失败",
+        "instructionsRequired": "说明是必需的"
       },
       "hiddenSkills": {
-        "name": "?????",
-        "desc": "??????????? Codex ????????? $ ???????????",
-        "placeholder": "??\n????\n??"
+        "name": "隐藏的技能",
+        "desc": "从下拉菜单中隐藏特定的 Codex 技能。输入不带前导 $ 的技能名称，每行一个。",
+        "placeholder": "分析\n解释一下\n修复"
       },
       "skillModal": {
-        "titleAdd": "?? Codex ??",
-        "titleEdit": "?? Codex ??",
+        "titleAdd": "添加 Codex 技能",
+        "titleEdit": "编辑 Codex 技能",
         "directory": {
-          "name": "??",
-          "desc": "???????"
+          "name": "目录",
+          "desc": "存储技能的位置"
         },
         "name": {
-          "name": "????",
-          "desc": "? $ ?????????? $analyze ?? \"analyze\"?",
-          "placeholder": "????"
+          "name": "技能名称",
+          "desc": "在 $ 之后使用的名称（例如 $analyze 中的 \"analyze\"）",
+          "placeholder": "分析代码"
         },
         "description": {
-          "name": "??",
-          "desc": "????????????"
+          "name": "描述",
+          "desc": "下拉菜单中显示的可选描述"
         },
         "instructions": {
-          "name": "??",
-          "desc": "?????SKILL.md ???",
-          "placeholder": "??????..."
+          "name": "说明",
+          "desc": "技能说明（SKILL.md 内容）",
+          "placeholder": "分析代码中的..."
         }
       },
       "subagents": {
-        "heading": "Codex ???",
-        "desc": "????? .codex/agents/ ??????? Codex ?????? TOML ????????????",
-        "label": "Codex ???",
-        "empty": "?????? Codex ?????? + ?????"
+        "heading": "Codex 子代理",
+        "desc": "管理存储在 .codex/agents/ 中的保险库级别 Codex 子代理。每个 TOML 文件定义一个自定义代理。",
+        "label": "Codex 子代理",
+        "empty": "保险库中没有 Codex 子代理。点击 + 创建一个。"
       },
       "subagentModal": {
-        "titleAdd": "?? Codex ???",
-        "titleEdit": "?? Codex ???",
-        "advanced": "????",
+        "titleAdd": "添加 Codex 子代理",
+        "titleEdit": "编辑 Codex 子代理",
+        "advanced": "高级选项",
         "name": {
-          "name": "??",
-          "desc": "Codex ????????????????????????",
-          "placeholder": "?????"
+          "name": "名称",
+          "desc": "Codex 生成时使用的代理名称（小写字母、连字符、下划线）",
+          "placeholder": "代码审阅者"
         },
         "description": {
-          "name": "??",
-          "desc": "Codex ???????",
-          "placeholder": "????????????",
-          "required": "??????"
+          "name": "描述",
+          "desc": "Codex 何时使用此代理",
+          "placeholder": "审查代码的正确性和安全性",
+          "required": "描述是必需的"
         },
         "model": {
-          "name": "??",
-          "desc": "???????????"
+          "name": "模型",
+          "desc": "模型覆盖（留空则继承）"
         },
         "reasoningEffort": {
-          "name": "??????",
-          "desc": "????????",
-          "inherit": "??",
-          "low": "?",
-          "medium": "?",
-          "high": "?",
-          "xhigh": "??"
+          "name": "推理努力程度",
+          "desc": "模型推理努力程度",
+          "inherit": "继承",
+          "low": "低",
+          "medium": "中",
+          "high": "高",
+          "xhigh": "极高"
         },
         "sandboxMode": {
-          "name": "????",
-          "desc": "????????",
-          "inherit": "??",
-          "readOnly": "??",
-          "dangerFullAccess": "??????",
-          "workspaceWrite": "?????"
+          "name": "沙箱模式",
+          "desc": "此代理的沙箱限制",
+          "inherit": "继承",
+          "readOnly": "只读",
+          "dangerFullAccess": "危险完全访问",
+          "workspaceWrite": "工作区写入"
         },
         "nicknameCandidates": {
-          "name": "????",
-          "desc": "???????????? atlas?delta?echo?"
+          "name": "候选昵称",
+          "desc": "逗号分隔的显示昵称（例如 atlas、delta、echo）"
         },
         "developerInstructions": {
-          "name": "?????",
-          "desc": "???????????",
-          "placeholder": "???????????\n????????????????????",
-          "required": "?????????"
+          "name": "开发者指令",
+          "desc": "定义代理行为的核心指令",
+          "placeholder": "像所有者一样审查代码。\n优先考虑正确性、安全性和缺失的测试覆盖。",
+          "required": "开发者指令是必需的"
         },
         "errors": {
-          "duplicateName": "?? \"{name}\" ???????",
-          "saveFailed": "????????{message}",
-          "deleteFailed": "???????",
-          "deletedNotice": "??? \"{name}\" ???",
-          "createdNotice": "??? \"{name}\" ???",
-          "updatedNotice": "??? \"{name}\" ???",
-          "deleteConfirm": "????? \"{name}\"?"
+          "duplicateName": "名为 \"{name}\" 的子代理已存在",
+          "saveFailed": "保存子代理失败：{message}",
+          "deleteFailed": "删除子代理失败",
+          "deletedNotice": "子代理 \"{name}\" 已删除",
+          "createdNotice": "子代理 \"{name}\" 已创建",
+          "updatedNotice": "子代理 \"{name}\" 已更新",
+          "deleteConfirm": "删除子代理 \"{name}\"？"
         },
         "validation": {
-          "nameRequired": "?????????",
-          "nameTooLong": "????????? {max} ???",
-          "nameInvalid": "????????????????????????",
-          "nicknameInvalid": "???????? ASCII ????????????????",
-          "nicknameDuplicate": "????????"
+          "nameRequired": "子代理名称是必需的",
+          "nameTooLong": "子代理名称不能超过 {max} 个字符",
+          "nameInvalid": "子代理名称只能包含小写字母、数字、连字符和下划线",
+          "nicknameInvalid": "候选昵称只能包含 ASCII 字母、数字、空格、连字符和下划线",
+          "nicknameDuplicate": "候选昵称必须唯一"
         }
       },
       "safeMode": {
-        "workspaceWrite": "?????",
-        "readOnly": "??"
+        "workspaceWrite": "工作区写入",
+        "readOnly": "只读"
       },
       "env": {
-        "name": "?????",
-        "desc": "Codex ??????KEY=VALUE ??????????? shell export ???",
+        "name": "自定义变量",
+        "desc": "Codex 的环境变量（KEY=VALUE 格式，每行一个）。支持 shell export 前缀。",
         "placeholder": "OPENAI_API_KEY=your-key\nOPENAI_BASE_URL=https://api.openai.com/v1"
       },
       "mcp": {
-        "notice": "Codex ?????? CLI ?? MCP ?????? `codex mcp` ??????? TyporAi ????",
-        "learnMore": "????"
+        "notice": "Codex 通过其自己的 CLI 管理 MCP 服务器。使用 `codex mcp` 配置，它们将在 TyporAi 中可用。",
+        "learnMore": "了解更多"
       }
     },
     "opencode": {
       "setup": {
-        "heading": "??"
+        "heading": "设置"
       },
       "enable": {
-        "name": "?? OpenCode ???",
-        "desc": "????OpenCode ?????????????????"
+        "name": "启用 OpenCode 提供商",
+        "desc": "启用后，OpenCode 模型会出现在新对话的模型选择器中。"
       },
       "cliPath": {
-        "name": "CLI ??",
-        "desc": "????? OpenCode CLI ????????????? PATH ?? `opencode`?",
-        "placeholder": "????",
+        "name": "CLI 路径",
+        "desc": "此计算机上 OpenCode CLI 的可选绝对路径。留空则使用 PATH 中的 `opencode`。",
+        "placeholder": "开放代码",
         "placeholderWin": "C:\\Users\\you\\AppData\\Roaming\\npm\\opencode.cmd",
         "placeholderUnix": "/usr/local/bin/opencode",
         "validation": {
-          "notExist": "?????",
-          "isDirectory": "????????",
-          "isFile": "????????",
-          "notFile": "???????"
+          "notExist": "路径不存在",
+          "isDirectory": "路径必须指向文件",
+          "isFile": "路径必须指向文件",
+          "notFile": "路径未指向文件"
         }
       },
       "models": {
-        "heading": "??",
-        "browse": "????",
-        "searchPlaceholder": "????...",
-        "empty": "??????",
-        "loading": "?????...",
-        "loadFailed": "???????",
-        "startOpencode": "?? OpenCode ??????",
-        "notReported": "?? OpenCode ???",
-        "selectedCount": "??? {count}",
-        "ofDiscovered": "/ ??? {total}",
-        "noneDiscovered": "???",
-        "available": "??",
-        "allProviders": "?????",
-        "allProvidersCount": "????? ({count})",
+        "heading": "模型",
+        "browse": "浏览模型",
+        "searchPlaceholder": "搜索模型...",
+        "empty": "未发现模型。",
+        "loading": "加载模型中...",
+        "loadFailed": "加载模型失败。",
+        "startOpencode": "启动 OpenCode 以发现模型。",
+        "notReported": "当前 OpenCode 未报告",
+        "selectedCount": "已选择 {count}",
+        "ofDiscovered": "/ 共发现 {total}",
+        "noneDiscovered": "未发现",
+        "available": "可用",
+        "allProviders": "所有提供商",
+        "allProvidersCount": "所有提供商 ({count})",
         "providerOption": "{label} ({count})",
-        "removeAria": "?? {label}",
-        "aliasAria": "{name} ???",
-        "aliasTitle": "????????????????????????",
-        "visibleLabel": "????",
-        "clearAllAria": "?????????",
-        "emptyFiltered": "???????????",
-        "emptyLoading": "??? OpenCode ????...",
-        "emptyLoadFailed": "? OpenCode ?????????? CLI ??????",
-        "emptyStartOpencode": "?? OpenCode ????????",
+        "removeAria": "移除 {label}",
+        "aliasAria": "{name} 的别名",
+        "aliasTitle": "模型选择器中显示的自定义标签。留空则使用默认值。",
+        "visibleLabel": "可见模型",
+        "clearAllAria": "清除所有选中的模型",
+        "emptyFiltered": "没有匹配您搜索的模型。",
+        "emptyLoading": "正在从 OpenCode 加载模型...",
+        "emptyLoadFailed": "从 OpenCode 加载模型失败。请检查 CLI 路径并重试。",
+        "emptyStartOpencode": "启动 OpenCode 以查看可用模型。",
         "visible": {
-          "name": "????",
-          "desc": "??????????????????????????????"
+          "name": "可见模型",
+          "desc": "选择哪些模型出现在选择器中。如果为空，则显示所有发现的模型。"
         },
-        "unavailableBadge": "???",
-        "unavailableTitle": "?????? OpenCode ???"
+        "unavailableBadge": "不可用",
+        "unavailableTitle": "此模型当前从 OpenCode 不可用"
       },
       "commands": {
-        "heading": "??",
-        "desc": "???????? OpenCode ???"
+        "heading": "命令",
+        "desc": "管理保险库级别的 OpenCode 命令。"
       },
       "hiddenCommands": {
-        "name": "?????",
-        "desc": "??????????? OpenCode ????????????????????",
-        "placeholder": "??1\n??2"
+        "name": "隐藏的命令",
+        "desc": "从下拉菜单中隐藏特定的 OpenCode 命令。输入不带前导斜杠的名称，每行一个。",
+        "placeholder": "命令1\n命令2"
       },
       "subagents": {
-        "heading": "???",
-        "desc": "???????? OpenCode ????"
+        "heading": "子代理",
+        "desc": "管理保险库级别的 OpenCode 子代理。"
       },
       "agentModal": {
-        "titleAdd": "?? OpenCode ???",
-        "titleEdit": "?? OpenCode ???",
-        "advanced": "????",
+        "titleAdd": "添加 OpenCode 子代理",
+        "titleEdit": "编辑 OpenCode 子代理",
+        "advanced": "高级选项",
         "name": {
-          "name": "??",
-          "desc": "OpenCode ?????????????????????",
-          "placeholder": "??",
-          "required": "????????",
-          "slashLeadingTrailing": "???????????????????????????",
-          "segmentEmpty": "?????????????????",
-          "segmentWhitespace": "?????????????????",
-          "dotSegment": "???????? \".\" ? \"..\" ???",
-          "reservedChars": "??????????? Windows ????????"
+          "name": "名称",
+          "desc": "OpenCode 代理名称。使用斜杠分隔的段来表示嵌套代理。",
+          "placeholder": "审查",
+          "required": "代理名称是必需的",
+          "slashLeadingTrailing": "代理名称必须使用斜杠分隔的路径段，不能有前导或尾随斜杠",
+          "segmentEmpty": "代理名称路径段不能为空或仅包含空格",
+          "segmentWhitespace": "代理名称路径段不能以空格开头或结尾",
+          "dotSegment": "代理名称不能包含 \".\" 或 \"..\" 路径段",
+          "reservedChars": "代理名称路径段不能包含 Windows 保留的文件名字符"
         },
         "description": {
-          "name": "??",
-          "desc": "OpenCode ????????",
-          "placeholder": "?????????????",
-          "required": "??????"
+          "name": "描述",
+          "desc": "OpenCode 何时使用此子代理",
+          "placeholder": "审查代码的正确性和可维护性",
+          "required": "描述是必需的"
         },
         "model": {
-          "name": "??",
-          "desc": "provider/model ???????",
+          "name": "模型",
+          "desc": "provider/model 格式的模型覆盖",
           "placeholder": "Anthropic/Claude-sonnet-4-20250514"
         },
         "variant": {
-          "name": "??",
-          "desc": "??????",
-          "placeholder": "??"
+          "name": "变体",
+          "desc": "模型变体覆盖",
+          "placeholder": "高的"
         },
         "temperature": {
-          "name": "??",
-          "desc": "???????",
+          "name": "温度",
+          "desc": "可选的采样温度",
           "placeholder": "0.1",
-          "invalid": "?????????"
+          "invalid": "温度必须是有效数字"
         },
         "topP": {
-          "name": "?? p",
-          "desc": "???????",
+          "name": "顶部 p",
+          "desc": "可选的核采样值",
           "placeholder": "0.9",
-          "invalid": "Top P ???????"
+          "invalid": "Top P 必须是有效数字"
         },
         "color": {
-          "name": "??",
-          "desc": "???????????",
+          "name": "颜色",
+          "desc": "十六进制颜色或主题令牌",
           "placeholder": "#FF5733"
         },
         "steps": {
-          "name": "??",
-          "desc": "?????????????????",
+          "name": "步数",
+          "desc": "强制纯文本输出前的最大代理迭代次数",
           "placeholder": "10",
-          "invalid": "????????"
+          "invalid": "步数必须是正整数"
         },
         "hidden": {
-          "name": "? @?????",
-          "desc": "? @ ?????????????"
+          "name": "从 @提及中隐藏",
+          "desc": "从 @ 自动完成菜单中隐藏此子代理"
         },
         "disable": {
-          "name": "????",
-          "desc": "??????????????"
+          "name": "禁用代理",
+          "desc": "在不删除文件的情况下禁用代理"
         },
         "tools": {
-          "name": "????? (JSON)",
-          "desc": "????????????? {\"write\":false,\"edit\":false}",
+          "name": "启用的工具 (JSON)",
+          "desc": "可选的已弃用工具映射，例如 {\"write\":false,\"edit\":false}",
           "placeholder": "{\n  \"write\": false,\n  \"edit\": false\n}",
-          "invalid": "??????????????????"
+          "invalid": "启用的工具必须将工具名称映射到布尔值"
         },
         "permission": {
-          "name": "?? (JSON)",
-          "desc": "?????????? {\"edit\":\"deny\",\"bash\":\"allow\"}",
+          "name": "权限 (JSON)",
+          "desc": "可选的权限配置，例如 {\"edit\":\"deny\",\"bash\":\"allow\"}",
           "placeholder": "{\n  \"edit\": \"deny\"\n}",
-          "invalid": "???????? JSON"
+          "invalid": "权限必须是有效的 JSON"
         },
         "options": {
-          "name": "?? (JSON)",
-          "desc": "??????????",
+          "name": "选项 (JSON)",
+          "desc": "可选的自定义代理选项",
           "placeholder": "{\n  \"focus\": \"security\"\n}",
-          "invalid": "????? JSON ??"
+          "invalid": "选项必须是 JSON 对象"
         },
         "prompt": {
-          "name": "???",
-          "desc": "???????? Markdown ??",
-          "placeholder": "??????????????????????????",
-          "required": "???????"
+          "name": "提示词",
+          "desc": "用作代理提示词的 Markdown 正文",
+          "placeholder": "仔细审查代码更改，指出正确性、回归和缺失的测试覆盖。",
+          "required": "提示词是必需的"
         },
         "errors": {
-          "duplicate": "?? \"{name}\" ???????",
-          "saveFailed": "????????{message}",
-          "deleteFailed": "???????",
-          "created": "??? \"{name}\" ???",
-          "updated": "??? \"{name}\" ???",
-          "deleted": "??? \"{name}\" ???"
+          "duplicate": "名为 \"{name}\" 的子代理已存在",
+          "saveFailed": "保存子代理失败：{message}",
+          "deleteFailed": "删除子代理失败",
+          "created": "子代理 \"{name}\" 已创建",
+          "updated": "子代理 \"{name}\" 已更新",
+          "deleted": "子代理 \"{name}\" 已删除"
         }
       },
       "agentList": {
-        "label": "OpenCode ???",
-        "empty": "?????? OpenCode ?????? + ?????",
-        "badgeSubagent": "???",
-        "refreshAria": "??",
-        "addAria": "??",
-        "editAria": "??",
-        "deleteAria": "??",
-        "deleteConfirm": "????? \"{name}\"?"
+        "label": "OpenCode 子代理",
+        "empty": "保险库中没有 OpenCode 子代理。点击 + 创建一个。",
+        "badgeSubagent": "子代理",
+        "refreshAria": "刷新",
+        "addAria": "添加",
+        "editAria": "编辑",
+        "deleteAria": "删除",
+        "deleteConfirm": "删除子代理 \"{name}\"？"
       },
       "env": {
-        "heading": "??",
-        "name": "????",
-        "desc": "??? OpenCode ????????`OPENCODE_ENABLE_EXA=1` ?????",
+        "heading": "环境",
+        "name": "环境变量",
+        "desc": "传递给 OpenCode 的额外环境变量。`OPENCODE_ENABLE_EXA=1` 默认启用。",
         "placeholder": "{defaultEnv}\nOPENCODE_DB=/path/to/opencode.db"
       }
     },
     "typora": {
       "setup": {
-        "heading": "??"
+        "heading": "设置"
       },
       "enable": {
-        "name": "?? Typora ???",
-        "desc": "????Typora ??????????????"
+        "name": "启用 Typora 提供商",
+        "desc": "启用后，Typora 提供商可在模型选择器中使用。"
       },
       "api": {
-        "heading": "????????"
+        "heading": "应用程序编程接口"
       },
       "apiKey": {
-        "name": "API ??",
-        "desc": "??? Typora ??? API ????? API ???"
+        "name": "API 密钥",
+        "desc": "用于向 Typora 提供商 API 发送请求的 API 密钥。"
       },
       "apiBaseUrl": {
-        "name": "API ?? URL",
-        "desc": "Typora ??? API ??? URL??????????"
+        "name": "API 基础 URL",
+        "desc": "Typora 提供商 API 的基础 URL。留空则使用默认值。"
       },
       "apiModel": {
-        "name": "API ??",
-        "desc": "Typora ??? API ????? ID?"
+        "name": "API 模型",
+        "desc": "Typora 提供商 API 使用的模型 ID。"
       }
     },
     "mcp": {
       "modal": {
-        "titleEdit": "?? MCP ???",
-        "titleAdd": "?? MCP ???",
+        "titleEdit": "编辑 MCP 服务器",
+        "titleAdd": "添加 MCP 服务器",
         "serverName": {
-          "name": "?????",
-          "desc": "? MCP ??????????",
-          "placeholder": "?? mcp ???"
+          "name": "服务器名称",
+          "desc": "此 MCP 服务器的唯一标识符。",
+          "placeholder": "我的 mcp 服务器"
         },
         "type": {
-          "name": "??",
-          "desc": "?? MCP ????????????",
-          "stdio": "stdio??????",
-          "sse": "SSE?????????",
-          "http": "HTTP??"
+          "name": "类型",
+          "desc": "选择 MCP 服务器的启动或连接方式。",
+          "stdio": "stdio（本地命令）",
+          "sse": "SSE（服务器发送事件）",
+          "http": "HTTP协议"
         },
         "enabled": {
-          "name": "???",
-          "desc": "?????????????????????"
+          "name": "已启用",
+          "desc": "已禁用的服务器不会启动，也不会提供给模型。"
         },
         "contextSaving": {
-          "name": "?????",
-          "desc": "??????????????? @?????????????? tokens?"
+          "name": "上下文节省",
+          "desc": "启用后，此服务器仅在您在聊天中 @提及它时激活，从而节省上下文 tokens。"
         },
         "command": {
-          "name": "??",
-          "desc": "?? MCP ???? shell ???????????",
+          "name": "命令",
+          "desc": "启动 MCP 服务器的 shell 命令。参数以空格分隔。",
           "placeholder": "npx -y @my-org/mcp-server"
         },
         "env": {
-          "name": "????",
-          "desc": "???? KEY=VALUE ?????? shell ?????? `export` ???",
+          "name": "环境变量",
+          "desc": "每行一个 KEY=VALUE 对。如果您的 shell 需要，请使用 `export` 前缀。",
           "placeholder": "API_KEY=your-key\nDEBUG=true"
         },
         "url": {
-          "name": "??",
-          "desc": "MCP ???????",
-          "sseDesc": "????????? URL?",
-          "httpDesc": "HTTP ?? URL?",
+          "name": "网址",
+          "desc": "MCP 服务器的端点。",
+          "sseDesc": "服务器发送事件端点 URL。",
+          "httpDesc": "HTTP 端点 URL。",
           "placeholder": "https://example.com/mcp"
         },
         "headers": {
-          "name": "???",
-          "desc": "??? HTTP ???????? KEY=VALUE?",
+          "name": "请求头",
+          "desc": "自定义 HTTP 请求头，每行一个 KEY=VALUE。",
           "placeholder": "Authorization=Bearer your-token"
         },
-        "nameRequired": "????????",
-        "nameInvalid": "????????????????????????",
-        "commandRequired": "?????",
-        "urlRequired": "??? URL"
+        "nameRequired": "请输入服务器名称",
+        "nameInvalid": "服务器名称只能包含字母、数字、点、连字符和下划线",
+        "commandRequired": "请输入命令",
+        "urlRequired": "请输入 URL"
       },
-      "empty": "??? MCP ?????? + ?????",
-      "addOptionStdio": "Stdio??????",
+      "empty": "未配置 MCP 服务器。点击 + 添加一个。",
+      "addOptionStdio": "Stdio（本地命令）",
       "addOptionHttp": "HTTP/SSE",
-      "addOptionImport": "??????",
-      "contextSavingBadgeTitle": "???????? @{name} ?????",
-      "verifyAria": "????????",
-      "disableAria": "??",
-      "enableAria": "??",
-      "editAria": "??",
-      "deleteAria": "??",
-      "alreadyExists": "??? \"{name}\" ???",
-      "updated": "MCP ??? \"{name}\" ???",
-      "added": "MCP ??? \"{name}\" ???",
-      "enabled": "MCP ??? \"{name}\" ???",
-      "disabled": "MCP ??? \"{name}\" ???",
-      "deleted": "MCP ??? \"{name}\" ???",
-      "deleteConfirm": "?? MCP ??? \"{name}\"?",
-      "saveFailed": "?? MCP ?????",
-      "importEmpty": "?????",
-      "importInvalid": "?????????? mcp ??",
-      "importFailed": "???????",
-      "importEnterName": "???????",
-      "importSuccess": "??? {count} ? MCP ???{plural}",
-      "importPartial": "??? {count} ? MCP ???{plural}?{skipped} ?????",
-      "importNone": "????? mcp ???",
-      "reloadFailed": "?????????????????????????",
-      "verificationFailed": "????",
+      "addOptionImport": "从剪贴板导入",
+      "contextSavingBadgeTitle": "上下文节省：通过 @{name} 提及以启用",
+      "verifyAria": "验证（显示工具）",
+      "disableAria": "禁用",
+      "enableAria": "启用",
+      "editAria": "编辑",
+      "deleteAria": "删除",
+      "alreadyExists": "服务器 \"{name}\" 已存在",
+      "updated": "MCP 服务器 \"{name}\" 已更新",
+      "added": "MCP 服务器 \"{name}\" 已添加",
+      "enabled": "MCP 服务器 \"{name}\" 已启用",
+      "disabled": "MCP 服务器 \"{name}\" 已禁用",
+      "deleted": "MCP 服务器 \"{name}\" 已删除",
+      "deleteConfirm": "删除 MCP 服务器 \"{name}\"？",
+      "saveFailed": "保存 MCP 服务器失败",
+      "importEmpty": "剪贴板为空",
+      "importInvalid": "剪贴板中未找到有效的 mcp 配置",
+      "importFailed": "读取剪贴板失败",
+      "importEnterName": "输入服务器名称",
+      "importSuccess": "已导入 {count} 个 MCP 服务器{plural}",
+      "importPartial": "已导入 {count} 个 MCP 服务器{plural}（{skipped} 个已跳过）",
+      "importNone": "未导入新的 mcp 服务器",
+      "reloadFailed": "设置已保存但重新加载失败。更改将在下次会话时生效。",
+      "verificationFailed": "验证失败",
       "test": {
-        "toggleError": "????",
-        "permissionDenied": "?????????????????",
-        "diskFull": "???????????????????",
-        "configCorrupted": "MCP ???????????? JSON?",
-        "title": "???{name}",
-        "connecting": "???...",
-        "connected": "????",
-        "connectedTo": "?????? {name}",
-        "connectedToVersion": "?????? {name} v{version}",
-        "connectionFailed": "????",
-        "availableTools": "???? ({count})",
-        "noToolsInfo": "?????????????????????",
-        "disableAll": "????",
-        "enableAll": "????",
-        "close": "??"
+        "toggleError": "切换失败",
+        "permissionDenied": "权限被拒绝。请检查命令的文件权限。",
+        "diskFull": "磁盘已满或空间不足。请释放空间后重试。",
+        "configCorrupted": "MCP 配置已损坏。请检查并修复 JSON。",
+        "title": "验证：{name}",
+        "connecting": "连接中...",
+        "connected": "连接成功",
+        "connectedTo": "已成功连接到 {name}",
+        "connectedToVersion": "已成功连接到 {name} v{version}",
+        "connectionFailed": "连接失败",
+        "availableTools": "可用工具 ({count})",
+        "noToolsInfo": "无工具信息可用。工具将在聊天中使用时加载。",
+        "disableAll": "全部禁用",
+        "enableAll": "全部启用",
+        "close": "关闭"
       }
     },
     "envReview": {
-      "heading": "????",
-      "message": "?????????????{keys}",
-      "keysFor": "?????????????{keys}"
+      "heading": "环境审查",
+      "message": "审查以下内容的环境所有权：{keys}",
+      "keysFor": "审查以下内容的环境所有权：{keys}"
     }
   },
   "provider": {

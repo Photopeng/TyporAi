@@ -59,7 +59,7 @@
 /* Accessibility */
 @import "./accessibility.css";
 
-/* Unified Typora product surface ? imported after component modules. */
+/* Unified Typora product surface — imported after component modules. */
 @import "./editorial-shell.css";
 
 /* Utilities imported last to preserve cascade priority without importance flags */

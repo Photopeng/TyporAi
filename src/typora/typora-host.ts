@@ -598,7 +598,7 @@ function installPanelHideButton(root: HTMLElement): void {
   button.className = 'typorai-typora-hide-button';
   button.setAttribute('aria-label', t('typora.panel.hideAria'));
   setTyporAiTooltip(button, t('typora.panel.hideTitle'));
-  button.textContent = '?';
+  button.textContent = '›';
   button.textContent = '';
   setIcon(button, 'panel-right-close');
   button.addEventListener('click', () => setPanelHidden(true));
@@ -854,8 +854,8 @@ function findOpaqueBackground(
 /**
  * Read the actual rendered colors from the current Typora theme and push
  * them onto `<html>` (`:root`) as CSS variables so that EVERY element in
- * the document ? chat panel, settings modal, selection card, future
- * additions ? sees the same theme tokens.
+ * the document — chat panel, settings modal, selection card, future
+ * additions — sees the same theme tokens.
  *
  * Setting on `:root` is the architecturally correct scope: chat panel
  * (`#typorai-typora-root`) and the settings overlay
@@ -1025,7 +1025,7 @@ function readBundledStyles(): string {
 function getTyporaOverrideStyles(): string {
   return `
     :root {
-      /* Light-mode defaults ? JS overwrites these at runtime based on the
+      /* Light-mode defaults — JS overwrites these at runtime based on the
          active Typora theme. The fallbacks are used only when detection
          fails (e.g. fully transparent theme). */
       --typorai-bg-primary: #fafafa;
@@ -1046,7 +1046,7 @@ function getTyporaOverrideStyles(): string {
     #${ROOT_ID},
     .typorai-typora-settings-overlay {
 
-      /* Typora-style tokens ? the chat UI reads these names. They are
+      /* Typora-style tokens — the chat UI reads these names. They are
          aliased to our typorai-* variables so a single source of truth
          drives both surfaces. */
       --background-primary: var(--typorai-bg-primary);
@@ -1240,15 +1240,15 @@ function getTyporaOverrideStyles(): string {
       line-height: 1;
     }
     #${ROOT_ID} .typorai-typora-settings-button[data-icon="settings"]:not(.typorai-icon-rendered)::before {
-      content: "?";
+      content: "⚙";
     }
     #${ROOT_ID} .typorai-typora-hide-button[data-icon="panel-right-close"]:not(.typorai-icon-rendered)::before {
-      content: "?";
+      content: "‹";
       font-size: 18px;
       transform: translateY(-1px);
     }
     .typorai-typora-settings-close[data-icon="x"]:not(.typorai-icon-rendered)::before {
-      content: "?";
+      content: "×";
       font-size: 18px;
     }
     #${ROOT_ID} .typorai-typora-settings-button:hover,
