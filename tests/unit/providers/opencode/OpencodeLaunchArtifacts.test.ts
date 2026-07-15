@@ -21,7 +21,7 @@ const hostIo = {
     list: async (target: string) => (await fs.readdir(target, { withFileTypes: true })).map(entry => ({ name: entry.name, path: path.join(target, entry.name), kind: entry.isFile() ? 'file' as const : entry.isDirectory() ? 'directory' as const : 'other' as const })),
     stat: async (target: string) => { const value = await fs.stat(target); return { size: value.size, modifiedAtMs: value.mtimeMs, kind: value.isFile() ? 'file' as const : value.isDirectory() ? 'directory' as const : 'other' as const }; },
     rename: (from: string, to: string) => fs.rename(from, to),
-    ensureDirectory: (target: string) => fs.mkdir(target, { recursive: true }),
+    ensureDirectory: async (target: string) => { await fs.mkdir(target, { recursive: true }); },
   },
   pathService: path,
 };

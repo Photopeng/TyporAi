@@ -78,7 +78,7 @@ describe('CodexSettingsTab', () => {
     const container = document.createElement('section');
     const context = {
       plugin,
-      platform: process.platform === 'win32' ? 'windows' : 'linux',
+      platform: (process.platform === 'win32' ? 'windows' : 'linux') as 'windows' | 'linux',
       renderHiddenProviderCommandSetting: jest.fn(),
       refreshModelSelectors: jest.fn(),
       renderCustomContextLimits: jest.fn(),

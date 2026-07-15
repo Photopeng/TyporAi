@@ -25,7 +25,7 @@ function openModal(
   (modal as any).contentEl = document.createElement('div');
   (modal as any).modalEl = document.createElement('div');
   (modal as any).close = jest.fn();
-  InstructionModal.prototype.onOpen.call(modal);
+  (InstructionModal.prototype as any).onOpen.call(modal);
   return modal;
 }
 
@@ -253,7 +253,7 @@ describe('InstructionModal', () => {
       const callbacks = createMockCallbacks();
       const modal = openModal('test', callbacks);
 
-      InstructionModal.prototype.onClose.call(modal);
+      (InstructionModal.prototype as any).onClose.call(modal);
 
       expect(callbacks.onReject).toHaveBeenCalled();
     });
@@ -266,7 +266,7 @@ describe('InstructionModal', () => {
       modal.showConfirmation('refined');
       clickButton(contentEl, 'Accept');
 
-      InstructionModal.prototype.onClose.call(modal);
+      (InstructionModal.prototype as any).onClose.call(modal);
 
       expect(callbacks.onReject).not.toHaveBeenCalled();
     });
@@ -282,7 +282,7 @@ describe('InstructionModal', () => {
       expect((modal as any).close).toHaveBeenCalled();
 
       // onClose should not call onReject since resolved=true
-      InstructionModal.prototype.onClose.call(modal);
+      (InstructionModal.prototype as any).onClose.call(modal);
       expect(callbacks.onReject).not.toHaveBeenCalled();
     });
   });

@@ -167,9 +167,6 @@ function createMockDeps(overrides: Partial<InputControllerDeps> = {}): InputCont
       getContext: jest.fn().mockReturnValue(null),
       clearAfterSend: jest.fn(),
     } as any,
-    canvasSelectionController: {
-      getContext: jest.fn().mockReturnValue(null),
-    } as any,
     conversationController: {
       save: jest.fn(),
       generateFallbackTitle: jest.fn().mockReturnValue('Test Title'),
@@ -1068,12 +1065,13 @@ describe('InputController - Message Queue', () => {
     it('should append browser selection context when available', async () => {
       const mockAgentService = createMockAgentService();
       const localDeps = createSendableDeps({
-        browserSelectionController: {
+        selectionController: {
           getContext: jest.fn().mockReturnValue({
             source: 'surfing-view',
             selectedText: 'selected from browser',
             title: 'Surfing',
           }),
+          clearAfterSend: jest.fn(),
         } as any,
         getAgentService: () => mockAgentService as any,
       });

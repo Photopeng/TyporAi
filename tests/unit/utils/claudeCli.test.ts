@@ -32,7 +32,7 @@ const fileProbe = {
     .map(entry => ({ name: entry.name, isFile: entry.isFile() })),
 };
 const createResolver = (): ClaudeCliResolver => new ClaudeCliResolver(fileProbe);
-const resolveClaudeCliPath = (hostnamePath: string, legacyPath: string, envText: string): string | null =>
+const resolveClaudeCliPath = (hostnamePath: string | undefined, legacyPath: string | undefined, envText: string): string | null =>
   resolveClaudeCliPathWithProbe(hostnamePath, legacyPath, envText, fileProbe);
 
 describe('ClaudeCliResolver', () => {

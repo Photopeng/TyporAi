@@ -76,36 +76,36 @@ jest.mock('@/providers/codex/runtime/codexAppServerSupport', () => {
 import { CodexAppServerProcess as MockedProcessClass } from '@/providers/codex/runtime/CodexAppServerProcess';
 import { CodexChatRuntime as CodexChatRuntimeClass } from '@/providers/codex/runtime/CodexChatRuntime';
 
-type CodexChatRuntime = CodexChatRuntimeClass;
-
-function CodexChatRuntime(plugin: any, processTransport?: ProcessTransportFactory): CodexChatRuntimeClass {
-  return new CodexChatRuntimeClass(
-    plugin,
-    processTransport,
-    {
-      exists: async target => fs.existsSync(target),
-      readText: target => fs.promises.readFile(target, 'utf8'),
-      writeAtomic: async (target, data) => { await fs.promises.mkdir(path.dirname(target), { recursive: true }); await fs.promises.writeFile(target, data, 'utf8'); },
-      writeBinary: async (target, data) => { await fs.promises.mkdir(path.dirname(target), { recursive: true }); await fs.promises.writeFile(target, data); },
-      remove: target => fs.promises.rm(target, { recursive: true, force: true }),
-      list: async () => [],
-      stat: async target => { const value = await fs.promises.stat(target); return { size: value.size, modifiedAtMs: value.mtimeMs, kind: value.isFile() ? 'file' : value.isDirectory() ? 'directory' : 'other' }; },
-      rename: (from, to) => fs.promises.rename(from, to),
-      ensureDirectory: target => fs.promises.mkdir(target, { recursive: true }),
-    },
-    {
-      exists: target => fs.existsSync(target),
-      isFile: target => { try { return fs.statSync(target).isFile(); } catch { return false; } },
-      readText: target => fs.readFileSync(target, 'utf8'),
-      list: target => fs.readdirSync(target, { withFileTypes: true }).map(entry => ({ name: entry.name, isFile: entry.isFile() })),
-    },
-    path,
-    {
-      get: key => process.env[key] ?? null,
-      homeDirectory: () => os.homedir(),
-      findExecutable: async () => null,
-    },
-  );
+class CodexChatRuntime extends CodexChatRuntimeClass {
+  constructor(plugin: any, processTransport?: ProcessTransportFactory) {
+    super(
+      plugin,
+      processTransport,
+      {
+        exists: async target => fs.existsSync(target),
+        readText: target => fs.promises.readFile(target, 'utf8'),
+        writeAtomic: async (target, data) => { await fs.promises.mkdir(path.dirname(target), { recursive: true }); await fs.promises.writeFile(target, data, 'utf8'); },
+        writeBinary: async (target, data) => { await fs.promises.mkdir(path.dirname(target), { recursive: true }); await fs.promises.writeFile(target, data); },
+        remove: target => fs.promises.rm(target, { recursive: true, force: true }),
+        list: async () => [],
+        stat: async target => { const value = await fs.promises.stat(target); return { size: value.size, modifiedAtMs: value.mtimeMs, kind: value.isFile() ? 'file' : value.isDirectory() ? 'directory' : 'other' }; },
+        rename: (from, to) => fs.promises.rename(from, to),
+        ensureDirectory: async target => { await fs.promises.mkdir(target, { recursive: true }); },
+      },
+      {
+        exists: target => fs.existsSync(target),
+        isFile: target => { try { return fs.statSync(target).isFile(); } catch { return false; } },
+        readText: target => fs.readFileSync(target, 'utf8'),
+        list: target => fs.readdirSync(target, { withFileTypes: true }).map(entry => ({ name: entry.name, isFile: entry.isFile() })),
+      },
+      path,
+      {
+        get: key => process.env[key] ?? null,
+        homeDirectory: () => os.homedir(),
+        findExecutable: async () => null,
+      },
+    );
+  }
 }
 
 type CapturedServerRequestHandler = (requestId: string | number, params: unknown) => Promise<unknown>;

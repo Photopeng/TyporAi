@@ -16,14 +16,24 @@ import { PluginManager as PluginManagerClass } from '@/providers/claude/plugins/
 const mockFs = fs as jest.Mocked<typeof fs>;
 const notice = jest.fn();
 
-function PluginManager(vault: string, settings: any): PluginManagerClass {
-  const manager = new PluginManagerClass(vault, settings);
-  manager.setFileProbe({
-    exists: (filePath) => mockFs.existsSync(filePath),
-    readText: (filePath) => String(mockFs.readFileSync(filePath, 'utf8')),
-  });
-  manager.setNotificationService({ show: notice });
-  return manager;
+class PluginManager extends PluginManagerClass {
+  constructor(vault: string, settings: any) {
+    super(vault, settings);
+    this.setFileProbe({
+      exists: (filePath) => mockFs.existsSync(filePath),
+      isFile: (filePath) => {
+        try {
+          return mockFs.statSync(filePath).isFile();
+        } catch {
+          return false;
+        }
+      },
+      readText: (filePath) => String(mockFs.readFileSync(filePath, 'utf8')),
+      list: (filePath) => (mockFs.readdirSync(filePath, { withFileTypes: true }) as fs.Dirent[])
+        .map(entry => ({ name: entry.name, isFile: entry.isFile() })),
+    });
+    this.setNotificationService({ show: notice });
+  }
 }
 
 // Create a mock CCSettingsStorage

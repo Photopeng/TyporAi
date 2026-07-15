@@ -27,7 +27,12 @@ jest.mock('@/ui/ContextMenu', () => {
 
     constructor() { ContextMenu.instances.push(this); }
 
-    addItem(callback: (item: { setTitle(): unknown; setIcon(): unknown; setDisabled(): unknown; onClick(): unknown }) => void): this {
+    addItem(callback: (item: {
+      setTitle(value: string): unknown;
+      setIcon(icon: string): unknown;
+      setDisabled(disabled: boolean): unknown;
+      onClick(handler: () => void): unknown;
+    }) => void): this {
       const item = {
         title: '',
         clickHandler: undefined as (() => void) | undefined,

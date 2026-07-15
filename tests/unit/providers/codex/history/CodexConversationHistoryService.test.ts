@@ -9,22 +9,24 @@ const path = jest.requireActual<typeof pathType>('path');
 import type { Conversation } from '@/core/types';
 import { CodexConversationHistoryService as CodexConversationHistoryServiceClass } from '@/providers/codex/history/CodexConversationHistoryService';
 
-function CodexConversationHistoryService(): CodexConversationHistoryServiceClass {
-  return new CodexConversationHistoryServiceClass(
-    {
-      exists: target => fs.existsSync(target),
-      isFile: target => { try { return fs.statSync(target).isFile(); } catch { return false; } },
-      readText: target => fs.readFileSync(target, 'utf8'),
-      list: target => fs.readdirSync(target, { withFileTypes: true })
-        .map(entry => ({ name: entry.name, isFile: entry.isFile() })),
-    },
-    {
-      get: key => process.env[key] ?? null,
-      homeDirectory: () => os.homedir(),
-      findExecutable: async () => null,
-    },
-    path,
-  );
+class CodexConversationHistoryService extends CodexConversationHistoryServiceClass {
+  constructor() {
+    super(
+      {
+        exists: target => fs.existsSync(target),
+        isFile: target => { try { return fs.statSync(target).isFile(); } catch { return false; } },
+        readText: target => fs.readFileSync(target, 'utf8'),
+        list: target => fs.readdirSync(target, { withFileTypes: true })
+          .map(entry => ({ name: entry.name, isFile: entry.isFile() })),
+      },
+      {
+        get: key => process.env[key] ?? null,
+        homeDirectory: () => os.homedir(),
+        findExecutable: async () => null,
+      },
+      path,
+    );
+  }
 }
 
 describe('CodexConversationHistoryService', () => {

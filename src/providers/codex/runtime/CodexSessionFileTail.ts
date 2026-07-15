@@ -766,6 +766,10 @@ export class CodexFileTailEngine {
       this.tailSessionFile = null;
     }
 
+    if (!this.fileProbe) {
+      return null;
+    }
+
     const filePath = findCodexSessionFile(sessionId, this.sessionsDir, this.fileProbe);
     if (filePath) {
       this.tailSessionFile = filePath;

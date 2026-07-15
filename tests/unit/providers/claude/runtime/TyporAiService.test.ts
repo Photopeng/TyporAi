@@ -78,7 +78,7 @@ describe('TyporAiService', () => {
     showNotification = jest.fn();
     service = new TyporAiService(mockPlugin as TyporAiPlugin, {
       mcpManager: mockMcpManager,
-      pluginManager: mockPlugin.pluginManager,
+      pluginManager: (mockPlugin as any).pluginManager,
       agentManager: null,
       notificationService: { show: showNotification },
       fileBackups: {

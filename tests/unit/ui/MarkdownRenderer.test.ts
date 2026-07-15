@@ -28,8 +28,8 @@ describe('renderMarkdown', () => {
     expect(target.querySelector('h1')?.textContent).toBe('Title');
     expect(target.querySelectorAll('table th')).toHaveLength(2);
     expect(target.querySelector('table td')?.textContent).toBe('alpha');
-    expect(target.querySelector('.typorai-markdown-math-inline')?.dataset.math).toBe('x^2');
-    expect(target.querySelector('.typorai-markdown-math-block')?.dataset.math).toBe('E = mc^2');
+    expect(target.querySelector<HTMLElement>('.typorai-markdown-math-inline')?.dataset.math).toBe('x^2');
+    expect(target.querySelector<HTMLElement>('.typorai-markdown-math-block')?.dataset.math).toBe('E = mc^2');
     expect(target.querySelector('pre code')?.textContent).toBe('const value = 1;');
     expect(target.querySelector('mark')?.getAttribute('onclick')).toBeNull();
     expect(target.querySelector('script')).toBeNull();
