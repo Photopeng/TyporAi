@@ -549,6 +549,8 @@ describe('utils.ts', () => {
     });
 
     describe('on Windows', () => {
+      const joinWin = (...parts: string[]): string => parts.join('\\');
+
       beforeEach(() => {
         Object.defineProperty(process, 'platform', { value: 'win32' });
         process.env.ProgramFiles = 'C:\\Program Files';
@@ -566,8 +568,8 @@ describe('utils.ts', () => {
 
       it('should prefer .exe when both .exe and cli-wrapper.cjs exist', () => {
         jest.spyOn(os, 'homedir').mockReturnValue('C:\\Users\\test');
-        const exePath = path.join('C:\\Users\\test', '.claude', 'local', 'claude.exe');
-        const cliWrapperPath = path.join('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
+        const exePath = joinWin('C:\\Users\\test', '.claude', 'local', 'claude.exe');
+        const cliWrapperPath = joinWin('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
         mockExistingFile(exePath, cliWrapperPath);
 
         expect(findClaudeCLIPath()).toBe(exePath);
@@ -575,9 +577,8 @@ describe('utils.ts', () => {
 
       it('should prioritize cli-wrapper.cjs over .cmd files on Windows', () => {
         jest.spyOn(os, 'homedir').mockReturnValue('C:\\Users\\test');
-        // Note: path.join uses actual platform separator, so we match against that
-        const cliWrapperPath = path.join('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
-        const cmdPath = path.join('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'claude.cmd');
+        const cliWrapperPath = joinWin('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
+        const cmdPath = joinWin('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'claude.cmd');
         mockExistingFile(cmdPath, cliWrapperPath);
 
         expect(findClaudeCLIPath()).toBe(cliWrapperPath);
@@ -586,7 +587,7 @@ describe('utils.ts', () => {
       it('should find cli-wrapper.cjs in custom npm global path via npm_config_prefix', () => {
         jest.spyOn(os, 'homedir').mockReturnValue('C:\\Users\\test');
         process.env.npm_config_prefix = 'D:\\nodejs\\node_global';
-        const expectedPath = path.join('D:\\nodejs\\node_global', 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
+        const expectedPath = joinWin('D:\\nodejs\\node_global', 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
         mockExistingFile(expectedPath);
 
         expect(findClaudeCLIPath()).toBe(expectedPath);
@@ -594,7 +595,7 @@ describe('utils.ts', () => {
 
       it('should fall back to .exe if package entrypoint is not found', () => {
         jest.spyOn(os, 'homedir').mockReturnValue('C:\\Users\\test');
-        const expectedPath = path.join('C:\\Users\\test', '.claude', 'local', 'claude.exe');
+        const expectedPath = joinWin('C:\\Users\\test', '.claude', 'local', 'claude.exe');
         mockExistingFile(expectedPath);
 
         expect(findClaudeCLIPath()).toBe(expectedPath);
@@ -602,7 +603,7 @@ describe('utils.ts', () => {
 
       it('should ignore .cmd fallback on Windows', () => {
         jest.spyOn(os, 'homedir').mockReturnValue('C:\\Users\\test');
-        const expectedPath = path.join('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'claude.cmd');
+        const expectedPath = joinWin('C:\\Users\\test', 'AppData', 'Roaming', 'npm', 'claude.cmd');
         mockExistingFile(expectedPath);
 
         expect(findClaudeCLIPath()).toBeNull();
@@ -617,7 +618,7 @@ describe('utils.ts', () => {
 
       it('should resolve cli-wrapper.cjs from custom PATH npm prefix', () => {
         const npmBin = 'C:\\Users\\test\\AppData\\Roaming\\npm';
-        const cliWrapperPath = path.join(npmBin, 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
+        const cliWrapperPath = joinWin(npmBin, 'node_modules', '@anthropic-ai', 'claude-code', 'cli-wrapper.cjs');
         mockExistingFile(cliWrapperPath);
 
         const customPath = `${npmBin};C:\\Windows\\System32`;
@@ -626,7 +627,7 @@ describe('utils.ts', () => {
 
       it('should not return a directory path even if it exists', () => {
         jest.spyOn(os, 'homedir').mockReturnValue('C:\\Users\\test');
-        const dirPath = path.join('C:\\Users\\test', '.claude', 'local', 'claude');
+        const dirPath = joinWin('C:\\Users\\test', '.claude', 'local', 'claude');
         // Simulate a directory named 'claude' (exists but isFile returns false)
         jest.spyOn(fs, 'existsSync').mockImplementation((p: any) => p === dirPath);
         jest.spyOn(fs, 'statSync').mockImplementation(() => ({

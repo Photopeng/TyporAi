@@ -77,10 +77,6 @@ function findFirstExistingPath(entries: string[], candidates: string[], options:
   return null;
 }
 
-function isExistingFile(filePath: string, fileProbe?: FileProbe): boolean {
-  return findExistingFilePath(filePath, fileProbe, runtimePlatform()) !== null;
-}
-
 function findClaudeCodeNodeEntrypoint(packageRoot: string, options: ClaudeCliDiscoveryOptions): string | null {
   const platform = options.platform ?? runtimePlatform();
   for (const entrypoint of CLAUDE_CODE_NODE_ENTRYPOINTS) {
