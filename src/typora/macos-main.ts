@@ -1,5 +1,7 @@
-import { BridgeClient } from '@/hosts/bridge/BridgeClient';
 import type { SidecarBootstrap } from '@/sidecar/protocol';
+
+import { createMacosApplicationRuntime } from './createMacosApplicationRuntime';
+import { TyporaEditorApi } from './editor-api';
 
 declare global {
   interface Window {
@@ -14,10 +16,11 @@ async function boot(): Promise<void> {
   root.id = 'typorai-typora-root';
   root.className = 'typorai-macos-bridge-root';
   root.setAttribute('aria-label', 'TyporAi');
-  const client = new BridgeClient(bootstrap);
-  const health = await client.call<{ version: string }>('system.health');
+  const application = createMacosApplicationRuntime(new TyporaEditorApi(), bootstrap);
+  const health = await application.client.call<{ version: string }>('system.health');
   root.dataset.typoraiSidecar = 'connected';
   root.dataset.typoraiVersion = health.version;
+  root.dataset.typoraiRuntime = application.runtime.host.platform.runtime;
 }
 
 void boot().catch(error => {

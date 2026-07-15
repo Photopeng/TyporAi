@@ -59,7 +59,9 @@ export class BridgeSettingsStorageAdapter implements SettingsStorageAdapter {
 
   private async notifyExternalChanges(): Promise<void> {
     const bag = await this.readBag();
-    for (const [key, callbacks] of this.subscribers) {
+    for (const entry of this.subscribers) {
+      const key = entry[0];
+      const callbacks = entry[1];
       if (!Object.prototype.hasOwnProperty.call(bag, key)) continue;
       for (const callback of callbacks) callback(bag[key]);
     }

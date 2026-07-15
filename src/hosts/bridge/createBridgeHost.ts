@@ -9,23 +9,31 @@ import { BridgeProcessTransport } from './BridgeProcessTransport';
 
 export type BridgeHostDependencies = Omit<HostServices, 'documents' | 'files' | 'watches' | 'paths' | 'environment' | 'processes' | 'platform'> & {
   readonly bootstrap: SidecarBootstrap;
+  readonly client?: BridgeClient;
   readonly createDocuments: (watches: BridgeFileWatchService) => DocumentService;
 };
 
 export function createBridgeHost(dependencies: BridgeHostDependencies): HostServices {
-  const { bootstrap, createDocuments, ...rest } = dependencies;
-  const client = new BridgeClient(bootstrap);
+  const client = dependencies.client ?? new BridgeClient(dependencies.bootstrap);
   const watches = new BridgeFileWatchService(client);
-  const environment: EnvironmentService = new BridgeEnvironmentService(client, bootstrap.homeDirectory ?? null);
+  const environment: EnvironmentService = new BridgeEnvironmentService(
+    client,
+    dependencies.bootstrap.homeDirectory ?? null,
+  );
   return {
-    ...rest,
-    documents: createDocuments(watches),
+    documents: dependencies.createDocuments(watches),
     environment,
+    fileBackups: dependencies.fileBackups,
+    fileProbe: dependencies.fileProbe,
     files: new BridgeFileStore(client),
+    notifications: dependencies.notifications,
     paths: browserPathService,
     platform: { appVersion: null, operatingSystem: 'macos', runtime: 'webkit' },
     processes: new BridgeProcessTransport(client),
+    scheduler: dependencies.scheduler,
+    settings: dependencies.settings,
     watches,
+    workspace: dependencies.workspace,
   };
 }
 
