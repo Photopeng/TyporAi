@@ -2,11 +2,13 @@
 import {
   copyFileSync,
   chmodSync,
+  constants,
   existsSync,
   mkdirSync,
   readFileSync,
   renameSync,
   rmSync,
+  accessSync,
   writeFileSync,
 } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -185,11 +187,27 @@ function assertInstallInputs() {
     if (!existsSync(paths.sidecarPath)) throw new Error(`Missing sidecar: ${paths.sidecarPath}. Run npm run build:typora first.`);
   }
   assertWindowHtmlExists();
+  assertWindowHtmlWritable();
 }
 
 function assertWindowHtmlExists() {
   if (!existsSync(paths.windowHtmlPath)) {
     throw new Error(`Missing Typora window.html: ${paths.windowHtmlPath}`);
+  }
+}
+
+function assertWindowHtmlWritable() {
+  try {
+    accessSync(paths.windowHtmlPath, constants.W_OK);
+  } catch {
+    if (deploymentPlatform === 'darwin') {
+      throw new Error(
+        `Typora's entry file is not writable: ${paths.windowHtmlPath}. `
+        + `Close Typora and rerun with administrator privileges, for example:\n`
+        + `sudo ${process.execPath} scripts/deploy-typora.mjs install`,
+      );
+    }
+    throw new Error(`Typora's entry file is not writable: ${paths.windowHtmlPath}`);
   }
 }
 
@@ -381,24 +399,34 @@ function installMacosSidecar() {
   copyFileSync(paths.sidecarPath, paths.deployedSidecarPath);
   mkdirSync(path.dirname(paths.launchAgentPath), { recursive: true });
   writeFileSync(paths.launchAgentPath, buildLaunchAgentPlist(), 'utf8');
-  if (process.platform === 'darwin') {
-    try { execFileSync('launchctl', ['bootout', `gui/${process.getuid?.() ?? 0}`, paths.launchAgentPath], { stdio: 'ignore' }); } catch {}
-    execFileSync('launchctl', ['bootstrap', `gui/${process.getuid?.() ?? 0}`, paths.launchAgentPath], { stdio: 'inherit' });
-    execFileSync('launchctl', ['kickstart', '-k', `gui/${process.getuid?.() ?? 0}/${paths.launchAgentLabel}`], { stdio: 'inherit' });
+  if (shouldManageMacosSystemIntegration()) {
+    const uid = resolveLaunchAgentUid();
+    try { execFileSync('launchctl', ['bootout', `gui/${uid}`, paths.launchAgentPath], { stdio: 'ignore' }); } catch {}
+    execFileSync('launchctl', ['bootstrap', `gui/${uid}`, paths.launchAgentPath], { stdio: 'inherit' });
+    execFileSync('launchctl', ['kickstart', '-k', `gui/${uid}/${paths.launchAgentLabel}`], { stdio: 'inherit' });
   }
 }
 
 function uninstallMacosSidecar(removeData) {
-  if (process.platform === 'darwin') {
-    try { execFileSync('launchctl', ['bootout', `gui/${process.getuid?.() ?? 0}`, paths.launchAgentPath], { stdio: 'ignore' }); } catch {}
+  if (shouldManageMacosSystemIntegration()) {
+    try { execFileSync('launchctl', ['bootout', `gui/${resolveLaunchAgentUid()}`, paths.launchAgentPath], { stdio: 'ignore' }); } catch {}
   }
   rmSync(paths.launchAgentPath, { force: true });
   if (removeData) rmSync(paths.sidecarDataDir, { recursive: true, force: true });
 }
 
 function resignMacosApp() {
-  if (process.platform !== 'darwin') return;
+  if (!shouldManageMacosSystemIntegration()) return;
   execFileSync('codesign', ['--force', '--deep', '--sign', '-', paths.typoraInstallDir], { stdio: 'inherit' });
+}
+
+function shouldManageMacosSystemIntegration() {
+  return process.platform === 'darwin' && process.env.TYPORAI_SKIP_MACOS_SYSTEM_INTEGRATION !== '1';
+}
+
+function resolveLaunchAgentUid() {
+  const sudoUid = Number(process.env.SUDO_UID);
+  return Number.isInteger(sudoUid) && sudoUid >= 0 ? sudoUid : process.getuid?.() ?? 0;
 }
 
 function readSidecarToken() {
@@ -460,8 +488,13 @@ function resolvePaths() {
     sidecarLogPath: path.join(deploymentHome, 'Library', 'Logs', 'TyporAi', 'sidecar.log'),
     sidecarPort: Number(process.env.TYPORAI_SIDECAR_PORT ?? '17328'),
     sidecarTokenPath: path.join(sidecarDataDir, 'auth-token'),
-    launchAgentLabel: 'com.photopeng.typorai.sidecar',
-    launchAgentPath: path.join(deploymentHome, 'Library', 'LaunchAgents', 'com.photopeng.typorai.sidecar.plist'),
+    launchAgentLabel: process.env.TYPORAI_SIDECAR_LAUNCH_AGENT_LABEL ?? 'com.photopeng.typorai.sidecar',
+    launchAgentPath: path.join(
+      deploymentHome,
+      'Library',
+      'LaunchAgents',
+      `${process.env.TYPORAI_SIDECAR_LAUNCH_AGENT_LABEL ?? 'com.photopeng.typorai.sidecar'}.plist`,
+    ),
     deploymentHome,
     timestampBackupPath: `${windowHtmlPath}.typorai-backup-${timestamp}`,
     typoraInstallDir,

@@ -111,7 +111,11 @@ describe('deploy-typora script', () => {
 
     expect(readWindowHtml()).toContain(markerStart);
     expect(readWindowHtml()).toContain('abnerworks.Typora');
+    expect(readWindowHtml()).toContain('typorai-macos-renderer.js');
+    expect(readWindowHtml()).not.toContain('window.reqnode');
     expect(existsSync(path.join(pluginDir, 'typora-typorai.js'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'typorai-macos-renderer.js'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'typorai-sidecar.cjs'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
     runDeployWithEnv({
       TYPORAI_DEPLOY_PLATFORM: 'darwin',
@@ -160,6 +164,7 @@ describe('deploy-typora script', () => {
       encoding: 'utf8',
       env: {
         ...process.env,
+        TYPORAI_SKIP_MACOS_SYSTEM_INTEGRATION: '1',
         TYPORAI_SKIP_TYPORA_PROCESS_CHECK: '1',
         ...envOverrides,
       },
