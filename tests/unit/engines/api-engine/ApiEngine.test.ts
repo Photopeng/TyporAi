@@ -113,7 +113,9 @@ describe('ApiEngine', () => {
 
     const engine = new ApiEngine({
       apiKey: 'test-key',
+      apiBaseUrl: 'https://api.anthropic.com',
     });
+    const approvalCallback = jest.fn().mockResolvedValue('allow');
     const onToolStart = jest.fn();
     const onToolEnd = jest.fn();
     const onToken = jest.fn();
@@ -124,6 +126,7 @@ describe('ApiEngine', () => {
       currentDocument: 'before',
       currentFilePath: 'note.md',
       selection: 'before',
+      approvalCallback,
       replaceSelection,
     }, {
       onToken,
