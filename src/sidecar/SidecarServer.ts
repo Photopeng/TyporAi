@@ -39,6 +39,9 @@ export class SidecarServer {
   private readonly server = createServer((request, response) => this.handleHttp(request, response));
   private readonly sockets = new Set<WebSocket>();
   private readonly webSocketServer = new WebSocketServer({ noServer: true });
+  private rendererConnection: WebSocket | null = null;
+  private rendererReadyAtMs: number | null = null;
+  private rendererVersion: string | null = null;
 
   constructor(private readonly options: SidecarOptions) {
     this.allowedRoots = [...new Set([...options.allowedRoots, options.dataDirectory])]
@@ -135,6 +138,8 @@ export class SidecarServer {
   private async dispatch(socket: WebSocket, request: RpcRequest): Promise<unknown> {
     switch (request.method) {
       case 'system.health': return { protocolVersion: SIDECAR_PROTOCOL_VERSION, status: 'ok', version: this.options.version };
+      case 'system.rendererReady': return this.rendererReady(socket, request.params);
+      case 'system.rendererStatus': return this.rendererStatus();
       case 'environment.get': return this.environmentGet(request.params);
       case 'environment.homeDirectory': return os.homedir();
       case 'environment.findExecutable': return this.findExecutable(request.params);
@@ -155,6 +160,26 @@ export class SidecarServer {
       case 'process.terminate': return this.terminateProcess(request.params);
       default: throw new Error(`Unsupported sidecar method: ${request.method}`);
     }
+  }
+
+  private rendererReady(socket: WebSocket, params: unknown): { readyAtMs: number; version: string | null } {
+    const value = params && typeof params === 'object' ? params as { version?: unknown } : {};
+    this.rendererConnection = socket;
+    this.rendererReadyAtMs = Date.now();
+    this.rendererVersion = typeof value.version === 'string' ? value.version : null;
+    return { readyAtMs: this.rendererReadyAtMs, version: this.rendererVersion };
+  }
+
+  private rendererStatus(): { connected: boolean; readyAtMs: number | null; version: string | null } {
+    const connected = this.rendererConnection?.readyState === WebSocket.OPEN;
+    if (!connected) {
+      return { connected: false, readyAtMs: null, version: null };
+    }
+    return {
+      connected,
+      readyAtMs: this.rendererReadyAtMs,
+      version: this.rendererVersion,
+    };
   }
 
   private environmentGet(params: unknown): string | null {
@@ -282,6 +307,11 @@ export class SidecarServer {
   }
 
   private disposeSocket(socket: WebSocket): void {
+    if (this.rendererConnection === socket) {
+      this.rendererConnection = null;
+      this.rendererReadyAtMs = null;
+      this.rendererVersion = null;
+    }
     this.sockets.delete(socket);
     for (const [watchId, watcher] of this.watches) {
       watcher.close();

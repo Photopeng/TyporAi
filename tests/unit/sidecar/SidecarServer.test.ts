@@ -37,6 +37,30 @@ describe('SidecarServer', () => {
       .rejects.toThrow('outside TyporAi');
     socket.close();
   });
+
+  it('reports an authenticated Renderer only while its socket remains connected', async () => {
+    const renderer = await openSocket(server.port);
+    const inspector = await openSocket(server.port);
+    await request(renderer, 'renderer-handshake', 'system.handshake', { protocolVersion: 1, token: 'test-token' });
+    await request(inspector, 'inspector-handshake', 'system.handshake', { protocolVersion: 1, token: 'test-token' });
+
+    await request(renderer, 'renderer-ready', 'system.rendererReady', { version: 'test-renderer' });
+    await expect(request(inspector, 'renderer-status', 'system.rendererStatus', {})).resolves.toEqual({
+      connected: true,
+      readyAtMs: expect.any(Number),
+      version: 'test-renderer',
+    });
+
+    const closed = new Promise<void>(resolve => renderer.once('close', () => resolve()));
+    renderer.close();
+    await closed;
+    await expect(request(inspector, 'renderer-disconnected', 'system.rendererStatus', {})).resolves.toEqual({
+      connected: false,
+      readyAtMs: null,
+      version: null,
+    });
+    inspector.close();
+  });
 });
 
 function openSocket(port: number): Promise<WebSocket> {

@@ -18,6 +18,7 @@ async function boot(): Promise<void> {
   root.setAttribute('aria-label', 'TyporAi');
   const application = createMacosApplicationRuntime(new TyporaEditorApi(), bootstrap);
   const health = await application.client.call<{ version: string }>('system.health');
+  await application.client.call('system.rendererReady', { version: health.version });
   root.dataset.typoraiSidecar = 'connected';
   root.dataset.typoraiVersion = health.version;
   root.dataset.typoraiRuntime = application.runtime.host.platform.runtime;
