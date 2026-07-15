@@ -1,3 +1,5 @@
+import { setTyporAiTooltip } from '../ui/Tooltip';
+
 export type TyporaEventRef = unknown;
 export type TyporaPanelHost = any;
 export type Workspace = any;
@@ -180,7 +182,7 @@ export class ButtonComponent {
   }
 
   setTooltip(text: string): this {
-    this.buttonEl.title = text;
+    setTyporAiTooltip(this.buttonEl, text);
     return this;
   }
 
@@ -240,9 +242,9 @@ export class SliderComponent {
   getValue(): number { return Number(this.sliderEl.value); }
 
   setDynamicTooltip(): this {
-    this.sliderEl.title = this.sliderEl.value;
+    setTyporAiTooltip(this.sliderEl, this.sliderEl.value);
     this.sliderEl.addEventListener('input', () => {
-      this.sliderEl.title = this.sliderEl.value;
+      setTyporAiTooltip(this.sliderEl, this.sliderEl.value);
     });
     return this;
   }

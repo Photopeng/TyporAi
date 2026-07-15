@@ -17,6 +17,7 @@
 @import "./components/toolcalls.css";
 @import "./components/status-panel.css";
 @import "./components/subagent.css";
+@import "./components/tooltip.css";
 @import "./components/input.css";
 
 /* Toolbar */
@@ -58,7 +59,7 @@
 /* Accessibility */
 @import "./accessibility.css";
 
-/* Unified Typora product surface — imported after component modules. */
+/* Unified Typora product surface ? imported after component modules. */
 @import "./editorial-shell.css";
 
 /* Utilities imported last to preserve cascade priority without importance flags */

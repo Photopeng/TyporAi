@@ -1,5 +1,7 @@
 import { setIcon } from '@/ui/Icon';
 
+import { setTyporAiTooltip } from '../ui/Tooltip';
+
 type TyporaDomClass = string | string[];
 
 type TyporaDomOptions = {
@@ -40,7 +42,7 @@ function applyOptions(el: HTMLElement, options?: string | TyporaDomOptions): voi
     if (cls) el.classList.add(cls);
   }
   if (options.text !== undefined) el.textContent = options.text;
-  if (options.title !== undefined) el.title = options.title;
+  if (options.title !== undefined) setTyporAiTooltip(el, options.title);
   if (options.placeholder !== undefined && 'placeholder' in el) {
     (el as HTMLInputElement | HTMLTextAreaElement).placeholder = options.placeholder;
   }

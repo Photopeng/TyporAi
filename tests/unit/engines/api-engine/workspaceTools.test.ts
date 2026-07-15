@@ -41,14 +41,28 @@ describe('executeWorkspaceTool', () => {
     ).resolves.toContain('hello from workspace');
   });
 
-  it('writes a workspace-relative file and backs up existing content', async () => {
+  it('writes a workspace-relative file only after explicit approval', async () => {
+    const requestApproval = jest.fn().mockResolvedValue('allow');
+
     await executeWorkspaceTool(
-      { workspacePath },
+      { workspacePath, requestApproval },
       { name: 'write_file', input: { path: 'note.md', content: 'new content' } },
     );
 
     await expect(fs.readFile(path.join(workspacePath, 'note.md'), 'utf8')).resolves.toBe('new content');
     await expect(fs.readFile(path.join(workspacePath, 'note.md.typorai.bak'), 'utf8'))
+      .resolves.toContain('hello from workspace');
+  });
+
+  it('denies workspace writes when approval is unavailable', async () => {
+    await expect(
+      executeWorkspaceTool(
+        { workspacePath },
+        { name: 'write_file', input: { path: 'note.md', content: 'new content' } },
+      ),
+    ).rejects.toThrow(/YOLO mode/i);
+
+    await expect(fs.readFile(path.join(workspacePath, 'note.md'), 'utf8'))
       .resolves.toContain('hello from workspace');
   });
 
@@ -120,12 +134,13 @@ describe('executeWorkspaceTool', () => {
     }, null, 2));
   });
 
-  it('replaces the current Typora selection', async () => {
+  it('replaces the current Typora selection only after explicit approval', async () => {
     const replaceSelection = jest.fn(() => true);
+    const requestApproval = jest.fn().mockResolvedValue('allow');
 
     await expect(
       executeWorkspaceTool(
-        { workspacePath, replaceSelection },
+        { workspacePath, replaceSelection, requestApproval },
         { name: 'replace_selection', input: { text: 'replacement' } },
       ),
     ).resolves.toBe('Replaced current Typora selection.');

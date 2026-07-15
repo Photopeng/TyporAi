@@ -1,0 +1,36 @@
+.typorai-floating-tooltip {
+  position: fixed;
+  z-index: 2147483600;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 7px 11px;
+  border: 1px solid color-mix(in srgb, var(--typorai-fg-primary, currentColor) 14%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--typorai-bg-elevated, var(--background-secondary, #fff)) 94%, transparent);
+  color: var(--typorai-fg-primary, var(--text-normal, #20201f));
+  box-shadow:
+    0 12px 30px color-mix(in srgb, #000 14%, transparent),
+    0 2px 8px color-mix(in srgb, #000 8%, transparent);
+  font-size: 12px;
+  line-height: 1.45;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.typorai-floating-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.typorai-floating-tooltip[data-placement="top"] {
+  transform: translateY(2px);
+}
+
+.typorai-floating-tooltip[data-placement="top"].visible {
+  transform: translateY(0);
+}

@@ -9,6 +9,7 @@ import { t } from '../../../i18n/i18n';
 import { confirmAction } from '../../../ui/confirm';
 import { appendElement } from '../../../ui/dom';
 import { NoticeAdapter } from '../../../ui/NoticeAdapter';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 import { McpServerModal } from './McpServerModal';
 import { McpTestModal } from './McpTestModal';
 
@@ -127,7 +128,7 @@ export class McpSettingsManager {
 
     if (server.contextSaving) {
       const csEl = appendElement(nameRow, 'span', { className: 'typorai-mcp-context-saving-badge', text: '@' });
-      csEl.setAttribute('title', t('settings.mcp.contextSavingBadgeTitle', { name: server.name }));
+      setTyporAiTooltip(csEl, t('settings.mcp.contextSavingBadgeTitle', { name: server.name }));
     }
 
     const previewEl = appendElement(infoEl, 'div', { className: 'typorai-mcp-preview' });

@@ -1,5 +1,7 @@
 import { setIcon } from '@/ui/Icon';
 
+import { setTyporAiTooltip } from '../../../../../ui/Tooltip';
+
 export interface FileChipsViewCallbacks {
   onRemoveAttachment: (path: string) => void;
   onOpenFile: (path: string) => void;
@@ -51,7 +53,7 @@ export class FileChipsView {
     const filename = normalizedPath.split('/').pop() || filePath;
     const nameEl = chipEl.createSpan({ cls: 'typorai-file-chip-name' });
     nameEl.setText(filename);
-    nameEl.setAttribute('title', filePath);
+    setTyporAiTooltip(nameEl, filePath);
 
     const removeEl = chipEl.createSpan({ cls: 'typorai-file-chip-remove' });
     removeEl.setText('\u00D7');

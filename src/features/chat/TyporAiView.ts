@@ -20,6 +20,7 @@ import type TyporAiPlugin from '../../main';
 import { executeRegisteredCommand, getRegisteredCommandRegistry } from '../../shared/commandRuntime';
 import { DisposableBag } from '../../ui/DisposableBag';
 import { NoticeAdapter } from '../../ui/NoticeAdapter';
+import { installTyporAiTooltips, setTyporAiTooltip } from '../../ui/Tooltip';
 import {
   cancelScheduledAnimationFrame,
   scheduleAnimationFrame,
@@ -71,6 +72,7 @@ export class TyporAiView extends TyporaPanelView {
   // Event refs for cleanup
   private eventRefs: TyporaEventRef[] = [];
   private domEvents = new DisposableBag();
+  private tooltipEvents: DisposableBag | null = null;
 
   // Debouncing for tab bar updates
   private pendingTabBarUpdate: ScheduledAnimationFrame | null = null;
@@ -170,7 +172,11 @@ export class TyporAiView extends TyporaPanelView {
       const element = this.viewContainerEl?.querySelector<HTMLElement>(selector);
       if (!element) return;
       element.setAttribute('aria-label', t(key));
-      element.title = t(titleKey);
+      if (selector === '.typorai-title') {
+        setTyporAiTooltip(element, null);
+      } else {
+        setTyporAiTooltip(element, t(titleKey));
+      }
     };
 
     updateLabel('.typorai-new-conversation-btn', 'chat.actions.newConversation');
@@ -228,6 +234,8 @@ export class TyporAiView extends TyporaPanelView {
     this.viewContainerEl = container;
     this.viewContainerEl.empty();
     this.viewContainerEl.addClass('typorai-container');
+    this.tooltipEvents?.dispose();
+    this.tooltipEvents = installTyporAiTooltips(this.viewContainerEl);
 
     const header = this.viewContainerEl.createDiv({ cls: 'typorai-header' });
     this.buildHeader(header);
@@ -321,6 +329,8 @@ export class TyporAiView extends TyporaPanelView {
     this.scope = null;
 
     this.domEvents.dispose();
+    this.tooltipEvents?.dispose();
+    this.tooltipEvents = null;
     this.disposePlatformListeners();
   }
 
@@ -363,7 +373,7 @@ export class TyporAiView extends TyporaPanelView {
     setIcon(newBtn, 'message-square-dot');
     const newConversationLabel = t('chat.actions.newConversation');
     newBtn.setAttribute('aria-label', newConversationLabel);
-    newBtn.title = newConversationLabel;
+    setTyporAiTooltip(newBtn, newConversationLabel);
     newBtn.addEventListener('click', () => {
       void this.executeConversationCommand(
         'conversation.new',
@@ -377,7 +387,7 @@ export class TyporAiView extends TyporaPanelView {
     setIcon(this.newTabButtonEl, 'square-plus');
     const newTabLabel = t('chat.actions.newTab');
     this.newTabButtonEl.setAttribute('aria-label', newTabLabel);
-    this.newTabButtonEl.title = newTabLabel;
+    setTyporAiTooltip(this.newTabButtonEl, newTabLabel);
     this.newTabButtonEl.addEventListener('click', () => {
       void this.executeConversationCommand(
         'conversation.new-tab',
@@ -392,7 +402,7 @@ export class TyporAiView extends TyporaPanelView {
     setIcon(historyBtn, 'clock');
     const historyLabel = t('chat.actions.history');
     historyBtn.setAttribute('aria-label', historyLabel);
-    historyBtn.title = historyLabel;
+    setTyporAiTooltip(historyBtn, historyLabel);
 
     this.historyDropdown = this.historyContainerEl.createDiv({ cls: 'typorai-history-menu' });
 

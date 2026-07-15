@@ -707,7 +707,8 @@ describe('ServiceTierToggle', () => {
     const container = parentEl.querySelector('.typorai-service-tier-toggle');
     expect(button?.hasClass('active')).toBe(false);
     expect(icon).not.toBeNull();
-    expect(container?.getAttribute('title')).toBe('Toggle on/off fast mode');
+    expect(container?.getAttribute('data-typorai-tooltip')).toBe('Toggle on/off fast mode');
+    expect(container?.getAttribute('title')).toBeNull();
   });
 
   it('renders the icon button in the active state when fast mode is on', () => {
@@ -724,7 +725,8 @@ describe('ServiceTierToggle', () => {
     const button = parentEl2.querySelector('.typorai-service-tier-button');
     const container = parentEl2.querySelector('.typorai-service-tier-toggle');
     expect(button?.hasClass('active')).toBe(true);
-    expect(container?.getAttribute('title')).toBe('Toggle on/off fast mode');
+    expect(container?.getAttribute('data-typorai-tooltip')).toBe('Toggle on/off fast mode');
+    expect(container?.getAttribute('title')).toBeNull();
   });
 
   it('toggles from Standard to Fast on click', async () => {
@@ -1057,8 +1059,8 @@ describe('CursorFlowToggle localization', () => {
     const container = parentEl.querySelector('.typorai-cursor-flow-toggle');
     expect(container?.querySelector('.typorai-cursor-flow-label')?.textContent)
       .toBe(t('chat.toolbar.cursorFlow'));
-    expect(container?.querySelector('.typorai-cursor-flow-tooltip')?.textContent)
-      .toBe(t('chat.toolbar.cursorFlowTooltip'));
+    expect(container?.getAttribute('data-typorai-tooltip')).toBe(t('chat.toolbar.cursorFlowTooltip'));
+    expect(container?.querySelector('.typorai-cursor-flow-tooltip')).toBeNull();
     expect(container?.getAttribute('aria-label')).toBe(t('chat.toolbar.cursorFlowAriaLabel'));
     expect(container?.getAttribute('title')).toBeNull();
   });

@@ -4,6 +4,7 @@ import type { NotificationService } from '../../../core/ports';
 import type { ImageAttachment, ImageMediaType } from '../../../core/types';
 import { t } from '../../../i18n/i18n';
 import { NoticeAdapter } from '../../../ui/NoticeAdapter';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
@@ -285,7 +286,7 @@ export class ImageContextManager {
     const infoEl = previewEl.createDiv({ cls: 'typorai-image-info' });
     const nameEl = infoEl.createSpan({ cls: 'typorai-image-name' });
     nameEl.setText(this.truncateName(image.name, 20));
-    nameEl.setAttribute('title', image.name);
+    setTyporAiTooltip(nameEl, image.name);
 
     const sizeEl = infoEl.createSpan({ cls: 'typorai-image-size' });
     sizeEl.setText(this.formatSize(image.size));

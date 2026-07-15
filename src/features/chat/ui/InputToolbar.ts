@@ -15,6 +15,7 @@ import type { ManagedMcpServer } from '../../../core/types';
 import { t } from '../../../i18n/i18n';
 import { appendCheckIcon, appendMcpIcon, createProviderIconSvg } from '../../../shared/icons';
 import { NoticeAdapter } from '../../../ui/NoticeAdapter';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 
 function runToolbarAction(
   notifications: NotificationService,
@@ -128,9 +129,7 @@ export class ModelSelector {
         }));
       }
       option.createSpan({ text: model.label });
-      if (model.description) {
-        option.setAttribute('title', model.description);
-      }
+      setTyporAiTooltip(option, model.description);
 
       option.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -214,7 +213,7 @@ export class ModeSelector {
     if (currentOption.description) {
       titleParts.push(currentOption.description);
     }
-    this.container.setAttribute('title', titleParts.join('\n'));
+    setTyporAiTooltip(this.container, titleParts.join('\n'));
   }
 
   renderOptions() {
@@ -317,9 +316,7 @@ export class ThinkingBudgetSelector {
     for (const budget of [...options].reverse()) {
       const gearEl = optionsEl.createDiv({ cls: 'typorai-thinking-gear' });
       gearEl.setText(budget.label);
-      if (budget.description) {
-        gearEl.setAttribute('title', budget.description);
-      }
+      setTyporAiTooltip(gearEl, budget.description);
 
       if (budget.value === currentBudget) {
         gearEl.addClass('selected');
@@ -437,7 +434,7 @@ export class PermissionToggle {
       this.toggleEl.addClass('typorai-hidden');
       this.labelEl.setText(planLabel);
       this.labelEl.addClass('plan-active');
-      this.container.setAttribute('title', t('chat.toolbar.planModeTooltip'));
+      setTyporAiTooltip(this.container, t('chat.toolbar.planModeTooltip'));
       this.container.setAttribute('aria-label', t('chat.toolbar.planModeTooltip'));
     } else {
       this.toggleEl.removeClass('typorai-hidden');
@@ -446,13 +443,13 @@ export class PermissionToggle {
         this.toggleEl.removeClass('active');
         this.toggleEl.setAttribute('aria-checked', 'false');
         this.labelEl.setText(t('chat.toolbar.safeLabel'));
-        this.container.setAttribute('title', t('chat.toolbar.safeTooltip'));
+        setTyporAiTooltip(this.container, t('chat.toolbar.safeTooltip'));
         this.container.setAttribute('aria-label', t('chat.toolbar.safeTooltip'));
       } else {
         this.toggleEl.addClass('active');
         this.toggleEl.setAttribute('aria-checked', 'true');
         this.labelEl.setText(t('chat.toolbar.yoloLabel'));
-        this.container.setAttribute('title', t('chat.toolbar.yoloTooltip'));
+        setTyporAiTooltip(this.container, t('chat.toolbar.yoloTooltip'));
         this.container.setAttribute('aria-label', t('chat.toolbar.yoloTooltip'));
       }
     }
@@ -520,7 +517,7 @@ export class ServiceTierToggle {
       this.buttonEl.removeClass('active');
     }
 
-    this.container.setAttribute('title', t('chat.toolbar.toggleFastMode'));
+    setTyporAiTooltip(this.container, t('chat.toolbar.toggleFastMode'));
   }
 
   private async toggle() {
@@ -540,7 +537,6 @@ export class CursorFlowToggle {
   private container: HTMLElement;
   private labelEl: HTMLElement | null = null;
   private toggleEl: HTMLElement | null = null;
-  private tooltipEl: HTMLElement | null = null;
   private enabled: boolean = false;
   private onChangeCallback: ((enabled: boolean) => void) | null = null;
 
@@ -560,13 +556,8 @@ export class CursorFlowToggle {
 
     this.toggleEl = this.container.createDiv({ cls: 'typorai-toggle-switch' });
 
-    this.tooltipEl = this.container.createSpan({
-      cls: 'typorai-cursor-flow-tooltip',
-      attr: { role: 'tooltip' },
-    });
-    this.tooltipEl.setText(t('chat.toolbar.cursorFlowTooltip'));
-
     this.container.setAttribute('aria-label', t('chat.toolbar.cursorFlowAriaLabel'));
+    setTyporAiTooltip(this.container, t('chat.toolbar.cursorFlowTooltip'));
 
     this.updateDisplay();
 
@@ -588,8 +579,8 @@ export class CursorFlowToggle {
 
   updateDisplay(): void {
     this.labelEl?.setText(t('chat.toolbar.cursorFlow'));
-    this.tooltipEl?.setText(t('chat.toolbar.cursorFlowTooltip'));
     this.container.setAttribute('aria-label', t('chat.toolbar.cursorFlowAriaLabel'));
+    setTyporAiTooltip(this.container, t('chat.toolbar.cursorFlowTooltip'));
 
     if (!this.toggleEl) return;
     if (this.enabled) {
@@ -757,7 +748,7 @@ export class McpServerSelector {
     if (server.contextSaving) {
       const csEl = infoEl.createSpan({ cls: 'typorai-mcp-selector-cs-badge' });
       csEl.setText('@');
-      csEl.setAttribute('title', t('chat.toolbar.contextSavingHint', { name: server.name }));
+      setTyporAiTooltip(csEl, t('chat.toolbar.contextSavingHint', { name: server.name }));
     }
 
     // Click to toggle (use mousedown for more reliable capture)
@@ -807,7 +798,7 @@ export class McpServerSelector {
 
     if (count > 0) {
       this.iconEl.addClass('active');
-      this.iconEl.setAttribute('title', t('chat.toolbar.mcpEnabled', { count, plural: count > 1 ? 's' : '' }));
+      setTyporAiTooltip(this.iconEl, t('chat.toolbar.mcpEnabled', { count, plural: count > 1 ? 's' : '' }));
 
       // Show badge only when more than 1
       if (count > 1) {
@@ -818,7 +809,7 @@ export class McpServerSelector {
       }
     } else {
       this.iconEl.removeClass('active');
-      this.iconEl.setAttribute('title', t('chat.toolbar.mcpClickToEnable'));
+      setTyporAiTooltip(this.iconEl, t('chat.toolbar.mcpClickToEnable'));
       this.badgeEl.removeClass('visible');
     }
   }

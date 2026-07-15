@@ -9,6 +9,7 @@ import type TyporAiPlugin from '../../../main';
 import { confirm } from '../../../shared/modals/ConfirmModal';
 import { ContextMenu as Menu } from '../../../ui/ContextMenu';
 import { NoticeAdapter } from '../../../ui/NoticeAdapter';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 import { extractUserDisplayContent } from '../../../utils/context';
 import type { MessageRenderer } from '../rendering/MessageRenderer';
 import { cleanupThinkingBlock } from '../rendering/ThinkingBlockRenderer';
@@ -583,7 +584,7 @@ export class ConversationController {
 
       const content = item.createDiv({ cls: 'typorai-history-item-content' });
       const titleEl = content.createDiv({ cls: 'typorai-history-item-title', text: conv.title });
-      titleEl.setAttribute('title', conv.title);
+      setTyporAiTooltip(titleEl, conv.title);
       content.createDiv({
         cls: 'typorai-history-item-date',
         text: this.getHistoryItemStatusText(conversationStatus, conv.lastResponseAt ?? conv.createdAt),

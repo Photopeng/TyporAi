@@ -29,6 +29,7 @@ import { executeRegisteredCommand, getRegisteredCommandRegistry } from '../../..
 import { SlashCommandDropdown } from '../../../shared/components/SlashCommandDropdown';
 import { setIcon } from '../../../ui/Icon';
 import { NoticeAdapter } from '../../../ui/NoticeAdapter';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 import { getEnhancedPath } from '../../../utils/env';
 import { getVaultPath } from '../../../utils/path';
 import { ConversationController } from '../controllers/ConversationController';
@@ -724,7 +725,7 @@ export async function initializeTabService(
       runtime.syncConversationState(conversation, conversation.externalContextPaths ?? []);
     }
 
-    // Re-check after async operations — tab may have been closed during init
+    // Re-check after async operations ? tab may have been closed during init
     if (isClosingLifecycleState(tab.lifecycleState)) {
       unsubscribeReadyState?.();
       service?.cleanup();
@@ -1087,12 +1088,12 @@ export function initializeTabUI(
     attr: {
       type: 'button',
       'aria-label': t('chat.selection.clearQuote'),
-      title: t('chat.selection.clearQuote'),
     },
-    text: '×',
+    text: '?',
   });
   selectionClearBtn.textContent = '';
   setIcon(selectionClearBtn, 'x');
+  setTyporAiTooltip(selectionClearBtn, t('chat.selection.clearQuote'));
 
   dom.browserIndicatorEl = dom.contextRowEl.createDiv({ cls: 'typorai-browser-selection-indicator typorai-hidden' });
 
@@ -1312,7 +1313,7 @@ export function initializeTabControllers(
   openConversation?: (conversationId: string) => Promise<void>,
   getProviderCatalogConfig?: () => ProviderCatalogInfo,
 ): void;
-/** @deprecated Legacy 7-arg overload — 4th arg was previously an MCP manager. */
+/** @deprecated Legacy 7-arg overload ? 4th arg was previously an MCP manager. */
 export function initializeTabControllers(
   tab: TabData,
   plugin: TyporAiPlugin,
@@ -1370,7 +1371,7 @@ export function initializeTabControllers(
     () => autoResizeTextarea(dom.inputEl),
     [dom.contentEl, dom.inputComposerEl, ...getSharedSelectionFocusScopeEls(component)],
     (text, source) => {
-      // Cursor flow only applies to document selections — selecting AI
+      // Cursor flow only applies to document selections ? selecting AI
       // response text is almost always for copying, not for asking a new
       // question, so stealing focus there would fight the user's intent.
       if (!plugin.settings.cursorFlowEnabled || source !== 'document') {
@@ -1460,7 +1461,7 @@ export function initializeTabControllers(
           syncTabProviderServices(tab, plugin);
         }
 
-        // Bind session state only — runtime starts on send
+        // Bind session state only ? runtime starts on send
         tab.conversationId = conversation?.id ?? null;
         tab.draftModel = null;
         tab.lifecycleState = conversation ? 'bound_cold' : 'blank';
@@ -1832,7 +1833,7 @@ export function setupServiceCallbacks(tab: TabData, plugin: TyporAiPlugin): void
         const decision = await tab.controllers.inputController?.handleExitPlanMode(input, signal) ?? null;
         // Revert only on approve; feedback and cancel keep plan mode active.
         if (decision !== null && decision.type !== 'feedback') {
-          // Only restore permission mode if still in plan mode — user may have toggled out via Shift+Tab
+          // Only restore permission mode if still in plan mode ? user may have toggled out via Shift+Tab
           if (getTabPermissionMode(tab, plugin) === 'plan') {
             const restoreMode = tab.state.prePlanPermissionMode ?? 'normal';
             tab.state.prePlanPermissionMode = null;

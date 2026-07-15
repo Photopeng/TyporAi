@@ -13,6 +13,7 @@ import { appendElement } from '../../../ui/dom';
 import { NativeModal } from '../../../ui/NativeModal';
 import { NoticeAdapter } from '../../../ui/NoticeAdapter';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 import { formatContextLimit, parseContextLimit, parseEnvironmentVariables } from '../../../utils/env';
 import type { TyporAiView } from '../../chat/TyporAiView';
 
@@ -131,7 +132,7 @@ export class EnvSnippetModal extends NativeModal {
         aliasInput.placeholder = t('settings.customModelAliases.placeholder');
         aliasInput.value = existingAliases[modelId] ?? '';
         aliasInput.setAttribute('aria-label', t('settings.envSnippets.aliasAria', { modelId }));
-        aliasInput.title = t('settings.envSnippets.aliasTitle');
+        setTyporAiTooltip(aliasInput, t('settings.envSnippets.aliasTitle'));
         modelAliasInputs.set(modelId, aliasInput);
 
         const input = appendElement(row, 'input', { type: 'text', className: 'typorai-snippet-limit-input' });

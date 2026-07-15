@@ -1,5 +1,6 @@
 import type { AskUserQuestionItem, AskUserQuestionOption } from '../../../core/types/tools';
 import { t } from '../../../i18n/i18n';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 
 const HINTS_TEXT = t('renderer.ask.hints');
 const HINTS_TEXT_IMMEDIATE = t('renderer.ask.hintsImmediate');
@@ -192,7 +193,7 @@ export class InlineAskUserQuestion {
       const tab = this.tabBar.createSpan({ cls: 'typorai-ask-tab' });
       tab.createSpan({ text: this.questions[idx].header, cls: 'typorai-ask-tab-label' });
       tab.createSpan({ text: answered ? ' \u2713' : '', cls: 'typorai-ask-tab-tick' });
-      tab.setAttribute('title', this.questions[idx].question);
+      setTyporAiTooltip(tab, this.questions[idx].question);
 
       if (idx === this.activeTabIndex) tab.addClass('is-active');
       if (answered) tab.addClass('is-answered');

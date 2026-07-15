@@ -1,4 +1,5 @@
 import { hideSelectionHighlight, showSelectionHighlight } from '../../../shared/components/SelectionHighlight';
+import { setTyporAiTooltip } from '../../../ui/Tooltip';
 import type { TyporaEditor } from '../../../utils/editor';
 import { type EditorSelectionContext, getEditorView } from '../../../utils/editor';
 import type { StoredSelection } from '../state/types';
@@ -116,7 +117,7 @@ export class SelectionController {
       return;
     }
 
-    // Reading/preview mode has no usable CM6 selection — use DOM selection instead
+    // Reading/preview mode has no usable CM6 selection ? use DOM selection instead
     if (view.getMode() === 'preview') {
       this.pollReadingMode(view);
       return;
@@ -448,11 +449,11 @@ export class SelectionController {
     // Edit mode: prefer native CM6 unfocused selection (.cm-selectionBackground)
     if (sel.editorView && sel.from !== undefined && sel.to !== undefined) {
       if (this.isNativeEditorSelectionVisible(sel)) {
-        // Native is showing — clear any stale mock
+        // Native is showing ? clear any stale mock
         hideSelectionHighlight(sel.editorView);
         return;
       }
-      // Native selection not visible (e.g., input has focus) — show mock
+      // Native selection not visible (e.g., input has focus) ? show mock
       showSelectionHighlight(sel.editorView, sel.from, sel.to);
       return;
     }
@@ -460,11 +461,11 @@ export class SelectionController {
     // Preview mode: prefer native DOM selection (::selection)
     if (sel.domRanges?.length) {
       if (this.isNativePreviewSelectionVisible(sel.domRanges)) {
-        // Native is showing — clear any stale mock
+        // Native is showing ? clear any stale mock
         this.cssHighlights?.delete(HIGHLIGHT_KEY);
         return;
       }
-      // Native selection not visible (e.g., input has focus) — show mock
+      // Native selection not visible (e.g., input has focus) ? show mock
       const validRanges = sel.domRanges.filter(r => r.startContainer.isConnected);
       const HighlightCtor = this.highlightConstructor;
       if (validRanges.length && HighlightCtor) {
@@ -494,13 +495,13 @@ export class SelectionController {
       if (previewTextEl) {
         previewTextEl.textContent = previewText;
       }
-      this.indicatorEl.setAttribute('title', this.storedSelection.selectedText);
+      setTyporAiTooltip(this.indicatorEl, this.storedSelection.selectedText);
       this.indicatorEl.addClass('typorai-selection-preview-has-selection');
     } else {
       if (previewTextEl) {
         previewTextEl.textContent = '';
       }
-      this.indicatorEl.removeAttribute('title');
+      setTyporAiTooltip(this.indicatorEl, null);
       this.indicatorEl.removeClass('typorai-selection-preview-has-selection');
     }
     this.updateContextRowVisibility();

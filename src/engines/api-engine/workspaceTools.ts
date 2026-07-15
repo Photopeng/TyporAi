@@ -241,7 +241,7 @@ async function requireMutationApproval(
   input: Record<string, unknown>,
 ): Promise<void> {
   if (!context.requestApproval) {
-    return;
+    throw new Error('Access denied: document edits require YOLO mode.');
   }
 
   const decision = await context.requestApproval(

@@ -9,6 +9,7 @@ import { setIcon } from '@/ui/Icon';
 
 import type { ConversationMeta } from '../../core/types';
 import { t } from '../../i18n/i18n';
+import { setTyporAiTooltip } from '../../ui/Tooltip';
 
 export interface ResumeSessionDropdownCallbacks {
   onSelect: (conversationId: string) => void;
@@ -153,7 +154,7 @@ export class ResumeSessionDropdown {
 
       const content = item.createDiv({ cls: 'typorai-resume-item-content' });
       const titleEl = content.createDiv({ cls: 'typorai-resume-item-title', text: conv.title });
-      titleEl.setAttribute('title', conv.title);
+      setTyporAiTooltip(titleEl, conv.title);
       content.createDiv({
         cls: 'typorai-resume-item-date',
         text: isCurrent ? t('chat.resume.current') : this.formatDate(conv.lastResponseAt ?? conv.createdAt),

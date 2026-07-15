@@ -12,6 +12,7 @@ import { getAvailableLocales, getLocaleDisplayName, setLocale, t } from '../../i
 import type { Locale, TranslationKey } from '../../i18n/types';
 import type TyporAiPlugin from '../../main';
 import { SettingBuilder } from '../../ui/SettingBuilder';
+import { setTyporAiTooltip } from '../../ui/Tooltip';
 import { formatContextLimit, parseContextLimit, parseEnvironmentVariables } from '../../utils/env';
 import { buildNavMappingText, parseNavMappings } from './keyboardNavigation';
 import { renderEnvironmentSettingsSection } from './ui/EnvironmentSettingsSection';
@@ -426,7 +427,7 @@ export class TyporAiSettingTab extends TyporaSettingsPanel {
         value: currentAlias,
       });
       aliasInputEl.setAttribute('aria-label', t('settings.customModelAliases.ariaLabel', { modelId }));
-      aliasInputEl.title = t('settings.customModelAliases.aliasTitle');
+      setTyporAiTooltip(aliasInputEl, t('settings.customModelAliases.aliasTitle'));
 
       const inputEl = inputWrapper.createEl('input', {
         type: 'text',
