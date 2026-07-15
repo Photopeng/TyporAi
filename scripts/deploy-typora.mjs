@@ -26,10 +26,6 @@ const requestedAction = args.find(arg => actions.has(arg)) ?? 'install';
 const flags = new Set(args.filter(arg => arg.startsWith('--')));
 const deploymentPlatform = process.env.TYPORAI_DEPLOY_PLATFORM || process.platform;
 
-if (deploymentPlatform === 'darwin') {
-  fail('macOS deployment is not supported by this Typora-only release. Supported platforms: Windows and Linux.');
-}
-
 const paths = resolvePaths();
 const loader = buildLoader();
 
@@ -141,8 +137,8 @@ function verifyInstall() {
     if (!hasLoader(windowHtml)) {
       failures.push(`Missing TyporAi loader marker in ${paths.windowHtmlPath}`);
     }
-    if (!windowHtml.includes('Typora", "plugins", "typorai", "typora-typorai.js"')) {
-      failures.push('Loader does not point at the APPDATA Typora plugin directory.');
+    if (!windowHtml.includes('"plugins", "typorai", "typora-typorai.js"')) {
+      failures.push('Loader does not point at the Typora plugin directory.');
     }
     if (hasLegacyLoader(windowHtml)) {
       failures.push('Legacy loader marker is still present.');
@@ -176,9 +172,28 @@ function assertWindowHtmlExists() {
 }
 
 function assertTyporaIsNotRunning() {
-  if (process.env.TYPORAI_SKIP_TYPORA_PROCESS_CHECK === '1' || process.platform !== 'win32') {
+  if (process.env.TYPORAI_SKIP_TYPORA_PROCESS_CHECK === '1') {
     return;
   }
+
+  if (deploymentPlatform === 'darwin') {
+    try {
+      const output = execFileSync('pgrep', ['-x', 'Typora'], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      });
+      if (output.trim()) {
+        throw new Error('Typora is running. Quit Typora before installing, repairing, or uninstalling.');
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('Typora is running')) {
+        throw error;
+      }
+    }
+    return;
+  }
+
+  if (deploymentPlatform !== 'win32') return;
 
   try {
     const output = execFileSync('tasklist', ['/FI', 'IMAGENAME eq Typora.exe'], {
@@ -288,10 +303,19 @@ function buildLoader() {
     if (!req) return;
     var fs = req("fs");
     var path = req("path");
+    var os = req("os");
     var process = req("process");
     var pathToFileURL = req("url").pathToFileURL;
-    var appData = process.env.APPDATA || path.join(process.env.USERPROFILE || "", "AppData", "Roaming");
-    var pluginPath = path.join(appData, "Typora", "plugins", "typorai", "typora-typorai.js");
+    var userDataDir;
+    if (process.platform === "darwin") {
+      userDataDir = path.join(os.homedir(), "Library", "Application Support", "abnerworks.Typora");
+    } else if (process.platform === "linux") {
+      userDataDir = path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config"), "Typora");
+    } else {
+      var appData = process.env.APPDATA || path.join(process.env.USERPROFILE || os.homedir(), "AppData", "Roaming");
+      userDataDir = path.join(appData, "Typora");
+    }
+    var pluginPath = path.join(userDataDir, "plugins", "typorai", "typora-typorai.js");
     if (!fs.existsSync(pluginPath)) return;
     if (document.getElementById("typorai-typora-runtime")) return;
     var script = document.createElement("script");
@@ -311,9 +335,10 @@ function resolvePaths() {
   const platform = deploymentPlatform;
   const typoraInstallDir = resolveTyporaInstallDir(platform);
   const typoraResourcesDir = resolveTyporaResourcesDir(typoraInstallDir, platform);
-  const windowHtmlPath = path.join(typoraResourcesDir, 'window.html');
+  const windowHtmlPath = path.join(typoraResourcesDir, platform === 'darwin' ? 'index.html' : 'window.html');
   const appData = resolveTyporaUserDataDir(platform);
-  const pluginDir = path.join(appData, 'Typora', 'plugins', 'typorai');
+  const typoraUserDataDir = path.join(appData, platform === 'darwin' ? 'abnerworks.Typora' : 'Typora');
+  const pluginDir = path.join(typoraUserDataDir, 'plugins', 'typorai');
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 
   return {
@@ -322,7 +347,7 @@ function resolvePaths() {
     deployedBundlePath: path.join(pluginDir, 'typora-typorai.js'),
     deployedStylesPath: path.join(pluginDir, 'styles.css'),
     pluginDir,
-    pluginsRoot: path.join(appData, 'Typora', 'plugins'),
+    pluginsRoot: path.join(typoraUserDataDir, 'plugins'),
     stableBackupPath: `${windowHtmlPath}.typorai.bak`,
     stylesPath: path.join(root, 'styles.css'),
     timestampBackupPath: `${windowHtmlPath}.typorai-backup-${timestamp}`,
@@ -341,6 +366,16 @@ function resolveTyporaInstallDir(platform) {
     return process.env.TYPORA_LINUX_INSTALL_DIR || '/usr/share/typora';
   }
 
+  if (platform === 'darwin') {
+    if (process.env.TYPORA_MACOS_APP_PATH) return process.env.TYPORA_MACOS_APP_PATH;
+    const homeDirectory = resolveDeploymentHome(platform);
+    const candidates = [
+      '/Applications/Typora.app',
+      path.join(homeDirectory, 'Applications', 'Typora.app'),
+    ];
+    return candidates.find(candidate => existsSync(candidate)) ?? candidates[0];
+  }
+
   return 'C:\\Program Files\\Typora';
 }
 
@@ -349,7 +384,9 @@ function resolveTyporaResourcesDir(typoraInstallDir, platform) {
     return process.env.TYPORA_RESOURCES_DIR;
   }
 
-  return path.join(typoraInstallDir, 'resources');
+  return platform === 'darwin'
+    ? path.join(typoraInstallDir, 'Contents', 'Resources', 'TypeMark')
+    : path.join(typoraInstallDir, 'resources');
 }
 
 function resolveTyporaUserDataDir(platform) {
@@ -361,7 +398,29 @@ function resolveTyporaUserDataDir(platform) {
     return process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config');
   }
 
+  if (platform === 'darwin') {
+    return path.join(resolveDeploymentHome(platform), 'Library', 'Application Support');
+  }
+
   return process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming');
+}
+
+function resolveDeploymentHome(platform) {
+  if (process.env.TYPORAI_USER_HOME) return process.env.TYPORAI_USER_HOME;
+  if (platform === 'darwin' && process.env.SUDO_USER && process.env.SUDO_USER !== 'root') {
+    try {
+      const output = execFileSync('/usr/bin/dscl', [
+        '.',
+        '-read',
+        `/Users/${process.env.SUDO_USER}`,
+        'NFSHomeDirectory',
+      ], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+      const match = output.match(/NFSHomeDirectory:\s*(.+)\s*$/);
+      if (match?.[1]) return match[1].trim();
+    } catch {}
+    return path.join('/Users', process.env.SUDO_USER);
+  }
+  return os.homedir();
 }
 
 function assertPluginDirIsSafe() {

@@ -16,6 +16,7 @@ interface HotkeyRegistration {
 export interface DomHotkeyAdapterOptions {
   panelRoot?: HTMLElement | null;
   editorRoot?: HTMLElement | null;
+  platform?: 'windows' | 'macos' | 'linux' | 'unknown';
 }
 
 export class DomHotkeyAdapter implements HotkeyAdapter {
@@ -32,7 +33,7 @@ export class DomHotkeyAdapter implements HotkeyAdapter {
     this.registrations.set(id, {
       id,
       scope,
-      combo: normalizeCombo(combo),
+      combo: normalizeCombo(combo, this.options.platform),
       handler,
     });
     return id;
@@ -87,10 +88,15 @@ function comboFromEvent(event: KeyboardEvent): string {
   return parts.join('+');
 }
 
-function normalizeCombo(combo: string): string {
+function normalizeCombo(
+  combo: string,
+  platform: DomHotkeyAdapterOptions['platform'],
+): string {
   return combo
     .split('+')
-    .map(part => normalizeKey(part.trim()))
+    .map(part => part.trim().toLowerCase() === 'mod'
+      ? (platform === 'macos' ? 'Meta' : 'Ctrl')
+      : normalizeKey(part.trim()))
     .filter(Boolean)
     .join('+');
 }

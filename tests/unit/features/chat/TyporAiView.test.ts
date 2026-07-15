@@ -641,6 +641,31 @@ describe('TyporAiView Escape handling', () => {
     expect(result).toBe(false);
   });
 
+  it('sends from the focused composer through scoped Command+Enter on macOS', () => {
+    const { sendMessage, view } = createScopedSendHarness({ inputFocused: true });
+    view.setPlatform('macos');
+
+    view.wireEventHandlers();
+    const sendHandler = view.scope.handlers.find(
+      (handler: any) => handler.key === 'Enter' && handler.modifiers?.includes('Mod')
+    );
+    const event = {
+      key: 'Enter',
+      shiftKey: false,
+      ctrlKey: false,
+      metaKey: true,
+      altKey: false,
+      isComposing: false,
+      defaultPrevented: false,
+      preventDefault: jest.fn(),
+    } as unknown as KeyboardEvent;
+    const result = sendHandler.func(event);
+
+    expect(event.preventDefault).toHaveBeenCalled();
+    expect(sendMessage).toHaveBeenCalledTimes(1);
+    expect(result).toBe(false);
+  });
+
   it('ignores scoped Mod+Enter when composer is not focused', () => {
     Platform.isMacOS = true;
     const { sendMessage, view } = createScopedSendHarness({ inputFocused: false });

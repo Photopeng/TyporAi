@@ -96,7 +96,7 @@ export function registerConversationCommands(
     },
   );
 
-  runtime.hotkey?.register('panel', 'Ctrl+Enter', (event) => {
+  runtime.hotkey?.register('panel', 'Mod+Enter', (event) => {
     event.preventDefault();
     void runtime.commandRegistry.execute('conversation.send');
   });

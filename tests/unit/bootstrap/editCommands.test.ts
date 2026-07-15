@@ -48,7 +48,7 @@ describe('registerEditCommands', () => {
 
     registerEditCommands({ commandRegistry, hotkey }, controller);
 
-    expect(hotkey.register).toHaveBeenCalledWith('editor', 'Ctrl+Shift+E', expect.any(Function));
+    expect(hotkey.register).toHaveBeenCalledWith('editor', 'Mod+Shift+E', expect.any(Function));
   });
 });
 

@@ -20,6 +20,30 @@ describe('DomHotkeyAdapter', () => {
     adapter.unregisterAll();
   });
 
+  it('maps Mod to Command on macOS', () => {
+    const adapter = new DomHotkeyAdapter({ platform: 'macos' });
+    const handler = jest.fn();
+    adapter.register('global', 'Mod+Enter', handler);
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', metaKey: true, bubbles: true }));
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', ctrlKey: true, bubbles: true }));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    adapter.unregisterAll();
+  });
+
+  it('maps Mod to Control on Windows and Linux', () => {
+    const adapter = new DomHotkeyAdapter({ platform: 'windows' });
+    const handler = jest.fn();
+    adapter.register('global', 'Mod+Shift+E', handler);
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'e', ctrlKey: true, shiftKey: true, bubbles: true }));
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'e', metaKey: true, shiftKey: true, bubbles: true }));
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    adapter.unregisterAll();
+  });
+
   it('scopes panel hotkeys to the panel root', () => {
     const panelRoot = document.createElement('section');
     const input = document.createElement('input');

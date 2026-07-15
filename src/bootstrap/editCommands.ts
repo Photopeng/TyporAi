@@ -64,7 +64,7 @@ export function registerEditCommands(
     () => controller.discard(),
   );
 
-  runtime.hotkey?.register('editor', 'Ctrl+Shift+E', (event) => {
+  runtime.hotkey?.register('editor', 'Mod+Shift+E', (event) => {
     event.preventDefault();
     void runtime.commandRegistry.execute('edit.start');
   });

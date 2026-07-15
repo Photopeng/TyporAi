@@ -1225,4 +1225,17 @@ describe('Typora CLI path integration', () => {
     expect(segments).toContain('/usr/local/bin');
     expect(segments).toContain('/home/test/.local/bin');
   });
+
+  it('adds Homebrew and MacPorts binary directories for macOS GUI launches', () => {
+    process.env.HOME = '/Users/test';
+    process.env.PATH = '/usr/bin:/bin';
+
+    const mod = loadWithPlatform('darwin', '/Applications/Typora.app/Contents/MacOS/Typora');
+    const segments = mod.getEnhancedPath().split(':');
+
+    expect(segments).toContain('/opt/homebrew/bin');
+    expect(segments).toContain('/usr/local/bin');
+    expect(segments).toContain('/opt/local/bin');
+    expect(segments).toContain('/Users/test/.local/share/mise/shims');
+  });
 });

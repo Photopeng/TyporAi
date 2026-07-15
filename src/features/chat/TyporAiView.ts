@@ -52,6 +52,7 @@ export class TyporAiView extends TyporaPanelView {
   private runtimeFactory: ((options: CreateChatRuntimeOptions) => ChatRuntime) | null = null;
   private providerServiceFactory: ProviderServiceFactory | null = null;
   private processTransport: ProcessTransportFactory | null = null;
+  private platform: PlatformInfo['operatingSystem'] = 'unknown';
   private commandRegistry: CommandRegistry | null = null;
   private fileWatchService: FileWatchService | null = null;
   private tabBar: TabBar | null = null;
@@ -296,6 +297,7 @@ export class TyporAiView extends TyporaPanelView {
     if (this.runtimeFactory) this.tabManager.setRuntimeFactory(this.runtimeFactory);
     if (this.providerServiceFactory) this.tabManager.setProviderServiceFactory(this.providerServiceFactory);
     if (this.processTransport) this.tabManager.setProcessTransport(this.processTransport);
+    this.tabManager.setPlatform(this.platform);
     if (this.fileWatchService) this.tabManager.setFileWatchService(this.fileWatchService);
     this.tabManager.setNotificationService(this.notificationService);
 
@@ -553,7 +555,9 @@ export class TyporAiView extends TyporaPanelView {
       return false;
     }
 
-    return event.ctrlKey === true && !event.metaKey && !event.altKey;
+    return this.platform === 'macos'
+      ? event.metaKey === true && !event.ctrlKey && !event.altKey
+      : event.ctrlKey === true && !event.metaKey && !event.altKey;
   }
 
   private updateTabBar(): void {
@@ -940,7 +944,8 @@ export class TyporAiView extends TyporaPanelView {
   }
 
   setPlatform(platform: PlatformInfo['operatingSystem']): void {
-    this.tabManager?.setPlatform(platform);
+    this.platform = platform;
+    this.tabManager?.setPlatform?.(platform);
   }
 
   setCommandRegistry(commandRegistry: CommandRegistry): void {
