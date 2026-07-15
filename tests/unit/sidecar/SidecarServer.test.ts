@@ -61,6 +61,23 @@ describe('SidecarServer', () => {
     });
     inspector.close();
   });
+
+  it('probes only the supported local agents and rejects arbitrary agent launches', async () => {
+    const socket = await openSocket(server.port);
+    await request(socket, 'handshake', 'system.handshake', { protocolVersion: 1, token: 'test-token' });
+
+    await expect(request(socket, 'probe', 'agent.probe', {})).resolves.toEqual(expect.arrayContaining([
+      expect.objectContaining({ providerId: 'claude' }),
+      expect.objectContaining({ providerId: 'codex' }),
+      expect.objectContaining({ providerId: 'opencode' }),
+    ]));
+    await expect(request(socket, 'unsupported', 'agent.start', {
+      cwd: root,
+      prompt: 'hello',
+      providerId: 'shell',
+    })).rejects.toThrow('Invalid agent request');
+    socket.close();
+  });
 });
 
 function openSocket(port: number): Promise<WebSocket> {

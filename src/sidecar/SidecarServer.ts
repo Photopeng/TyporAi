@@ -27,6 +27,14 @@ interface ProcessStartParams {
   readonly executable: string;
 }
 
+type AgentId = 'claude' | 'codex' | 'opencode';
+
+interface AgentStartParams {
+  readonly cwd: string;
+  readonly prompt: string;
+  readonly providerId: AgentId;
+}
+
 interface ManagedProcess {
   readonly child: ChildProcess;
   readonly socket: WebSocket;
@@ -140,6 +148,9 @@ export class SidecarServer {
       case 'system.health': return { protocolVersion: SIDECAR_PROTOCOL_VERSION, status: 'ok', version: this.options.version };
       case 'system.rendererReady': return this.rendererReady(socket, request.params);
       case 'system.rendererStatus': return this.rendererStatus();
+      case 'agent.probe': return this.probeAgents();
+      case 'agent.start': return this.startAgent(socket, request.params);
+      case 'agent.cancel': return this.terminateProcess(request.params);
       case 'environment.get': return this.environmentGet(request.params);
       case 'environment.homeDirectory': return os.homedir();
       case 'environment.findExecutable': return this.findExecutable(request.params);
@@ -185,6 +196,43 @@ export class SidecarServer {
   private environmentGet(params: unknown): string | null {
     const name = this.stringParam(params, 'name');
     return process.env[name] ?? null;
+  }
+
+  private async probeAgents(): Promise<Array<{ available: boolean; providerId: AgentId }>> {
+    const providerIds: AgentId[] = ['claude', 'codex', 'opencode'];
+    return Promise.all(providerIds.map(async providerId => ({
+      available: await this.findExecutable({ name: providerId }) !== null,
+      providerId,
+    })));
+  }
+
+  private async startAgent(socket: WebSocket, params: unknown): Promise<{ pid: number | null; sessionId: string }> {
+    const request = this.objectParam(params) as unknown as AgentStartParams;
+    if (!this.isAgentId(request.providerId) || typeof request.prompt !== 'string' || typeof request.cwd !== 'string') {
+      throw new Error('Invalid agent request');
+    }
+    const prompt = request.prompt.trim();
+    if (!prompt) throw new Error('Agent prompt must not be empty');
+    if (prompt.length > 100_000) throw new Error('Agent prompt exceeds the maximum length');
+    const executable = await this.findExecutable({ name: request.providerId });
+    if (!executable) throw new Error(`${request.providerId} is not installed or not on PATH`);
+    return this.startProcess(socket, {
+      args: this.agentArgs(request.providerId, prompt),
+      cwd: this.allowedPath(request.cwd),
+      executable,
+    });
+  }
+
+  private isAgentId(value: unknown): value is AgentId {
+    return value === 'claude' || value === 'codex' || value === 'opencode';
+  }
+
+  private agentArgs(providerId: AgentId, prompt: string): string[] {
+    switch (providerId) {
+      case 'claude': return ['--print', prompt];
+      case 'codex': return ['exec', '--skip-git-repo-check', prompt];
+      case 'opencode': return ['run', prompt];
+    }
   }
 
   private async findExecutable(params: unknown): Promise<string | null> {
