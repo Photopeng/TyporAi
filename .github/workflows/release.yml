@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   release:
@@ -32,13 +32,20 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify release version
+        run: test "${GITHUB_REF_NAME}" = "v$(node -p \"require('./package.json').version\")"
+
+      - name: Package release archive
+        run: zip -j "TyporAi-${GITHUB_REF_NAME}.zip" typora-typorai.js styles.css manifest.json
+
       - name: Generate artifact attestations
         uses: actions/attest@v4
         with:
           subject-path: |
-            main.js
+            typora-typorai.js
             manifest.json
             styles.css
+            TyporAi-${{ github.ref_name }}.zip
 
       - name: Get previous tag
         id: prev_tag
@@ -65,9 +72,8 @@ jobs:
           body: |
             ## What's Changed
             ${{ steps.changelog.outputs.notes }}
-
-            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.prev_tag.outputs.tag }}...${{ github.ref_name }}
           files: |
-            main.js
+            TyporAi-${{ github.ref_name }}.zip
+            typora-typorai.js
             manifest.json
             styles.css
