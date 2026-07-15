@@ -2,6 +2,7 @@ import type { SidecarBootstrap } from '@/sidecar/protocol';
 
 import { createMacosApplicationRuntime } from './createMacosApplicationRuntime';
 import { TyporaEditorApi } from './editor-api';
+import { installMacosPanelStyles } from './installMacosPanelStyles';
 import { MacosChatPanel } from './MacosChatPanel';
 
 declare global {
@@ -13,6 +14,7 @@ declare global {
 async function boot(): Promise<void> {
   const bootstrap = window.__TYPORAI_BOOTSTRAP__;
   if (!bootstrap) throw new Error('Missing TyporAi macOS bootstrap configuration');
+  installMacosPanelStyles();
   const root = document.getElementById('typorai-typora-root') ?? document.body.appendChild(document.createElement('section'));
   root.id = 'typorai-typora-root';
   root.className = 'typorai-macos-bridge-root';

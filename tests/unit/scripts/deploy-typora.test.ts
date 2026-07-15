@@ -117,6 +117,7 @@ describe('deploy-typora script', () => {
     expect(existsSync(path.join(pluginDir, 'typorai-macos-renderer.js'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'typorai-sidecar.cjs'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
+    expect(readFileSync(path.join(tempRoot, 'Library', 'LaunchAgents', 'com.photopeng.typorai.sidecar.plist'), 'utf8')).toContain('<key>PATH</key>');
     runDeployWithEnv({
       TYPORAI_DEPLOY_PLATFORM: 'darwin',
       TYPORA_INSTALL_DIR: installDir,

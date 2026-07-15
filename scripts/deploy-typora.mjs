@@ -445,6 +445,7 @@ function buildLaunchAgentPlist() {
 <key>TYPORAI_SIDECAR_PORT</key><string>${paths.sidecarPort}</string>
 <key>TYPORAI_ALLOWED_ROOTS</key><string>${escapeXml(paths.deploymentHome)}</string>
 <key>TYPORAI_VERSION</key><string>${escapeXml(readProjectVersion())}</string>
+<key>PATH</key><string>${escapeXml(resolveSidecarPath())}</string>
 </dict>
 <key>RunAtLoad</key><true/>
 <key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
@@ -455,6 +456,17 @@ function buildLaunchAgentPlist() {
 
 function escapeXml(value) { return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[character]); }
 function readProjectVersion() { return JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version; }
+function resolveSidecarPath() {
+  const entries = [
+    path.dirname(process.execPath),
+    '/opt/homebrew/bin',
+    '/usr/local/bin',
+    '/usr/bin',
+    '/bin',
+    ...(process.env.PATH ?? '').split(path.delimiter),
+  ].filter(Boolean);
+  return [...new Set(entries)].join(path.delimiter);
+}
 
 function resolvePaths() {
   const platform = deploymentPlatform;
