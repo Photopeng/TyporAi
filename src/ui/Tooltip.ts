@@ -1,7 +1,7 @@
 import { DisposableBag } from './DisposableBag';
 
 const TOOLTIP_ATTR = 'data-typorai-tooltip';
-const TOOLTIP_SHOW_DELAY_MS = 300;
+const TOOLTIP_SHOW_DELAY_MS = 500;
 
 export function setTyporAiTooltip(element: HTMLElement, text: string | null | undefined): void {
   if (!text) {
