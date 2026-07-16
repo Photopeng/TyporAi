@@ -1,8 +1,11 @@
+import type { NodeCompatibleProcess } from '@/hosts/electron/NodeProcessSessionAdapter';
+
 import type {
   EnvironmentService,
   FileProbe,
   FileStore,
   PathService,
+  ProcessSession,
   ProcessTransportFactory,
 } from '../../../core/ports';
 import {
@@ -155,6 +158,7 @@ export class CodexChatRuntime implements ChatRuntime {
     private readonly fileProbe?: FileProbe,
     private readonly pathService?: PathService,
     private readonly environmentService?: EnvironmentService,
+    private readonly processSessionAdapter?: (session: ProcessSession) => NodeCompatibleProcess,
   ) {
     this.plugin = plugin;
   }
@@ -830,7 +834,9 @@ export class CodexChatRuntime implements ChatRuntime {
   private async startAppServer(launchSpec: CodexLaunchSpec, clientConfigKey: string): Promise<void> {
     this.launchSpec = launchSpec;
     this.process = this.processTransport
-      ? new CodexAppServerProcess(launchSpec, this.processTransport)
+      ? this.processSessionAdapter
+        ? new CodexAppServerProcess(launchSpec, this.processTransport, undefined, this.processSessionAdapter)
+        : new CodexAppServerProcess(launchSpec, this.processTransport)
       : new CodexAppServerProcess(launchSpec);
     await this.process.start();
 

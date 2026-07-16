@@ -9,6 +9,7 @@ import type { CodexLaunchSpec } from './codexLaunchTypes';
 const SIGKILL_TIMEOUT_MS = 3_000;
 
 type ExitCallback = (code: number | null, signal: string | null) => void;
+type ProcessSessionAdapter = (session: ProcessSession) => NodeCompatibleProcess;
 
 export class CodexAppServerProcess {
   private proc: NodeCompatibleProcess | null = null;
@@ -21,6 +22,7 @@ export class CodexAppServerProcess {
     private readonly launchSpec: Pick<CodexLaunchSpec, 'command' | 'args' | 'spawnCwd' | 'env'>,
     private readonly transportFactory?: ProcessTransportFactory,
     private readonly executionPolicy: ExecutionPolicy = new DefaultExecutionPolicy(),
+    private readonly processSessionAdapter: ProcessSessionAdapter = adaptProcessSession,
   ) {}
 
   async start(): Promise<void> {
@@ -40,7 +42,7 @@ export class CodexAppServerProcess {
         ...(resolvedSpawnSpec.windowsVerbatimArguments ? { windowsVerbatimArguments: true } : {}),
       });
       this.session = session;
-      this.proc = adaptProcessSession(session);
+      this.proc = this.processSessionAdapter(session);
       this.alive = true;
       this.proc.on('exit', (code, signal) => {
         this.alive = false;
