@@ -80,6 +80,7 @@ export class SidecarServer {
     this.providers.register('claude', () => new ClaudeSidecarRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
+      getMcpServers: () => this.mcp?.list() ?? [],
       processes: this.processTransport,
       requestApproval: async (toolName, input, description) => {
         const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, toolName } });

@@ -31,4 +31,19 @@ describe('ClaudeSidecarRuntime', () => {
 
     await expect(runtime.dispose()).resolves.toBeUndefined();
   });
+
+  it('passes Sidecar-owned enabled MCP servers into the native SDK options', () => {
+    const runtime = new ClaudeSidecarRuntime({
+      getMcpServers: () => [
+        { name: 'docs', config: { command: 'docs-mcp' }, enabled: true, contextSaving: false },
+        { name: 'mentioned-only', config: { command: 'other-mcp' }, enabled: true, contextSaving: true },
+      ],
+      getSettings: () => ({ providerConfigs: { claude: { cliPath: process.execPath } } }),
+      getWorkspacePath: () => '/workspace',
+      processes: { start: jest.fn() },
+      requestApproval: async () => 'deny',
+    });
+
+    expect((runtime as any).createQueryOptions('/workspace').mcpServers).toEqual({ docs: { command: 'docs-mcp' } });
+  });
 });

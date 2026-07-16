@@ -8,6 +8,7 @@ import { query as agentQuery } from '@anthropic-ai/claude-agent-sdk';
 
 import type { ProcessTransportFactory } from '@/core/ports';
 import { buildSystemPrompt } from '@/core/prompt/mainAgent';
+import type { ManagedMcpServer } from '@/core/types';
 import type { StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
 import { toClaudeRuntimeModelId } from '@/providers/claude/modelSelection';
@@ -23,6 +24,7 @@ import { EventReplayBuffer } from '../../server/EventReplayBuffer';
 export interface ClaudeSidecarRuntimeOptions {
   readonly getSettings: () => Record<string, unknown>;
   readonly getWorkspacePath: () => string | null;
+  readonly getMcpServers?: () => readonly ManagedMcpServer[];
   readonly processes: ProcessTransportFactory;
   readonly requestApproval: (toolName: string, input: Record<string, unknown>, description: string) => Promise<'allow' | 'deny'>;
 }
@@ -119,6 +121,10 @@ export class ClaudeSidecarRuntime {
       effort: resolveEffortLevel(model, settings.effortLevel),
     };
     if (this.sessionId) queryOptions.resume = this.sessionId;
+    const mcpServers = this.options.getMcpServers?.().filter(server => server.enabled && !server.contextSaving) ?? [];
+    if (mcpServers.length > 0) {
+      queryOptions.mcpServers = Object.fromEntries(mcpServers.map(server => [server.name, server.config])) as Options['mcpServers'];
+    }
     if (provider.safeMode === 'auto') queryOptions.extraArgs = { 'enable-auto-mode': null };
     if (provider.enableChrome) queryOptions.extraArgs = { ...queryOptions.extraArgs, chrome: null };
     return queryOptions;
