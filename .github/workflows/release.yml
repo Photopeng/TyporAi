@@ -6,7 +6,47 @@ on:
       - 'v*'
 
 jobs:
+  platform-build:
+    name: Build and test (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-x64
+            runner: windows-latest
+          - platform: macos-x64
+            runner: macos-13
+          - platform: macos-arm64
+            runner: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck and lint
+        run: npm run typecheck && npm run lint
+      - name: Test Sidecar protocol and contracts
+        run: npm run test:protocol && npm run test:contract && npm run test:integration
+      - name: Build portable Renderer and Sidecar
+        run: npm run build:renderer && npm run build:sidecar-v1 && npm run audit:renderer && npm run verify:sidecar
+      - name: Upload platform artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TyporAi-${{ matrix.platform }}
+          path: |
+            typora-typorai.renderer.js
+            typorai-sidecar-v1.cjs
+            manifest.json
+            styles.css
+
   release:
+    needs: platform-build
     runs-on: ubuntu-latest
     permissions:
       contents: write
