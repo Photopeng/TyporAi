@@ -15,3 +15,7 @@ ElectronHost, `require`, or provider-native runtimes.
 The bundles have separate entry points and static audits. ElectronHost remains
 available until all default-switch and stability gates have passed; it is not
 removed as part of Sidecar work.
+
+The evidence and rollout sequence are maintained in
+[`default-switch-gate.md`](default-switch-gate.md). A release artifact or
+automated deployment check does not close a platform gate.

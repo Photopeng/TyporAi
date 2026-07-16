@@ -50,6 +50,9 @@ Sidecar path. macOS Intel and Apple Silicon require independent evidence.
 Until the documented default-switch gate has passed, Windows must retain the
 ElectronHost/legacy bundle as the rollback path. A Sidecar failure must be
 recorded here and must not be papered over by deleting legacy behavior.
+The cross-platform default-switch evidence is tracked in
+[`default-switch-gate.md`](default-switch-gate.md); every platform cell remains
+`Not run` until it has direct execution evidence.
 
 ## Protocol baseline
 
