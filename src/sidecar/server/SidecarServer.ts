@@ -413,6 +413,22 @@ export class SidecarServer {
           void this.discovery.listAgents().then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'WORKSPACE_NOT_GRANTED', message: 'Agents are unavailable until a workspace is granted.' } })));
           return;
         }
+        if (request.method === 'agents.save') {
+          const params = request.params as { provider?: unknown; name?: unknown; content?: unknown } | undefined;
+          if ((params?.provider !== 'claude' && params?.provider !== 'codex' && params?.provider !== 'opencode') || typeof params.name !== 'string' || typeof params.content !== 'string') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid agent definition.' } }));
+          void this.discovery.saveAgent(params.provider, params.name, params.content).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'WORKSPACE_NOT_GRANTED', message: 'Agent persistence failed.' } })));
+          return;
+        }
+        if (request.method === 'agents.delete') {
+          const params = request.params as { provider?: unknown; name?: unknown } | undefined;
+          if ((params?.provider !== 'claude' && params?.provider !== 'codex' && params?.provider !== 'opencode') || typeof params.name !== 'string') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid agent definition.' } }));
+          void this.discovery.deleteAgent(params.provider, params.name).then(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'WORKSPACE_NOT_GRANTED', message: 'Agent deletion failed.' } })));
+          return;
+        }
+        if (request.method === 'agents.refresh') {
+          void this.discovery.listAgents().then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'WORKSPACE_NOT_GRANTED', message: 'Agent refresh failed.' } })));
+          return;
+        }
         if (request.method === 'mcp.list') {
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: this.mcp?.list() ?? [] }));
           return;

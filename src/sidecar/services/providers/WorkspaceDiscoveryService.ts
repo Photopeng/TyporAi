@@ -1,4 +1,4 @@
-import { readdir, readFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 export interface DiscoveredSkill {
@@ -45,6 +45,23 @@ export class WorkspaceDiscoveryService {
     return values.flat().sort((left, right) => left.name.localeCompare(right.name));
   }
 
+  async saveAgent(provider: 'claude' | 'codex' | 'opencode', name: string, content: string): Promise<DiscoveredAgent> {
+    if (!/^[A-Za-z0-9._-]+$/.test(name) || !content.trim()) throw new Error('Invalid agent definition.');
+    const root = this.requireRoot();
+    const location = this.agentLocation(provider);
+    const filePath = path.join(root, location.directory, `${name}${location.extension}`);
+    await mkdir(path.dirname(filePath), { recursive: true });
+    await writeFile(filePath, content, 'utf8');
+    return { id: `${provider}:${name}${location.extension}`, name, path: filePath, provider };
+  }
+
+  async deleteAgent(provider: 'claude' | 'codex' | 'opencode', name: string): Promise<void> {
+    if (!/^[A-Za-z0-9._-]+$/.test(name)) throw new Error('Invalid agent name.');
+    const root = this.requireRoot();
+    const location = this.agentLocation(provider);
+    await rm(path.join(root, location.directory, `${name}${location.extension}`), { force: true });
+  }
+
   private requireRoot(): string {
     const root = this.getWorkspaceRoot();
     if (!root) throw new Error('Workspace is not granted.');
@@ -59,5 +76,11 @@ export class WorkspaceDiscoveryService {
   private async readFiles(directory: string): Promise<readonly string[]> {
     try { return (await readdir(directory, { withFileTypes: true })).filter(entry => entry.isFile()).map(entry => entry.name); }
     catch { return []; }
+  }
+
+  private agentLocation(provider: 'claude' | 'codex' | 'opencode'): { directory: string; extension: string } {
+    if (provider === 'codex') return { directory: '.codex/agents', extension: '.toml' };
+    if (provider === 'opencode') return { directory: '.opencode/agents', extension: '.md' };
+    return { directory: '.claude/agents', extension: '.md' };
   }
 }

@@ -33,4 +33,13 @@ describe('WorkspaceDiscoveryService', () => {
   it('rejects discovery until the Sidecar owns a workspace grant', async () => {
     await expect(new WorkspaceDiscoveryService(() => null).listSkills()).rejects.toThrow('Workspace is not granted.');
   });
+
+  it('writes and removes provider agent definitions beneath the granted workspace only', async () => {
+    const service = new WorkspaceDiscoveryService(() => root);
+    await expect(service.saveAgent('codex', 'reviewer', 'name = "reviewer"')).resolves.toEqual(expect.objectContaining({ id: 'codex:reviewer.toml' }));
+    await expect(service.listAgents()).resolves.toEqual([expect.objectContaining({ provider: 'codex', name: 'reviewer' })]);
+    await expect(service.deleteAgent('codex', 'reviewer')).resolves.toBeUndefined();
+    await expect(service.listAgents()).resolves.toEqual([]);
+    await expect(service.saveAgent('claude', '../escape', 'bad')).rejects.toThrow('Invalid agent definition.');
+  });
 });
