@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+
 import type {
   CanUseTool,
   Options,
@@ -8,10 +10,10 @@ import { query as agentQuery } from '@anthropic-ai/claude-agent-sdk';
 
 import type { ProcessTransportFactory } from '@/core/ports';
 import { buildSystemPrompt } from '@/core/prompt/mainAgent';
-import type { ManagedMcpServer } from '@/core/types';
-import type { StreamChunk } from '@/core/types';
+import type { ImageAttachment, ManagedMcpServer, StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
 import { toClaudeRuntimeModelId } from '@/providers/claude/modelSelection';
+import { buildClaudePromptWithImages } from '@/providers/claude/runtime/ClaudeUserMessageFactory';
 import { createCustomSpawnFunction } from '@/providers/claude/runtime/customSpawn';
 import { isStreamChunk } from '@/providers/claude/sdk/typeGuards';
 import { getClaudeProviderSettings, resolveClaudeSettingSources } from '@/providers/claude/settings';
@@ -56,7 +58,7 @@ export class ClaudeSidecarRuntime {
     this.activeTurn = turnId;
     try {
       const query = agentQuery({
-        prompt,
+        prompt: await buildSidecarClaudePrompt(prompt),
         options: this.createQueryOptions(workspace),
       });
       this.activeQuery = query;
@@ -155,4 +157,20 @@ export class ClaudeSidecarRuntime {
     if (message.type !== 'system' || message.subtype !== 'init' || !message.session_id) return;
     this.sessionId = message.session_id;
   }
+}
+
+async function buildSidecarClaudePrompt(prompt: string): Promise<ReturnType<typeof buildClaudePromptWithImages>> {
+  const match = prompt.match(/\n*<typorai_attachments>\n([\s\S]*?)\n<\/typorai_attachments>\s*$/);
+  if (!match) return prompt;
+  const paths = match[1].split(/\r?\n/).map(value => value.trim()).filter(Boolean);
+  const images: ImageAttachment[] = await Promise.all(paths.map(async (target, index) => {
+    const data = await readFile(target);
+    return { id: `sidecar-${index}`, name: target.split(/[\\/]/).pop() ?? `image-${index + 1}`, data: data.toString('base64'), mediaType: mimeTypeFor(target), size: data.byteLength, source: 'file' };
+  }));
+  return buildClaudePromptWithImages(prompt.slice(0, match.index).trimEnd(), images);
+}
+
+function mimeTypeFor(target: string): ImageAttachment['mediaType'] {
+  const extension = target.toLowerCase().split('.').pop();
+  return extension === 'png' ? 'image/png' : extension === 'jpg' || extension === 'jpeg' ? 'image/jpeg' : extension === 'gif' ? 'image/gif' : 'image/webp';
 }
