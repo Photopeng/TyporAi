@@ -8,6 +8,8 @@ TyporAi release packaging produces one self-contained deployment directory per s
 
 Each package has the portable renderer, ESM Sidecar, styles, deployment script, license, source manifest, a generated `release-manifest.json`, and `SHA256SUMS.txt`. The release manifest fixes the Sidecar protocol version, Node support range, file hashes, and the exact install, repair, verify, and rollback commands for that package.
 
+The Windows package additionally includes `typora-typorai.js`, the legacy/ElectronHost rollback bundle. It remains an artifact until the separate default-switch and retirement gate is closed.
+
 Build a package after the normal production build:
 
 ```sh
