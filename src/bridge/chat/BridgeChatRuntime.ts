@@ -8,18 +8,21 @@ export interface BridgeChatClient {
 }
 
 export interface BridgeChatRuntimeOptions {
+  readonly conversationId?: string;
   readonly providerId?: string;
   readonly runtimeId?: string;
 }
 
 export class BridgeChatRuntime {
   private activeTurnId: string | null = null;
+  private readonly conversationId: string;
   private readonly providerId: string;
   private readonly runtimeId: string;
 
   constructor(private readonly client: BridgeChatClient, options: BridgeChatRuntimeOptions = {}) {
     this.providerId = options.providerId ?? 'fake';
     this.runtimeId = options.runtimeId ?? crypto.randomUUID();
+    this.conversationId = options.conversationId ?? this.runtimeId;
   }
 
   prepareTurn(request: ChatTurnRequest): PreparedChatTurn {
@@ -35,8 +38,8 @@ export class BridgeChatRuntime {
       queue.push(event.payload);
     });
     try {
-      await this.client.request('chat.createRuntime', { providerId: this.providerId, runtimeId: this.runtimeId }, signal);
-      await this.client.request('chat.startTurn', { prompt: turn.prompt, turnId, providerId: this.providerId, runtimeId: this.runtimeId }, signal);
+      await this.client.request('chat.createRuntime', { conversationId: this.conversationId, providerId: this.providerId, runtimeId: this.runtimeId }, signal);
+      await this.client.request('chat.startTurn', { conversationId: this.conversationId, prompt: turn.prompt, turnId, providerId: this.providerId, runtimeId: this.runtimeId }, signal);
       for (;;) {
         const chunk = await queue.next(signal);
         if (!chunk) return;

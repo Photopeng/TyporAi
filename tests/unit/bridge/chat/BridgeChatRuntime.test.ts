@@ -33,4 +33,26 @@ describe('BridgeChatRuntime', () => {
     randomId.mockRestore();
     expect(requests).toEqual(expect.arrayContaining([expect.objectContaining({ method: 'chat.cancelTurn', params: { turnId: '00000000-0000-0000-0000-000000000001' } })]));
   });
+
+  it('uses one stable Sidecar conversation id for runtime creation and turns', async () => {
+    const requests: Array<{ method: string; params?: unknown }> = [];
+    let listener: ((event: RpcEventEnvelope<unknown>) => void) | undefined;
+    const client: BridgeChatClient = {
+      onEvent: next => { listener = next; return () => { listener = undefined; }; },
+      request: async (method, params) => {
+        requests.push({ method, params });
+        if (method === 'chat.startTurn') queueMicrotask(() => listener?.({ connectionId: 'c', streamId: 'turn-id', seq: 1, event: 'chat.chunk', payload: { type: 'done' }, timestamp: 1 }));
+        return { streamId: 'turn-id' } as never;
+      },
+    };
+    const ids = jest.spyOn(crypto, 'randomUUID').mockReturnValueOnce('runtime-id').mockReturnValueOnce('turn-id');
+    const runtime = new BridgeChatRuntime(client);
+    for await (const _ of runtime.query(runtime.prepareTurn({ text: 'hello' }))) { /* consume */ }
+    ids.mockRestore();
+
+    expect(requests).toEqual(expect.arrayContaining([
+      expect.objectContaining({ method: 'chat.createRuntime', params: expect.objectContaining({ conversationId: 'runtime-id' }) }),
+      expect.objectContaining({ method: 'chat.startTurn', params: expect.objectContaining({ conversationId: 'runtime-id' }) }),
+    ]));
+  });
 });

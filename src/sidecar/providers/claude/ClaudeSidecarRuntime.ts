@@ -85,6 +85,9 @@ export class ClaudeSidecarRuntime {
     this.activeTurn = null;
   }
 
+  restoreSession(sessionId: string | null): void { this.sessionId = sessionId; }
+  getSessionState(): { readonly sessionId: string | null } { return { sessionId: this.sessionId }; }
+
   private createQueryOptions(workspace: string): Options {
     const settings = this.options.getSettings();
     const provider = getClaudeProviderSettings(settings);

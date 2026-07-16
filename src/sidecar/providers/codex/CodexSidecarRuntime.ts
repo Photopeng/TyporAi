@@ -25,6 +25,7 @@ export class CodexSidecarRuntime {
   private process: CodexAppServerProcess | null = null;
   private transport: CodexRpcTransport | null = null;
   private threadId: string | null = null;
+  private threadLoaded = false;
   private activeTurn: string | null = null;
   private interruptActiveTurn: ((error: Error) => void) | null = null;
 
@@ -71,6 +72,9 @@ export class CodexSidecarRuntime {
     await this.shutdownProcess();
     this.threadId = null;
   }
+
+  restoreSession(sessionId: string | null): void { this.threadId = sessionId; this.threadLoaded = false; }
+  getSessionState(): { readonly sessionId: string | null } { return { sessionId: this.threadId }; }
 
   private async runTurn(
     transport: CodexRpcTransport,
@@ -128,7 +132,21 @@ export class CodexSidecarRuntime {
   }
 
   private async ensureThread(transport: CodexRpcTransport, workspace: string): Promise<string> {
-    if (this.threadId) return this.threadId;
+    if (this.threadId && this.threadLoaded) return this.threadId;
+    if (this.threadId) {
+      const resumed = await transport.request<ThreadStartResult>('thread/resume', {
+        threadId: this.threadId,
+        model: DEFAULT_CODEX_PRIMARY_MODEL,
+        cwd: workspace,
+        approvalPolicy: 'on-request',
+        sandbox: 'workspace-write',
+        experimentalRawEvents: true,
+        persistExtendedHistory: true,
+      });
+      this.threadId = resumed.thread.id;
+      this.threadLoaded = true;
+      return this.threadId;
+    }
     const result = await transport.request<ThreadStartResult>('thread/start', {
       model: DEFAULT_CODEX_PRIMARY_MODEL,
       cwd: workspace,
@@ -138,6 +156,7 @@ export class CodexSidecarRuntime {
       persistExtendedHistory: true,
     });
     this.threadId = result.thread.id;
+    this.threadLoaded = true;
     return this.threadId;
   }
 
@@ -146,7 +165,7 @@ export class CodexSidecarRuntime {
     this.transport = null;
     await this.process?.shutdown();
     this.process = null;
-    this.threadId = null;
+    this.threadLoaded = false;
   }
 }
 

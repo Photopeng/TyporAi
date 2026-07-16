@@ -43,6 +43,8 @@ export interface SidecarServerOptions {
 
 interface SidecarChatProviderRuntime extends SidecarProviderRuntime {
   cancelTurn(turnId: string): void;
+  restoreSession?(sessionId: string | null): void | Promise<void>;
+  getSessionState?(): { readonly providerState?: Record<string, unknown>; readonly sessionId: string | null };
   startTurn(connectionId: string, turnId: string, prompt: string, publish: (event: RpcEventEnvelope<StreamChunk>) => void): Promise<void>;
 }
 
@@ -322,13 +324,14 @@ export class SidecarServer {
           return;
         }
         if (request.method === 'chat.startTurn') {
-          const params = request.params as { blobIds?: unknown; prompt?: unknown; turnId?: unknown; providerId?: unknown; runtimeId?: unknown } | undefined;
+          const params = request.params as { blobIds?: unknown; conversationId?: unknown; prompt?: unknown; turnId?: unknown; providerId?: unknown; runtimeId?: unknown } | undefined;
           if (typeof params?.prompt !== 'string' || typeof params.turnId !== 'string') {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid chat turn.' } }));
             return;
           }
           const providerId = typeof params.providerId === 'string' ? params.providerId : 'fake';
           const runtimeId = typeof params.runtimeId === 'string' && params.runtimeId ? params.runtimeId : connectionId;
+          const conversationId = typeof params.conversationId === 'string' && params.conversationId ? params.conversationId : null;
           const turnId = params.turnId;
           const blobIds = Array.isArray(params.blobIds) && params.blobIds.every(value => typeof value === 'string') ? params.blobIds : [];
           let chatRuntime: SidecarChatProviderRuntime;
@@ -342,22 +345,23 @@ export class SidecarServer {
             if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: event }));
           }).finally(() => {
             this.activeTurns.delete(turnId);
+            if (conversationId) void this.persistRuntimeSession(conversationId, chatRuntime).catch(() => undefined);
             void Promise.all(blobIds.map(blobId => this.blobs?.abort(blobId)));
           });
           return;
         }
         if (request.method === 'chat.createRuntime') {
-          const params = request.params as { providerId?: unknown; runtimeId?: unknown } | undefined;
+          const params = request.params as { conversationId?: unknown; providerId?: unknown; runtimeId?: unknown } | undefined;
           if (typeof params?.providerId !== 'string' || typeof params.runtimeId !== 'string' || !params.runtimeId) {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid runtime request.' } }));
             return;
           }
-          try {
-            this.runtimes.getOrCreate(params.providerId, params.runtimeId);
-            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { providerId: params.providerId, runtimeId: params.runtimeId } }));
-          } catch {
+          const conversationId = typeof params.conversationId === 'string' && params.conversationId ? params.conversationId : null;
+          void this.createChatRuntime(params.providerId, params.runtimeId, conversationId).then(() => {
+            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { conversationId, providerId: params.providerId, runtimeId: params.runtimeId } }));
+          }).catch(() => {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: 'Provider runtime is unavailable.' } }));
-          }
+          });
           return;
         }
         if (request.method === 'chat.disposeRuntime') {
@@ -394,6 +398,38 @@ export class SidecarServer {
     });
     connection.once('error', () => undefined);
     setTimeout(() => { if (!initialized) connection.close(1008, 'Initialize timeout'); }, 3_000).unref();
+  }
+
+  private async createChatRuntime(providerId: string, runtimeId: string, conversationId: string | null): Promise<SidecarChatProviderRuntime> {
+    const runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(providerId, runtimeId);
+    if (!conversationId) return runtime;
+    const conversation = await this.ensureChatConversation(conversationId, providerId);
+    await runtime.restoreSession?.(conversation.sessionId);
+    return runtime;
+  }
+
+  private async ensureChatConversation(conversationId: string, providerId: string): Promise<Conversation> {
+    if (!this.sessions) throw new Error('Sessions unavailable');
+    try {
+      const existing = this.sessions.store.get(conversationId).conversation;
+      if (existing.providerId !== providerId) throw new Error('Conversation provider mismatch');
+      return existing;
+    } catch (error) {
+      if (!(error instanceof SessionNotFoundError)) throw error;
+    }
+    const now = Date.now();
+    const created = this.sessions.store.create({ createdAt: now, id: conversationId, messages: [], providerId: providerId as Conversation['providerId'], sessionId: null, title: 'New conversation', updatedAt: now }, `chat-runtime:${conversationId}`);
+    await this.sessions.persist();
+    return created.conversation;
+  }
+
+  private async persistRuntimeSession(conversationId: string, runtime: SidecarChatProviderRuntime): Promise<void> {
+    if (!this.sessions || !runtime.getSessionState) return;
+    const state = runtime.getSessionState();
+    const current = this.sessions.store.get(conversationId);
+    if (current.conversation.sessionId === state.sessionId && JSON.stringify(current.conversation.providerState) === JSON.stringify(state.providerState)) return;
+    this.sessions.store.applyPatch(conversationId, { providerState: state.providerState, sessionId: state.sessionId, updatedAt: Date.now() }, current.revision, `native-session:${conversationId}:${state.sessionId ?? 'none'}`);
+    await this.sessions.persist();
   }
 
   private async createWatch(connectionId: string, connection: WebSocket, inputPath: string): Promise<string> {

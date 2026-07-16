@@ -27,6 +27,7 @@ export class OpencodeSidecarRuntime {
   private connection: AcpClientConnection | null = null;
   private process: AcpSubprocess | null = null;
   private sessionId: string | null = null;
+  private sessionLoaded = false;
   private transport: AcpJsonRpcTransport | null = null;
   private activeTurn: string | null = null;
   private publish: ((chunk: StreamChunk) => void) | null = null;
@@ -80,9 +81,13 @@ export class OpencodeSidecarRuntime {
     await this.process?.shutdown().catch(() => undefined);
     this.process = null;
     this.sessionId = null;
+    this.sessionLoaded = false;
     this.activeTurn = null;
     this.publish = null;
   }
+
+  restoreSession(sessionId: string | null): void { this.sessionId = sessionId; this.sessionLoaded = false; }
+  getSessionState(): { readonly sessionId: string | null } { return { sessionId: this.sessionId }; }
 
   private async ensureConnection(workspace: string): Promise<AcpClientConnection> {
     if (this.connection && this.process?.isAlive()) return this.connection;
@@ -117,9 +122,20 @@ export class OpencodeSidecarRuntime {
   }
 
   private async ensureSession(connection: AcpClientConnection, workspace: string): Promise<string> {
-    if (this.sessionId) return this.sessionId;
+    if (this.sessionId && this.sessionLoaded) return this.sessionId;
+    if (this.sessionId) {
+      try {
+        const result = await connection.loadSession({ cwd: workspace, mcpServers: [], sessionId: this.sessionId });
+        this.sessionId = result.sessionId;
+        this.sessionLoaded = true;
+        return this.sessionId;
+      } catch {
+        this.sessionId = null;
+      }
+    }
     const result = await connection.newSession({ cwd: workspace, mcpServers: [] });
     this.sessionId = result.sessionId;
+    this.sessionLoaded = true;
     return result.sessionId;
   }
 
