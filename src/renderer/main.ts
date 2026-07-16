@@ -2,6 +2,7 @@ import { type RpcSocket,WebSocketRpcClient } from '@/bridge/client/WebSocketRpcC
 import type { SidecarBootstrap } from '@/sidecar/protocol';
 
 import { RENDERER_PROVIDERS } from './RendererProviderRegistry';
+import { SidecarChatPanel } from './SidecarChatPanel';
 
 export {};
 
@@ -31,6 +32,8 @@ async function connect(root: HTMLElement, bootstrap: SidecarBootstrap): Promise<
     });
     localStorage.setItem('typorai.renderer.last-connection-id', initialized.connectionId);
     root.dataset.typoraiSidecar = 'connected';
+    const panel = new SidecarChatPanel(root, client);
+    await panel.initialize();
     window.addEventListener('offline', () => { root.dataset.typoraiSidecar = 'reconnecting'; }, { once: true });
   } catch {
     root.dataset.typoraiSidecar = client.state === 'incompatible' ? 'incompatible' : 'error';
