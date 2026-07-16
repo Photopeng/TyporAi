@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+
 import type { ProcessTransportFactory } from '@/core/ports';
 import type { StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
@@ -57,7 +59,8 @@ export class OpencodeSidecarRuntime {
     try {
       const connection = await this.ensureConnection(workspace);
       const sessionId = await this.ensureSession(connection, workspace);
-      await connection.prompt({ prompt: [{ text: prompt, type: 'text' }], sessionId });
+      const input = await buildSidecarPromptBlocks(prompt);
+      await connection.prompt({ prompt: input, sessionId });
       emit({ type: 'done' });
     } catch (error) {
       emit({ type: 'error', content: this.formatError(error) });
@@ -164,4 +167,21 @@ export class OpencodeSidecarRuntime {
     const stderr = this.process?.getStderrSnapshot();
     return stderr ? `${message}\n\n${stderr}` : message;
   }
+}
+
+async function buildSidecarPromptBlocks(prompt: string): Promise<Array<{ type: 'text'; text: string } | { type: 'image'; data: string; mimeType: string }>> {
+  const match = prompt.match(/\n*<typorai_attachments>\n([\s\S]*?)\n<\/typorai_attachments>\s*$/);
+  if (!match) return [{ type: 'text', text: prompt }];
+  const paths = match[1].split(/\r?\n/).map(value => value.trim()).filter(Boolean);
+  const blocks: Array<{ type: 'text'; text: string } | { type: 'image'; data: string; mimeType: string }> = [{ type: 'text', text: prompt.slice(0, match.index).trimEnd() }];
+  for (const target of paths) {
+    const data = await readFile(target);
+    blocks.push({ type: 'image', data: data.toString('base64'), mimeType: mimeTypeFor(target) });
+  }
+  return blocks;
+}
+
+function mimeTypeFor(target: string): string {
+  const extension = target.toLowerCase().split('.').pop();
+  return extension === 'png' ? 'image/png' : extension === 'jpg' || extension === 'jpeg' ? 'image/jpeg' : extension === 'gif' ? 'image/gif' : 'image/webp';
 }
