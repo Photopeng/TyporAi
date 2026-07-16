@@ -19,6 +19,7 @@ describe('package-release script', () => {
     writeInput('styles.css', 'body {}');
     writeInput('typora-typorai.renderer.js', 'console.log("renderer")');
     writeInput('typorai-sidecar-v1.mjs', 'console.log("sidecar")');
+    writeInput('scripts/diagnose-typora.mjs', 'console.log("diagnose")');
     writeInput('scripts/deploy-typora.mjs', 'console.log("deploy")');
   });
 
@@ -40,8 +41,9 @@ describe('package-release script', () => {
       protocolVersion: 1,
       sidecar: 'typorai-sidecar-v1.mjs',
     });
-    expect(releaseManifest.files).toHaveLength(7);
+    expect(releaseManifest.files).toHaveLength(8);
     expect(existsSync(path.join(packageDirectory, 'scripts', 'deploy-typora.mjs'))).toBe(true);
+    expect(existsSync(path.join(packageDirectory, 'scripts', 'diagnose-typora.mjs'))).toBe(true);
     expect(readFileSync(path.join(packageDirectory, 'SHA256SUMS.txt'), 'utf8')).toContain(
       `${hash(path.join(packageDirectory, 'typorai-sidecar-v1.mjs'))}  typorai-sidecar-v1.mjs`,
     );

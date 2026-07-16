@@ -28,6 +28,7 @@ const files = [
   'manifest.json',
   'LICENSE',
   'README.md',
+  'scripts/diagnose-typora.mjs',
   'scripts/deploy-typora.mjs',
 ];
 
