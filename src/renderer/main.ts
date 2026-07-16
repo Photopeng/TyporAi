@@ -13,6 +13,7 @@ declare global {
 function mountRenderer(): void {
   const root = document.getElementById('typorai-typora-root') ?? document.body.appendChild(document.createElement('section'));
   root.id = 'typorai-typora-root';
+  installRendererShellStyles();
   root.dataset.typoraiRuntime = 'browser';
   root.dataset.typoraiProviders = RENDERER_PROVIDERS.map(provider => provider.providerId).join(',');
   const bootstrap = window.__TYPORAI_BOOTSTRAP__;
@@ -35,9 +36,31 @@ async function connect(root: HTMLElement, bootstrap: SidecarBootstrap): Promise<
     const panel = new SidecarChatPanel(root, client);
     await panel.initialize();
     window.addEventListener('offline', () => { root.dataset.typoraiSidecar = 'reconnecting'; }, { once: true });
-  } catch {
+  } catch (error) {
     root.dataset.typoraiSidecar = client.state === 'incompatible' ? 'incompatible' : 'error';
+    root.className = 'typorai-sidecar-panel typorai-sidecar-panel--error';
+    root.textContent = `TyporAi could not connect to its Sidecar: ${error instanceof Error ? error.message : 'unknown error'}`;
   }
+}
+
+function installRendererShellStyles(): void {
+  if (document.getElementById('typorai-sidecar-shell-style')) return;
+  const style = document.createElement('style');
+  style.id = 'typorai-sidecar-shell-style';
+  style.textContent = `
+    #typorai-typora-root {
+      position: fixed;
+      inset: 0 0 0 auto;
+      z-index: 9999;
+      width: min(430px, 48vw);
+      min-width: 320px;
+      overflow: hidden;
+      border-left: 1px solid rgba(0, 0, 0, 0.16);
+    }
+    body > content { right: min(430px, 48vw) !important; }
+    .typorai-sidecar-panel--error { padding: 16px; background: #f7f0e2; color: #25211b; }
+  `;
+  document.head.append(style);
 }
 
 function getLastConnectionId(): string | null { return localStorage.getItem('typorai.renderer.last-connection-id'); }
