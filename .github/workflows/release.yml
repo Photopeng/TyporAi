@@ -34,16 +34,14 @@ jobs:
       - name: Test Sidecar protocol and contracts
         run: npm run test:protocol && npm run test:contract && npm run test:integration
       - name: Build portable Renderer and Sidecar
-        run: npm run build:renderer && npm run build:sidecar-v1 && npm run audit:renderer && npm run verify:sidecar
+        run: npm run build:all && npm run audit:renderer && npm run verify:sidecar
+      - name: Package platform release
+        run: npm run package:release -- --platform ${{ matrix.platform }}
       - name: Upload platform artifacts
         uses: actions/upload-artifact@v4
         with:
           name: TyporAi-${{ matrix.platform }}
-          path: |
-            typora-typorai.renderer.js
-            typorai-sidecar-v1.cjs
-            manifest.json
-            styles.css
+          path: dist/TyporAi-${{ matrix.platform }}
 
   release:
     needs: platform-build
@@ -69,27 +67,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build:all
-
       - name: Verify release version
         run: |
           VERSION=$(node -p "require('./package.json').version")
           test "$GITHUB_REF_NAME" = "v$VERSION"
 
-      - name: Package release archive
-        run: zip -j "TyporAi-${GITHUB_REF_NAME}.zip" typora-typorai.renderer.js typora-typorai.js typorai-sidecar-v1.cjs styles.css manifest.json
+      - name: Download platform packages
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Package release archives
+        run: |
+          for platform in windows-x64 macos-x64 macos-arm64; do
+            directory="dist/TyporAi-${platform}"
+            test -f "$directory/release-manifest.json"
+            zip -r "TyporAi-${platform}-${GITHUB_REF_NAME}.zip" "$directory"
+          done
 
       - name: Generate artifact attestations
         uses: actions/attest@v4
         with:
           subject-path: |
-            typora-typorai.renderer.js
-            typora-typorai.js
-            typorai-sidecar-v1.cjs
-            manifest.json
-            styles.css
-            TyporAi-${{ github.ref_name }}.zip
+            TyporAi-*-v*.zip
+            dist/**/release-manifest.json
+            dist/**/SHA256SUMS.txt
 
       - name: Get previous tag
         id: prev_tag
@@ -117,9 +119,6 @@ jobs:
             ## What's Changed
             ${{ steps.changelog.outputs.notes }}
           files: |
-            TyporAi-${{ github.ref_name }}.zip
-            typora-typorai.renderer.js
-            typora-typorai.js
-            typorai-sidecar-v1.cjs
-            manifest.json
-            styles.css
+            TyporAi-*-v*.zip
+            dist/**/release-manifest.json
+            dist/**/SHA256SUMS.txt

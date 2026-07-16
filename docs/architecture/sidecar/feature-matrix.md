@@ -35,6 +35,7 @@ PR has passed the listed test and platform check.
 | Settings / environment | app and provider settings | Changes validate and persist correctly | settings reconciler tests | Not run | Not run | Not run | Not run | P0 | Settings suites |
 | CLI probe | provider CLI resolvers | Availability and version are reported accurately | CLI resolver tests | Not run | Not run | Not run | Not run | P1 | Provider CLI suites |
 | Install / repair / uninstall | deploy scripts | Installation is recoverable and fully removable | `npm run verify:typora` | Not run | Not run | Not run | Not run | P0 | Platform evidence pending |
+| Release package / checksums | release workflow | Each supported target has a portable, signed release package with rollback instructions | `tests/unit/scripts/package-release.test.ts` | Not run | Not run | Not run | Not run | P0 | Package generation is automated; platform deployment evidence pending |
 
 ## D0 evidence procedure
 

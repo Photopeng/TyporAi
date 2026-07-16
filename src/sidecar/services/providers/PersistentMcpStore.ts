@@ -1,5 +1,4 @@
 import { readFile, rename, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 
 import { DEFAULT_MCP_SERVER, isValidMcpServerConfig, type ManagedMcpServer } from '@/core/types';
 

@@ -1,3 +1,4 @@
+/* eslint-disable simple-import-sort/imports -- Provider side effects must load after Jest mocks. */
 jest.mock('@/typora/platform', () => {
   const actual = jest.requireActual('@/typora/platform');
   return {

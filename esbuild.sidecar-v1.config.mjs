@@ -1,4 +1,7 @@
 import esbuild from 'esbuild';
+import { readFileSync, writeFileSync } from 'node:fs';
+
+const outfile = 'typorai-sidecar-v1.mjs';
 
 await esbuild.build({
   bundle: true,
@@ -9,7 +12,12 @@ await esbuild.build({
   format: 'esm',
   logLevel: 'info',
   minify: process.argv[2] === 'production',
-  outfile: 'typorai-sidecar-v1.mjs',
+  outfile,
   platform: 'node',
   target: 'node24',
 });
+
+// esbuild can preserve whitespace-only lines from bundled dependencies. Keep
+// the tracked portable artifact reviewable and make `git diff --check` stable.
+const output = readFileSync(outfile, 'utf8').replace(/[\t ]+\n/g, '\n');
+writeFileSync(outfile, output, 'utf8');

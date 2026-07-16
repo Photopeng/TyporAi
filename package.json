@@ -19,6 +19,7 @@
     "build:sidecar": "node esbuild.sidecar.config.mjs production",
     "build:sidecar-v1": "node esbuild.sidecar-v1.config.mjs production",
     "build:all": "npm run build:css && npm run build:renderer && npm run build:legacy && npm run build:sidecar && npm run build:sidecar-v1",
+    "package:release": "node scripts/package-release.mjs",
     "deploy:typora": "npm run build:all && node scripts/deploy-typora.mjs install",
     "install:typora": "npm run deploy:typora",
     "uninstall:typora": "node scripts/deploy-typora.mjs uninstall",

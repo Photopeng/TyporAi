@@ -6,8 +6,8 @@ import path from 'node:path';
 
 import { type WebSocket,WebSocketServer } from 'ws';
 
-import type { AppTabManagerState } from '@/core/providers/types';
 import { testMcpServer } from '@/core/mcp/McpTester';
+import type { AppTabManagerState } from '@/core/providers/types';
 import type { Conversation, StreamChunk } from '@/core/types';
 import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope } from '@/protocol';
 
@@ -24,9 +24,9 @@ import { BlobNotFoundError,BlobPayloadTooLargeError,BlobStore } from '../service
 import { FileConflictError,PathOutsideWorkspaceError,WorkspaceFileService,WorkspaceNotGrantedError } from '../services/fs/WorkspaceFileService';
 import { ManagedProcessRegistry } from '../services/process/ManagedProcessRegistry';
 import { SidecarProcessTransport } from '../services/process/SidecarProcessTransport';
+import { PersistentMcpStore } from '../services/providers/PersistentMcpStore';
 import { type ProbedProviderId,ProviderProbeService } from '../services/providers/ProviderProbeService';
 import { WorkspaceDiscoveryService } from '../services/providers/WorkspaceDiscoveryService';
-import { PersistentMcpStore } from '../services/providers/PersistentMcpStore';
 import { PersistentSessionRepository } from '../services/sessions/PersistentSessionRepository';
 import { PersistentTabLayoutStore } from '../services/sessions/PersistentTabLayoutStore';
 import { SessionNotFoundError,SessionRevisionConflictError } from '../services/sessions/SessionRepository';
