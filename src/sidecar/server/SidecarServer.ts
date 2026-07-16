@@ -6,6 +6,7 @@ import path from 'node:path';
 
 import { type WebSocket,WebSocketServer } from 'ws';
 
+import type { AppTabManagerState } from '@/core/providers/types';
 import type { Conversation } from '@/core/types';
 import { type JsonRpcRequest,parseJsonRpcMessage } from '@/protocol';
 
@@ -19,6 +20,7 @@ import { FileConflictError,PathOutsideWorkspaceError,WorkspaceFileService,Worksp
 import { ManagedProcessRegistry } from '../services/process/ManagedProcessRegistry';
 import { SidecarProcessTransport } from '../services/process/SidecarProcessTransport';
 import { PersistentSessionRepository } from '../services/sessions/PersistentSessionRepository';
+import { PersistentTabLayoutStore } from '../services/sessions/PersistentTabLayoutStore';
 import { SessionNotFoundError,SessionRevisionConflictError } from '../services/sessions/SessionRepository';
 import { PersistentSettingsStore } from '../services/settings/PersistentSettingsStore';
 import { SettingsRevisionConflictError } from '../services/settings/VersionedSettingsStore';
@@ -46,6 +48,7 @@ export class SidecarServer {
   private readonly watches = new Map<string, { connection: WebSocket; close(): void }>();
   private settings: PersistentSettingsStore<Record<string, unknown>> | null = null;
   private sessions: PersistentSessionRepository | null = null;
+  private tabLayout: PersistentTabLayoutStore | null = null;
   private workspace: PersistentWorkspaceGrantStore | null = null;
   private files: WorkspaceFileService | null = null;
   private readonly processes = new ManagedProcessRegistry();
@@ -69,6 +72,7 @@ export class SidecarServer {
     try {
       this.settings = await PersistentSettingsStore.open(path.join(this.options.dataDirectory, 'settings.json'), {});
       this.sessions = await PersistentSessionRepository.open(path.join(this.options.dataDirectory, 'sessions.json'));
+      this.tabLayout = await PersistentTabLayoutStore.open(path.join(this.options.dataDirectory, 'tab-layout.json'));
       this.workspace = await PersistentWorkspaceGrantStore.open(path.join(this.options.dataDirectory, 'workspace-grant.json'));
       this.files = new WorkspaceFileService(() => this.workspace?.current ?? null);
       this.blobs = new BlobStore(path.join(this.options.dataDirectory, 'blobs'));
@@ -160,6 +164,17 @@ export class SidecarServer {
           if (!this.sessions || typeof id !== 'string' || !id) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'SESSION_NOT_FOUND', message: 'Session not found.' } }));
           try { connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: this.sessions.store.get(id) })); }
           catch (error) { connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: error instanceof SessionNotFoundError ? 'SESSION_NOT_FOUND' : 'INTERNAL_ERROR', message: 'Session lookup rejected.' } })); }
+          return;
+        }
+        if (request.method === 'session.getTabLayout') {
+          if (!this.tabLayout) return connection.close(1011, 'Tab layout unavailable');
+          connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: this.tabLayout.get() }));
+          return;
+        }
+        if (request.method === 'session.setTabLayout') {
+          const params = request.params as { expectedRevision?: unknown; idempotencyKey?: unknown; value?: unknown } | undefined;
+          if (!this.tabLayout || !params || !Number.isInteger(params.expectedRevision) || typeof params.idempotencyKey !== 'string' || !params.value || typeof params.value !== 'object') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid tab layout.' } }));
+          void this.tabLayout.set(params.value as AppTabManagerState, params.expectedRevision as number, params.idempotencyKey).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(error => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: error instanceof SessionRevisionConflictError ? 'SESSION_REVISION_CONFLICT' : 'INTERNAL_ERROR', message: 'Tab layout update rejected.' } })));
           return;
         }
         if (request.method === 'workspace.getCurrent') {
