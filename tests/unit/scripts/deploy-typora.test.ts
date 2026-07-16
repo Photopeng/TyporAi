@@ -107,6 +107,17 @@ describe('deploy-typora script', () => {
     expect(existsSync(pluginDir)).toBe(false);
   });
 
+  it('returns machine-readable staged verification output', () => {
+    runDeploy('install');
+    const result = JSON.parse(runDeploy('verify', '--json')) as { ok: boolean; checks: Array<{ name: string; passed: boolean }> };
+    expect(result.ok).toBe(true);
+    expect(result.checks).toEqual(expect.arrayContaining([
+      expect.objectContaining({ name: 'Renderer files', passed: true }),
+      expect.objectContaining({ name: 'Sidecar artifact', passed: true }),
+      expect.objectContaining({ name: 'Loader marker', passed: true }),
+    ]));
+  });
+
   it('installs into the macOS application bundle and Typora user data directory', () => {
     installDir = path.join(tempRoot, 'Applications', 'Typora.app');
     appDataDir = path.join(tempRoot, 'Library', 'Application Support');

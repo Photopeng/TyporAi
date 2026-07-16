@@ -35,6 +35,7 @@ const paths = resolvePaths();
 try {
   run(requestedAction, {
     dryRun: flags.has('--dry-run'),
+    json: flags.has('--json'),
     removePluginFiles: flags.has('--remove-plugin-files'),
     restoreBackup: flags.has('--restore-backup'),
   });
@@ -44,7 +45,7 @@ try {
 
 function run(action, options) {
   if (action === 'verify') {
-    verifyInstall();
+    verifyInstall(options);
     return;
   }
 
@@ -59,7 +60,7 @@ function run(action, options) {
 
   install(options);
   if (!options.dryRun) {
-    verifyInstall();
+    verifyInstall(options);
   }
 }
 
@@ -131,45 +132,39 @@ function uninstall(options) {
   if (deploymentPlatform === 'win32' && !options.dryRun && shouldManageWindowsSystemIntegration()) uninstallWindowsSidecar();
 }
 
-function verifyInstall() {
+function verifyInstall(options = {}) {
   const failures = [];
+  const checks = [];
 
-  if (!existsSync(paths.deployedBundlePath)) {
-    failures.push(`Missing deployed bundle: ${paths.deployedBundlePath}`);
-  }
-  if (!existsSync(paths.deployedStylesPath)) {
-    failures.push(`Missing deployed styles: ${paths.deployedStylesPath}`);
-  }
-  if (!existsSync(paths.deployedSidecarPath)) failures.push(`Missing sidecar: ${paths.deployedSidecarPath}`);
-  if (!existsSync(paths.sidecarTokenPath)) failures.push(`Missing sidecar token: ${paths.sidecarTokenPath}`);
+  const check = (name, passed, detail) => {
+    checks.push({ name, passed, detail });
+    if (!passed) failures.push(detail);
+  };
+
+  check('Renderer files', existsSync(paths.deployedBundlePath) && existsSync(paths.deployedStylesPath), `Missing deployed renderer files in ${paths.pluginDir}`);
+  check('Sidecar artifact', existsSync(paths.deployedSidecarPath), `Missing sidecar: ${paths.deployedSidecarPath}`);
+  check('Bootstrap token', existsSync(paths.sidecarTokenPath), `Missing sidecar token: ${paths.sidecarTokenPath}`);
   if (deploymentPlatform === 'darwin') {
-    if (!existsSync(paths.launchAgentPath)) failures.push(`Missing LaunchAgent: ${paths.launchAgentPath}`);
+    check('Sidecar service registration', existsSync(paths.launchAgentPath), `Missing LaunchAgent: ${paths.launchAgentPath}`);
   }
   if (!existsSync(paths.windowHtmlPath)) {
-    failures.push(`Missing Typora window.html: ${paths.windowHtmlPath}`);
+    check('Loader marker', false, `Missing Typora window.html: ${paths.windowHtmlPath}`);
   } else {
     const windowHtml = readFileSync(paths.windowHtmlPath, 'utf8');
-    if (!hasLoader(windowHtml)) {
-      failures.push(`Missing TyporAi loader marker in ${paths.windowHtmlPath}`);
-    }
+    check('Loader marker', hasLoader(windowHtml), `Missing TyporAi loader marker in ${paths.windowHtmlPath}`);
     const expectedBundle = 'typora-typorai.renderer.js';
-    if (!windowHtml.includes(expectedBundle)) {
-      failures.push('Loader does not point at the Typora plugin directory.');
-    }
-    if (hasLegacyLoader(windowHtml)) {
-      failures.push('Legacy loader marker is still present.');
-    }
+    check('Shared renderer loader', windowHtml.includes(expectedBundle), 'Loader does not point at the Typora plugin directory.');
+    check('Legacy fallback hygiene', !hasLegacyLoader(windowHtml), 'Legacy loader marker is still present.');
   }
 
   if (failures.length > 0) {
+    if (options.json) console.log(JSON.stringify({ checks, ok: false, platform: deploymentPlatform }));
     throw new Error(`Verification failed:\n- ${failures.join('\n- ')}`);
   }
 
+  if (options.json) { console.log(JSON.stringify({ checks, ok: true, platform: deploymentPlatform })); return; }
   console.log('TyporAi deployment verified.');
-  console.log(`Bundle: ${paths.deployedBundlePath}`);
-  console.log(`Styles: ${paths.deployedStylesPath}`);
-  console.log(`Sidecar: ${paths.deployedSidecarPath}`);
-  console.log(`Loader: ${paths.windowHtmlPath}`);
+  for (const entry of checks) console.log(`[PASS] ${entry.name}`);
 }
 
 function assertInstallInputs() {
