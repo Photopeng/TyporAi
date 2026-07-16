@@ -59,6 +59,7 @@ export class SidecarServer {
   private readonly runtimes: RuntimeManager;
   private readonly activeTurns = new Map<string, { providerId: string; runtimeId: string }>();
   private readonly connections = new Map<string, WebSocket>();
+  private readonly fileOperationResults = new Map<string, Promise<unknown>>();
   private readonly approvals = new ApprovalBroker(interaction => this.publishInteraction(interaction));
   private readonly watches = new Map<string, { connection: WebSocket; close(): void }>();
   private settings: PersistentSettingsStore<Record<string, unknown>> | null = null;
@@ -534,15 +535,15 @@ export class SidecarServer {
     };
     switch (request.method) {
       case 'fs.readText': return this.files.readText(readPath());
-      case 'fs.writeText': { const value = writeParams(); return this.files.writeText(value.path, value.data, value.expectedHash); }
-      case 'fs.writeBinary': { const value = writeParams(); return this.files.writeBinary(value.path, value.data, value.expectedHash); }
-      case 'fs.remove': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file remove.'); return this.files.remove(readPath());
+      case 'fs.writeText': { const value = writeParams(); return this.idempotentFileOperation(request.method, params!.idempotencyKey as string, () => this.files!.writeText(value.path, value.data, value.expectedHash)); }
+      case 'fs.writeBinary': { const value = writeParams(); return this.idempotentFileOperation(request.method, params!.idempotencyKey as string, () => this.files!.writeBinary(value.path, value.data, value.expectedHash)); }
+      case 'fs.remove': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file remove.'); return this.idempotentFileOperation(request.method, params.idempotencyKey, () => this.files!.remove(readPath()));
       case 'fs.list': return this.files.list(readPath());
       case 'fs.stat': return this.files.stat(readPath());
       case 'fs.createBackup': return this.files.createBackup(readPath());
       case 'fs.restoreBackup': {
         if (typeof params?.backupId !== 'string' || typeof params?.idempotencyKey !== 'string') throw new Error('Invalid backup restore.');
-        return this.files.restoreBackup(params.backupId, readPath(), typeof params.expectedHash === 'string' ? params.expectedHash : undefined);
+        return this.idempotentFileOperation(request.method, params.idempotencyKey, () => this.files!.restoreBackup(params.backupId as string, readPath(), typeof params.expectedHash === 'string' ? params.expectedHash : undefined));
       }
       case 'fs.rename': {
         if (typeof params?.from !== 'string' || typeof params?.to !== 'string' || typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file rename.');
@@ -551,6 +552,16 @@ export class SidecarServer {
       case 'fs.createDirectory': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid directory create.'); return this.files.createDirectory(readPath());
       default: throw new Error('Unsupported file operation.');
     }
+  }
+
+  private idempotentFileOperation(method: string, key: string, operation: () => Promise<unknown>): Promise<unknown> {
+    const id = `${method}:${key}`;
+    const existing = this.fileOperationResults.get(id);
+    if (existing) return existing;
+    const result = operation();
+    this.fileOperationResults.set(id, result);
+    if (this.fileOperationResults.size > 1_000) this.fileOperationResults.delete(this.fileOperationResults.keys().next().value as string);
+    return result;
   }
 
   private async handleBlobRequest(request: JsonRpcRequest): Promise<unknown> {

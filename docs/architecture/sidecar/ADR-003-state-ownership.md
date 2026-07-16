@@ -9,7 +9,8 @@ Accepted for the migration.
 Sidecar is the only writer for settings, workspace grants, session metadata,
 provider state, native transcripts, and provider configuration. Renderers may
 cache projections only. Persistent writes use revision checks and idempotency
-keys through RPC.
+keys through RPC. Sidecar caches the outcome of each file-operation method/key
+pair so a transport retry does not repeat the write.
 
 ## Consequences
 

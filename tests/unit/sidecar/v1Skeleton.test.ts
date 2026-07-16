@@ -97,6 +97,29 @@ describe('v1 Sidecar skeleton', () => {
     socket.close();
     await server.close();
   });
+
+  it('deduplicates retried workspace writes by method and idempotency key', async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), 'typorai-idempotency-'));
+    const server = new SidecarServer({ dataDirectory: directory, descriptorPath: path.join(directory, 'descriptor.json'), lockPath: path.join(directory, 'lock'), sidecarVersion: '2.0.27', token: 'test-token' });
+    const descriptor = await server.start();
+    const socket = await openSocket(descriptor.port);
+    const messages: Array<Record<string, unknown>> = [];
+    socket.on('message', raw => messages.push(JSON.parse(raw.toString()) as Record<string, unknown>));
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'init', method: 'system.initialize', params: { token: 'test-token', clientId: 'client', rendererVersion: '2.0.27', protocol: { min: 1, max: 1 }, platform: 'windows', lastConnectionId: null } }));
+    await waitFor(() => messages.some(message => message.id === 'init'));
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'grant', method: 'workspace.grant', params: { root: directory } }));
+    await waitFor(() => messages.some(message => message.id === 'grant'));
+    const params = { path: 'retry.md', idempotencyKey: 'write-1' };
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'first', method: 'fs.writeText', params: { ...params, data: 'first' } }));
+    await waitFor(() => messages.some(message => message.id === 'first'));
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'retry', method: 'fs.writeText', params: { ...params, data: 'second' } }));
+    await waitFor(() => messages.some(message => message.id === 'retry'));
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'read', method: 'fs.readText', params: { path: 'retry.md' } }));
+    await waitFor(() => messages.some(message => message.id === 'read'));
+    expect(messages.find(message => message.id === 'read')).toMatchObject({ result: 'first' });
+    socket.close();
+    await server.close();
+  });
 });
 
 function openSocket(port: number): Promise<WebSocket> { return new Promise((resolve, reject) => { const socket = new WebSocket(`ws://127.0.0.1:${port}/rpc`); socket.once('open', () => resolve(socket)); socket.once('error', reject); }); }
