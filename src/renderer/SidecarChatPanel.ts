@@ -1,4 +1,5 @@
 import { BridgeChatRuntime } from '@/bridge/chat/BridgeChatRuntime';
+import { type BridgeInteraction,BridgeInteractionService } from '@/bridge/chat/BridgeInteractionService';
 import type { WebSocketRpcClient } from '@/bridge/client/WebSocketRpcClient';
 import type { StreamChunk } from '@/core/types';
 
@@ -7,6 +8,7 @@ interface ProviderStatus { readonly providerId: string; readonly status: string;
 /** Shared Browser-only Typora surface for every platform. */
 export class SidecarChatPanel {
   private runtime: BridgeChatRuntime | null = null;
+  private readonly interactions: BridgeInteractionService;
   private readonly messages: HTMLElement;
   private readonly provider: HTMLSelectElement;
   private readonly prompt: HTMLTextAreaElement;
@@ -18,6 +20,8 @@ export class SidecarChatPanel {
     root.replaceChildren();
     root.className = 'typorai-sidecar-panel';
     installPanelStyles();
+    this.interactions = new BridgeInteractionService(client);
+    this.interactions.onRequest(interaction => this.renderInteraction(interaction));
     const masthead = document.createElement('header'); masthead.className = 'typorai-sidecar-panel__masthead';
     masthead.append(label('TyporAi', 'typorai-sidecar-panel__title'));
     this.provider = document.createElement('select'); this.provider.setAttribute('aria-label', 'Provider'); masthead.append(this.provider);
@@ -55,6 +59,23 @@ export class SidecarChatPanel {
   }
 
   private async stop(): Promise<void> { await this.runtime?.cancel(); }
+  private renderInteraction(interaction: BridgeInteraction): void {
+    const card = document.createElement('section'); card.className = 'typorai-sidecar-panel__interaction';
+    const description = typeof interaction.payload.description === 'string' ? interaction.payload.description : 'Provider interaction requested.';
+    card.append(label(description, 'typorai-sidecar-panel__interaction-description'));
+    const resolve = async (result: unknown): Promise<void> => {
+      card.querySelectorAll('button,textarea').forEach(element => { (element as HTMLButtonElement | HTMLTextAreaElement).disabled = true; });
+      try { await this.interactions.resolve(interaction, result); card.remove(); }
+      catch { card.querySelectorAll('button,textarea').forEach(element => { (element as HTMLButtonElement | HTMLTextAreaElement).disabled = false; }); }
+    };
+    if (interaction.kind === 'userInput') {
+      const input = document.createElement('textarea'); input.rows = 2; input.placeholder = 'Type your response';
+      card.append(input, button('Submit', () => { void resolve({ answers: input.value }); }));
+    } else {
+      card.append(button('Allow', () => { void resolve({ approved: true }); }), button('Deny', () => { void resolve({ approved: false }); }));
+    }
+    this.messages.append(card); card.scrollIntoView({ block: 'end' });
+  }
   private async refreshWorkspace(): Promise<void> {
     const result = await this.client.request<{ root: string | null }>('workspace.getCurrent');
     this.workspace.textContent = result.root ? `Workspace: ${basename(result.root)}` : 'Grant workspace';
