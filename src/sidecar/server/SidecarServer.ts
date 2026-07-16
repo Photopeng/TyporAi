@@ -537,6 +537,11 @@ export class SidecarServer {
       case 'fs.remove': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file remove.'); return this.files.remove(readPath());
       case 'fs.list': return this.files.list(readPath());
       case 'fs.stat': return this.files.stat(readPath());
+      case 'fs.createBackup': return this.files.createBackup(readPath());
+      case 'fs.restoreBackup': {
+        if (typeof params?.backupId !== 'string' || typeof params?.idempotencyKey !== 'string') throw new Error('Invalid backup restore.');
+        return this.files.restoreBackup(params.backupId, readPath(), typeof params.expectedHash === 'string' ? params.expectedHash : undefined);
+      }
       case 'fs.rename': {
         if (typeof params?.from !== 'string' || typeof params?.to !== 'string' || typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file rename.');
         return this.files.rename(params.from, params.to);

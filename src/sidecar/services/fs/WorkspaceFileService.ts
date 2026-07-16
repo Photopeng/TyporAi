@@ -44,6 +44,27 @@ export class WorkspaceFileService {
     await rename(await this.allowedPath(from), destination);
   }
 
+  async createBackup(inputPath: string): Promise<{ readonly backupId: string; readonly sourcePath: string }> {
+    const sourcePath = await this.allowedPath(inputPath);
+    const root = this.getWorkspaceRoot();
+    if (!root) throw new WorkspaceNotGrantedError('No workspace has been granted.');
+    const backupId = randomUUID();
+    const backupPath = path.join(root, '.typorai', 'sidecar-backups', backupId);
+    await mkdir(path.dirname(backupPath), { recursive: true });
+    await writeFile(backupPath, await readFile(sourcePath));
+    return { backupId, sourcePath };
+  }
+
+  async restoreBackup(backupId: string, inputPath: string, expectedHash?: string): Promise<void> {
+    if (!/^[a-f0-9-]{36}$/i.test(backupId)) throw new FileConflictError('Invalid backup id.');
+    const target = await this.allowedPath(inputPath, true);
+    await this.assertExpectedHash(target, expectedHash);
+    const root = this.getWorkspaceRoot();
+    if (!root) throw new WorkspaceNotGrantedError('No workspace has been granted.');
+    const backupPath = path.join(root, '.typorai', 'sidecar-backups', backupId);
+    await writeFile(target, await readFile(backupPath));
+  }
+
   async list(inputPath: string): Promise<readonly DirectoryEntry[]> {
     const root = await this.allowedPath(inputPath);
     const entries = await readdir(root, { withFileTypes: true });
