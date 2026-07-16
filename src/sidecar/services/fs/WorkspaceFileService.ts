@@ -62,6 +62,7 @@ export class WorkspaceFileService {
     const root = this.getWorkspaceRoot();
     if (!root) throw new WorkspaceNotGrantedError('No workspace has been granted.');
     const backupPath = path.join(root, '.typorai', 'sidecar-backups', backupId);
+    await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, await readFile(backupPath));
   }
 
