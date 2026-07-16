@@ -7,6 +7,7 @@ import path from 'node:path';
 import { type WebSocket,WebSocketServer } from 'ws';
 
 import type { AppTabManagerState } from '@/core/providers/types';
+import { testMcpServer } from '@/core/mcp/McpTester';
 import type { Conversation, StreamChunk } from '@/core/types';
 import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope } from '@/protocol';
 
@@ -420,6 +421,13 @@ export class SidecarServer {
           const servers = (request.params as { servers?: unknown } | undefined)?.servers;
           if (!Array.isArray(servers) || !this.mcp) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid MCP configuration.' } }));
           void this.mcp.save(servers as []).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'MCP persistence failed.' } })));
+          return;
+        }
+        if (request.method === 'mcp.test') {
+          const name = (request.params as { name?: unknown } | undefined)?.name;
+          const server = typeof name === 'string' ? this.mcp?.list().find(value => value.name === name) : null;
+          if (!server) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Saved MCP server not found.' } }));
+          void testMcpServer(server).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'MCP test failed.' } })));
           return;
         }
         connection.send(JSON.stringify(this.router.routeAuthenticated(request as JsonRpcRequest)));

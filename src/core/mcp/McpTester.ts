@@ -266,7 +266,7 @@ export async function testMcpServer(server: ManagedMcpServer): Promise<McpTestRe
 
   const client = new Client({ name: 'typorai-tester', version: '1.0.0' });
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
     await client.connect(transport, { signal: controller.signal });
@@ -300,7 +300,7 @@ export async function testMcpServer(server: ManagedMcpServer): Promise<McpTestRe
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   } finally {
-    window.clearTimeout(timeout);
+    clearTimeout(timeout);
     try {
       await client.close();
     } catch {
