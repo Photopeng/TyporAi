@@ -260,6 +260,15 @@ export class SidecarServer {
           } catch (error) { connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: error instanceof SessionRevisionConflictError ? 'SESSION_REVISION_CONFLICT' : 'INTERNAL_ERROR', message: 'Session update rejected.' } })); }
           return;
         }
+        if (request.method === 'session.fork') {
+          const params = request.params as { conversation?: unknown; expectedSourceRevision?: unknown; idempotencyKey?: unknown; sourceId?: unknown } | undefined;
+          if (!this.sessions || typeof params?.sourceId !== 'string' || !Number.isInteger(params.expectedSourceRevision) || typeof params.idempotencyKey !== 'string' || !params.conversation || typeof params.conversation !== 'object') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid session fork.' } }));
+          try {
+            const result = this.sessions.store.fork(params.sourceId, params.conversation as Conversation, params.expectedSourceRevision as number, params.idempotencyKey);
+            void this.sessions.persist().then(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Session persistence failed.' } })));
+          } catch (error) { connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: error instanceof SessionNotFoundError ? 'SESSION_NOT_FOUND' : error instanceof SessionRevisionConflictError ? 'SESSION_REVISION_CONFLICT' : 'INTERNAL_ERROR', message: 'Session fork rejected.' } })); }
+          return;
+        }
         if (request.method === 'session.delete') {
           const params = request.params as { expectedRevision?: unknown; id?: unknown; idempotencyKey?: unknown } | undefined;
           if (!this.sessions || typeof params?.id !== 'string' || !Number.isInteger(params.expectedRevision) || typeof params.idempotencyKey !== 'string') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid session delete.' } }));

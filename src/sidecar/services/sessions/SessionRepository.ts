@@ -49,6 +49,19 @@ export class SessionRepository {
     return clone(updated);
   }
 
+  fork(sourceId: string, fork: Conversation, expectedSourceRevision: number, idempotencyKey: string): VersionedConversation {
+    const existing = this.idempotentResults.get(idempotencyKey);
+    if (existing) return clone(existing);
+    const source = this.require(sourceId);
+    if (source.revision !== expectedSourceRevision) throw new SessionRevisionConflictError(sourceId);
+    if (this.sessions.has(fork.id)) throw new Error(`Session already exists: ${fork.id}`);
+    const conversation = { ...structuredClone(source.conversation), ...structuredClone(fork), id: fork.id };
+    const created = { revision: 1, conversation };
+    this.sessions.set(conversation.id, created);
+    this.idempotentResults.set(idempotencyKey, created);
+    return clone(created);
+  }
+
   delete(id: string, expectedRevision: number, idempotencyKey?: string): void {
     if (idempotencyKey && this.idempotentDeletes.has(idempotencyKey)) return;
     const current = this.require(id);

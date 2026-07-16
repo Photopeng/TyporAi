@@ -26,4 +26,12 @@ describe('SessionRepository', () => {
     const second = await PersistentSessionRepository.open(file);
     expect(second.store.get('session-1')).toMatchObject({ revision: 1, conversation: { title: 'Test' } });
   });
+
+  it('forks a source session through a revision-guarded Sidecar write', () => {
+    const sessions = new SessionRepository();
+    sessions.create(conversation, 'create-source');
+    const fork = sessions.fork('session-1', { ...conversation, id: 'session-fork', title: 'Forked conversation' }, 1, 'fork-1');
+    expect(fork).toMatchObject({ revision: 1, conversation: { id: 'session-fork', title: 'Forked conversation' } });
+    expect(sessions.get('session-1')).toMatchObject({ conversation: { id: 'session-1' } });
+  });
 });
