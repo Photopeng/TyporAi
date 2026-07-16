@@ -24,6 +24,7 @@ import { FileConflictError,PathOutsideWorkspaceError,WorkspaceFileService,Worksp
 import { ManagedProcessRegistry } from '../services/process/ManagedProcessRegistry';
 import { SidecarProcessTransport } from '../services/process/SidecarProcessTransport';
 import { type ProbedProviderId,ProviderProbeService } from '../services/providers/ProviderProbeService';
+import { WorkspaceDiscoveryService } from '../services/providers/WorkspaceDiscoveryService';
 import { PersistentSessionRepository } from '../services/sessions/PersistentSessionRepository';
 import { PersistentTabLayoutStore } from '../services/sessions/PersistentTabLayoutStore';
 import { SessionNotFoundError,SessionRevisionConflictError } from '../services/sessions/SessionRepository';
@@ -65,6 +66,7 @@ export class SidecarServer {
   private files: WorkspaceFileService | null = null;
   private readonly processes = new ManagedProcessRegistry();
   private readonly providerProbe = new ProviderProbeService();
+  private readonly discovery = new WorkspaceDiscoveryService(() => this.workspace?.current ?? null);
   readonly processTransport = new SidecarProcessTransport(this.processes);
   private blobs: BlobStore | null = null;
   private readonly webSocket = new WebSocketServer({ maxPayload: 1_048_576, noServer: true });
@@ -390,6 +392,20 @@ export class SidecarServer {
           const providerId = (request.params as { providerId?: unknown } | undefined)?.providerId;
           if (providerId !== 'claude' && providerId !== 'codex' && providerId !== 'opencode' && providerId !== 'typora') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Unknown provider.' } }));
           void this.providerProbe.probe(providerId as ProbedProviderId).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result })));
+          return;
+        }
+        if (request.method === 'skills.list') {
+          void this.discovery.listSkills().then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'WORKSPACE_NOT_GRANTED', message: 'Skills are unavailable until a workspace is granted.' } })));
+          return;
+        }
+        if (request.method === 'skills.read') {
+          const id = (request.params as { id?: unknown } | undefined)?.id;
+          if (typeof id !== 'string') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Skill id is required.' } }));
+          void this.discovery.readSkill(id).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Skill not found.' } })));
+          return;
+        }
+        if (request.method === 'agents.list') {
+          void this.discovery.listAgents().then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'WORKSPACE_NOT_GRANTED', message: 'Agents are unavailable until a workspace is granted.' } })));
           return;
         }
         connection.send(JSON.stringify(this.router.routeAuthenticated(request as JsonRpcRequest)));
