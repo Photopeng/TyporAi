@@ -563,7 +563,13 @@ export class SidecarServer {
         if (!blobId || typeof params?.data !== 'string') throw new Error('Invalid blob chunk.');
         this.blobs.chunk(blobId, params.data);
         return {};
-      case 'blob.commit': if (!blobId) throw new Error('Invalid blob commit.'); return this.blobs.commit(blobId);
+      case 'blob.commit': {
+        if (!blobId) throw new Error('Invalid blob commit.');
+        const committed = await this.blobs.commit(blobId);
+        // Temporary paths are Sidecar-owned implementation details. Renderer
+        // receives only an opaque blob id; providers resolve the path locally.
+        return { blobId, mimeType: committed.mimeType, size: committed.size };
+      }
       case 'blob.abort': if (!blobId) throw new Error('Invalid blob abort.'); await this.blobs.abort(blobId); return {};
       default: throw new Error('Unsupported blob operation.');
     }

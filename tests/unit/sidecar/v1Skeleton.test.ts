@@ -72,6 +72,28 @@ describe('v1 Sidecar skeleton', () => {
     socket.close();
     await server.close();
   });
+
+  it('keeps Sidecar blob staging paths out of authenticated RPC responses', async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), 'typorai-blob-rpc-'));
+    const server = new SidecarServer({ dataDirectory: directory, descriptorPath: path.join(directory, 'descriptor.json'), lockPath: path.join(directory, 'lock'), sidecarVersion: '2.0.27', token: 'test-token' });
+    const descriptor = await server.start();
+    const socket = await openSocket(descriptor.port);
+    const messages: Array<Record<string, unknown>> = [];
+    socket.on('message', raw => messages.push(JSON.parse(raw.toString()) as Record<string, unknown>));
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'init', method: 'system.initialize', params: { token: 'test-token', clientId: 'client', rendererVersion: '2.0.27', protocol: { min: 1, max: 1 }, platform: 'windows', lastConnectionId: null } }));
+    await waitFor(() => messages.some(message => message.id === 'init'));
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'begin', method: 'blob.begin', params: { bytes: 2, mimeType: 'image/png' } }));
+    await waitFor(() => messages.some(message => message.id === 'begin'));
+    const blobId = ((messages.find(message => message.id === 'begin')?.result as { blobId: string }).blobId);
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'chunk', method: 'blob.chunk', params: { blobId, data: 'aGk=' } }));
+    await waitFor(() => messages.some(message => message.id === 'chunk'));
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'commit', method: 'blob.commit', params: { blobId } }));
+    await waitFor(() => messages.some(message => message.id === 'commit'));
+    expect(messages.find(message => message.id === 'commit')).toMatchObject({ result: { blobId, mimeType: 'image/png', size: 2 } });
+    expect(JSON.stringify(messages.find(message => message.id === 'commit'))).not.toContain(directory);
+    socket.close();
+    await server.close();
+  });
 });
 
 function openSocket(port: number): Promise<WebSocket> { return new Promise((resolve, reject) => { const socket = new WebSocket(`ws://127.0.0.1:${port}/rpc`); socket.once('open', () => resolve(socket)); socket.once('error', reject); }); }
