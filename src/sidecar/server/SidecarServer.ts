@@ -11,6 +11,7 @@ import type { Conversation, StreamChunk } from '@/core/types';
 import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope } from '@/protocol';
 
 import { SingleInstanceLock } from '../lifecycle/SingleInstanceLock';
+import { ClaudeSidecarRuntime } from '../providers/claude/ClaudeSidecarRuntime';
 import { CodexSidecarRuntime } from '../providers/codex/CodexSidecarRuntime';
 import { FakeChatService } from '../providers/fake/FakeChatService';
 import { SidecarProviderRegistry,type SidecarProviderRuntime } from '../providers/registry';
@@ -69,6 +70,15 @@ export class SidecarServer {
     this.lock = new SingleInstanceLock(options.lockPath);
     this.router = new RpcRouter({ sidecarVersion: options.sidecarVersion, token: options.token });
     this.providers.register('fake', () => new FakeChatService());
+    this.providers.register('claude', () => new ClaudeSidecarRuntime({
+      getSettings: () => this.settings?.getSnapshot().value ?? {},
+      getWorkspacePath: () => this.workspace?.current ?? null,
+      processes: this.processTransport,
+      requestApproval: async (toolName, input, description) => {
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, toolName } });
+        return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
+      },
+    }));
     this.providers.register('codex', () => new CodexSidecarRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
