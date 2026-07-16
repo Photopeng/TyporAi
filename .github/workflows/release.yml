@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build:all
 
       - name: Verify release version
         run: |
@@ -38,15 +38,15 @@ jobs:
           test "$GITHUB_REF_NAME" = "v$VERSION"
 
       - name: Package release archive
-        run: zip -j "TyporAi-${GITHUB_REF_NAME}.zip" typora-typorai.js typorai-macos-renderer.js typorai-sidecar.cjs styles.css manifest.json
+        run: zip -j "TyporAi-${GITHUB_REF_NAME}.zip" typora-typorai.renderer.js typora-typorai.js typorai-sidecar-v1.cjs styles.css manifest.json
 
       - name: Generate artifact attestations
         uses: actions/attest@v4
         with:
           subject-path: |
+            typora-typorai.renderer.js
             typora-typorai.js
-            typorai-macos-renderer.js
-            typorai-sidecar.cjs
+            typorai-sidecar-v1.cjs
             manifest.json
             styles.css
             TyporAi-${{ github.ref_name }}.zip
@@ -78,8 +78,8 @@ jobs:
             ${{ steps.changelog.outputs.notes }}
           files: |
             TyporAi-${{ github.ref_name }}.zip
+            typora-typorai.renderer.js
             typora-typorai.js
-            typorai-macos-renderer.js
-            typorai-sidecar.cjs
+            typorai-sidecar-v1.cjs
             manifest.json
             styles.css

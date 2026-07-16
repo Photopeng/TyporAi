@@ -1,0 +1,7 @@
+{"type":"message.part.updated","properties":{"part":{"type":"text","text":"sanitized response"}}}
+{"type":"permission.updated","properties":{"permission":{"id":"approval-redacted","type":"bash","status":"pending"}}}
+{"type":"session.updated","properties":{"session":{"id":"session-redacted","mode":"plan"}}}
+{"type":"tool.execute.after","properties":{"tool":{"name":"task","status":"completed","subagent_type":"general"}}}
+{"type":"message.part.updated","properties":{"part":{"type":"image","url":"<workspace>/image.png"}}}
+{"type":"session.compacted","properties":{"sessionID":"session-redacted"}}
+{"type":"session.error","properties":{"error":{"message":"sanitized provider error"}}}

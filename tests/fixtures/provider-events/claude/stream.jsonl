@@ -1,0 +1,4 @@
+{"type":"stream_event","event":{"type":"content_block_delta","delta":{"type":"text_delta","text":"sanitized response"}}}
+{"type":"assistant","message":{"content":[{"type":"tool_use","id":"tool-redacted","name":"Read","input":{"file_path":"<workspace>/note.md"}}]}}
+{"type":"system","subtype":"init","session_id":"session-redacted"}
+{"type":"result","subtype":"error","is_error":true,"result":"sanitized provider error"}

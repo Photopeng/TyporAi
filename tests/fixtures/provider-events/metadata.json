@@ -1,0 +1,9 @@
+{
+  "format": "jsonl",
+  "redaction": "tokens, API keys, user home paths, prompts, document contents, and workspace paths are replaced with neutral values",
+  "providers": {
+    "claude": ["text", "tool", "approval", "subagent", "interrupt", "error", "restart"],
+    "codex": ["text", "tool", "approval", "plan", "ask-user", "subagent", "image", "compact", "interrupt", "error", "restart"],
+    "opencode": ["text", "tool", "approval", "plan", "ask-user", "subagent", "image", "compact", "interrupt", "error", "restart"]
+  }
+}

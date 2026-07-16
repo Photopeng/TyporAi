@@ -15,6 +15,8 @@ const repoRoot = process.cwd();
 
 describe('deploy-typora script', () => {
   let createdBundle = false;
+  let createdRenderer = false;
+  let createdSidecar = false;
   let createdStyles = false;
   let tempRoot: string;
   let installDir: string;
@@ -33,7 +35,8 @@ describe('deploy-typora script', () => {
 
     mkdirSync(path.dirname(windowHtmlPath), { recursive: true });
     writeFileSync(windowHtmlPath, '<html><head></head><body><main>Typora</main></body></html>', 'utf8');
-    ensureBuildInput('typora-typorai.js', 'console.log("bundle");');
+    ensureBuildInput('typora-typorai.renderer.js', 'console.log("renderer");');
+    ensureBuildInput('typorai-sidecar-v1.cjs', 'console.log("sidecar");');
     ensureBuildInput('styles.css', 'body { color: inherit; }');
   });
 
@@ -42,6 +45,14 @@ describe('deploy-typora script', () => {
     if (createdBundle) {
       rmSync(path.join(repoRoot, 'typora-typorai.js'), { force: true });
       createdBundle = false;
+    }
+    if (createdRenderer) {
+      rmSync(path.join(repoRoot, 'typora-typorai.renderer.js'), { force: true });
+      createdRenderer = false;
+    }
+    if (createdSidecar) {
+      rmSync(path.join(repoRoot, 'typorai-sidecar-v1.cjs'), { force: true });
+      createdSidecar = false;
     }
     if (createdStyles) {
       rmSync(path.join(repoRoot, 'styles.css'), { force: true });
@@ -53,7 +64,8 @@ describe('deploy-typora script', () => {
     runDeploy('install');
     runDeploy('verify');
 
-    expect(existsSync(path.join(pluginDir, 'typora-typorai.js'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'typora-typorai.renderer.js'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'typorai-sidecar-v1.cjs'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
     expect(readWindowHtml()).toContain(markerStart);
 
@@ -62,7 +74,7 @@ describe('deploy-typora script', () => {
 
     runDeploy('uninstall');
     expect(readWindowHtml()).not.toContain(markerStart);
-    expect(existsSync(path.join(pluginDir, 'typora-typorai.js'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'typora-typorai.renderer.js'))).toBe(true);
 
     runDeploy('repair');
     runDeploy('verify');
@@ -111,11 +123,9 @@ describe('deploy-typora script', () => {
 
     expect(readWindowHtml()).toContain(markerStart);
     expect(readWindowHtml()).toContain('abnerworks.Typora');
-    expect(readWindowHtml()).toContain('typorai-macos-renderer.js');
-    expect(readWindowHtml()).not.toContain('window.reqnode');
-    expect(existsSync(path.join(pluginDir, 'typora-typorai.js'))).toBe(true);
-    expect(existsSync(path.join(pluginDir, 'typorai-macos-renderer.js'))).toBe(true);
-    expect(existsSync(path.join(pluginDir, 'typorai-sidecar.cjs'))).toBe(true);
+    expect(readWindowHtml()).toContain('typora-typorai.renderer.js');
+    expect(existsSync(path.join(pluginDir, 'typora-typorai.renderer.js'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'typorai-sidecar-v1.cjs'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
     expect(readFileSync(path.join(tempRoot, 'Library', 'LaunchAgents', 'com.photopeng.typorai.sidecar.plist'), 'utf8')).toContain('<key>PATH</key>');
     runDeployWithEnv({
@@ -148,6 +158,8 @@ describe('deploy-typora script', () => {
     if (existsSync(filePath)) return;
     writeFileSync(filePath, contents, 'utf8');
     if (name === 'typora-typorai.js') createdBundle = true;
+    if (name === 'typora-typorai.renderer.js') createdRenderer = true;
+    if (name === 'typorai-sidecar-v1.cjs') createdSidecar = true;
     if (name === 'styles.css') createdStyles = true;
   }
 

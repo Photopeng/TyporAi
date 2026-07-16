@@ -1,0 +1,7 @@
+{"method":"item/agentMessage/delta","params":{"threadId":"thread-redacted","turnId":"turn-redacted","itemId":"item-text","delta":"sanitized response"}}
+{"method":"turn/plan/updated","params":{"threadId":"thread-redacted","turnId":"turn-redacted","explanation":"sanitized plan","plan":[{"step":"Inspect","status":"in_progress"}]}}
+{"method":"item/commandExecution/requestApproval","params":{"threadId":"thread-redacted","turnId":"turn-redacted","itemId":"item-tool","command":"echo <redacted>","cwd":"<workspace>"}}
+{"method":"item/tool/requestUserInput","params":{"threadId":"thread-redacted","turnId":"turn-redacted","itemId":"item-question","questions":[{"id":"choice","header":"Choice","question":"Continue?","options":[{"label":"Yes","description":"Continue"}],"isOther":false,"isSecret":false}]}}
+{"method":"item/started","params":{"threadId":"thread-redacted","turnId":"turn-redacted","item":{"type":"imageView","id":"item-image","path":"<workspace>/image.png"}}}
+{"method":"item/started","params":{"threadId":"thread-redacted","turnId":"turn-redacted","item":{"type":"collabAgentToolCall","id":"item-agent","tool":"spawn_agent","status":"inProgress"}}}
+{"method":"error","params":{"threadId":"thread-redacted","turnId":"turn-redacted","error":{"message":"sanitized provider error"},"willRetry":false}}
