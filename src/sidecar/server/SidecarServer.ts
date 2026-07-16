@@ -20,6 +20,7 @@ import { BlobNotFoundError,BlobPayloadTooLargeError,BlobStore } from '../service
 import { FileConflictError,PathOutsideWorkspaceError,WorkspaceFileService,WorkspaceNotGrantedError } from '../services/fs/WorkspaceFileService';
 import { ManagedProcessRegistry } from '../services/process/ManagedProcessRegistry';
 import { SidecarProcessTransport } from '../services/process/SidecarProcessTransport';
+import { type ProbedProviderId,ProviderProbeService } from '../services/providers/ProviderProbeService';
 import { PersistentSessionRepository } from '../services/sessions/PersistentSessionRepository';
 import { PersistentTabLayoutStore } from '../services/sessions/PersistentTabLayoutStore';
 import { SessionNotFoundError,SessionRevisionConflictError } from '../services/sessions/SessionRepository';
@@ -58,6 +59,7 @@ export class SidecarServer {
   private workspace: PersistentWorkspaceGrantStore | null = null;
   private files: WorkspaceFileService | null = null;
   private readonly processes = new ManagedProcessRegistry();
+  private readonly providerProbe = new ProviderProbeService();
   readonly processTransport = new SidecarProcessTransport(this.processes);
   private blobs: BlobStore | null = null;
   private readonly webSocket = new WebSocketServer({ maxPayload: 1_048_576, noServer: true });
@@ -351,7 +353,13 @@ export class SidecarServer {
           return;
         }
         if (request.method === 'provider.list') {
-          connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: this.providers.list().map(providerId => ({ providerId, status: 'available' })) }));
+          void this.providerProbe.list().then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: result.map(provider => ({ ...provider, status: provider.available ? 'available' : 'unavailable' })) })));
+          return;
+        }
+        if (request.method === 'provider.probeCli') {
+          const providerId = (request.params as { providerId?: unknown } | undefined)?.providerId;
+          if (providerId !== 'claude' && providerId !== 'codex' && providerId !== 'opencode' && providerId !== 'typora') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Unknown provider.' } }));
+          void this.providerProbe.probe(providerId as ProbedProviderId).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result })));
           return;
         }
         connection.send(JSON.stringify(this.router.routeAuthenticated(request as JsonRpcRequest)));
