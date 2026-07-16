@@ -8,7 +8,7 @@ const DEFAULT_TIMEOUT_MS = 30_000;
 interface PendingRequest {
   resolve: (result: unknown) => void;
   reject: (error: Error) => void;
-  timer: number | null;
+  timer: ReturnType<typeof setTimeout> | null;
 }
 
 type NotificationHandler = (params: unknown) => void;
@@ -38,7 +38,7 @@ export class CodexRpcTransport {
 
     return new Promise<T>((resolve, reject) => {
       const timer = timeoutMs > 0
-        ? window.setTimeout(() => {
+        ? globalThis.setTimeout(() => {
           this.pending.delete(id);
           reject(new Error(`Request timeout: ${method} (${timeoutMs}ms)`));
         }, timeoutMs)
@@ -121,7 +121,7 @@ export class CodexRpcTransport {
     if (!pending) return;
 
     this.pending.delete(id);
-    if (pending.timer) window.clearTimeout(pending.timer);
+    if (pending.timer) globalThis.clearTimeout(pending.timer);
 
     if (msg.error) {
       const err = msg.error as JsonRpcError;
@@ -163,7 +163,7 @@ export class CodexRpcTransport {
 
   private rejectAllPending(error: Error): void {
     for (const [, pending] of this.pending) {
-      if (pending.timer) window.clearTimeout(pending.timer);
+      if (pending.timer) globalThis.clearTimeout(pending.timer);
       pending.reject(error);
     }
     this.pending.clear();

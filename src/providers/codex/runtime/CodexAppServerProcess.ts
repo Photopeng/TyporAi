@@ -95,16 +95,16 @@ export class CodexAppServerProcess {
     if (!this.proc || !this.alive) return;
 
     return new Promise<void>((resolve) => {
-      const killTimer: { value?: number } = {};
+      const killTimer: { value?: ReturnType<typeof setTimeout> } = {};
       const onExit = () => {
-        if (killTimer.value !== undefined) window.clearTimeout(killTimer.value);
+        if (killTimer.value !== undefined) globalThis.clearTimeout(killTimer.value);
         resolve();
       };
 
       this.proc!.once('exit', onExit);
       void this.killProc('SIGTERM');
 
-      killTimer.value = window.setTimeout(() => {
+      killTimer.value = globalThis.setTimeout(() => {
         if (this.alive) {
           void this.killProc('SIGKILL');
         }
