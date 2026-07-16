@@ -14,6 +14,7 @@ import { SingleInstanceLock } from '../lifecycle/SingleInstanceLock';
 import { ClaudeSidecarRuntime } from '../providers/claude/ClaudeSidecarRuntime';
 import { CodexSidecarRuntime } from '../providers/codex/CodexSidecarRuntime';
 import { FakeChatService } from '../providers/fake/FakeChatService';
+import { OpencodeSidecarRuntime } from '../providers/opencode/OpencodeSidecarRuntime';
 import { SidecarProviderRegistry,type SidecarProviderRuntime } from '../providers/registry';
 import { RuntimeManager } from '../providers/RuntimeManager';
 import { TyporaApiRuntime } from '../providers/typora/TyporaApiRuntime';
@@ -83,6 +84,15 @@ export class SidecarServer {
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
       processes: this.processTransport,
+    }));
+    this.providers.register('opencode', () => new OpencodeSidecarRuntime({
+      getSettings: () => this.settings?.getSnapshot().value ?? {},
+      getWorkspacePath: () => this.workspace?.current ?? null,
+      processes: this.processTransport,
+      requestApproval: async (toolName, input, description) => {
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, toolName } });
+        return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
+      },
     }));
     this.providers.register('typora', () => new TyporaApiRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},

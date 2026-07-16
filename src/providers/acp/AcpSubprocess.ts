@@ -140,11 +140,11 @@ export class AcpSubprocess {
         cleanup();
         resolve();
       };
-      const killTimer = window.setTimeout(() => {
+      const killTimer = globalThis.setTimeout(() => {
         this.killProc(proc, 'SIGKILL');
       }, SIGKILL_TIMEOUT_MS);
       const cleanup = () => {
-        window.clearTimeout(killTimer);
+        globalThis.clearTimeout(killTimer);
         (proc as unknown as { off?: (event: 'exit', listener: () => void) => void }).off?.('exit', onClose);
       };
 
