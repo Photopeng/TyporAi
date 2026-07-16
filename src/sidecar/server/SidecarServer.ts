@@ -7,13 +7,14 @@ import path from 'node:path';
 import { type WebSocket,WebSocketServer } from 'ws';
 
 import type { AppTabManagerState } from '@/core/providers/types';
-import type { Conversation } from '@/core/types';
-import { type JsonRpcRequest,parseJsonRpcMessage } from '@/protocol';
+import type { Conversation, StreamChunk } from '@/core/types';
+import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope } from '@/protocol';
 
 import { SingleInstanceLock } from '../lifecycle/SingleInstanceLock';
 import { FakeChatService } from '../providers/fake/FakeChatService';
-import { SidecarProviderRegistry } from '../providers/registry';
+import { SidecarProviderRegistry,type SidecarProviderRuntime } from '../providers/registry';
 import { RuntimeManager } from '../providers/RuntimeManager';
+import { TyporaApiRuntime } from '../providers/typora/TyporaApiRuntime';
 import { ApprovalBroker, type PendingInteraction } from '../services/approval/ApprovalBroker';
 import { BlobNotFoundError,BlobPayloadTooLargeError,BlobStore } from '../services/blobs/BlobStore';
 import { FileConflictError,PathOutsideWorkspaceError,WorkspaceFileService,WorkspaceNotGrantedError } from '../services/fs/WorkspaceFileService';
@@ -34,6 +35,11 @@ export interface SidecarServerOptions {
   readonly lockPath: string;
   readonly sidecarVersion: string;
   readonly token: string;
+}
+
+interface SidecarChatProviderRuntime extends SidecarProviderRuntime {
+  cancelTurn(turnId: string): void;
+  startTurn(connectionId: string, turnId: string, prompt: string, publish: (event: RpcEventEnvelope<StreamChunk>) => void): Promise<void>;
 }
 
 export class SidecarServer {
@@ -60,6 +66,14 @@ export class SidecarServer {
     this.lock = new SingleInstanceLock(options.lockPath);
     this.router = new RpcRouter({ sidecarVersion: options.sidecarVersion, token: options.token });
     this.providers.register('fake', () => new FakeChatService());
+    this.providers.register('typora', () => new TyporaApiRuntime({
+      getSettings: () => this.settings?.getSnapshot().value ?? {},
+      getWorkspacePath: () => this.workspace?.current ?? null,
+      requestApproval: async (toolName, input, description) => {
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, toolName } });
+        return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
+      },
+    }));
     this.runtimes = new RuntimeManager(this.providers);
     this.http.on('upgrade', (request, socket, head) => {
       if (request.url !== '/rpc') return socket.destroy();
@@ -280,14 +294,14 @@ export class SidecarServer {
           const runtimeId = typeof params.runtimeId === 'string' && params.runtimeId ? params.runtimeId : connectionId;
           const turnId = params.turnId;
           const blobIds = Array.isArray(params.blobIds) && params.blobIds.every(value => typeof value === 'string') ? params.blobIds : [];
-          let fakeChat: FakeChatService;
-          try { fakeChat = this.runtimes.getOrCreate<FakeChatService>(providerId, runtimeId); } catch {
+          let chatRuntime: SidecarChatProviderRuntime;
+          try { chatRuntime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(providerId, runtimeId); } catch {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: 'Provider runtime is unavailable.' } }));
             return;
           }
           this.activeTurns.set(turnId, { providerId, runtimeId });
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { streamId: turnId } }));
-          void fakeChat.startTurn(connectionId, turnId, params.prompt, event => {
+          void chatRuntime.startTurn(connectionId, turnId, params.prompt, event => {
             if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: event }));
           }).finally(() => {
             this.activeTurns.delete(turnId);
@@ -323,7 +337,7 @@ export class SidecarServer {
           if (typeof turnId !== 'string' || !turnId) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'TURN_NOT_FOUND', message: 'Invalid turn id.' } }));
           const active = this.activeTurns.get(turnId);
           if (!active) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'TURN_NOT_FOUND', message: 'Turn not found.' } }));
-          this.runtimes.getOrCreate<FakeChatService>(active.providerId, active.runtimeId).cancelTurn(turnId);
+          this.runtimes.getOrCreate<SidecarChatProviderRuntime>(active.providerId, active.runtimeId).cancelTurn(turnId);
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }));
           return;
         }
