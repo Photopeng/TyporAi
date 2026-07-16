@@ -25,6 +25,7 @@ import { ManagedProcessRegistry } from '../services/process/ManagedProcessRegist
 import { SidecarProcessTransport } from '../services/process/SidecarProcessTransport';
 import { type ProbedProviderId,ProviderProbeService } from '../services/providers/ProviderProbeService';
 import { WorkspaceDiscoveryService } from '../services/providers/WorkspaceDiscoveryService';
+import { PersistentMcpStore } from '../services/providers/PersistentMcpStore';
 import { PersistentSessionRepository } from '../services/sessions/PersistentSessionRepository';
 import { PersistentTabLayoutStore } from '../services/sessions/PersistentTabLayoutStore';
 import { SessionNotFoundError,SessionRevisionConflictError } from '../services/sessions/SessionRepository';
@@ -67,6 +68,7 @@ export class SidecarServer {
   private readonly processes = new ManagedProcessRegistry();
   private readonly providerProbe = new ProviderProbeService();
   private readonly discovery = new WorkspaceDiscoveryService(() => this.workspace?.current ?? null);
+  private mcp: PersistentMcpStore | null = null;
   readonly processTransport = new SidecarProcessTransport(this.processes);
   private blobs: BlobStore | null = null;
   private readonly webSocket = new WebSocketServer({ maxPayload: 1_048_576, noServer: true });
@@ -122,6 +124,7 @@ export class SidecarServer {
       this.workspace = await PersistentWorkspaceGrantStore.open(path.join(this.options.dataDirectory, 'workspace-grant.json'));
       this.files = new WorkspaceFileService(() => this.workspace?.current ?? null);
       this.blobs = new BlobStore(path.join(this.options.dataDirectory, 'blobs'));
+      this.mcp = await PersistentMcpStore.open(path.join(this.options.dataDirectory, 'mcp.json'));
       await new Promise<void>((resolve, reject) => {
         this.http.once('error', reject);
         this.http.listen({ host: '127.0.0.1', port: 0 }, () => {
@@ -406,6 +409,16 @@ export class SidecarServer {
         }
         if (request.method === 'agents.list') {
           void this.discovery.listAgents().then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'WORKSPACE_NOT_GRANTED', message: 'Agents are unavailable until a workspace is granted.' } })));
+          return;
+        }
+        if (request.method === 'mcp.list') {
+          connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: this.mcp?.list() ?? [] }));
+          return;
+        }
+        if (request.method === 'mcp.save') {
+          const servers = (request.params as { servers?: unknown } | undefined)?.servers;
+          if (!Array.isArray(servers) || !this.mcp) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid MCP configuration.' } }));
+          void this.mcp.save(servers as []).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'MCP persistence failed.' } })));
           return;
         }
         connection.send(JSON.stringify(this.router.routeAuthenticated(request as JsonRpcRequest)));
