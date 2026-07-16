@@ -90,6 +90,18 @@ describe('deploy-typora script', () => {
     expect(existsSync(pluginDir)).toBe(false);
   });
 
+  it('installs the Windows legacy rollback loader only when explicitly requested', () => {
+    runDeployWithEnv({
+      APPDATA: appDataDir,
+      TYPORA_INSTALL_DIR: installDir,
+      TYPORAI_DEPLOY_PLATFORM: 'win32',
+      TYPORAI_RENDERER_MODE: 'legacy',
+    }, 'install');
+
+    expect(readWindowHtml()).toContain('typora-typorai.legacy.js');
+    expect(existsSync(path.join(pluginDir, 'typora-typorai.legacy.js'))).toBe(true);
+  });
+
   it('creates a restorable stable backup when the loader is already installed', () => {
     runDeploy('install');
     rmSync(stableBackupPath, { force: true });

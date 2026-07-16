@@ -29,6 +29,7 @@ const args = process.argv.slice(2);
 const requestedAction = args.find(arg => actions.has(arg)) ?? 'install';
 const flags = new Set(args.filter(arg => arg.startsWith('--')));
 const deploymentPlatform = process.env.TYPORAI_DEPLOY_PLATFORM || process.platform;
+const rendererMode = resolveRendererMode();
 
 const paths = resolvePaths();
 
@@ -71,6 +72,7 @@ function install(options) {
   if (!options.dryRun) {
     mkdirSync(paths.pluginDir, { recursive: true });
     copyFileSync(paths.bundlePath, paths.deployedBundlePath);
+    if (deploymentPlatform === 'win32' && existsSync(paths.legacyBundlePath)) copyFileSync(paths.legacyBundlePath, paths.deployedLegacyBundlePath);
     installSidecarRuntime();
     if (existsSync(paths.stylesPath)) {
       copyFileSync(paths.stylesPath, paths.deployedStylesPath);
@@ -152,7 +154,7 @@ function verifyInstall(options = {}) {
   } else {
     const windowHtml = readFileSync(paths.windowHtmlPath, 'utf8');
     check('Loader marker', hasLoader(windowHtml), `Missing TyporAi loader marker in ${paths.windowHtmlPath}`);
-    const expectedBundle = 'typora-typorai.renderer.js';
+    const expectedBundle = rendererMode === 'legacy' ? 'typora-typorai.legacy.js' : 'typora-typorai.renderer.js';
     check('Shared renderer loader', windowHtml.includes(expectedBundle), 'Loader does not point at the Typora plugin directory.');
     check('Legacy fallback hygiene', !hasLegacyLoader(windowHtml), 'Legacy loader marker is still present.');
   }
@@ -325,7 +327,27 @@ function legacyMarkerPattern() {
 }
 
 function buildLoader(resolvedPaths) {
+  if (rendererMode === 'legacy') return buildLegacyLoader(resolvedPaths);
   return buildBrowserLoader(resolvedPaths);
+}
+
+function buildLegacyLoader(resolvedPaths) {
+  return `${markerStart}
+<script id="typorai-typora-loader">
+(function () {
+  try {
+    var req = window.reqnode || window.require;
+    if (!req) return;
+    var pathToFileURL = req("url").pathToFileURL;
+    var fs = req("fs");
+    var pluginPath = ${JSON.stringify(resolvedPaths.deployedLegacyBundlePath)};
+    if (!fs.existsSync(pluginPath)) throw new Error("Legacy bundle is unavailable");
+    if (!document.getElementById("typorai-style")) { var style = document.createElement("link"); style.id = "typorai-style"; style.rel = "stylesheet"; style.href = pathToFileURL(${JSON.stringify(resolvedPaths.deployedStylesPath)}).href; document.head.appendChild(style); }
+    var script = document.createElement("script"); script.id = "typorai-typora-runtime"; script.defer = true; script.src = pathToFileURL(pluginPath).href; document.head.appendChild(script);
+  } catch (error) { console.error("[TyporAi] legacy loader failed", error); }
+})();
+</script>
+${markerEnd}`;
 }
 
 function buildBrowserLoader(resolvedPaths) {
@@ -510,6 +532,8 @@ function resolvePaths() {
   return {
     appData,
     bundlePath: path.join(root, 'typora-typorai.renderer.js'),
+    legacyBundlePath: path.join(root, 'typora-typorai.js'),
+    deployedLegacyBundlePath: path.join(pluginDir, 'typora-typorai.legacy.js'),
     deployedSidecarPath: path.join(pluginDir, 'typorai-sidecar-v1.mjs'),
     deployedBundlePath: path.join(pluginDir, 'typora-typorai.renderer.js'),
     deployedStylesPath: path.join(pluginDir, 'styles.css'),
@@ -537,6 +561,13 @@ function resolvePaths() {
     typoraResourcesDir,
     windowHtmlPath,
   };
+}
+
+function resolveRendererMode() {
+  const requested = process.env.TYPORAI_RENDERER_MODE ?? 'sidecar';
+  if (requested !== 'sidecar' && requested !== 'legacy') throw new Error('TYPORAI_RENDERER_MODE must be "sidecar" or "legacy".');
+  if (requested === 'legacy' && deploymentPlatform !== 'win32') throw new Error('Legacy renderer mode is supported only on Windows.');
+  return requested;
 }
 
 function resolveTyporaInstallDir(platform) {

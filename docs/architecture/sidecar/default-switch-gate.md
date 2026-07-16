@@ -25,3 +25,5 @@ No default-switch or ElectronHost-retirement condition is satisfied by source-le
 5. Retire ElectronHost only in a separate PR after usage, migration, rollback, and release-package gates are closed.
 
 The feature matrix is the authoritative location for platform execution evidence. A successful build, deployment-file check, or CI artifact is not a substitute for a matrix result.
+
+For a controlled Windows rollback, reinstall with `TYPORAI_RENDERER_MODE=legacy` in the environment. This selects the packaged legacy bundle; it is not available on macOS and does not alter the default Sidecar path.
