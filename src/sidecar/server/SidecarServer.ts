@@ -11,6 +11,7 @@ import type { Conversation, StreamChunk } from '@/core/types';
 import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope } from '@/protocol';
 
 import { SingleInstanceLock } from '../lifecycle/SingleInstanceLock';
+import { CodexSidecarRuntime } from '../providers/codex/CodexSidecarRuntime';
 import { FakeChatService } from '../providers/fake/FakeChatService';
 import { SidecarProviderRegistry,type SidecarProviderRuntime } from '../providers/registry';
 import { RuntimeManager } from '../providers/RuntimeManager';
@@ -68,6 +69,11 @@ export class SidecarServer {
     this.lock = new SingleInstanceLock(options.lockPath);
     this.router = new RpcRouter({ sidecarVersion: options.sidecarVersion, token: options.token });
     this.providers.register('fake', () => new FakeChatService());
+    this.providers.register('codex', () => new CodexSidecarRuntime({
+      getSettings: () => this.settings?.getSnapshot().value ?? {},
+      getWorkspacePath: () => this.workspace?.current ?? null,
+      processes: this.processTransport,
+    }));
     this.providers.register('typora', () => new TyporaApiRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
