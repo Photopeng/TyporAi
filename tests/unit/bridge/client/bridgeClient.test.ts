@@ -44,6 +44,18 @@ describe('Bridge client primitives', () => {
     expect(events).toEqual([event]);
   });
 
+  it('forwards Sidecar interaction notifications without treating them as stream chunks', async () => {
+    const socket = new FakeSocket();
+    const client = new WebSocketRpcClient('ws://127.0.0.1/rpc', { socketFactory: () => socket });
+    const connecting = client.connect();
+    socket.emit('open');
+    await connecting;
+    const requests: unknown[] = [];
+    client.onNotification('approval.request', params => requests.push(params));
+    socket.emit('message', JSON.stringify({ jsonrpc: '2.0', method: 'approval.request', params: { id: 'approval-1', payload: {} } }));
+    expect(requests).toEqual([{ id: 'approval-1', payload: {} }]);
+  });
+
   it('only enters ready after the protocol initialize response', async () => {
     const socket = new FakeSocket();
     const client = new WebSocketRpcClient('ws://127.0.0.1/rpc', { socketFactory: () => socket });

@@ -29,6 +29,7 @@ export class WebSocketRpcClient {
   private readonly stateMachine = new ConnectionStateMachine();
   private readonly subscriptions = new SubscriptionManager();
   private readonly eventListeners = new Set<(event: RpcEventEnvelope<unknown>) => void>();
+  private readonly notificationListeners = new Map<string, Set<(params: unknown) => void>>();
   private readonly pending = new Map<string, { reject(error: Error): void; resolve(result: unknown): void; timeout: ReturnType<typeof setTimeout> }>();
   private socket: RpcSocket | null = null;
   private sequence = 0;
@@ -78,6 +79,16 @@ export class WebSocketRpcClient {
     return () => this.eventListeners.delete(listener);
   }
 
+  onNotification(method: string, listener: (params: unknown) => void): () => void {
+    const listeners = this.notificationListeners.get(method) ?? new Set<(params: unknown) => void>();
+    listeners.add(listener);
+    this.notificationListeners.set(method, listeners);
+    return () => {
+      listeners.delete(listener);
+      if (listeners.size === 0) this.notificationListeners.delete(method);
+    };
+  }
+
   notify(method: string, params?: unknown): void {
     if (!this.socket || this.state !== 'ready') throw new Error('Sidecar is not ready.');
     this.socket.send(JSON.stringify({ jsonrpc: '2.0', method, params }));
@@ -110,6 +121,10 @@ export class WebSocketRpcClient {
     const event = 'method' in response && response.method === 'stream.event' ? response.params : undefined;
     if (isEventEnvelope(event)) {
       if (this.subscriptions.consume(event)) this.eventListeners.forEach(listener => listener(event));
+      return;
+    }
+    if ('method' in response && typeof response.method === 'string') {
+      this.notificationListeners.get(response.method)?.forEach(listener => listener(response.params));
       return;
     }
     if (!('id' in response)) return;

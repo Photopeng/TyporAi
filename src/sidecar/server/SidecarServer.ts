@@ -13,6 +13,7 @@ import { SingleInstanceLock } from '../lifecycle/SingleInstanceLock';
 import { FakeChatService } from '../providers/fake/FakeChatService';
 import { SidecarProviderRegistry } from '../providers/registry';
 import { RuntimeManager } from '../providers/RuntimeManager';
+import { ApprovalBroker, type PendingInteraction } from '../services/approval/ApprovalBroker';
 import { BlobNotFoundError,BlobPayloadTooLargeError,BlobStore } from '../services/blobs/BlobStore';
 import { FileConflictError,PathOutsideWorkspaceError,WorkspaceFileService,WorkspaceNotGrantedError } from '../services/fs/WorkspaceFileService';
 import { ManagedProcessRegistry } from '../services/process/ManagedProcessRegistry';
@@ -40,6 +41,8 @@ export class SidecarServer {
   private readonly providers = new SidecarProviderRegistry();
   private readonly runtimes: RuntimeManager;
   private readonly activeTurns = new Map<string, { providerId: string; runtimeId: string }>();
+  private readonly connections = new Map<string, WebSocket>();
+  private readonly approvals = new ApprovalBroker(interaction => this.publishInteraction(interaction));
   private readonly watches = new Map<string, { connection: WebSocket; close(): void }>();
   private settings: PersistentSettingsStore<Record<string, unknown>> | null = null;
   private sessions: PersistentSessionRepository | null = null;
@@ -93,6 +96,7 @@ export class SidecarServer {
   async close(): Promise<void> {
     this.processes.terminateAll('SIGTERM');
     await this.runtimes.disposeAll();
+    this.approvals.rejectAll('sidecar-shutdown');
     await this.blobs?.cleanupAll();
     for (const watch of this.watches.values()) watch.close();
     this.watches.clear();
@@ -118,6 +122,7 @@ export class SidecarServer {
       connection.send(JSON.stringify(response));
       if ('error' in response) return connection.close(1008, 'Authentication failed');
       const connectionId = (response.result as { connectionId: string }).connectionId;
+      this.connections.set(connectionId, connection);
       initialized = true;
       connection.on('message', next => {
         const request = parseJsonRpcMessage(next.toString());
@@ -137,6 +142,12 @@ export class SidecarServer {
         }
         if (request.method === 'system.getDiagnostics') {
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { activeTurns: this.activeTurns.size, managedProcesses: this.processes.size, providerRuntimes: this.providers.list(), watches: this.watches.size } }));
+          return;
+        }
+        if (request.method === 'approval.resolve' || request.method === 'userInput.resolve' || request.method === 'planApproval.resolve') {
+          const params = request.params as { id?: unknown; result?: unknown } | undefined;
+          if (typeof params?.id !== 'string' || !this.approvals.resolve(params.id, params.result)) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Interaction not found.' } }));
+          connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }));
           return;
         }
         if (request.method === 'session.list') {
@@ -307,7 +318,7 @@ export class SidecarServer {
         }
         connection.send(JSON.stringify(this.router.routeAuthenticated(request as JsonRpcRequest)));
       });
-      connection.once('close', () => this.disposeConnection(connection));
+      connection.once('close', () => this.disposeConnection(connectionId, connection));
     });
     connection.once('error', () => undefined);
     setTimeout(() => { if (!initialized) connection.close(1008, 'Initialize timeout'); }, 3_000).unref();
@@ -327,11 +338,20 @@ export class SidecarServer {
     return watchId;
   }
 
-  private disposeConnection(connection: WebSocket): void {
+  private disposeConnection(connectionId: string, connection: WebSocket): void {
+    this.connections.delete(connectionId);
+    this.approvals.rejectAll();
     for (const [watchId, watch] of this.watches) {
       if (watch.connection !== connection) continue;
       watch.close();
       this.watches.delete(watchId);
+    }
+  }
+
+  private publishInteraction(interaction: PendingInteraction): void {
+    const method = interaction.kind === 'approval' ? 'approval.request' : interaction.kind === 'planApproval' ? 'planApproval.request' : 'userInput.request';
+    for (const connection of this.connections.values()) {
+      if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method, params: interaction }));
     }
   }
 
