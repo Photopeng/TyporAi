@@ -12,6 +12,7 @@ export class SidecarChatPanel {
   private readonly prompt: HTMLTextAreaElement;
   private readonly send: HTMLButtonElement;
   private readonly cancel: HTMLButtonElement;
+  private readonly workspace: HTMLButtonElement;
 
   constructor(private readonly root: HTMLElement, private readonly client: WebSocketRpcClient) {
     root.replaceChildren();
@@ -20,6 +21,7 @@ export class SidecarChatPanel {
     const masthead = document.createElement('header'); masthead.className = 'typorai-sidecar-panel__masthead';
     masthead.append(label('TyporAi', 'typorai-sidecar-panel__title'));
     this.provider = document.createElement('select'); this.provider.setAttribute('aria-label', 'Provider'); masthead.append(this.provider);
+    this.workspace = button('Workspace', () => { void this.grantWorkspace(); }); this.workspace.className = 'typorai-sidecar-panel__workspace'; masthead.append(this.workspace);
     this.messages = document.createElement('main'); this.messages.className = 'typorai-sidecar-panel__messages'; this.messages.setAttribute('aria-live', 'polite');
     this.messages.append(label('Sidecar connected. Select a provider to begin.', 'typorai-sidecar-panel__notice'));
     const composer = document.createElement('footer'); composer.className = 'typorai-sidecar-panel__composer';
@@ -35,6 +37,7 @@ export class SidecarChatPanel {
     const providers = await this.client.request<ProviderStatus[]>('provider.list');
     for (const item of providers) { const option = new Option(item.providerId, item.providerId); option.disabled = item.status !== 'available'; this.provider.append(option); }
     if (!this.provider.options.length) this.messages.append(label('No Sidecar provider is available.', 'typorai-sidecar-panel__notice'));
+    await this.refreshWorkspace();
   }
 
   private async submit(): Promise<void> {
@@ -52,12 +55,23 @@ export class SidecarChatPanel {
   }
 
   private async stop(): Promise<void> { await this.runtime?.cancel(); }
+  private async refreshWorkspace(): Promise<void> {
+    const result = await this.client.request<{ root: string | null }>('workspace.getCurrent');
+    this.workspace.textContent = result.root ? `Workspace: ${basename(result.root)}` : 'Grant workspace';
+  }
+  private async grantWorkspace(): Promise<void> {
+    const root = window.prompt('Absolute workspace path for Sidecar access');
+    if (!root?.trim()) return;
+    await this.client.request('workspace.grant', { root: root.trim() });
+    await this.refreshWorkspace();
+  }
   private append(role: 'assistant' | 'user', text: string): HTMLElement { const entry = document.createElement('article'); entry.className = `typorai-sidecar-panel__message typorai-sidecar-panel__message--${role}`; entry.textContent = text; this.messages.append(entry); entry.scrollIntoView({ block: 'end' }); return entry; }
   private render(output: HTMLElement, chunk: StreamChunk): void { if (chunk.type === 'text') output.textContent += chunk.content; if (chunk.type === 'error') output.textContent = chunk.content; }
 }
 
 function label(text: string, className: string): HTMLElement { const element = document.createElement('span'); element.className = className; element.textContent = text; return element; }
 function button(text: string, click: () => void): HTMLButtonElement { const element = document.createElement('button'); element.type = 'button'; element.textContent = text; element.addEventListener('click', click); return element; }
+function basename(value: string): string { return value.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || value; }
 
 function installPanelStyles(): void {
   if (document.getElementById('typorai-sidecar-panel-style')) return;
