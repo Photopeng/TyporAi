@@ -1,0 +1,12 @@
+# Keep source and project metadata stable across Windows and macOS checkouts.
+* text=auto eol=lf
+
+# Never transform generated or binary assets.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary

@@ -146,6 +146,17 @@ describe('deploy-typora script', () => {
     }, 'verify');
   });
 
+  it('reports a clear error for a non-standard macOS Typora resource layout', () => {
+    installDir = path.join(tempRoot, 'Applications', 'Typora.app');
+    appDataDir = path.join(tempRoot, 'Library', 'Application Support');
+
+    expect(() => runDeployWithEnv({
+      TYPORAI_DEPLOY_PLATFORM: 'darwin',
+      TYPORA_INSTALL_DIR: installDir,
+      TYPORA_USER_DATA_DIR: appDataDir,
+    }, 'verify')).toThrow(/Typora resources directory was not found[\s\S]*TYPORA_RESOURCES_DIR/);
+  });
+
   it('detects Linux resources and XDG config plugin directory', () => {
     installDir = path.join(tempRoot, 'usr', 'share', 'typora');
     appDataDir = path.join(tempRoot, 'xdg');

@@ -3,7 +3,7 @@ import { createMockEl } from '@test/helpers/mockElement';
 import { CommandRegistry } from '@/core/CommandRegistry';
 import { TyporAiView } from '@/features/chat/TyporAiView';
 import { setLocale } from '@/i18n/i18n';
-import { Platform, Scope } from '@/typora/platform';
+import { Scope } from '@/typora/platform';
 
 function createViewHarness(options: {
   canCreateTab: boolean;
@@ -667,7 +667,6 @@ describe('TyporAiView Escape handling', () => {
   });
 
   it('ignores scoped Mod+Enter when composer is not focused', () => {
-    Platform.isMacOS = true;
     const { sendMessage, view } = createScopedSendHarness({ inputFocused: false });
 
     view.wireEventHandlers();

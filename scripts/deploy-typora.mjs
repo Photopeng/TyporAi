@@ -566,9 +566,16 @@ function resolveTyporaResourcesDir(typoraInstallDir, platform) {
     return process.env.TYPORA_RESOURCES_DIR;
   }
 
-  return platform === 'darwin'
+  const resourcesDir = platform === 'darwin'
     ? path.join(typoraInstallDir, 'Contents', 'Resources', 'TypeMark')
     : path.join(typoraInstallDir, 'resources');
+  if (platform === 'darwin' && !existsSync(resourcesDir)) {
+    throw new Error(
+      `Typora resources directory was not found at ${resourcesDir}. `
+      + 'Set TYPORA_RESOURCES_DIR to the directory containing index.html when using a non-standard Typora bundle.',
+    );
+  }
+  return resourcesDir;
 }
 
 function resolveTyporaUserDataDir(platform) {

@@ -3,11 +3,6 @@ jest.mock('@/typora/platform', () => {
   return {
     ...actual,
     Notice: jest.fn(),
-    Platform: {
-      isMacOS: true,
-      isMobile: false,
-      isWin: false,
-    },
   };
 });
 
@@ -48,7 +43,7 @@ import {
   DEFAULT_CODEX_PRIMARY_MODEL,
   DEFAULT_CODEX_PRIMARY_MODEL_LABEL,
 } from '@/providers/codex/types/models';
-import { Notice, Platform } from '@/typora/platform';
+import { Notice } from '@/typora/platform';
 import * as envUtils from '@/utils/env';
 
 // Mock ResizeObserver (not available in jsdom)
@@ -2095,7 +2090,6 @@ describe('Tab - Controller Initialization', () => {
 describe('Tab - Event Handler Behavior', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    Platform.isMacOS = true;
     mockFileContextManager = createMockFileContextManager();
     mockSlashCommandDropdown = createMockSlashCommandDropdown();
     mockInstructionModeManager = createMockInstructionModeManager();

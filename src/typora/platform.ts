@@ -612,12 +612,6 @@ export class TextAreaComponent {
   }
 }
 
-export const Platform = {
-  isMacOS: false,
-  isWin: false,
-  isMobile: false,
-};
-
 function appendInlineMarkdown(parent: HTMLElement, text: string): void {
   const tokenPattern = /(`[^`]+`|\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
   let cursor = 0;
