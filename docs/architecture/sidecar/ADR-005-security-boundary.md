@@ -20,4 +20,6 @@ full environment values, prompts, or document contents.
 
 Blob upload responses likewise expose only an opaque blob identifier, MIME type,
 and byte count. The temporary file path is resolved only inside Sidecar when a
-provider consumes the attachment, and is removed on abort or turn completion.
+provider consumes the attachment, is appended to that provider's private turn
+context, and is removed on abort or turn completion. The Renderer receives
+neither the path nor a filesystem capability.

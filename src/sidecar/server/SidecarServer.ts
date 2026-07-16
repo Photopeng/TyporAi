@@ -348,8 +348,10 @@ export class SidecarServer {
           }
           this.activeTurns.set(turnId, { providerId, runtimeId });
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { streamId: turnId } }));
-          void chatRuntime.startTurn(connectionId, turnId, params.prompt, event => {
+          void this.withBlobContext(params.prompt, blobIds).then(prompt => chatRuntime.startTurn(connectionId, turnId, prompt, event => {
             if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: event }));
+          })).catch(error => {
+            if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: { connectionId, streamId: turnId, seq: 1, event: 'chat.chunk', timestamp: Date.now(), payload: { type: 'error', content: error instanceof Error ? error.message : 'Attachment preparation failed.' } } }));
           }).finally(() => {
             this.activeTurns.delete(turnId);
             if (conversationId) void this.persistRuntimeSession(conversationId, chatRuntime).catch(() => undefined);
@@ -573,6 +575,14 @@ export class SidecarServer {
       case 'blob.abort': if (!blobId) throw new Error('Invalid blob abort.'); await this.blobs.abort(blobId); return {};
       default: throw new Error('Unsupported blob operation.');
     }
+  }
+
+  private async withBlobContext(prompt: string, blobIds: readonly string[]): Promise<string> {
+    if (blobIds.length === 0) return prompt;
+    if (!this.blobs) throw new Error('Blob service unavailable.');
+    const paths = await Promise.all(blobIds.map(blobId => this.blobs!.getCommittedPath(blobId)));
+    // Paths stay within Sidecar and are supplied only to the native provider.
+    return `${prompt}\n\n<typorai_attachments>\n${paths.map(target => `file://${target}`).join('\n')}\n</typorai_attachments>`;
   }
 
   private systemStatus(): { readonly providerRuntimes: readonly string[]; readonly status: 'ok'; readonly workspaceGranted: boolean } {

@@ -91,6 +91,9 @@ describe('v1 Sidecar skeleton', () => {
     await waitFor(() => messages.some(message => message.id === 'commit'));
     expect(messages.find(message => message.id === 'commit')).toMatchObject({ result: { blobId, mimeType: 'image/png', size: 2 } });
     expect(JSON.stringify(messages.find(message => message.id === 'commit'))).not.toContain(directory);
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'turn', method: 'chat.startTurn', params: { blobIds: [blobId], prompt: 'describe attachment', turnId: 'attachment-turn' } }));
+    await waitFor(() => messages.some(message => JSON.stringify(message).includes('typorai_attachments')));
+    expect(JSON.stringify(messages.find(message => JSON.stringify(message).includes('typorai_attachments')))).toContain('.blob');
     socket.close();
     await server.close();
   });
