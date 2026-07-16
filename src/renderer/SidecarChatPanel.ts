@@ -7,7 +7,8 @@ interface ProviderStatus { readonly providerId: string; readonly status: string;
 
 /** Shared Browser-only Typora surface for every platform. */
 export class SidecarChatPanel {
-  private runtime: BridgeChatRuntime | null = null;
+  private activeRuntime: BridgeChatRuntime | null = null;
+  private readonly runtimes = new Map<string, BridgeChatRuntime>();
   private readonly interactions: BridgeInteractionService;
   private readonly messages: HTMLElement;
   private readonly provider: HTMLSelectElement;
@@ -46,19 +47,27 @@ export class SidecarChatPanel {
 
   private async submit(): Promise<void> {
     const text = this.prompt.value.trim();
-    if (!text || !this.provider.value || this.runtime) return;
+    if (!text || !this.provider.value || this.activeRuntime) return;
     this.append('user', text);
     this.prompt.value = ''; this.send.disabled = true; this.cancel.hidden = false;
     const output = this.append('assistant', '');
-    this.runtime = new BridgeChatRuntime(this.client, { providerId: this.provider.value, runtimeId: crypto.randomUUID() });
+    const runtime = this.getRuntime(this.provider.value);
+    this.activeRuntime = runtime;
     try {
-      for await (const chunk of this.runtime.query(this.runtime.prepareTurn({ text }))) this.render(output, chunk);
+      for await (const chunk of runtime.query(runtime.prepareTurn({ text }))) this.render(output, chunk);
     } finally {
-      void this.runtime.dispose(); this.runtime = null; this.send.disabled = false; this.cancel.hidden = true;
+      this.activeRuntime = null; this.send.disabled = false; this.cancel.hidden = true;
     }
   }
 
-  private async stop(): Promise<void> { await this.runtime?.cancel(); }
+  private getRuntime(providerId: string): BridgeChatRuntime {
+    const existing = this.runtimes.get(providerId);
+    if (existing) return existing;
+    const created = new BridgeChatRuntime(this.client, { providerId, runtimeId: crypto.randomUUID() });
+    this.runtimes.set(providerId, created);
+    return created;
+  }
+  private async stop(): Promise<void> { await this.activeRuntime?.cancel(); }
   private renderInteraction(interaction: BridgeInteraction): void {
     const card = document.createElement('section'); card.className = 'typorai-sidecar-panel__interaction';
     const description = typeof interaction.payload.description === 'string' ? interaction.payload.description : 'Provider interaction requested.';
