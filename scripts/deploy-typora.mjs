@@ -426,7 +426,21 @@ function shouldManageMacosSystemIntegration() {
 
 function resolveLaunchAgentUid() {
   const sudoUid = Number(process.env.SUDO_UID);
-  return Number.isInteger(sudoUid) && sudoUid >= 0 ? sudoUid : process.getuid?.() ?? 0;
+  if (Number.isInteger(sudoUid) && sudoUid > 0) return sudoUid;
+
+  // AppleScript's `do shell script ... with administrator privileges` runs
+  // as root without sudo's environment. Register the LaunchAgent for the
+  // interactive console user instead of incorrectly targeting gui/0.
+  if (process.platform === 'darwin') {
+    try {
+      const consoleUid = Number(execFileSync('stat', ['-f', '%u', '/dev/console'], {
+        encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim());
+      if (Number.isInteger(consoleUid) && consoleUid > 0) return consoleUid;
+    } catch {}
+  }
+
+  return process.getuid?.() ?? 0;
 }
 
 function readSidecarToken() {
