@@ -9,7 +9,7 @@ claim that the migration is complete.
 | D1 protocol | Protocol v1 schemas, authentication, negotiation and contract tests | Implemented and tested |
 | D2-D7 Sidecar/bridge/state/process/providers | Sidecar server, bridge client, state stores, process transport and provider runtimes | Implemented in repository; provider real-device behavior not accepted |
 | D8 MCP, skills and agents | Persistent MCP store/test, workspace discovery and agent RPC | Implemented and tested |
-| D9 files, images and inline edit | Hash-protected file service, backups/restore, blob upload and private attachment context | Files and blob boundary implemented; end-to-end provider image semantics and full inline-edit acceptance remain open |
+| D9 files, images and inline edit | Hash-protected file service, backups/restore, blob upload and private attachment context | Files and blob boundary implemented; Codex maps staged attachments to native `localImage` inputs; Claude/OpenCode semantics and full inline-edit acceptance remain open |
 | D10 delivery and diagnostics | Platform packages, checksums, release workflow, deploy/repair/uninstall and redacted diagnostics | Implemented and tested in repository; install/upgrade/rollback hardware evidence open |
 | D11 switching/retirement | Explicit Windows legacy rollback, legacy package artifact and default-switch gate | Gate intentionally open; no retirement or default-switch claim |
 

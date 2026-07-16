@@ -3,7 +3,7 @@ import type { StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
 import { CodexAppServerProcess } from '@/providers/codex/runtime/CodexAppServerProcess';
 import { initializeCodexAppServerTransport } from '@/providers/codex/runtime/codexAppServerSupport';
-import type { ThreadStartResult, TurnStartResult } from '@/providers/codex/runtime/codexAppServerTypes';
+import type { ThreadStartResult, TurnStartResult, UserInput } from '@/providers/codex/runtime/codexAppServerTypes';
 import { buildCodexLaunchSpec } from '@/providers/codex/runtime/CodexLaunchSpecBuilder';
 import type { CodexLaunchSpec } from '@/providers/codex/runtime/codexLaunchTypes';
 import { CodexRpcTransport } from '@/providers/codex/runtime/CodexRpcTransport';
@@ -109,9 +109,14 @@ export class CodexSidecarRuntime {
       rejectCompletion(new Error(extractErrorMessage(params)));
     });
 
+    const attachment = extractSidecarAttachments(prompt);
+    const input: UserInput[] = [
+      ...attachment.paths.map(path => ({ type: 'localImage' as const, path })),
+      { type: 'text', text: attachment.prompt, text_elements: [] },
+    ];
     const result = await transport.request<TurnStartResult>('turn/start', {
       threadId,
-      input: [{ type: 'text', text: prompt }],
+      input,
       cwd: workspace,
     });
     providerTurnId = result.turn.id;
@@ -167,6 +172,13 @@ export class CodexSidecarRuntime {
     this.process = null;
     this.threadLoaded = false;
   }
+}
+
+function extractSidecarAttachments(prompt: string): { readonly paths: readonly string[]; readonly prompt: string } {
+  const match = prompt.match(/\n*<typorai_attachments>\n([\s\S]*?)\n<\/typorai_attachments>\s*$/);
+  if (!match) return { paths: [], prompt };
+  const paths = match[1].split(/\r?\n/).map(value => value.trim()).filter(Boolean);
+  return { paths, prompt: prompt.slice(0, match.index).trimEnd() };
 }
 
 export function createCodexSidecarLaunchSpec(

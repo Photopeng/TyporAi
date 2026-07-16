@@ -593,7 +593,7 @@ export class SidecarServer {
     if (!this.blobs) throw new Error('Blob service unavailable.');
     const paths = await Promise.all(blobIds.map(blobId => this.blobs!.getCommittedPath(blobId)));
     // Paths stay within Sidecar and are supplied only to the native provider.
-    return `${prompt}\n\n<typorai_attachments>\n${paths.map(target => `file://${target}`).join('\n')}\n</typorai_attachments>`;
+    return `${prompt}\n\n<typorai_attachments>\n${paths.join('\n')}\n</typorai_attachments>`;
   }
 
   private systemStatus(): { readonly providerRuntimes: readonly string[]; readonly status: 'ok'; readonly workspaceGranted: boolean } {
