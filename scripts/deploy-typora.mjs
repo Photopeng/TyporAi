@@ -177,6 +177,9 @@ function assertInstallInputs() {
     throw new Error(`Missing Typora styles: ${paths.stylesPath}. Run npm run build:typora first.`);
   }
   if (!existsSync(paths.sidecarPath)) throw new Error(`Missing sidecar: ${paths.sidecarPath}. Run npm run build:all first.`);
+  if (rendererMode === 'legacy' && !existsSync(paths.legacyBundlePath)) {
+    throw new Error(`Missing Windows legacy bundle: ${paths.legacyBundlePath}. Run npm run build:legacy first.`);
+  }
   assertWindowHtmlExists();
   assertWindowHtmlWritable();
 }

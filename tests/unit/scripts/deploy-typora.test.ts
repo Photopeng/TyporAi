@@ -36,6 +36,7 @@ describe('deploy-typora script', () => {
     mkdirSync(path.dirname(windowHtmlPath), { recursive: true });
     writeFileSync(windowHtmlPath, '<html><head></head><body><main>Typora</main></body></html>', 'utf8');
     ensureBuildInput('typora-typorai.renderer.js', 'console.log("renderer");');
+    ensureBuildInput('typora-typorai.js', 'console.log("legacy");');
     ensureBuildInput('typorai-sidecar-v1.mjs', 'console.log("sidecar");');
     ensureBuildInput('styles.css', 'body { color: inherit; }');
   });
