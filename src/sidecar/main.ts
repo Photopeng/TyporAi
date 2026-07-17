@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+import { parseSidecarPort } from './sidecarPort';
 import { SidecarServer } from './SidecarServer';
 
-const port = Number(process.env.TYPORAI_SIDECAR_PORT ?? '17328');
+const port = parseSidecarPort(process.env.TYPORAI_SIDECAR_PORT ?? '17328');
 const token = process.env.TYPORAI_SIDECAR_TOKEN
   ?? (process.env.TYPORAI_SIDECAR_TOKEN_FILE ? readFileSync(process.env.TYPORAI_SIDECAR_TOKEN_FILE, 'utf8').trim() : undefined);
 if (!token) throw new Error('TYPORAI_SIDECAR_TOKEN is required');

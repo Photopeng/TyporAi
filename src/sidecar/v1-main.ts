@@ -5,6 +5,7 @@ import path from 'node:path';
 import { ShutdownCoordinator } from './lifecycle/ShutdownCoordinator';
 import { createBootstrapToken } from './server/Authentication';
 import { SidecarServer } from './server/SidecarServer';
+import { parseSidecarPort } from './sidecarPort';
 
 const dataDirectory = process.env.TYPORAI_SIDECAR_DATA_DIR ?? defaultDataDirectory();
 const tokenPath = process.env.TYPORAI_SIDECAR_TOKEN_FILE ?? path.join(dataDirectory, 'auth-token');
@@ -13,6 +14,7 @@ const server = new SidecarServer({
   dataDirectory,
   descriptorPath: process.env.TYPORAI_SIDECAR_DESCRIPTOR ?? path.join(dataDirectory, 'connection.json'),
   lockPath: path.join(dataDirectory, 'sidecar.lock'),
+  port: parseSidecarPort(process.env.TYPORAI_SIDECAR_PORT ?? '17328'),
   sidecarVersion: process.env.TYPORAI_VERSION ?? 'development',
   token,
 });

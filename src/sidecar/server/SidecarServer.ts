@@ -40,6 +40,7 @@ export interface SidecarServerOptions {
   readonly dataDirectory: string;
   readonly descriptorPath: string;
   readonly lockPath: string;
+  readonly port?: number;
   readonly sidecarVersion: string;
   readonly token: string;
 }
@@ -130,7 +131,7 @@ export class SidecarServer {
       this.mcp = await PersistentMcpStore.open(path.join(this.options.dataDirectory, 'mcp.json'));
       await new Promise<void>((resolve, reject) => {
         this.http.once('error', reject);
-        this.http.listen({ host: '127.0.0.1', port: 0 }, () => {
+        this.http.listen({ host: '127.0.0.1', port: this.options.port ?? 0 }, () => {
           this.http.off('error', reject);
           resolve();
         });
