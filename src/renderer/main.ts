@@ -18,7 +18,11 @@ function mountRenderer(): void {
   root.dataset.typoraiProviders = RENDERER_PROVIDERS.map(provider => provider.providerId).join(',');
   const bootstrap = window.__TYPORAI_BOOTSTRAP__;
   root.dataset.typoraiSidecar = bootstrap ? 'pending' : 'unavailable';
-  if (!bootstrap) return;
+  if (!bootstrap) {
+    root.className = 'typorai-sidecar-panel typorai-sidecar-panel--error';
+    root.textContent = 'TyporAi bootstrap configuration is unavailable.';
+    return;
+  }
   void connect(root, bootstrap);
 }
 

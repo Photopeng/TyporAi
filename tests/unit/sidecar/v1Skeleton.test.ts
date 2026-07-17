@@ -1,4 +1,5 @@
 import { mkdtemp, readFile } from 'node:fs/promises';
+import { createServer } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -24,6 +25,26 @@ describe('v1 Sidecar skeleton', () => {
     const descriptorPath = path.join(directory, 'connection.json');
     await writeConnectionDescriptor(descriptorPath, { host: '127.0.0.1', port: 8123, token: 'redacted', pid: 1, sidecarVersion: '2.0.27', protocolMin: 1, protocolMax: 1, startedAt: 1 });
     await expect(readFile(descriptorPath, 'utf8')).resolves.toContain('127.0.0.1');
+  });
+
+  it('binds the configured stable port for browser-only renderers', async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), 'typorai-fixed-port-'));
+    const port = await findAvailablePort();
+    const server = new SidecarServer({
+      dataDirectory: directory,
+      descriptorPath: path.join(directory, 'descriptor.json'),
+      lockPath: path.join(directory, 'lock'),
+      port,
+      sidecarVersion: '2.0.27',
+      token: 'test-token',
+    });
+
+    const descriptor = await server.start();
+    try {
+      expect(descriptor).toMatchObject({ port });
+    } finally {
+      await server.close();
+    }
   });
 
   it('requires initialize authentication and version compatibility', () => {
@@ -123,4 +144,5 @@ describe('v1 Sidecar skeleton', () => {
 });
 
 function openSocket(port: number): Promise<WebSocket> { return new Promise((resolve, reject) => { const socket = new WebSocket(`ws://127.0.0.1:${port}/rpc`); socket.once('open', () => resolve(socket)); socket.once('error', reject); }); }
+function findAvailablePort(): Promise<number> { return new Promise((resolve, reject) => { const server = createServer(); server.once('error', reject); server.listen(0, '127.0.0.1', () => { const address = server.address(); if (!address || typeof address === 'string') { server.close(); reject(new Error('Unable to reserve a test port')); return; } server.close(error => { if (error) reject(error); else resolve(address.port); }); }); }); }
 async function waitFor(predicate: () => boolean): Promise<void> { for (let index = 0; index < 50; index += 1) { if (predicate()) return; await new Promise(resolve => setTimeout(resolve, 10)); } throw new Error('Timed out waiting for WebSocket message.'); }

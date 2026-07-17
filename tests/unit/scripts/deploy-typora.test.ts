@@ -141,19 +141,27 @@ describe('deploy-typora script', () => {
 
     runDeployWithEnv({
       TYPORAI_DEPLOY_PLATFORM: 'darwin',
+      TYPORAI_SIDECAR_PORT: '18328',
       TYPORA_INSTALL_DIR: installDir,
       TYPORA_USER_DATA_DIR: appDataDir,
     }, 'install');
 
     expect(readWindowHtml()).toContain(markerStart);
-    expect(readWindowHtml()).toContain('abnerworks.Typora');
     expect(readWindowHtml()).toContain('typora-typorai.renderer.js');
+    expect(readWindowHtml()).toContain('typorai-bootstrap.js');
+    expect(readWindowHtml()).toContain('TyporAi is starting');
+    expect(readWindowHtml()).not.toContain('window.reqnode');
+    expect(readWindowHtml()).not.toContain('18328/rpc');
     expect(existsSync(path.join(pluginDir, 'typora-typorai.renderer.js'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'typorai-sidecar-v1.mjs'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
+    const bootstrap = readFileSync(path.join(pluginDir, 'typorai-bootstrap.js'), 'utf8');
+    expect(bootstrap).toContain('ws://127.0.0.1:18328/rpc');
+    expect(bootstrap).toMatch(/"token":"[0-9a-f]{64}"/);
     expect(readFileSync(path.join(tempRoot, 'Library', 'LaunchAgents', 'com.photopeng.typorai.sidecar.plist'), 'utf8')).toContain('<key>PATH</key>');
     runDeployWithEnv({
       TYPORAI_DEPLOY_PLATFORM: 'darwin',
+      TYPORAI_SIDECAR_PORT: '18328',
       TYPORA_INSTALL_DIR: installDir,
       TYPORA_USER_DATA_DIR: appDataDir,
     }, 'verify');
