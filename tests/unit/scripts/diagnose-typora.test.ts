@@ -23,6 +23,11 @@ describe('diagnose-typora script', () => {
     expect(result.deployment.renderer.exists).toBe(false);
     expect(result.deployment.descriptor.exists).toBe(false);
     expect(result.service).toEqual({ reachable: false, reason: 'descriptor-unavailable' });
+    expect(result.persistedRuntime).toEqual(expect.objectContaining({
+      status: 'service-missing',
+      serviceExists: false,
+      node: expect.objectContaining({ path: null, exists: false }),
+    }));
     expect(result.providerCli).toEqual([]);
     expect(result.privacy).toEqual(expect.objectContaining({
       tokenRead: false,

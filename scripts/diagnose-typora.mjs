@@ -26,6 +26,7 @@ const resourcesDir = value('--typora-resources-dir') ?? (platform === 'darwin'
   : path.join('C:', 'Program Files', 'Typora', 'resources'));
 const entryFile = path.join(resourcesDir, platform === 'darwin' ? 'index.html' : 'window.html');
 const descriptorPath = path.join(dataDir, 'connection.json');
+const persistedRuntime = diagnosePersistedRuntime();
 const report = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
@@ -39,6 +40,7 @@ const report = {
     descriptor: descriptorSummary(descriptorPath),
   },
   service: await health(descriptorPath),
+  persistedRuntime,
   providerCli: args.includes('--skip-probes') ? [] : ['claude', 'codex', 'opencode'].map(probe),
   privacy: {
     tokenRead: false,
@@ -85,6 +87,53 @@ function descriptorSummary(target) {
   } catch {
     return { exists: false, host: null, port: null, sidecarVersion: null, protocolMin: null, protocolMax: null };
   }
+}
+
+function diagnosePersistedRuntime() {
+  const configuredNodePath = persistedNodePath();
+  const serviceExists = configuredNodePath !== null;
+  const node = describeNode(configuredNodePath);
+  const sidecar = describe(path.join(pluginDir, 'typorai-sidecar-v1.mjs'));
+  const descriptor = descriptorSummary(descriptorPath);
+  return {
+    status: runtimeStatus({ serviceExists, node, sidecar, descriptor }),
+    serviceExists,
+    node,
+    sidecar,
+  };
+}
+
+function persistedNodePath() {
+  if (platform === 'darwin') {
+    const agent = path.join(home, 'Library', 'LaunchAgents', 'com.photopeng.typorai.sidecar.plist');
+    try { return readFileSync(agent, 'utf8').match(/<key>ProgramArguments<\/key><array><string>([^<]+)<\/string>/)?.[1] ?? null; } catch { return null; }
+  }
+  if (platform === 'win32') {
+    try {
+      const task = spawnSync('schtasks', ['/Query', '/TN', '\\TyporAi Sidecar', '/XML'], { encoding: 'utf8', windowsHide: true });
+      return `${task.stdout ?? ''}`.match(/<Command>([^<]+)<\/Command>/i)?.[1] ?? null;
+    } catch { return null; }
+  }
+  return null;
+}
+
+function describeNode(nodePath) {
+  if (!nodePath || !existsSync(nodePath)) return { path: nodePath ? redact(nodePath) : null, exists: false, executable: false, version: null, compatible: false };
+  try {
+    const result = spawnSync(nodePath, ['--version'], { encoding: 'utf8', timeout: 1500, windowsHide: true });
+    const version = `${result.stdout ?? ''}`.trim();
+    const major = Number(version.match(/^v(\d+)/)?.[1]);
+    return { path: redact(nodePath), exists: true, executable: !result.error && result.status === 0, version: version || null, compatible: major === 24 };
+  } catch { return { path: redact(nodePath), exists: true, executable: false, version: null, compatible: false }; }
+}
+
+function runtimeStatus({ serviceExists, node, sidecar, descriptor }) {
+  if (!serviceExists) return 'service-missing';
+  if (!node.exists || !node.executable) return 'node-missing';
+  if (!node.compatible) return 'node-version-incompatible';
+  if (!sidecar.exists) return 'sidecar-missing';
+  if (descriptor.exists && descriptor.sidecarVersion && descriptor.sidecarVersion !== readManifest().version) return 'descriptor-stale';
+  return descriptor.exists ? 'healthy' : 'health-unreachable';
 }
 
 async function health(target) {
