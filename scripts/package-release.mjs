@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const scriptRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const platforms = new Set(['windows-x64', 'macos-x64', 'macos-arm64']);
+const platforms = new Set(['windows-x64', 'macos-arm64']);
 const args = process.argv.slice(2);
 const platform = readArgument('--platform') ?? process.env.TYPORAI_RELEASE_PLATFORM;
 const root = path.resolve(readArgument('--source') ?? scriptRoot);

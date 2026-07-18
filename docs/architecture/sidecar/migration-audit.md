@@ -16,7 +16,7 @@ claim that the migration is complete.
 ## Required before final completion
 
 - Complete the remaining D9 provider image and inline-edit acceptance paths.
-- Execute the Windows legacy/Sidecar, macOS Intel and macOS Apple Silicon feature matrices.
+- Execute the Windows legacy/Sidecar and macOS Apple Silicon feature matrices. Intel macOS is not supported.
 - Verify clean install, upgrade, repair, rollback, uninstall, provider compatibility, process cleanup and soak requirements on the documented hardware.
 - Maintain Windows legacy until every row in `default-switch-gate.md` has direct passing evidence and a stable release cycle has elapsed.
 

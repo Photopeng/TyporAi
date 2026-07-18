@@ -5,7 +5,7 @@ intentional baseline debt, not a claim of support. The legacy column is the
 Windows release baseline; Sidecar columns remain `Not run` until their relevant
 PR has passed the listed test and platform check.
 
-| Feature | Current owner | Expected behavior | Automated test | Windows legacy | Windows sidecar | macOS Intel | macOS Apple Silicon | Severity | Evidence |
+| Feature | Current owner | Expected behavior | Automated test | Windows legacy | Windows sidecar | macOS Apple Silicon | Severity | Evidence |
 |---|---|---|---|---|---|---|---|---|---|
 | Multiple tabs | `features/chat` | Create and retain independent conversations | `tests/unit/features/chat` | Not run | Not run | Not run | Not run | P0 | D0 manual test pending |
 | Create, close, switch tab | `features/chat` | Tab lifecycle preserves active selection | `tests/unit/features/chat` | Not run | Not run | Not run | Not run | P0 | D0 manual test pending |
@@ -43,7 +43,7 @@ Run `npm run typecheck`, `npm run lint`, `npm run test`, `npm run build`, and
 `npm run audit:architecture` before updating any result cell. Attach command
 output or a platform-test record to the Evidence column; do not infer a Pass
 from source inspection. Record Windows legacy results before enabling the
-Sidecar path. macOS Intel and Apple Silicon require independent evidence.
+Sidecar path. macOS Apple Silicon requires independent evidence; Intel macOS is not supported.
 
 ## Rollback
 

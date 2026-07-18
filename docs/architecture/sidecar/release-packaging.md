@@ -3,7 +3,6 @@
 TyporAi release packaging produces one self-contained deployment directory per supported target:
 
 - `windows-x64`
-- `macos-x64`
 - `macos-arm64`
 
 Each package has the portable renderer, ESM Sidecar, styles, deployment script, license, source manifest, a generated `release-manifest.json`, and `SHA256SUMS.txt`. The release manifest fixes the Sidecar protocol version, Node support range, file hashes, and the exact install, repair, verify, and rollback commands for that package.
@@ -27,4 +26,4 @@ Run `node scripts/diagnose-typora.mjs` to collect a local deployment report. The
 
 `release-manifest.json` is a versioned data contract (`schemaVersion: 1`); consumers must reject an unknown schema rather than infer deployment behavior. A checksum mismatch is a release-integrity failure and must be resolved before executing the installer. The first release line intentionally requires Node 24 and records that range in the manifest, avoiding untested runtime fallback. Sidecar protocol version 1 is also recorded so an incompatible renderer/Sidecar combination can be rejected before a data-writing operation. Platform packages retain the deployment script's stable backup and explicit rollback command; Windows legacy is not removed or selected by this packaging step.
 
-The release workflow rebuilds and tests each target independently, uploads each package as a CI artifact, and publishes each package archive and its checksum manifest with the tagged GitHub release.
+The release workflow rebuilds and tests each supported target independently, uploads each package as a CI artifact, and publishes each package archive and its checksum manifest with the tagged GitHub release. Intel macOS is not a supported release target.

@@ -11,7 +11,6 @@ No default-switch or ElectronHost-retirement condition is satisfied by source-le
 | Automated quality suite | Typecheck, lint, full test suite, build, architecture/renderer/Sidecar audits | Code CI coverage exists; release-run evidence pending |
 | Windows legacy matrix | Supported Windows and Typora combinations, including one-click legacy rollback | Not run |
 | Windows Sidecar matrix | Clean install, upgrade, repair, uninstall, process cleanup and provider matrix | Not run |
-| macOS Intel matrix | Clean install, repair, upgrade and provider matrix | Not run |
 | macOS Apple Silicon matrix | Clean install, repair, upgrade, architecture/PATH cases and provider matrix | Not run |
 | Provider compatibility | Claude, Codex, OpenCode and Typora/API supported-version probes | Not run |
 | Soak and process safety | Stable release cycle with no P0/P1 data, permission or process-leak incident | Not run |

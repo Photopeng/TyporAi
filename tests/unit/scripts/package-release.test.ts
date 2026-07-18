@@ -95,6 +95,11 @@ describe('package-release script', () => {
       stdio: 'pipe',
     })).toThrow();
     expect(existsSync(path.join(temporaryRoot, 'dist', 'TyporAi-linux-x64'))).toBe(false);
+    expect(() => execFileSync(process.execPath, [script, '--source', temporaryRoot, '--platform', 'macos-x64'], {
+      cwd: repoRoot,
+      stdio: 'pipe',
+    })).toThrow();
+    expect(existsSync(path.join(temporaryRoot, 'dist', 'TyporAi-macos-x64'))).toBe(false);
   });
 
   function writeInput(relativePath: string, contents: string) {
