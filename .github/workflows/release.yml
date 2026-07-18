@@ -81,6 +81,8 @@ jobs:
             directory="dist/TyporAi-${platform}"
             test -f "$directory/release-manifest.json"
             zip -r "TyporAi-${platform}-${GITHUB_REF_NAME}.zip" "$directory"
+            cp "$directory/release-manifest.json" "release-manifest-${platform}.json"
+            cp "$directory/SHA256SUMS.txt" "SHA256SUMS-${platform}.txt"
           done
 
       - name: Generate artifact attestations
@@ -88,8 +90,8 @@ jobs:
         with:
           subject-path: |
             TyporAi-*-v*.zip
-            dist/**/release-manifest.json
-            dist/**/SHA256SUMS.txt
+            release-manifest-*.json
+            SHA256SUMS-*.txt
 
       - name: Get previous tag
         id: prev_tag
@@ -118,5 +120,5 @@ jobs:
             ${{ steps.changelog.outputs.notes }}
           files: |
             TyporAi-*-v*.zip
-            dist/**/release-manifest.json
-            dist/**/SHA256SUMS.txt
+            release-manifest-*.json
+            SHA256SUMS-*.txt
