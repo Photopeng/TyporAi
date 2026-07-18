@@ -1,3 +1,4 @@
+import { ProviderRegistry } from '../../../core/providers/ProviderRegistry';
 import type {
   ProviderChatUIConfig,
   ProviderPermissionModeToggleConfig,
@@ -18,7 +19,6 @@ import {
   resolveOpencodeModeForPermissionMode,
   resolvePermissionModeForManagedOpencodeMode,
 } from '../modes';
-import { OpencodeChatRuntime } from '../runtime/OpencodeChatRuntime';
 import { getOpencodeProviderSettings, updateOpencodeProviderSettings } from '../settings';
 
 const OPENCODE_MODELS: ProviderUIOption[] = [
@@ -177,13 +177,17 @@ export const opencodeChatUIConfig: ProviderChatUIConfig = {
       return;
     }
 
-    const runtime = new OpencodeChatRuntime(context.plugin);
+    const runtime = ProviderRegistry.createChatRuntime({
+      plugin: context.plugin,
+      providerId: 'opencode',
+    });
     try {
       runtime.syncConversationState({
         providerState: { databasePath: OPENCODE_METADATA_WARMUP_DB },
         sessionId: null,
       });
-      await runtime.warmModelMetadata(model);
+      const warmup = (runtime as { warmModelMetadata?: (modelId: string) => Promise<void> }).warmModelMetadata;
+      await warmup?.call(runtime, model);
     } catch {
       // Metadata warmup is opportunistic; the first real turn can still discover it.
     } finally {

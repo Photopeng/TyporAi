@@ -48,6 +48,7 @@ export class TyporaApiRuntime {
 
   cancelTurn(): void { this.engine?.abort(); }
   dispose(): void { this.engine?.abort(); this.engine = null; this.streams.clear(); }
+  resetSession(): void { this.engine?.abort(); this.engine = null; }
 
   private async ensureEngine(): Promise<IAgentEngine> {
     if (this.engine) return this.engine;

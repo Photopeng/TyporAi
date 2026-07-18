@@ -1,8 +1,8 @@
 import { type RpcSocket,WebSocketRpcClient } from '@/bridge/client/WebSocketRpcClient';
 import type { SidecarBootstrap } from '@/sidecar/protocol';
 
+import { mountBridgeTyporAiInTypora } from './mountBridgeTyporAiInTypora';
 import { RENDERER_PROVIDERS } from './RendererProviderRegistry';
-import { SidecarChatPanel } from './SidecarChatPanel';
 
 export {};
 
@@ -30,15 +30,19 @@ async function connect(root: HTMLElement, bootstrap: SidecarBootstrap): Promise<
   const client = new WebSocketRpcClient(bootstrap.endpoint, { socketFactory: endpoint => new WebSocket(endpoint) as unknown as RpcSocket });
   try {
     await client.connect();
+    const platform = navigator.platform.toLowerCase().includes('mac') ? 'macos' : 'windows';
     const initialized = await client.initialize({
       clientId: getClientId(), lastConnectionId: getLastConnectionId(),
-      platform: navigator.platform.toLowerCase().includes('mac') ? 'macos' : 'windows',
+      platform,
       protocol: { min: 1, max: 1 }, rendererVersion: '2.x', token: bootstrap.token,
     });
     localStorage.setItem('typorai.renderer.last-connection-id', initialized.connectionId);
     root.dataset.typoraiSidecar = 'connected';
-    const panel = new SidecarChatPanel(root, client);
-    await panel.initialize();
+    const runtime = await mountBridgeTyporAiInTypora(client, bootstrap, platform);
+    window.addEventListener('beforeunload', () => {
+      void runtime.dispose();
+      client.dispose();
+    }, { once: true });
     window.addEventListener('offline', () => { root.dataset.typoraiSidecar = 'reconnecting'; }, { once: true });
   } catch (error) {
     root.dataset.typoraiSidecar = client.state === 'incompatible' ? 'incompatible' : 'error';

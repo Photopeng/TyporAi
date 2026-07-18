@@ -1,5 +1,6 @@
 import { ProviderRegistry } from '../core/providers/ProviderRegistry';
 import { ProviderWorkspaceRegistry } from '../core/providers/ProviderWorkspaceRegistry';
+import { ElectronHomeFileStore } from '../hosts/electron/ElectronHomeFileStore';
 import { claudeWorkspaceRegistration } from './claude/app/ClaudeWorkspaceServices';
 import { claudeProviderRegistration } from './claude/registration';
 import { codexWorkspaceRegistration } from './codex/app/CodexWorkspaceServices';
@@ -24,6 +25,7 @@ export function registerBuiltInProviders(): void {
   ProviderWorkspaceRegistry.register('codex', codexWorkspaceRegistration);
   ProviderWorkspaceRegistry.register('opencode', opencodeWorkspaceRegistration);
   ProviderWorkspaceRegistry.register('typora', typoraWorkspaceRegistration);
+  ProviderWorkspaceRegistry.configureHomeAdapter(new ElectronHomeFileStore());
   builtInProvidersRegistered = true;
 }
 

@@ -1,7 +1,7 @@
 import { setIcon } from '@/ui/Icon';
 
 import { tryParseClipboardConfig } from '../../../core/mcp/McpConfigParser';
-import { testMcpServer } from '../../../core/mcp/McpTester';
+import type { McpTestResult } from '../../../core/mcp/McpTester';
 import type { AppMcpStorage } from '../../../core/providers/types';
 import type { ManagedMcpServer, McpServerConfig, McpServerType } from '../../../core/types';
 import { DEFAULT_MCP_SERVER, getMcpServerType } from '../../../core/types';
@@ -18,12 +18,14 @@ const managerByContainer = new WeakMap<HTMLElement, McpSettingsManager>();
 export interface McpSettingsManagerDeps {
   mcpStorage: AppMcpStorage;
   broadcastMcpReload: () => Promise<void>;
+  testServer?: (server: ManagedMcpServer) => Promise<McpTestResult>;
 }
 
 export class McpSettingsManager {
   private containerEl: HTMLElement;
   private mcpStorage: AppMcpStorage;
   private broadcastMcpReload: () => Promise<void>;
+  private readonly testServerWithHost: (server: ManagedMcpServer) => Promise<McpTestResult>;
   private servers: ManagedMcpServer[] = [];
   private readonly notifications = new NoticeAdapter();
   private stopDocumentClick: (() => void) | null = null;
@@ -34,6 +36,11 @@ export class McpSettingsManager {
     this.containerEl = containerEl;
     this.mcpStorage = deps.mcpStorage;
     this.broadcastMcpReload = deps.broadcastMcpReload;
+    this.testServerWithHost = deps.testServer ?? (async () => ({
+      error: 'MCP verification is unavailable in this host.',
+      success: false,
+      tools: [],
+    }));
     void this.loadAndRender();
   }
 
@@ -185,7 +192,7 @@ export class McpSettingsManager {
     modal.open();
 
     try {
-      const result = await testMcpServer(server);
+      const result = await this.testServerWithHost(server);
       modal.setResult(result);
     } catch (error) {
       modal.setError(error instanceof Error ? error.message : t('settings.mcp.verificationFailed'));

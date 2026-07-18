@@ -1,4 +1,4 @@
-import { DEFAULT_TYPORA_ENGINE_SETTINGS } from '../../core/engine-factory';
+import { DEFAULT_TYPORA_ENGINE_SETTINGS } from '../../core/engine-settings';
 import { getDefaultHiddenProviderCommands } from '../../core/providers/commands/hiddenCommands';
 import { type TyporAiSettings } from '../../core/types/settings';
 import { getBuiltInProviderDefaultConfigs } from '../../providers/defaultProviderConfigs';

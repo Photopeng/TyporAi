@@ -1,3 +1,4 @@
+import { testMcpServer } from '../../../core/mcp/McpTester';
 import { setSingleEnabledCliProvider } from '../../../core/providers/cliProviderSelection';
 import { ProviderSettingsCoordinator } from '../../../core/providers/ProviderSettingsCoordinator';
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
@@ -284,6 +285,7 @@ export const claudeSettingsTabRenderer: ProviderSettingsTabRenderer = {
     container.append(mcpDesc, mcpContainer);
     new McpSettingsManager(mcpContainer, {
       mcpStorage: claudeWorkspace.mcpStorage,
+      testServer: testMcpServer,
       broadcastMcpReload: async () => {
         for (const view of context.plugin.getAllViews()) {
           await view.getTabManager()?.broadcastToAllTabs(

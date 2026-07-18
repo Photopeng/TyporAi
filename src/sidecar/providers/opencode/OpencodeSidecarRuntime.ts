@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import type { ProcessTransportFactory } from '@/core/ports';
 import type { StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
+import type { AcpLoadSessionResponse,AcpNewSessionResponse } from '@/providers/acp';
 import {
   AcpClientConnection,
   AcpJsonRpcTransport,
@@ -11,11 +12,17 @@ import {
   type AcpSessionNotification,
   AcpSessionUpdateNormalizer,
   AcpSubprocess,
+  extractAcpSessionModelState,
+  extractAcpSessionModeState,
+  extractAcpSessionThoughtLevelState,
 } from '@/providers/acp';
+import { decodeOpencodeModelId,resolveOpencodeBaseModelRawId } from '@/providers/opencode/models';
+import { resolveOpencodeModeForPermissionMode } from '@/providers/opencode/modes';
 import { buildOpencodeRuntimeEnv } from '@/providers/opencode/runtime/OpencodeRuntimeEnvironment';
 import { getOpencodeProviderSettings } from '@/providers/opencode/settings';
 
 import { EventReplayBuffer } from '../../server/EventReplayBuffer';
+import type { SidecarTurnOptions } from '../registry';
 
 export interface OpencodeSidecarRuntimeOptions {
   readonly getSettings: () => Record<string, unknown>;
@@ -32,7 +39,10 @@ export class OpencodeSidecarRuntime {
   private sessionLoaded = false;
   private transport: AcpJsonRpcTransport | null = null;
   private activeTurn: string | null = null;
+  private availableModes: Array<{ description?: string; id: string; name: string }> = [];
+  private discoveredModels: Array<{ description?: string; label: string; rawId: string }> = [];
   private publish: ((chunk: StreamChunk) => void) | null = null;
+  private thoughtLevelConfigId: string | null = null;
   private readonly normalizer = new AcpSessionUpdateNormalizer();
 
   constructor(private readonly options: OpencodeSidecarRuntimeOptions) {}
@@ -42,6 +52,7 @@ export class OpencodeSidecarRuntime {
     turnId: string,
     prompt: string,
     publish: (event: RpcEventEnvelope<StreamChunk>) => void,
+    turnOptions: SidecarTurnOptions = {},
   ): Promise<void> {
     if (this.activeTurn) throw new Error('TURN_ALREADY_ACTIVE');
     const replay = new EventReplayBuffer<StreamChunk>(connectionId, turnId);
@@ -59,6 +70,11 @@ export class OpencodeSidecarRuntime {
     try {
       const connection = await this.ensureConnection(workspace);
       const sessionId = await this.ensureSession(connection, workspace);
+      await this.applySelectedModeAndEffort(connection, sessionId);
+      const selectedModel = this.resolveModel(turnOptions.model);
+      if (selectedModel) {
+        await connection.setConfigOption({ configId: 'model', sessionId, type: 'select', value: selectedModel });
+      }
       const input = await buildSidecarPromptBlocks(prompt);
       await connection.prompt({ prompt: input, sessionId });
       emit({ type: 'done' });
@@ -90,7 +106,18 @@ export class OpencodeSidecarRuntime {
   }
 
   restoreSession(sessionId: string | null): void { this.sessionId = sessionId; this.sessionLoaded = false; }
-  getSessionState(): { readonly sessionId: string | null } { return { sessionId: this.sessionId }; }
+  getSessionState(): { readonly providerState: Record<string, unknown>; readonly sessionId: string | null } {
+    return {
+      providerState: { availableModes: this.availableModes, discoveredModels: this.discoveredModels },
+      sessionId: this.sessionId,
+    };
+  }
+  async resetSession(): Promise<void> {
+    if (this.connection && this.sessionId && this.activeTurn) this.connection.cancel({ sessionId: this.sessionId });
+    this.sessionId = null;
+    this.sessionLoaded = false;
+    this.normalizer.reset();
+  }
 
   private async ensureConnection(workspace: string): Promise<AcpClientConnection> {
     if (this.connection && this.process?.isAlive()) return this.connection;
@@ -129,6 +156,7 @@ export class OpencodeSidecarRuntime {
     if (this.sessionId) {
       try {
         const result = await connection.loadSession({ cwd: workspace, mcpServers: [], sessionId: this.sessionId });
+        this.captureSessionConfig(result);
         this.sessionId = result.sessionId;
         this.sessionLoaded = true;
         return this.sessionId;
@@ -137,6 +165,7 @@ export class OpencodeSidecarRuntime {
       }
     }
     const result = await connection.newSession({ cwd: workspace, mcpServers: [] });
+    this.captureSessionConfig(result);
     this.sessionId = result.sessionId;
     this.sessionLoaded = true;
     return result.sessionId;
@@ -166,6 +195,42 @@ export class OpencodeSidecarRuntime {
     const message = error instanceof Error ? error.message : String(error);
     const stderr = this.process?.getStderrSnapshot();
     return stderr ? `${message}\n\n${stderr}` : message;
+  }
+
+  private resolveModel(model: string | undefined): string | null {
+    if (!model) return null;
+    const settings = getOpencodeProviderSettings(this.options.getSettings());
+    const decoded = decodeOpencodeModelId(model);
+    return decoded ? resolveOpencodeBaseModelRawId(decoded, settings.discoveredModels) : null;
+  }
+
+  private captureSessionConfig(result: AcpLoadSessionResponse | AcpNewSessionResponse): void {
+    const models = extractAcpSessionModelState(result).availableModels;
+    const modes = extractAcpSessionModeState(result).availableModes;
+    const thought = extractAcpSessionThoughtLevelState(result);
+    this.discoveredModels = models.map(model => ({
+      ...(model.description ? { description: model.description } : {}),
+      label: model.name || model.id,
+      rawId: model.id,
+    }));
+    this.availableModes = modes.map(mode => ({
+      ...(mode.description ? { description: mode.description } : {}),
+      id: mode.id,
+      name: mode.name || mode.id,
+    }));
+    this.thoughtLevelConfigId = thought.configId;
+  }
+
+  private async applySelectedModeAndEffort(connection: AcpClientConnection, sessionId: string): Promise<void> {
+    const settings = this.options.getSettings();
+    const selectedMode = resolveOpencodeModeForPermissionMode(settings.permissionMode, this.availableModes);
+    if (selectedMode) {
+      await connection.setConfigOption({ configId: 'mode', sessionId, type: 'select', value: selectedMode });
+    }
+    const effort = typeof settings.effortLevel === 'string' ? settings.effortLevel : '';
+    if (this.thoughtLevelConfigId && effort && effort !== 'default') {
+      await connection.setConfigOption({ configId: this.thoughtLevelConfigId, sessionId, type: 'select', value: effort });
+    }
   }
 }
 
