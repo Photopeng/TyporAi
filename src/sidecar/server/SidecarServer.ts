@@ -8,15 +8,19 @@ import { type WebSocket,WebSocketServer } from 'ws';
 
 import { testMcpServer } from '@/core/mcp/McpTester';
 import type { AppTabManagerState } from '@/core/providers/types';
+import type { ChatTurnMetadata } from '@/core/runtime/types';
 import type { Conversation, StreamChunk } from '@/core/types';
 import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope } from '@/protocol';
+import { getClaudeProviderSettings } from '@/providers/claude/settings';
+import { getCodexProviderSettings } from '@/providers/codex/settings';
+import { getOpencodeProviderSettings } from '@/providers/opencode/settings';
 
 import { SingleInstanceLock } from '../lifecycle/SingleInstanceLock';
 import { ClaudeSidecarRuntime } from '../providers/claude/ClaudeSidecarRuntime';
 import { CodexSidecarRuntime } from '../providers/codex/CodexSidecarRuntime';
 import { FakeChatService } from '../providers/fake/FakeChatService';
 import { OpencodeSidecarRuntime } from '../providers/opencode/OpencodeSidecarRuntime';
-import { SidecarProviderRegistry,type SidecarProviderRuntime } from '../providers/registry';
+import { SidecarProviderRegistry,type SidecarProviderRuntime,type SidecarTurnOptions } from '../providers/registry';
 import { RuntimeManager } from '../providers/RuntimeManager';
 import { TyporaApiRuntime } from '../providers/typora/TyporaApiRuntime';
 import { ApprovalBroker, type PendingInteraction } from '../services/approval/ApprovalBroker';
@@ -47,9 +51,12 @@ export interface SidecarServerOptions {
 
 interface SidecarChatProviderRuntime extends SidecarProviderRuntime {
   cancelTurn(turnId: string): void;
+  consumeTurnMetadata?(): ChatTurnMetadata;
+  resetSession?(): void | Promise<void>;
   restoreSession?(sessionId: string | null): void | Promise<void>;
   getSessionState?(): { readonly providerState?: Record<string, unknown>; readonly sessionId: string | null };
-  startTurn(connectionId: string, turnId: string, prompt: string, publish: (event: RpcEventEnvelope<StreamChunk>) => void): Promise<void>;
+  startTurn(connectionId: string, turnId: string, prompt: string, publish: (event: RpcEventEnvelope<StreamChunk>) => void, options?: SidecarTurnOptions): Promise<void>;
+  steer?(turnId: string, prompt: string): Promise<boolean>;
 }
 
 export class SidecarServer {
@@ -80,35 +87,61 @@ export class SidecarServer {
     this.lock = new SingleInstanceLock(options.lockPath);
     this.router = new RpcRouter({ sidecarVersion: options.sidecarVersion, token: options.token });
     this.providers.register('fake', () => new FakeChatService());
-    this.providers.register('claude', () => new ClaudeSidecarRuntime({
+    this.providers.register('claude', ({ runtimeId }) => new ClaudeSidecarRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
       getMcpServers: () => this.mcp?.list() ?? [],
       processes: this.processTransport,
       requestApproval: async (toolName, input, description) => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, toolName } });
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'claude', runtimeId, toolName } });
         return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
       },
+      requestPlanApproval: async input => {
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'planApproval', payload: { ...input, providerId: 'claude', runtimeId } });
+        return result && typeof result === 'object' ? result as never : null;
+      },
+      requestUserInput: async input => {
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'userInput', payload: { ...input, providerId: 'claude', runtimeId } });
+        const answers = (result as { answers?: unknown })?.answers;
+        return answers && typeof answers === 'object' && !Array.isArray(answers)
+          ? answers as Record<string, string | string[]>
+          : null;
+      },
     }));
-    this.providers.register('codex', () => new CodexSidecarRuntime({
-      getSettings: () => this.settings?.getSnapshot().value ?? {},
-      getWorkspacePath: () => this.workspace?.current ?? null,
-      processes: this.processTransport,
-    }));
-    this.providers.register('opencode', () => new OpencodeSidecarRuntime({
+    this.providers.register('codex', ({ runtimeId }) => new CodexSidecarRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
       processes: this.processTransport,
       requestApproval: async (toolName, input, description) => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, toolName } });
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'codex', runtimeId, toolName } });
+        const decision = (result as { decision?: unknown })?.decision;
+        return decision === 'allow' || decision === 'allow-always' || decision === 'deny'
+          ? decision
+          : decision === 'abort' ? 'cancel'
+          : (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
+      },
+      requestUserInput: async input => {
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'userInput', payload: { ...input, providerId: 'codex', runtimeId } });
+        const answers = (result as { answers?: unknown })?.answers;
+        return answers && typeof answers === 'object' && !Array.isArray(answers)
+          ? answers as Record<string, string | string[]>
+          : null;
+      },
+    }));
+    this.providers.register('opencode', ({ runtimeId }) => new OpencodeSidecarRuntime({
+      getSettings: () => this.settings?.getSnapshot().value ?? {},
+      getWorkspacePath: () => this.workspace?.current ?? null,
+      processes: this.processTransport,
+      requestApproval: async (toolName, input, description) => {
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'opencode', runtimeId, toolName } });
         return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
       },
     }));
-    this.providers.register('typora', () => new TyporaApiRuntime({
+    this.providers.register('typora', ({ runtimeId }) => new TyporaApiRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
       requestApproval: async (toolName, input, description) => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, toolName } });
+        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'typora', runtimeId, toolName } });
         return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
       },
     }));
@@ -333,7 +366,7 @@ export class SidecarServer {
           return;
         }
         if (request.method === 'chat.startTurn') {
-          const params = request.params as { blobIds?: unknown; conversationId?: unknown; prompt?: unknown; turnId?: unknown; providerId?: unknown; runtimeId?: unknown } | undefined;
+          const params = request.params as { blobIds?: unknown; conversationId?: unknown; options?: unknown; prompt?: unknown; turnId?: unknown; providerId?: unknown; runtimeId?: unknown } | undefined;
           if (typeof params?.prompt !== 'string' || typeof params.turnId !== 'string') {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid chat turn.' } }));
             return;
@@ -343,6 +376,11 @@ export class SidecarServer {
           const conversationId = typeof params.conversationId === 'string' && params.conversationId ? params.conversationId : null;
           const turnId = params.turnId;
           const blobIds = Array.isArray(params.blobIds) && params.blobIds.every(value => typeof value === 'string') ? params.blobIds : [];
+          let turnOptions: SidecarTurnOptions;
+          try { turnOptions = this.validateTurnOptions(params.options); } catch (error) {
+            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: error instanceof Error ? error.message : 'Invalid chat turn options.' } }));
+            return;
+          }
           let chatRuntime: SidecarChatProviderRuntime;
           try { chatRuntime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(providerId, runtimeId); } catch {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: 'Provider runtime is unavailable.' } }));
@@ -352,7 +390,7 @@ export class SidecarServer {
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { streamId: turnId } }));
           void this.withBlobContext(params.prompt, blobIds).then(prompt => chatRuntime.startTurn(connectionId, turnId, prompt, event => {
             if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: event }));
-          })).catch(error => {
+          }, turnOptions)).catch(error => {
             if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: { connectionId, streamId: turnId, seq: 1, event: 'chat.chunk', timestamp: Date.now(), payload: { type: 'error', content: error instanceof Error ? error.message : 'Attachment preparation failed.' } } }));
           }).finally(() => {
             this.activeTurns.delete(turnId);
@@ -381,7 +419,30 @@ export class SidecarServer {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid runtime dispose.' } }));
             return;
           }
-          void this.runtimes.dispose(params.providerId, params.runtimeId).then(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} })));
+          void this.runtimes.dispose(params.providerId, params.runtimeId)
+            .then(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} })))
+            .catch(error => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: error instanceof Error ? error.message : 'Runtime disposal failed.' } })));
+          return;
+        }
+        if (request.method === 'chat.getRuntimeState') {
+          const params = request.params as { providerId?: unknown; runtimeId?: unknown } | undefined;
+          if (typeof params?.providerId !== 'string' || typeof params.runtimeId !== 'string' || !params.runtimeId) {
+            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid runtime state request.' } }));
+            return;
+          }
+          try {
+            const runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, params.runtimeId);
+            connection.send(JSON.stringify({
+              jsonrpc: '2.0',
+              id: request.id,
+              result: {
+                ...(runtime.getSessionState?.() ?? { sessionId: null }),
+                turnMetadata: runtime.consumeTurnMetadata?.() ?? {},
+              },
+            }));
+          } catch (error) {
+            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: error instanceof Error ? error.message : 'Provider runtime is unavailable.' } }));
+          }
           return;
         }
         if (request.method === 'chat.cancelTurn') {
@@ -393,14 +454,47 @@ export class SidecarServer {
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }));
           return;
         }
+        if (request.method === 'chat.steer') {
+          const params = request.params as { blobIds?: unknown; prompt?: unknown; providerId?: unknown; runtimeId?: unknown; turnId?: unknown } | undefined;
+          if (typeof params?.providerId !== 'string' || typeof params.runtimeId !== 'string'
+            || typeof params.turnId !== 'string' || typeof params.prompt !== 'string') {
+            return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid steer request.' } }));
+          }
+          let runtime: SidecarChatProviderRuntime;
+          try { runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, params.runtimeId); } catch (error) {
+            return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: error instanceof Error ? error.message : 'Provider runtime is unavailable.' } }));
+          }
+          const blobIds = Array.isArray(params.blobIds) && params.blobIds.every(value => typeof value === 'string') ? params.blobIds : [];
+          void this.withBlobContext(params.prompt, blobIds)
+            .then(prompt => runtime.steer?.(params.turnId as string, prompt) ?? false)
+            .then(accepted => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { accepted } })))
+            .catch(error => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: error instanceof Error ? error.message : 'Turn steering failed.' } })))
+            .finally(() => { void Promise.all(blobIds.map(blobId => this.blobs?.abort(blobId))); });
+          return;
+        }
+        if (request.method === 'chat.resetSession') {
+          const params = request.params as { providerId?: unknown; runtimeId?: unknown } | undefined;
+          if (typeof params?.providerId !== 'string' || typeof params.runtimeId !== 'string' || !params.runtimeId) {
+            return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid reset request.' } }));
+          }
+          let runtime: SidecarChatProviderRuntime;
+          try { runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, params.runtimeId); } catch (error) {
+            return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: error instanceof Error ? error.message : 'Provider runtime is unavailable.' } }));
+          }
+          void Promise.resolve(runtime.resetSession?.())
+            .then(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} })))
+            .catch(error => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: error instanceof Error ? error.message : 'Session reset failed.' } })));
+          return;
+        }
         if (request.method === 'provider.list') {
-          void this.providerProbe.list().then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: result.map(provider => ({ ...provider, status: provider.available ? 'available' : 'unavailable' })) })));
+          void this.providerProbe.list(this.configuredProviderExecutables()).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: result.map(provider => ({ ...provider, status: provider.available ? 'available' : 'unavailable' })) })));
           return;
         }
         if (request.method === 'provider.probeCli') {
           const providerId = (request.params as { providerId?: unknown } | undefined)?.providerId;
           if (providerId !== 'claude' && providerId !== 'codex' && providerId !== 'opencode' && providerId !== 'typora') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Unknown provider.' } }));
-          void this.providerProbe.probe(providerId as ProbedProviderId).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result })));
+          const configured = this.configuredProviderExecutables()[providerId];
+          void this.providerProbe.probe(providerId as ProbedProviderId, configured).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result })));
           return;
         }
         if (request.method === 'skills.list') {
@@ -464,6 +558,15 @@ export class SidecarServer {
     const conversation = await this.ensureChatConversation(conversationId, providerId);
     await runtime.restoreSession?.(conversation.sessionId);
     return runtime;
+  }
+
+  private configuredProviderExecutables(): Partial<Record<ProbedProviderId, string>> {
+    const settings = this.settings?.getSnapshot().value ?? {};
+    return {
+      claude: getClaudeProviderSettings(settings).cliPath,
+      codex: getCodexProviderSettings(settings).cliPath,
+      opencode: getOpencodeProviderSettings(settings).cliPath,
+    };
   }
 
   private async ensureChatConversation(conversationId: string, providerId: string): Promise<Conversation> {
@@ -587,6 +690,28 @@ export class SidecarServer {
       case 'blob.abort': if (!blobId) throw new Error('Invalid blob abort.'); await this.blobs.abort(blobId); return {};
       default: throw new Error('Unsupported blob operation.');
     }
+  }
+
+  private validateTurnOptions(value: unknown): SidecarTurnOptions {
+    if (value === undefined || value === null) return {};
+    if (typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid chat turn options.');
+    const options = value as Record<string, unknown>;
+    const readStrings = (key: string): readonly string[] | undefined => {
+      const current = options[key];
+      if (current === undefined) return undefined;
+      if (!Array.isArray(current) || !current.every(item => typeof item === 'string')) throw new Error(`Invalid ${key}.`);
+      return current;
+    };
+    if (options.model !== undefined && typeof options.model !== 'string') throw new Error('Invalid model.');
+    if (options.forceColdStart !== undefined && typeof options.forceColdStart !== 'boolean') throw new Error('Invalid cold-start option.');
+    return {
+      allowedTools: readStrings('allowedTools'),
+      enabledMcpServers: readStrings('enabledMcpServers'),
+      externalContextPaths: readStrings('externalContextPaths'),
+      forceColdStart: options.forceColdStart as boolean | undefined,
+      mcpMentions: readStrings('mcpMentions'),
+      model: options.model as string | undefined,
+    };
   }
 
   private async withBlobContext(prompt: string, blobIds: readonly string[]): Promise<string> {

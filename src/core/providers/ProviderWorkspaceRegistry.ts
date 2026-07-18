@@ -1,6 +1,5 @@
-import { ElectronHomeFileStore } from '../../hosts/electron/ElectronHomeFileStore';
 import type TyporAiPlugin from '../../main';
-import type { HostServices } from '../ports';
+import type { HomeFileStore,HostServices } from '../ports';
 import type { ProviderCommandCatalog } from './commands/ProviderCommandCatalog';
 import type {
   AgentMentionProvider,
@@ -23,6 +22,7 @@ import type {
 export class ProviderWorkspaceRegistry {
   private static registrations: Partial<Record<ProviderId, ProviderWorkspaceRegistration>> = {};
   private static services: Partial<Record<ProviderId, ProviderWorkspaceServices>> = {};
+  private static homeAdapter: HomeFileStore | null = null;
 
   static register(
     providerId: ProviderId,
@@ -42,9 +42,11 @@ export class ProviderWorkspaceRegistry {
   static async initializeAll(plugin: TyporAiPlugin): Promise<void> {
     await this.disposeAll();
     const providerIds = Object.keys(this.registrations);
+    if (providerIds.length === 0) return;
     const storage = plugin.storage;
     const workspaceFileAdapter = storage.getAdapter();
-    const homeAdapter = new ElectronHomeFileStore();
+    const homeAdapter = this.homeAdapter;
+    if (!homeAdapter) throw new Error('Provider home storage is not configured for this host.');
 
     for (const providerId of providerIds) {
       this.services[providerId] = await this.getWorkspaceRegistration(providerId).initialize({
@@ -55,6 +57,10 @@ export class ProviderWorkspaceRegistry {
         homeAdapter,
       });
     }
+  }
+
+  static configureHomeAdapter(adapter: HomeFileStore): void {
+    this.homeAdapter = adapter;
   }
 
   static setServices(

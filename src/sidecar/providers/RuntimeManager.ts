@@ -12,7 +12,7 @@ export class RuntimeManager {
     const key = `${providerId}:${sessionId}`;
     const existing = this.runtimes.get(key);
     if (existing) return existing as T;
-    const runtime = this.providers.create<T>(providerId);
+    const runtime = this.providers.create<T>(providerId, sessionId);
     this.runtimes.set(key, runtime);
     return runtime;
   }

@@ -1023,7 +1023,8 @@ function readBundledStyles(): string {
   }
 }
 
-function getTyporaOverrideStyles(): string {
+/** Shared Typora host overrides used by both the native and Sidecar renderers. */
+export function getTyporaOverrideStyles(): string {
   return `
     :root {
       /* Light-mode defaults — JS overwrites these at runtime based on the

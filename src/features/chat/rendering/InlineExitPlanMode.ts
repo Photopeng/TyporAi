@@ -139,6 +139,10 @@ export class InlineExitPlanMode {
   }
 
   private readPlanContent(): string | null {
+    const suppliedContent = this.input.planContent;
+    if (typeof suppliedContent === 'string' && suppliedContent.trim()) {
+      return suppliedContent.trim();
+    }
     const planFilePath = this.input.planFilePath as string | undefined;
     if (!planFilePath) return null;
 

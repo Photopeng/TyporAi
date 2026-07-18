@@ -1,7 +1,7 @@
 import {
   DEFAULT_TYPORA_ENGINE_SETTINGS,
   type TyporaEngineSettings,
-} from '../../core/engine-factory';
+} from '../../core/engine-settings';
 import { getProviderConfig, setProviderConfig } from '../../core/providers/providerConfig';
 
 export interface TyporaProviderSettings extends TyporaEngineSettings {

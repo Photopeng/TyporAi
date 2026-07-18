@@ -10,7 +10,8 @@ import { query as agentQuery } from '@anthropic-ai/claude-agent-sdk';
 
 import type { ProcessTransportFactory } from '@/core/ports';
 import { buildSystemPrompt } from '@/core/prompt/mainAgent';
-import type { ImageAttachment, ManagedMcpServer, StreamChunk } from '@/core/types';
+import { TOOL_ASK_USER_QUESTION,TOOL_EXIT_PLAN_MODE,TOOL_WRITE } from '@/core/tools/toolNames';
+import type { ExitPlanModeDecision,ImageAttachment,ManagedMcpServer,StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
 import { toClaudeRuntimeModelId } from '@/providers/claude/modelSelection';
 import { buildClaudePromptWithImages } from '@/providers/claude/runtime/ClaudeUserMessageFactory';
@@ -22,6 +23,7 @@ import { resolveEffortLevel } from '@/providers/claude/types/models';
 import { getEnhancedPath, getMissingNodeError, parseEnvironmentVariables } from '@/utils/env';
 
 import { EventReplayBuffer } from '../../server/EventReplayBuffer';
+import type { SidecarTurnOptions } from '../registry';
 
 export interface ClaudeSidecarRuntimeOptions {
   readonly getSettings: () => Record<string, unknown>;
@@ -29,6 +31,8 @@ export interface ClaudeSidecarRuntimeOptions {
   readonly getMcpServers?: () => readonly ManagedMcpServer[];
   readonly processes: ProcessTransportFactory;
   readonly requestApproval: (toolName: string, input: Record<string, unknown>, description: string) => Promise<'allow' | 'deny'>;
+  readonly requestPlanApproval?: (input: Record<string, unknown>) => Promise<ExitPlanModeDecision | null>;
+  readonly requestUserInput?: (input: Record<string, unknown>) => Promise<Record<string, string | string[]> | null>;
 }
 
 /** Native Claude Agent SDK runtime owned by Sidecar rather than the Renderer. */
@@ -36,6 +40,7 @@ export class ClaudeSidecarRuntime {
   private activeTurn: string | null = null;
   private activeQuery: Query | null = null;
   private sessionId: string | null = null;
+  private planFilePath: string | null = null;
 
   constructor(private readonly options: ClaudeSidecarRuntimeOptions) {}
 
@@ -44,6 +49,7 @@ export class ClaudeSidecarRuntime {
     turnId: string,
     prompt: string,
     publish: (event: RpcEventEnvelope<StreamChunk>) => void,
+    turnOptions: SidecarTurnOptions = {},
   ): Promise<void> {
     if (this.activeTurn) throw new Error('TURN_ALREADY_ACTIVE');
     const replay = new EventReplayBuffer<StreamChunk>(connectionId, turnId);
@@ -59,13 +65,16 @@ export class ClaudeSidecarRuntime {
     try {
       const query = agentQuery({
         prompt: await buildSidecarClaudePrompt(prompt),
-        options: this.createQueryOptions(workspace),
+        options: this.createQueryOptions(workspace, turnOptions),
       });
       this.activeQuery = query;
       for await (const message of query) {
         this.captureSessionId(message);
-        for (const event of transformSDKMessage(message, { intendedModel: this.getModel() })) {
-          if (isStreamChunk(event)) emit(event);
+        for (const event of transformSDKMessage(message, { intendedModel: this.getModel(turnOptions.model) })) {
+          if (isStreamChunk(event)) {
+            this.capturePlanFile(event);
+            emit(event);
+          }
         }
       }
       emit({ type: 'done' });
@@ -91,8 +100,13 @@ export class ClaudeSidecarRuntime {
 
   restoreSession(sessionId: string | null): void { this.sessionId = sessionId; }
   getSessionState(): { readonly sessionId: string | null } { return { sessionId: this.sessionId }; }
+  async resetSession(): Promise<void> {
+    await this.activeQuery?.interrupt();
+    this.sessionId = null;
+    this.planFilePath = null;
+  }
 
-  private createQueryOptions(workspace: string): Options {
+  private createQueryOptions(workspace: string, turnOptions: SidecarTurnOptions = {}): Options {
     const settings = this.options.getSettings();
     const provider = getClaudeProviderSettings(settings);
     const cliPath = provider.cliPath || 'claude';
@@ -101,7 +115,7 @@ export class ClaudeSidecarRuntime {
     const missingNodeError = getMissingNodeError(cliPath, enhancedPath);
     if (missingNodeError) throw new Error(missingNodeError);
 
-    const model = this.getModel();
+    const model = this.getModel(turnOptions.model);
     const queryOptions: Options = {
       cwd: workspace,
       systemPrompt: buildSystemPrompt({
@@ -122,8 +136,12 @@ export class ClaudeSidecarRuntime {
       thinking: { type: 'adaptive' },
       effort: resolveEffortLevel(model, settings.effortLevel),
     };
-    if (this.sessionId) queryOptions.resume = this.sessionId;
-    const mcpServers = this.options.getMcpServers?.().filter(server => server.enabled && !server.contextSaving) ?? [];
+    if (turnOptions.allowedTools) queryOptions.allowedTools = [...turnOptions.allowedTools];
+    if (this.sessionId && !turnOptions.forceColdStart) queryOptions.resume = this.sessionId;
+    const selectedMcpServers = [...(turnOptions.enabledMcpServers ?? []), ...(turnOptions.mcpMentions ?? [])];
+    const enabledMcpServers = selectedMcpServers.length > 0 ? new Set(selectedMcpServers) : null;
+    const mcpServers = this.options.getMcpServers?.().filter(server => server.enabled && !server.contextSaving
+      && (!enabledMcpServers || enabledMcpServers.has(server.name))) ?? [];
     if (mcpServers.length > 0) {
       queryOptions.mcpServers = Object.fromEntries(mcpServers.map(server => [server.name, server.config])) as Options['mcpServers'];
     }
@@ -137,6 +155,30 @@ export class ClaudeSidecarRuntime {
       const normalizedInput = input && typeof input === 'object' && !Array.isArray(input)
         ? input as Record<string, unknown>
         : {};
+      if (toolName === TOOL_EXIT_PLAN_MODE && this.options.requestPlanApproval) {
+        const planContent = await this.readPlanContent();
+        const decision = await this.options.requestPlanApproval({
+          ...normalizedInput,
+          ...(planContent ? { planContent } : {}),
+        });
+        if (!decision) return { behavior: 'deny', message: 'User cancelled.', interrupt: true };
+        if (decision.type === 'feedback') return { behavior: 'deny', message: decision.text, interrupt: false };
+        return { behavior: 'allow', updatedInput: normalizedInput };
+      }
+      if (toolName === TOOL_ASK_USER_QUESTION && this.options.requestUserInput) {
+        const questions = normalizedInput.questions;
+        if (Array.isArray(questions)) {
+          for (const question of questions) {
+            if (question && typeof question === 'object' && !Array.isArray(question) && !('isOther' in question)) {
+              (question as Record<string, unknown>).isOther = true;
+            }
+          }
+        }
+        const answers = await this.options.requestUserInput(normalizedInput);
+        return answers
+          ? { behavior: 'allow', updatedInput: { ...normalizedInput, answers } }
+          : { behavior: 'deny', message: 'User declined to answer.', interrupt: true };
+      }
       const decision = await this.options.requestApproval(
         toolName,
         normalizedInput,
@@ -148,8 +190,26 @@ export class ClaudeSidecarRuntime {
     };
   }
 
-  private getModel(): string {
-    const model = this.options.getSettings().model;
+  private capturePlanFile(chunk: StreamChunk): void {
+    if (chunk.type !== 'tool_use' || chunk.name !== TOOL_WRITE) return;
+    const path = chunk.input.file_path;
+    if (typeof path === 'string' && path.replace(/\\/g, '/').includes('/.claude/plans/')) {
+      this.planFilePath = path;
+    }
+  }
+
+  private async readPlanContent(): Promise<string | null> {
+    if (!this.planFilePath) return null;
+    try {
+      const content = await readFile(this.planFilePath, 'utf8');
+      return content.trim() || null;
+    } catch {
+      return null;
+    }
+  }
+
+  private getModel(override?: string): string {
+    const model = override ?? this.options.getSettings().model;
     return toClaudeRuntimeModelId(typeof model === 'string' && model.trim() ? model : 'sonnet');
   }
 

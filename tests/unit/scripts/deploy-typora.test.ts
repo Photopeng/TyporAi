@@ -157,6 +157,7 @@ describe('deploy-typora script', () => {
     expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
     const bootstrap = readFileSync(path.join(pluginDir, 'typorai-bootstrap.js'), 'utf8');
     expect(bootstrap).toContain('ws://127.0.0.1:18328/rpc');
+    expect(bootstrap).toContain(`"homeDirectory":${JSON.stringify(tempRoot)}`);
     expect(bootstrap).toMatch(/"token":"[0-9a-f]{64}"/);
     expect(readFileSync(path.join(tempRoot, 'Library', 'LaunchAgents', 'com.photopeng.typorai.sidecar.plist'), 'utf8')).toContain('<key>PATH</key>');
     runDeployWithEnv({

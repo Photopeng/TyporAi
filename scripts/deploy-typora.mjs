@@ -447,6 +447,7 @@ function installSidecarRuntime() {
 function writeMacosRendererBootstrap() {
   const bootstrap = JSON.stringify({
     endpoint: `ws://127.0.0.1:${paths.sidecarPort}/rpc`,
+    homeDirectory: paths.deploymentHome,
     protocolVersion: 1,
     token: readSidecarToken(),
   }).replace(/</g, '\\u003c');

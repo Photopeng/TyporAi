@@ -1,20 +1,16 @@
 import { ApiEngine } from '../engines/api-engine/ApiEngine';
+import {
+  DEFAULT_TYPORA_ENGINE_SETTINGS,
+  type TyporaEngineSettings,
+} from './engine-settings';
 import type { AgentEngineConfig, IAgentEngine } from './types/agent-engine';
 
+export {
+  DEFAULT_TYPORA_ENGINE_SETTINGS,
+  type TyporaEngineSettings,
+} from './engine-settings';
+
 const SETTINGS_KEY = 'typorai.typora.settings';
-
-export interface TyporaEngineSettings {
-  apiKey: string;
-  apiBaseUrl: string;
-  apiModel: string;
-  effortLevel?: string;
-}
-
-export const DEFAULT_TYPORA_ENGINE_SETTINGS: TyporaEngineSettings = {
-  apiKey: '',
-  apiBaseUrl: 'https://api.anthropic.com/v1/messages',
-  apiModel: 'claude-sonnet-4-20250514',
-};
 
 export function loadTyporaEngineSettings(storage: Storage = window.localStorage): TyporaEngineSettings {
   const raw = storage.getItem(SETTINGS_KEY);
