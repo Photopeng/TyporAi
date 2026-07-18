@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import {
+  chmodSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -166,6 +167,39 @@ describe('deploy-typora script', () => {
       TYPORA_INSTALL_DIR: installDir,
       TYPORA_USER_DATA_DIR: appDataDir,
     }, 'verify');
+  });
+
+  it('repairs user-owned macOS plugin artifacts when the installed loader is not writable', () => {
+    installDir = path.join(tempRoot, 'Applications', 'Typora.app');
+    appDataDir = path.join(tempRoot, 'Library', 'Application Support');
+    windowHtmlPath = path.join(installDir, 'Contents', 'Resources', 'TypeMark', 'index.html');
+    pluginDir = path.join(appDataDir, 'abnerworks.Typora', 'plugins', 'typorai');
+    mkdirSync(path.dirname(windowHtmlPath), { recursive: true });
+    writeFileSync(windowHtmlPath, '<html><body>Typora</body></html>', 'utf8');
+    const env = {
+      TYPORAI_DEPLOY_PLATFORM: 'darwin',
+      TYPORA_INSTALL_DIR: installDir,
+      TYPORA_USER_DATA_DIR: appDataDir,
+    };
+
+    runDeployWithEnv(env, 'install');
+    const deployedRenderer = path.join(pluginDir, 'typora-typorai.renderer.js');
+    writeFileSync(deployedRenderer, 'stale reduced renderer', 'utf8');
+    chmodSync(windowHtmlPath, 0o444);
+    try {
+      runDeployWithEnv(env, 'repair');
+    } finally {
+      chmodSync(windowHtmlPath, 0o644);
+    }
+
+    expect(readFileSync(deployedRenderer)).toEqual(readFileSync(path.join(repoRoot, 'typora-typorai.renderer.js')));
+  });
+
+  it('fails verification when a deployed renderer is stale', () => {
+    runDeploy('install');
+    writeFileSync(path.join(pluginDir, 'typora-typorai.renderer.js'), 'stale reduced renderer', 'utf8');
+
+    expect(() => runDeploy('verify')).toThrow(/Renderer artifact does not match/);
   });
 
   it('reports a clear error for a non-standard macOS Typora resource layout', () => {
