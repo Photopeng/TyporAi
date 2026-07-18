@@ -36,7 +36,7 @@ if (platform === 'windows-x64') files.splice(1, 0, 'typora-typorai.js');
 for (const relativePath of files) {
   const absolutePath = path.join(root, relativePath);
   if (!existsSync(absolutePath) || !statSync(absolutePath).isFile()) {
-    throw new Error(`Missing release input: ${relativePath}. Run npm run build:all first.`);
+    throw new Error(`Missing release input: ${relativePath}. Run npm run build:release first.`);
   }
 }
 

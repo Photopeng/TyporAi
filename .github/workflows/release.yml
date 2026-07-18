@@ -34,7 +34,7 @@ jobs:
       - name: Test Sidecar protocol and contracts
         run: npm run test:protocol && npm run test:contract && npm run test:integration
       - name: Build portable Renderer and Sidecar
-        run: npm run build:all && npm run audit:renderer && npm run verify:sidecar
+        run: npm run build:release && npm run audit:renderer && npm run verify:sidecar
       - name: Package platform release
         run: npm run package:release -- --platform ${{ matrix.platform }}
       - name: Upload platform artifacts

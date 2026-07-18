@@ -203,12 +203,12 @@ function verifyInstall(options = {}) {
 
 function assertInstallInputs() {
   if (!existsSync(paths.bundlePath)) {
-    throw new Error(`Missing Typora bundle: ${paths.bundlePath}. Run npm run build:typora first.`);
+    throw new Error(`Missing Typora bundle: ${paths.bundlePath}. Run npm run build first.`);
   }
   if (!existsSync(paths.stylesPath)) {
-    throw new Error(`Missing Typora styles: ${paths.stylesPath}. Run npm run build:typora first.`);
+    throw new Error(`Missing Typora styles: ${paths.stylesPath}. Run npm run build first.`);
   }
-  if (!existsSync(paths.sidecarPath)) throw new Error(`Missing sidecar: ${paths.sidecarPath}. Run npm run build:all first.`);
+  if (!existsSync(paths.sidecarPath)) throw new Error(`Missing sidecar: ${paths.sidecarPath}. Run npm run build first.`);
   if (rendererMode === 'legacy' && !existsSync(paths.legacyBundlePath)) {
     throw new Error(`Missing Windows legacy bundle: ${paths.legacyBundlePath}. Run npm run build:legacy first.`);
   }
@@ -608,7 +608,21 @@ function buildLaunchAgentPlist() {
 
 function escapeXml(value) { return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[character]); }
 function escapeHtmlAttribute(value) { return escapeXml(value); }
-function readProjectVersion() { return JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version; }
+function readProjectVersion() {
+  const releaseManifestPath = path.join(root, 'release-manifest.json');
+  if (existsSync(releaseManifestPath)) {
+    const version = JSON.parse(readFileSync(releaseManifestPath, 'utf8')).version;
+    if (typeof version === 'string' && version.length > 0) return version;
+  }
+
+  const manifestPath = path.join(root, 'manifest.json');
+  if (existsSync(manifestPath)) {
+    const version = JSON.parse(readFileSync(manifestPath, 'utf8')).version;
+    if (typeof version === 'string' && version.length > 0) return version;
+  }
+
+  return JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8')).version;
+}
 function resolveSidecarPath() {
   const entries = [
     path.dirname(process.execPath),

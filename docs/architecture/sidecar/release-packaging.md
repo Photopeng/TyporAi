@@ -13,7 +13,7 @@ The Windows package additionally includes `typora-typorai.js`, the legacy/Electr
 Build a package after the normal production build:
 
 ```sh
-npm run build:all
+npm run build:release
 npm run package:release -- --platform macos-arm64
 ```
 
