@@ -27,6 +27,26 @@ describe('SessionRepository', () => {
     expect(second.store.get('session-1')).toMatchObject({ revision: 1, conversation: { title: 'Test' } });
   });
 
+  it('serializes concurrent persistence without temporary-file collisions or lost sessions', async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), 'typorai-sessions-concurrent-'));
+    const file = path.join(directory, 'sessions.json');
+    const repository = await PersistentSessionRepository.open(file);
+    const writes: Promise<void>[] = [];
+
+    for (let index = 0; index < 24; index += 1) {
+      repository.store.create({
+        ...conversation,
+        id: `session-${index}`,
+        title: `Session ${index}`,
+      }, `create-${index}`);
+      writes.push(repository.persist());
+    }
+
+    await expect(Promise.all(writes)).resolves.toHaveLength(24);
+    const reopened = await PersistentSessionRepository.open(file);
+    expect(reopened.store.list()).toHaveLength(24);
+  });
+
   it('forks a source session through a revision-guarded Sidecar write', () => {
     const sessions = new SessionRepository();
     sessions.create(conversation, 'create-source');

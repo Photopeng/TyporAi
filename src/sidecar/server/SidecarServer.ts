@@ -408,8 +408,8 @@ export class SidecarServer {
           const conversationId = typeof params.conversationId === 'string' && params.conversationId ? params.conversationId : null;
           void this.createChatRuntime(params.providerId, params.runtimeId, conversationId).then(() => {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { conversationId, providerId: params.providerId, runtimeId: params.runtimeId } }));
-          }).catch(() => {
-            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: 'Provider runtime is unavailable.' } }));
+          }).catch(error => {
+            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: error instanceof Error ? error.message : 'Provider runtime is unavailable.' } }));
           });
           return;
         }
