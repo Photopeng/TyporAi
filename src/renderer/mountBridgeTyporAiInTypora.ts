@@ -308,22 +308,20 @@ interface RendererLeaf {
 }
 
 class RendererWorkspaceService implements TyporaWorkspaceApi {
+  private readonly documentView: RendererDocumentView;
   private readonly hub = new EventHub();
   private readonly leaf: RendererLeaf = { app: null as unknown as TyporaHostApp, view: null, setViewState: async () => {} };
-  constructor(private readonly editor: TyporaEditorApi, private readonly root: string) {}
+  constructor(private readonly editor: TyporaEditorApi, private readonly root: string) {
+    this.documentView = new RendererDocumentView(editor, () => this.getActiveFile());
+  }
   on(name: string, callback: Listener): TyporaEventRef { return this.hub.on(name, callback); }
   getLeavesOfType(type: string): Array<{ view: unknown }> { return type === VIEW_TYPE_TYPORAI && this.leaf.view ? [{ view: this.leaf.view }] : []; }
   getActiveViewOfType<T>(type: { new (...args: never[]): T }): T | null {
     if (type !== TyporaDocumentView) return null;
-    const view = new TyporaDocumentView();
-    view.file = this.getActiveFile() ?? undefined;
-    view.containerEl = document.querySelector<HTMLElement>('#write') ?? document.createElement('div');
-    view.editor = {
-      getSelection: () => this.editor.getSelection(),
-      replaceSelection: (text: string) => this.editor.replaceSelection(text),
-    };
-    return view as T;
+    this.documentView.refresh();
+    return this.documentView as T;
   }
+  getActiveDocumentView(): RendererDocumentView { this.documentView.refresh(); return this.documentView; }
   getLeaf(): RendererLeaf { return this.leaf; }
   getLeftLeaf(): RendererLeaf { return this.leaf; }
   getRightLeaf(): RendererLeaf { return this.leaf; }
@@ -333,6 +331,43 @@ class RendererWorkspaceService implements TyporaWorkspaceApi {
     return path ? fileFromPath(relativePath(this.root, path)) : null;
   }
   async openLinkText(linktext: string): Promise<void> { window.location.href = `file://${normalize(`${this.root}/${linktext}`)}`; }
+}
+
+class RendererDocumentView extends TyporaDocumentView {
+  constructor(
+    private readonly editorApi: TyporaEditorApi,
+    private readonly activeFile: () => TyporaFile | null,
+  ) {
+    super();
+    this.editor = {
+      getSelection: () => this.editorApi.getSelection(),
+      replaceSelection: (text: string) => this.editorApi.replaceSelection(text),
+    };
+    this.refresh();
+  }
+
+  getMode(): string { return 'preview'; }
+
+  refresh(): void {
+    this.file = this.activeFile() ?? undefined;
+    this.containerEl = getActiveTyporaWriteElement();
+  }
+}
+
+function getActiveTyporaWriteElement(): HTMLElement {
+  const candidates = Array.from(document.querySelectorAll<HTMLElement>('#write'));
+  const selection = document.getSelection?.();
+  if (selection && !selection.isCollapsed) {
+    const owner = candidates.find(candidate =>
+      Boolean(selection.anchorNode && candidate.contains(selection.anchorNode))
+      || Boolean(selection.focusNode && candidate.contains(selection.focusNode))
+    );
+    if (owner) return owner;
+  }
+  return candidates.find(candidate => {
+    const style = getComputedStyle(candidate);
+    return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+  }) ?? candidates[0] ?? document.querySelector<HTMLElement>('content') ?? document.body;
 }
 
 class RendererMetadataCache implements TyporaMetadataIndex {

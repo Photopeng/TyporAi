@@ -42,6 +42,7 @@ export interface TyporaMetadataIndex {
 export interface TyporaWorkspaceApi {
   on(name: string, callback: (arg1: any, arg2: any, arg3: any) => void): TyporaEventRef;
   getLeavesOfType(type: string): Array<{ view: any }>;
+  getActiveDocumentView?(): unknown;
   getActiveViewOfType<T>(type: { new (...args: any[]): T }): T | null;
   getLeaf(...args: any[]): TyporaPanelHost;
   getLeftLeaf(...args: any[]): TyporaPanelHost | null;

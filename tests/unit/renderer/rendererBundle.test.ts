@@ -12,4 +12,11 @@ describe('browser renderer source boundary', () => {
     expect(source).toContain('mountBridgeTyporAiInTypora');
     expect(source).not.toMatch(/(?:SidecarChatPanel|MacosChatPanel)/);
   });
+
+  it('exposes the active Typora document as a preview view for selection capture', async () => {
+    const source = await readFile('src/renderer/mountBridgeTyporAiInTypora.ts', 'utf8');
+
+    expect(source).toContain('getActiveDocumentView()');
+    expect(source).toMatch(/getMode\(\): string \{ return 'preview'; \}/);
+  });
 });
