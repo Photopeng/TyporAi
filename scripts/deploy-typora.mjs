@@ -68,6 +68,12 @@ function run(action, options) {
 
 function install(options) {
   assertInstallInputs();
+  const windowHtml = readFileSync(paths.windowHtmlPath, 'utf8');
+  const nextWindowHtml = upsertLoader(removeLegacyLoader(windowHtml));
+  const loaderNeedsUpdate = nextWindowHtml !== windowHtml;
+  if (!options.dryRun && loaderNeedsUpdate) {
+    assertWindowHtmlWritable();
+  }
   logPlan(`Installing TyporAi plugin into ${paths.pluginDir}`, options);
 
   if (!options.dryRun) {
@@ -80,9 +86,7 @@ function install(options) {
     installSidecarRuntime();
   }
 
-  const windowHtml = readFileSync(paths.windowHtmlPath, 'utf8');
-  const nextWindowHtml = upsertLoader(removeLegacyLoader(windowHtml));
-  if (nextWindowHtml === windowHtml) {
+  if (!loaderNeedsUpdate) {
     if (!options.dryRun) {
       ensureStableBackup(windowHtml);
     }
@@ -145,7 +149,29 @@ function verifyInstall(options = {}) {
   };
 
   check('Renderer files', existsSync(paths.deployedBundlePath) && existsSync(paths.deployedStylesPath), `Missing deployed renderer files in ${paths.pluginDir}`);
+  check(
+    'Renderer artifact matches',
+    filesMatch(paths.bundlePath, paths.deployedBundlePath),
+    `Renderer artifact does not match the current build: ${paths.deployedBundlePath}`,
+  );
+  check(
+    'Renderer styles match',
+    filesMatch(paths.stylesPath, paths.deployedStylesPath),
+    `Renderer styles do not match the current build: ${paths.deployedStylesPath}`,
+  );
   check('Sidecar artifact', existsSync(paths.deployedSidecarPath), `Missing sidecar: ${paths.deployedSidecarPath}`);
+  check(
+    'Sidecar artifact matches',
+    filesMatch(paths.sidecarPath, paths.deployedSidecarPath),
+    `Sidecar artifact does not match the current build: ${paths.deployedSidecarPath}`,
+  );
+  if (rendererMode === 'legacy') {
+    check(
+      'Legacy renderer artifact matches',
+      filesMatch(paths.legacyBundlePath, paths.deployedLegacyBundlePath),
+      `Legacy renderer artifact does not match the current build: ${paths.deployedLegacyBundlePath}`,
+    );
+  }
   check('Bootstrap token', existsSync(paths.sidecarTokenPath), `Missing sidecar token: ${paths.sidecarTokenPath}`);
   if (deploymentPlatform === 'darwin') {
     check('Renderer bootstrap', existsSync(paths.deployedBootstrapPath), `Missing renderer bootstrap: ${paths.deployedBootstrapPath}`);
@@ -187,7 +213,11 @@ function assertInstallInputs() {
     throw new Error(`Missing Windows legacy bundle: ${paths.legacyBundlePath}. Run npm run build:legacy first.`);
   }
   assertWindowHtmlExists();
-  assertWindowHtmlWritable();
+}
+
+function filesMatch(sourcePath, deployedPath) {
+  if (!existsSync(sourcePath) || !existsSync(deployedPath)) return false;
+  return readFileSync(sourcePath).equals(readFileSync(deployedPath));
 }
 
 function assertWindowHtmlExists() {
