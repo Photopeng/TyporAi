@@ -1100,6 +1100,7 @@ export function getTyporaOverrideStyles(): string {
       z-index: 9999;
       width: var(--typorai-typora-panel-width);
       min-width: ${MIN_PANEL_WIDTH}px;
+      max-width: ${MAX_PANEL_WIDTH}px;
       background: var(--typorai-bg-primary);
       border-left: 1px solid var(--typorai-border);
       box-shadow: none;

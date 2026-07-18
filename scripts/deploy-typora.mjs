@@ -377,7 +377,15 @@ function buildMacosBrowserLoader(resolvedPaths) {
   const stylesUrl = pathToFileURL(resolvedPaths.deployedStylesPath).href;
   return `${markerStart}
 <link id="typorai-style" rel="stylesheet" href="${escapeHtmlAttribute(stylesUrl)}">
-<section id="typorai-typora-root" data-typorai-sidecar="pending" role="status" aria-live="polite" style="position:fixed;inset:0 0 0 auto;z-index:9999;width:min(430px,48vw);min-width:320px;padding:16px;box-sizing:border-box;background:#fff;border-left:1px solid rgba(0,0,0,.16)">TyporAi is starting…</section>
+<section
+ id="typorai-typora-root"
+ class="typorai-bootstrap-root"
+ data-typorai-sidecar="pending"
+ role="status"
+ aria-live="polite"
+>
+ TyporAi is starting…
+</section>
 <script id="typorai-typora-bootstrap" src="${escapeHtmlAttribute(bootstrapUrl)}"></script>
 <script id="typorai-typora-runtime" defer src="${escapeHtmlAttribute(rendererUrl)}"></script>
 ${markerEnd}`;

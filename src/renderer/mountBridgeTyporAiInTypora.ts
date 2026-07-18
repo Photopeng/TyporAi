@@ -386,6 +386,7 @@ class RendererMetadataCache implements TyporaMetadataIndex {
 
 function ensureRoot(): HTMLElement {
   const root = document.getElementById(ROOT_ID) ?? document.body.appendChild(document.createElement('section'));
+  root.removeAttribute('style');
   root.id = ROOT_ID;
   root.setAttribute('aria-label', 'TyporAi');
   return root;
@@ -430,25 +431,41 @@ function openSettings(app: TyporaHostApp, plugin: TyporAiPlugin): void {
 }
 
 function installPanelControls(root: HTMLElement): void {
-  const width = clampPanelWidth(Number.parseInt(localStorage.getItem(PANEL_WIDTH_KEY) ?? '', 10) || DEFAULT_PANEL_WIDTH);
+  const width = readStoredPanelWidth();
   applyPanelLayout(width, localStorage.getItem(PANEL_HIDDEN_KEY) === 'true');
   const resizer = document.createElement('div');
   resizer.className = 'typorai-typora-resizer';
   resizer.setAttribute('role', 'separator');
   root.append(resizer);
-  let startX = 0; let startWidth = width;
-  const move = (event: PointerEvent) => applyPanelLayout(clampPanelWidth(startWidth + startX - event.clientX), false);
-  const up = (event: PointerEvent) => {
-    const next = clampPanelWidth(startWidth + startX - event.clientX);
-    localStorage.setItem(PANEL_WIDTH_KEY, String(next));
-    document.removeEventListener('pointermove', move);
-    document.removeEventListener('pointerup', up);
+  let resizing = false;
+  let pointerId: number | null = null;
+  let startX = 0;
+  let startWidth = width;
+  const widthFor = (event: PointerEvent): number => clampPanelWidth(startWidth + startX - event.clientX);
+  const finishResize = (event: PointerEvent, persist: boolean): void => {
+    if (!resizing || event.pointerId !== pointerId) return;
+    const next = widthFor(event);
+    if (persist) localStorage.setItem(PANEL_WIDTH_KEY, String(next));
+    resizing = false;
+    pointerId = null;
+    document.body.classList.remove('typorai-typora-resizing');
+    if (resizer.hasPointerCapture(event.pointerId)) resizer.releasePointerCapture(event.pointerId);
   };
+  resizer.addEventListener('pointermove', event => {
+    if (!resizing || event.pointerId !== pointerId) return;
+    applyPanelLayout(widthFor(event), false);
+  });
+  resizer.addEventListener('pointerup', event => finishResize(event, true));
+  resizer.addEventListener('pointercancel', event => finishResize(event, false));
   resizer.addEventListener('pointerdown', event => {
+    if (event.button !== 0 || resizing) return;
+    event.preventDefault();
     startX = event.clientX;
-    startWidth = Number.parseInt(getComputedStyle(document.documentElement).getPropertyValue('--typorai-typora-panel-width'), 10) || width;
-    document.addEventListener('pointermove', move);
-    document.addEventListener('pointerup', up);
+    startWidth = readStoredPanelWidth();
+    pointerId = event.pointerId;
+    resizing = true;
+    document.body.classList.add('typorai-typora-resizing');
+    resizer.setPointerCapture(event.pointerId);
   });
   const title = root.querySelector<HTMLElement>('.typorai-title');
   title?.classList.add('typorai-typora-title-hide-button');
@@ -461,7 +478,7 @@ function installPanelControls(root: HTMLElement): void {
 
 function setPanelHidden(hidden: boolean): void {
   localStorage.setItem(PANEL_HIDDEN_KEY, String(hidden));
-  const width = Number.parseInt(localStorage.getItem(PANEL_WIDTH_KEY) ?? '', 10) || DEFAULT_PANEL_WIDTH;
+  const width = readStoredPanelWidth();
   applyPanelLayout(width, hidden);
 }
 
@@ -472,6 +489,13 @@ function applyPanelLayout(width: number, hidden: boolean): void {
 }
 
 function clampPanelWidth(width: number): number { return Math.min(720, Math.max(320, Math.round(width))); }
+
+function readStoredPanelWidth(): number {
+  const stored = Number.parseInt(localStorage.getItem(PANEL_WIDTH_KEY) ?? '', 10);
+  if (stored >= 320 && stored <= 720) return stored;
+  localStorage.setItem(PANEL_WIDTH_KEY, String(DEFAULT_PANEL_WIDTH));
+  return DEFAULT_PANEL_WIDTH;
+}
 
 function installHostStyles(): void {
   if (document.getElementById(HOST_STYLE_ID)) return;
