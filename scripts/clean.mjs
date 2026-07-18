@@ -7,6 +7,7 @@ for (const output of [
   'styles.css',
   'typora-typorai.renderer.js',
   'typorai-sidecar-v1.mjs',
+  'typorai-sidecar-v1.cjs',
   'typorai-macos-renderer.js',
   'typorai-sidecar.cjs',
 ]) {

@@ -18,6 +18,6 @@ await esbuild.build({
 });
 
 // esbuild can preserve whitespace-only lines from bundled dependencies. Keep
-// the tracked portable artifact reviewable and make `git diff --check` stable.
+// generated release output compact and make `git diff --check` stable.
 const output = readFileSync(outfile, 'utf8').replace(/[\t ]+\n/g, '\n');
 writeFileSync(outfile, output, 'utf8');

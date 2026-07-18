@@ -35,7 +35,13 @@ export class WorkspaceFileService {
     await rename(temporary, target);
   }
 
-  async remove(inputPath: string): Promise<void> { await rm(await this.allowedPath(inputPath), { force: true, recursive: true }); }
+  async remove(inputPath: string): Promise<void> {
+    const target = await this.allowedPath(inputPath);
+    if (path.relative(await realpath(this.requireWorkspaceRoot()), target) === '') {
+      throw new PathOutsideWorkspaceError('Removing the granted workspace root is not allowed.');
+    }
+    await rm(target, { force: true, recursive: true });
+  }
   async createDirectory(inputPath: string): Promise<void> { await mkdir(await this.allowedPath(inputPath, true), { recursive: true }); }
 
   async rename(from: string, to: string): Promise<void> {
@@ -80,25 +86,31 @@ export class WorkspaceFileService {
   async resolveWatchTarget(inputPath: string): Promise<string> { return this.allowedPath(inputPath); }
 
   private async allowedPath(inputPath: string, allowMissing = false): Promise<string> {
-    const root = this.getWorkspaceRoot();
-    if (!root) throw new WorkspaceNotGrantedError('No workspace has been granted.');
-    const canonicalRoot = await realpath(root);
+    const canonicalRoot = await realpath(this.requireWorkspaceRoot());
     const resolved = path.resolve(canonicalRoot, inputPath);
     this.assertInside(canonicalRoot, resolved);
     const target = allowMissing ? await this.resolveExistingParent(resolved) : await realpath(resolved);
     this.assertInside(canonicalRoot, target);
-    return resolved;
+    return target;
   }
 
   private async resolveExistingParent(target: string): Promise<string> {
     let current = target;
+    const missingSegments: string[] = [];
     while (true) {
-      try { return await realpath(current); } catch {
+      try { return path.join(await realpath(current), ...missingSegments); } catch {
         const parent = path.dirname(current);
         if (parent === current) throw new PathOutsideWorkspaceError('Unable to resolve target path.');
+        missingSegments.unshift(path.basename(current));
         current = parent;
       }
     }
+  }
+
+  private requireWorkspaceRoot(): string {
+    const root = this.getWorkspaceRoot();
+    if (!root) throw new WorkspaceNotGrantedError('No workspace has been granted.');
+    return root;
   }
 
   private assertInside(root: string, target: string): void {

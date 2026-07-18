@@ -6,6 +6,12 @@ This change closes the safe, repository-only cleanup items from the 2026-07-18 a
 
 `npm run build` is the only default production build. It creates the shared renderer and V1 Sidecar, plus styles. It first removes generated outputs so an old artifact cannot accidentally enter a release package.
 
+Generated bundles (`typora-typorai.renderer.js`, `typorai-sidecar-v1.mjs`, and the retired `typorai-sidecar-v1.cjs`) are not versioned. CI and release packaging build them from a clean checkout before audit, verification, or packaging. Pull requests must not include hand-edited bundles.
+
+## Dependency audit evidence
+
+The 2026-07-18 dependency review used `npm explain`, Knip, depcheck, and a full dependency-tree check. `tslib` remains a production dependency because TypeScript is configured with `importHelpers`; `@modelcontextprotocol/sdk`, `@codemirror/state`, `@codemirror/view`, `smol-toml`, and `ws` each have direct runtime imports. Knip's reported renderer and sidecar entries are esbuild entry points, so they are not deletion candidates. The unused development-only `tsx` package was removed.
+
 `npm run build:legacy` is an explicit Windows rollback build. `npm run build:release` composes the official build with that rollback artifact for the current release packages. Neither command builds the retired macOS renderer or retired CJS Sidecar.
 
 Run `npm run check` for the repository quality gate, and `npm run check:release` to additionally exercise portable package generation.

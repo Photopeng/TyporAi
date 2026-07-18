@@ -2,6 +2,9 @@
 main.js
 typora-typorai.js
 styles.css
+typora-typorai.renderer.js
+typorai-sidecar-v1.mjs
+typorai-sidecar-v1.cjs
 .codex-vendor/
 *.js.map
 dist/
