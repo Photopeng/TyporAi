@@ -56,16 +56,18 @@ function installRendererShellStyles(): void {
   const style = document.createElement('style');
   style.id = 'typorai-sidecar-shell-style';
   style.textContent = `
+    :root { --typorai-typora-panel-width: 430px; }
     #typorai-typora-root {
       position: fixed;
       inset: 0 0 0 auto;
       z-index: 9999;
-      width: min(430px, 48vw);
+      width: var(--typorai-typora-panel-width);
       min-width: 320px;
+      max-width: 720px;
       overflow: hidden;
       border-left: 1px solid rgba(0, 0, 0, 0.16);
     }
-    body > content { right: min(430px, 48vw) !important; }
+    body > content { right: var(--typorai-typora-panel-width) !important; }
     .typorai-sidecar-panel--error { padding: 16px; background: #f7f0e2; color: #25211b; }
   `;
   document.head.append(style);
