@@ -1,4 +1,6 @@
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 
 import type {
   CanUseTool,
@@ -16,7 +18,6 @@ import type { ExitPlanModeDecision,ImageAttachment,ManagedMcpServer,StreamChunk 
 import type { RpcEventEnvelope } from '@/protocol';
 import { toClaudeRuntimeModelId } from '@/providers/claude/modelSelection';
 import { buildClaudePromptWithImages } from '@/providers/claude/runtime/ClaudeUserMessageFactory';
-import { createCustomSpawnFunction } from '@/providers/claude/runtime/customSpawn';
 import { isStreamChunk } from '@/providers/claude/sdk/typeGuards';
 import { getClaudeProviderSettings, resolveClaudeSettingSources } from '@/providers/claude/settings';
 import { transformSDKMessage } from '@/providers/claude/stream/transformClaudeMessage';
@@ -24,14 +25,14 @@ import { resolveEffortLevel } from '@/providers/claude/types/models';
 import { getEnhancedPath, getMissingNodeError, parseEnvironmentVariables } from '@/utils/env';
 
 import { EventReplayBuffer } from '../../server/EventReplayBuffer';
-import { startDeferredSidecarProcess } from '../../services/process/adaptProcessSession';
 import type { SidecarTurnOptions } from '../registry';
 
 export interface ClaudeSidecarRuntimeOptions {
+  /** Retained while the runtime migrates from the Sidecar stream bridge. */
+  readonly processes: ProcessTransportFactory;
   readonly getSettings: () => Record<string, unknown>;
   readonly getWorkspacePath: () => string | null;
   readonly getMcpServers?: () => readonly ManagedMcpServer[];
-  readonly processes: ProcessTransportFactory;
   readonly requestApproval: (toolName: string, input: Record<string, unknown>, description: string) => Promise<'allow' | 'deny'>;
   readonly requestPlanApproval?: (input: Record<string, unknown>) => Promise<ExitPlanModeDecision | null>;
   readonly requestUserInput?: (input: Record<string, unknown>) => Promise<Record<string, string | string[]> | null>;
@@ -111,7 +112,7 @@ export class ClaudeSidecarRuntime {
   private createQueryOptions(workspace: string, turnOptions: SidecarTurnOptions = {}): Options {
     const settings = this.options.getSettings();
     const provider = getClaudeProviderSettings(settings);
-    const cliPath = provider.cliPath || 'claude';
+    const cliPath = resolveClaudeNativeExecutable(provider.cliPath || 'claude');
     const customEnvironment = parseEnvironmentVariables(provider.environmentVariables);
     const enhancedPath = getEnhancedPath(customEnvironment.PATH, cliPath);
     const missingNodeError = getMissingNodeError(cliPath, enhancedPath);
@@ -135,12 +136,6 @@ export class ClaudeSidecarRuntime {
       allowDangerouslySkipPermissions: permission.filesystem === 'full-access',
       permissionMode: permission.planOnly ? 'plan' : permission.filesystem === 'full-access' ? 'bypassPermissions' : 'default',
       canUseTool: this.createApprovalCallback(),
-      spawnClaudeCodeProcess: createCustomSpawnFunction(
-        enhancedPath,
-        this.options.processes,
-        undefined,
-        startDeferredSidecarProcess,
-      ),
       thinking: { type: 'adaptive' },
       effort: resolveEffortLevel(model, settings.effortLevel),
     };
@@ -218,7 +213,7 @@ export class ClaudeSidecarRuntime {
 
   private getModel(override?: string): string {
     const model = override ?? this.options.getSettings().model;
-    return toClaudeRuntimeModelId(typeof model === 'string' && model.trim() ? model : 'sonnet');
+    return toClaudeRuntimeModelId(typeof model === 'string' && model.trim() ? model : 'sonnet') || 'sonnet';
   }
 
   private captureSessionId(message: SDKMessage): void {
@@ -241,4 +236,19 @@ async function buildSidecarClaudePrompt(prompt: string): Promise<ReturnType<type
 function mimeTypeFor(target: string): ImageAttachment['mediaType'] {
   const extension = target.toLowerCase().split('.').pop();
   return extension === 'png' ? 'image/png' : extension === 'jpg' || extension === 'jpeg' ? 'image/jpeg' : extension === 'gif' ? 'image/gif' : 'image/webp';
+}
+
+function resolveClaudeNativeExecutable(configuredPath: string): string {
+  if (existsSync(configuredPath)) return configuredPath;
+  if (process.platform !== 'win32') return configuredPath;
+
+  const candidateDirectories = [
+    process.env.APPDATA ? path.join(process.env.APPDATA, 'npm') : '',
+    process.env.USERPROFILE ? path.join(process.env.USERPROFILE, 'AppData', 'Roaming', 'npm') : '',
+  ].filter(Boolean);
+  for (const directory of candidateDirectories) {
+    const executable = path.join(directory, 'node_modules', '@anthropic-ai', 'claude-code', 'bin', 'claude.exe');
+    if (existsSync(executable)) return executable;
+  }
+  return configuredPath;
 }

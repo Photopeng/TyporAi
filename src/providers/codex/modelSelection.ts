@@ -1,4 +1,5 @@
 import {
+  decodeProviderModelSelectionId,
   encodeProviderModelSelectionId,
   isProviderModelSelectionId,
   toProviderRuntimeModelId,
@@ -13,5 +14,6 @@ export function isCodexModelSelectionId(modelId: string): boolean {
 }
 
 export function toCodexRuntimeModelId(modelId: string): string {
+  if (decodeProviderModelSelectionId(modelId)?.providerId && !isCodexModelSelectionId(modelId)) return '';
   return toProviderRuntimeModelId('codex', modelId);
 }

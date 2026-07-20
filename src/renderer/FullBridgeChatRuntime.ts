@@ -128,7 +128,7 @@ export class FullBridgeChatRuntime implements ChatRuntime {
     const turnId = crypto.randomUUID();
     const queue = new StreamQueue();
     this.activeTurnId = turnId;
-    this.turnMetadata = { wasSent: true };
+    this.turnMetadata = {};
     const unsubscribe = this.rpc.onEvent(event => {
       if (event.streamId !== turnId || event.event !== 'chat.chunk' || !isStreamChunk(event.payload)) return;
       this.captureMetadata(event.payload);
@@ -152,6 +152,7 @@ export class FullBridgeChatRuntime implements ChatRuntime {
         options: serializeTurnOptions(queryOptions),
         turnId,
       });
+      this.turnMetadata = { ...this.turnMetadata, wasSent: true };
       for (;;) {
         const chunk = await queue.next();
         if (!chunk) break;

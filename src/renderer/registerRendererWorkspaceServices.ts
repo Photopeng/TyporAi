@@ -59,9 +59,7 @@ export async function registerRendererWorkspaceServices(
       continue;
     }
     const agents = new BridgeAgentManager(rpc, providerId);
-    await agents.loadAgents();
     const commandCatalog = new BridgeCommandCatalog(rpc, providerId);
-    await commandCatalog.refresh();
     const services: ProviderWorkspaceServices = {
       agentMentionProvider: agents,
       cliResolver: new BridgeCliResolver(providerId),
@@ -73,6 +71,9 @@ export async function registerRendererWorkspaceServices(
       tabWarmupPolicy: { resolveMode: () => 'commands' },
     };
     ProviderWorkspaceRegistry.setServices(providerId, services);
+    // Discovery is independently retryable from the command UI; starting it
+    // here keeps the first panel render independent of three CLI round trips.
+    void Promise.all([agents.loadAgents(), commandCatalog.refresh()]);
   }
 
   // Keep the cache synchronized when settings opens after an external edit.
