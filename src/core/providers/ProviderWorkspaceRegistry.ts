@@ -48,14 +48,20 @@ export class ProviderWorkspaceRegistry {
     const homeAdapter = this.homeAdapter;
     if (!homeAdapter) throw new Error('Provider home storage is not configured for this host.');
 
-    for (const providerId of providerIds) {
-      this.services[providerId] = await this.getWorkspaceRegistration(providerId).initialize({
+    const results = await Promise.allSettled(providerIds.map(async providerId => ({
+      providerId,
+      services: await this.getWorkspaceRegistration(providerId).initialize({
         plugin,
         storage,
         workspaceFileAdapter,
         vaultAdapter: workspaceFileAdapter,
         homeAdapter,
-      });
+      }),
+    })));
+    for (const result of results) {
+      if (result.status === 'fulfilled') {
+        this.services[result.value.providerId] = result.value.services;
+      }
     }
   }
 

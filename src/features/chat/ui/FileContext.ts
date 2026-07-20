@@ -153,6 +153,10 @@ export class FileContextManager {
     this.state.markCurrentNoteSent();
   }
 
+  resetCurrentNoteSent() {
+    this.state.resetCurrentNoteSent();
+  }
+
   isSessionStarted(): boolean {
     return this.state.isSessionStarted();
   }

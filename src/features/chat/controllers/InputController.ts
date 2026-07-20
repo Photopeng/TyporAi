@@ -431,6 +431,9 @@ export class InputController {
       finalAssistantMsg.assistantMessageId = turnMetadata.assistantMessageId ?? finalAssistantMsg.assistantMessageId;
       didEnqueueToSdk = didEnqueueToSdk || turnMetadata.wasSent === true;
       planCompleted = planCompleted || turnMetadata.planCompleted === true;
+      if (!didEnqueueToSdk && typeof (fileContextManager as { resetCurrentNoteSent?: unknown } | undefined)?.resetCurrentNoteSent === 'function') {
+        (fileContextManager as { resetCurrentNoteSent(): void }).resetCurrentNoteSent();
+      }
 
       // ALWAYS clear the timer interval, even on stream invalidation (prevents memory leaks)
       state.clearFlavorTimerInterval();
@@ -773,6 +776,9 @@ export class InputController {
         text: transformedText,
         images: options.images,
         currentNotePath: shouldSendCurrentNote && currentNotePath ? currentNotePath : undefined,
+        externalContextPaths: !isCompact && typeof (fileContextManager as { getAttachedFiles?: unknown } | undefined)?.getAttachedFiles === 'function'
+          ? [...(fileContextManager as { getAttachedFiles(): Set<string> }).getAttachedFiles()]
+          : undefined,
         typoraDocument,
         editorSelection: editorContext,
         browserSelection: browserContext,

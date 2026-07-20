@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
 import type { ProcessTransportFactory } from '@/core/ports';
+import { buildTyporAiIdentityInstruction } from '@/core/prompt/mainAgent';
 import type { StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
 import type { AcpLoadSessionResponse,AcpNewSessionResponse } from '@/providers/acp';
@@ -67,8 +68,6 @@ export class OpencodeSidecarRuntime {
     }
 
     this.activeTurn = turnId;
-    this.publish = emit;
-    this.normalizer.reset();
     try {
       const connection = await this.ensureConnection(workspace);
       const sessionId = await this.ensureSession(connection, workspace);
@@ -77,7 +76,12 @@ export class OpencodeSidecarRuntime {
       if (selectedModel) {
         await connection.setConfigOption({ configId: 'model', sessionId, type: 'select', value: selectedModel });
       }
-      const input = await buildSidecarPromptBlocks(prompt);
+      const input = await buildSidecarPromptBlocks(`${buildTyporAiIdentityInstruction()}\n\n${prompt}`);
+      // Some ACP servers replay session history while loading or changing
+      // config. Do not route those notifications into this turn: they were
+      // the source of the previous-answer-on-next-question mismatch.
+      this.normalizer.reset();
+      this.publish = emit;
       await connection.prompt({ prompt: input, sessionId });
       emit({ type: 'done' });
     } catch (error) {
@@ -159,7 +163,7 @@ export class OpencodeSidecarRuntime {
       try {
         const result = await connection.loadSession({ cwd: workspace, mcpServers: [], sessionId: this.sessionId });
         this.captureSessionConfig(result);
-        this.sessionId = result.sessionId;
+        this.sessionId = requireSessionId(result);
         this.sessionLoaded = true;
         return this.sessionId;
       } catch {
@@ -168,9 +172,9 @@ export class OpencodeSidecarRuntime {
     }
     const result = await connection.newSession({ cwd: workspace, mcpServers: [] });
     this.captureSessionConfig(result);
-    this.sessionId = result.sessionId;
+    this.sessionId = requireSessionId(result);
     this.sessionLoaded = true;
-    return result.sessionId;
+    return this.sessionId;
   }
 
   private async handleSessionNotification(notification: AcpSessionNotification): Promise<void> {
@@ -234,6 +238,16 @@ export class OpencodeSidecarRuntime {
       await connection.setConfigOption({ configId: this.thoughtLevelConfigId, sessionId, type: 'select', value: effort });
     }
   }
+}
+
+function requireSessionId(result: AcpLoadSessionResponse | AcpNewSessionResponse): string {
+  const record = result as unknown as Record<string, unknown>;
+  const nested = record.session && typeof record.session === 'object'
+    ? record.session as Record<string, unknown>
+    : null;
+  const value = record.sessionId ?? record.sessionID ?? nested?.sessionId ?? nested?.sessionID;
+  if (typeof value !== 'string' || !value.trim()) throw new Error('OpenCode ACP did not return a valid sessionId.');
+  return value;
 }
 
 async function buildSidecarPromptBlocks(prompt: string): Promise<Array<{ type: 'text'; text: string } | { type: 'image'; data: string; mimeType: string }>> {

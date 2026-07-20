@@ -36,7 +36,7 @@ export function adaptSidecarProcessSession(session: ProcessSession): NodeCompati
 export function startDeferredSidecarProcess(
   factory: ProcessTransportFactory,
   spec: ProcessSpec,
-  signal?: AbortSignal,
+  _signal?: AbortSignal,
 ): NodeCompatibleProcess {
   const stdin = new PassThrough();
   const stdout = new PassThrough();
@@ -91,7 +91,10 @@ export function startDeferredSidecarProcess(
     else closeStdin = true;
   });
 
-  void factory.start(spec, signal).then(async (started) => {
+  // Cancellation is forwarded by the SDK-compatible child handle below.
+  // Do not also hand its AbortSignal to the transport: that can kill the
+  // Windows cmd shim while the first stdin frame is still being flushed.
+  void factory.start(spec).then(async (started) => {
     session = started;
     started.onStdout(chunk => { stdout.write(chunk); });
     started.onStderr(chunk => { stderr.write(chunk); });

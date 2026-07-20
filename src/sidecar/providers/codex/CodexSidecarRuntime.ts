@@ -1,4 +1,5 @@
 import type { ProcessTransportFactory } from '@/core/ports';
+import { buildTyporAiIdentityInstruction } from '@/core/prompt/mainAgent';
 import type { ChatTurnMetadata } from '@/core/runtime/types';
 import { resolveUnifiedPermissionPolicy } from '@/core/security/UnifiedPermissionPolicy';
 import type { ApprovalDecision,StreamChunk } from '@/core/types';
@@ -174,7 +175,7 @@ export class CodexSidecarRuntime {
       approvalPolicy: resolvePermissionMode(settings).approvalPolicy,
       collaborationMode: {
         mode: isPlanTurn ? 'plan' : 'default',
-        settings: { developer_instructions: null, model, reasoning_effort: resolveEffort(settings.effortLevel) },
+        settings: { developer_instructions: buildTyporAiIdentityInstruction(), model, reasoning_effort: resolveEffort(settings.effortLevel) },
       },
       effort: resolveEffort(settings.effortLevel),
       model,
@@ -307,7 +308,7 @@ function resolveCodexModel(settings: Record<string, unknown>, override?: string)
     : typeof settings.model === 'string' && settings.model.trim()
     ? settings.model
     : DEFAULT_CODEX_PRIMARY_MODEL;
-  return toCodexRuntimeModelId(value);
+  return toCodexRuntimeModelId(value) || DEFAULT_CODEX_PRIMARY_MODEL;
 }
 
 function resolveEffort(value: unknown): string {

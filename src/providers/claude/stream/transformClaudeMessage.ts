@@ -365,6 +365,15 @@ function maybeEmitUsageFromPromptUsage(
   return { type: 'usage', usage: buildUsageInfo(promptUsage, options) };
 }
 
+function normalizeClaudeError(error: string): string {
+  const message = error.trim();
+  if (message && message.toLowerCase() !== 'unknown') {
+    return message;
+  }
+
+  return 'Claude request failed without a detailed provider error. Check the Sidecar diagnostics and try again.';
+}
+
 /**
  * Transform SDK message to StreamChunk format.
  * One SDK message can yield multiple chunks (e.g., text + tool_use blocks).
@@ -397,7 +406,7 @@ export function* transformSDKMessage(
 
       // Errors on assistant messages (e.g. rate_limit, billing_error)
       if (message.error) {
-        yield { type: 'error', content: message.error };
+        yield { type: 'error', content: normalizeClaudeError(message.error) };
       }
 
       if (message.message?.content && Array.isArray(message.message.content)) {
@@ -564,7 +573,7 @@ export function* transformSDKMessage(
         const content = message.errors.filter((e) => e.trim().length > 0).join('\n');
         yield {
           type: 'error',
-          content: content || `Result error: ${message.subtype}`,
+          content: content ? normalizeClaudeError(content) : `Result error: ${message.subtype}`,
         };
       }
 

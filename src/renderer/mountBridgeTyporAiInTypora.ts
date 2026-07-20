@@ -82,7 +82,6 @@ export async function mountBridgeTyporAiInTypora(
   const files = new BridgeFileStore(rpc);
   const fileAdapter = new RendererWorkspaceFileAdapter(files, rootPath);
   const vault = new RendererWorkspace(fileAdapter);
-  await vault.refresh();
   const workspace = new RendererWorkspaceService(editor, rootPath);
   const app: TyporaHostApp = {
     metadataCache: new RendererMetadataCache(vault),
@@ -136,9 +135,13 @@ export async function mountBridgeTyporAiInTypora(
   view.setProcessTransport(applicationRuntime.host.processes);
   view.setPlatform(platform);
   view.setFileWatchService(applicationRuntime.host.watches);
+  view.setDocumentSnapshotProvider(() => editor.getSnapshot());
   leaf.view = view;
 
   await view.onOpen();
+  // File indexing is useful for search and link completion but must never
+  // delay the first visible chat panel.
+  void vault.refresh();
   installSettingsEntry(app, plugin, root);
   installPanelControls(root);
   detectAndApplyTyporaTheme();
