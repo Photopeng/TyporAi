@@ -66,6 +66,12 @@ export class ClaudeSidecarRuntime {
 
     this.activeTurn = turnId;
     try {
+      // With includePartialMessages enabled, the Claude SDK emits visible text
+      // twice: first as stream_event deltas, then again in the completed
+      // assistant message. The renderer appends both chunks, so retain the
+      // stream copy and suppress the completed duplicate.
+      let sawVisibleStreamText = false;
+      let sawVisibleStreamThinking = false;
       const query = agentQuery({
         prompt: await buildSidecarClaudePrompt(prompt),
         options: this.createQueryOptions(workspace, turnOptions),
@@ -74,6 +80,18 @@ export class ClaudeSidecarRuntime {
       for await (const message of query) {
         this.captureSessionId(message);
         for (const event of transformSDKMessage(message, { intendedModel: this.getModel(turnOptions.model) })) {
+          if (message.type === 'assistant' && event.type === 'text' && sawVisibleStreamText) {
+            continue;
+          }
+          if (message.type === 'assistant' && event.type === 'thinking' && sawVisibleStreamThinking) {
+            continue;
+          }
+          if (message.type === 'stream_event' && event.type === 'text') {
+            sawVisibleStreamText = true;
+          }
+          if (message.type === 'stream_event' && event.type === 'thinking') {
+            sawVisibleStreamThinking = true;
+          }
           if (isStreamChunk(event)) {
             this.capturePlanFile(event);
             emit(event);
