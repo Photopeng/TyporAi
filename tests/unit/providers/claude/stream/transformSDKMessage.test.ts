@@ -1684,7 +1684,7 @@ describe('transformSDKMessage', () => {
       const results = [...transformSDKMessage(message)];
 
       expect(results).toEqual([
-        { type: 'error', content: 'unknown' },
+        { type: 'error', content: 'Claude request failed without a detailed provider error. Check the Sidecar diagnostics and try again.' },
       ]);
     });
 
