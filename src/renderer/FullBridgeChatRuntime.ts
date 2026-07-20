@@ -225,12 +225,9 @@ export class FullBridgeChatRuntime implements ChatRuntime {
   async rewind(
     _userMessageId: string,
     _assistantMessageId: string | undefined,
-    mode: ChatRewindMode = 'conversation',
+    _mode: ChatRewindMode = 'conversation',
   ): Promise<ChatRewindResult> {
-    if (mode === 'code-and-conversation') {
-      return { canRewind: false, error: 'Sidecar code rewind is unavailable.' };
-    }
-    return { canRewind: true, filesChanged: [] };
+    return { canRewind: false, error: 'Sidecar rewind is unavailable.' };
   }
 
   setApprovalCallback(callback: ApprovalCallback | null): void { this.approvalCallback = callback; }

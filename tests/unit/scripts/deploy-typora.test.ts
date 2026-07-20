@@ -69,7 +69,13 @@ describe('deploy-typora script', () => {
     expect(existsSync(path.join(pluginDir, 'typora-typorai.renderer.js'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'typorai-sidecar-v1.mjs'))).toBe(true);
     expect(existsSync(path.join(pluginDir, 'styles.css'))).toBe(true);
+    expect(existsSync(path.join(pluginDir, 'installation-state.json'))).toBe(true);
     expect(readWindowHtml()).toContain(markerStart);
+    expect(readWindowHtml()).toContain('refreshEndpoint');
+    expect(readWindowHtml()).toContain(`var sidecarNodePath = ${JSON.stringify(process.execPath)}`);
+    expect(readWindowHtml()).toContain('spawn(sidecarNodePath, [sidecarPath]');
+    expect(readWindowHtml()).toContain('function hasLiveSidecar()');
+    expect(readWindowHtml()).not.toContain('spawn(process.execPath, [sidecarPath]');
 
     runDeploy('install');
     expect(countLoaderMarkers(readWindowHtml())).toBe(1);
@@ -128,6 +134,7 @@ describe('deploy-typora script', () => {
     expect(result.checks).toEqual(expect.arrayContaining([
       expect.objectContaining({ name: 'Renderer files', passed: true }),
       expect.objectContaining({ name: 'Sidecar artifact', passed: true }),
+      expect.objectContaining({ name: 'Installation state', passed: true }),
       expect.objectContaining({ name: 'Loader marker', passed: true }),
     ]));
   });

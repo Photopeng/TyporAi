@@ -216,6 +216,31 @@ describe('typora host workspace file facade', () => {
     expect(write.parentElement).toBe(content);
   });
 
+  it('recovers #write when Typora moves it into the hidden modal after mount', async () => {
+    jest.useFakeTimers();
+    try {
+      await mountRealTyporAiInTypora();
+      jest.advanceTimersByTime(801);
+
+      const content = document.querySelector('content')!;
+      const write = document.getElementById('write')!;
+      const modal = document.createElement('div');
+      modal.id = 'image-create-folder-confirm';
+      modal.className = 'modal fade';
+      modal.style.display = 'none';
+      content.appendChild(modal);
+      modal.appendChild(write);
+
+      await Promise.resolve();
+      jest.advanceTimersByTime(801);
+
+      expect(write.closest('#image-create-folder-confirm')).toBeNull();
+      expect(write.parentElement).toBe(content);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   it('leaves a healthy Typora #write parent unchanged', async () => {
     const write = document.getElementById('write')!;
     const originalParent = write.parentElement;

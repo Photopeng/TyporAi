@@ -1,5 +1,6 @@
 import { type RpcSocket,WebSocketRpcClient } from '@/bridge/client/WebSocketRpcClient';
 import type { SidecarBootstrap } from '@/sidecar/protocol';
+import { installTyporaEditorDomRecovery } from '@/typora/TyporaEditorDomRecovery';
 
 import { mountBridgeTyporAiInTypora } from './mountBridgeTyporAiInTypora';
 import { RENDERER_PROVIDERS } from './RendererProviderRegistry';
@@ -11,6 +12,8 @@ declare global {
 }
 
 function mountRenderer(): void {
+  const disposeEditorDomRecovery = installTyporaEditorDomRecovery();
+  window.addEventListener('beforeunload', disposeEditorDomRecovery, { once: true });
   const root = document.getElementById('typorai-typora-root') ?? document.body.appendChild(document.createElement('section'));
   root.id = 'typorai-typora-root';
   installRendererShellStyles();
@@ -27,7 +30,10 @@ function mountRenderer(): void {
 }
 
 async function connect(root: HTMLElement, bootstrap: SidecarBootstrap): Promise<void> {
-  const client = new WebSocketRpcClient(bootstrap.endpoint, { socketFactory: endpoint => new WebSocket(endpoint) as unknown as RpcSocket });
+  const client = new WebSocketRpcClient(bootstrap.endpoint, {
+    endpointResolver: bootstrap.refreshEndpoint,
+    socketFactory: endpoint => new WebSocket(endpoint) as unknown as RpcSocket,
+  });
   try {
     await client.connect();
     const platform = navigator.platform.toLowerCase().includes('mac') ? 'macos' : 'windows';
@@ -37,6 +43,10 @@ async function connect(root: HTMLElement, bootstrap: SidecarBootstrap): Promise<
       protocol: { min: 1, max: 1 }, rendererVersion: '2.x', token: bootstrap.token,
     });
     localStorage.setItem('typorai.renderer.last-connection-id', initialized.connectionId);
+    client.onReconnected(result => {
+      localStorage.setItem('typorai.renderer.last-connection-id', result.connectionId);
+      root.dataset.typoraiSidecar = 'connected';
+    });
     root.dataset.typoraiSidecar = 'connected';
     const runtime = await mountBridgeTyporAiInTypora(client, bootstrap, platform);
     window.addEventListener('beforeunload', () => {
@@ -77,10 +87,10 @@ function getLastConnectionId(): string | null { return localStorage.getItem('typ
 
 function getClientId(): string {
   const key = 'typorai.renderer.client-id';
-  const existing = localStorage.getItem(key);
+  const existing = sessionStorage.getItem(key);
   if (existing) return existing;
   const generated = crypto.randomUUID();
-  localStorage.setItem(key, generated);
+  sessionStorage.setItem(key, generated);
   return generated;
 }
 

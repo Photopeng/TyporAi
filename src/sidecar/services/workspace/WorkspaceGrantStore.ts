@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 export class WorkspaceGrantStore {
-  private root: string | null = null;
+  protected root: string | null = null;
 
   grant(root: string): string {
     this.root = path.resolve(root);

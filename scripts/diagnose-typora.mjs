@@ -147,7 +147,16 @@ async function health(target) {
       response.on('end', () => {
         try {
           const parsed = JSON.parse(body);
-          resolve({ reachable: response.statusCode === 200, status: typeof parsed.status === 'string' ? parsed.status : 'unknown', protocolVersion: parsed.protocolVersion ?? null });
+          resolve({
+            persistence: parsed.persistence === true,
+            processManager: parsed.processManager === true,
+            protocolMax: Number.isInteger(parsed.protocolMax) ? parsed.protocolMax : null,
+            protocolMin: Number.isInteger(parsed.protocolMin) ? parsed.protocolMin : null,
+            reachable: response.statusCode === 200,
+            sidecarVersion: typeof parsed.sidecarVersion === 'string' ? parsed.sidecarVersion : null,
+            startedAt: Number.isInteger(parsed.startedAt) ? parsed.startedAt : null,
+            status: typeof parsed.status === 'string' ? parsed.status : 'unknown',
+          });
         } catch { resolve({ reachable: false, reason: 'invalid-health-response' }); }
       });
     });
@@ -159,8 +168,55 @@ async function health(target) {
 
 function probe(command) {
   try {
-    const result = spawnSync(command, ['--version'], { encoding: 'utf8', timeout: 1500, windowsHide: true });
+    const executable = resolveProbeExecutable(command);
+    const result = spawnProbeCommand(executable, ['--version']);
     const version = `${result.stdout ?? ''}${result.stderr ?? ''}`.trim().split(/\r?\n/, 1)[0] ?? '';
     return { command, available: !result.error && result.status === 0, version: version.slice(0, 200) || null };
   } catch { return { command, available: false, version: null }; }
+}
+
+function resolveProbeExecutable(command) {
+  if (platform !== 'win32' || command.includes('/') || command.includes('\\') || path.extname(command)) return command;
+  for (const directory of enhancedProbePath().split(';').filter(Boolean)) {
+    for (const extension of ['.exe', '.cmd', '.bat']) {
+      const candidate = path.join(directory.replace(/^"|"$/g, ''), `${command}${extension}`);
+      if (existsSync(candidate)) return candidate;
+    }
+  }
+  return command;
+}
+
+function spawnProbeCommand(command, args) {
+  const options = {
+    encoding: 'utf8',
+    env: { ...process.env, PATH: enhancedProbePath() },
+    timeout: 1500,
+    windowsHide: true,
+  };
+  if (platform === 'win32' && /\.(?:cmd|bat)$/i.test(command)) {
+    const shellCommand = [command, ...args].map(quoteWindowsShellArgument).join(' ');
+    return spawnSync(process.env.ComSpec || process.env.comspec || 'cmd.exe', ['/d', '/s', '/c', `"${shellCommand}"`], {
+      ...options,
+      windowsVerbatimArguments: true,
+    });
+  }
+  return spawnSync(command, args, options);
+}
+
+function quoteWindowsShellArgument(value) {
+  return /[\s"&<>|{}^=;!'+,`~()%@\[\]]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+}
+
+function enhancedProbePath() {
+  if (platform !== 'win32') return process.env.PATH ?? '';
+  const appData = process.env.APPDATA ?? path.join(home, 'AppData', 'Roaming');
+  const programFiles = process.env.ProgramFiles ?? 'C:\\Program Files';
+  const segments = [
+    path.join(appData, 'npm'),
+    path.join(programFiles, 'nodejs'),
+    ...(process.env.PATH ?? '').split(path.delimiter),
+  ].filter(Boolean);
+  return [...new Set(segments.map(entry => entry.toLowerCase()))]
+    .map(entry => segments.find(candidate => candidate.toLowerCase() === entry) ?? entry)
+    .join(path.delimiter);
 }

@@ -1,5 +1,10 @@
 # TyporAi
 
+> Sidecar remediation status and remaining Stable-release evidence are tracked
+> in [the architecture status record](docs/architecture/sidecar/remediation-status.md).
+
+> **v2.0.30 release status:** Beta / release candidate. Sidecar deployment is not yet a stable default: multi-window and reconnect behavior still require platform acceptance evidence. Windows retains the legacy renderer as the documented rollback path, and only macOS Apple Silicon is in the current macOS support matrix. Do not label a Sidecar build as stable until the [default-switch gate](docs/architecture/sidecar/default-switch-gate.md) is closed.
+
 TyporAi 是运行在 Typora 中的 AI 写作与文档协作插件。它把 AI 对话、当前文档上下文和原位编辑整合到右侧边栏，让你无需离开编辑器即可阅读、提问、改写和完善 Markdown 文档。
 
 > 适用于 Windows、macOS 14 及更高版本和 Linux 桌面版 Typora。Claude 是默认且功能最完整的提供商；Codex 和 OpenCode 可按需启用。

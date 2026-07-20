@@ -747,14 +747,18 @@ function repairMisnestedTyporaEditor(): boolean {
 function observeTyporaEditorLayout(): void {
   editorLayoutObserver?.disconnect();
   const contentEl = document.querySelector<HTMLElement>('content');
-  if (!contentEl || typeof MutationObserver === 'undefined') return;
+  const TyporaMutationObserver = window.MutationObserver;
+  if (!contentEl || !TyporaMutationObserver) return;
 
-  editorLayoutObserver = new MutationObserver((mutations) => {
-    const documentLayoutChanged = mutations.some((mutation) => Array.from(mutation.addedNodes).some((node) => {
-      if (!(node instanceof Element)) return false;
-      return node.matches('#write, .md-fences, .CodeMirror')
-        || Boolean(node.querySelector('#write, .md-fences, .CodeMirror'));
-    }));
+  editorLayoutObserver = new TyporaMutationObserver((mutations) => {
+    const documentLayoutChanged = mutations.some((mutation) => {
+      const nodes = [...Array.from(mutation.addedNodes), ...Array.from(mutation.removedNodes)];
+      return nodes.some((node) => {
+        if (!(node instanceof Element)) return false;
+        return node.matches('#write, .md-fences, .CodeMirror')
+          || Boolean(node.querySelector('#write, .md-fences, .CodeMirror'));
+      });
+    });
     if (documentLayoutChanged) scheduleEditorLayoutRefresh();
   });
   editorLayoutObserver.observe(contentEl, { childList: true, subtree: true });

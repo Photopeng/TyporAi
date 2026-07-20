@@ -46,6 +46,13 @@ describe('FullBridgeChatRuntime', () => {
     });
     runtime.cleanup();
   });
+
+  it('does not advertise or simulate unsupported Sidecar rewind', async () => {
+    const runtime = new FullBridgeChatRuntime(createRpcHarness().rpc, 'claude');
+    expect(runtime.getCapabilities().supportsRewind).toBe(false);
+    await expect(runtime.rewind('user-1', 'assistant-1')).resolves.toEqual({ canRewind: false, error: 'Sidecar rewind is unavailable.' });
+    runtime.cleanup();
+  });
 });
 
 function createRpcHarness(options: { approval?: boolean } = {}): {

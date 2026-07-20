@@ -1,4 +1,5 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import type { AppTabManagerState } from '@/core/providers/types';
@@ -10,6 +11,7 @@ export interface VersionedTabLayout { readonly revision: number; readonly value:
 export class PersistentTabLayoutStore {
   private snapshot: VersionedTabLayout;
   private readonly idempotent = new Map<string, VersionedTabLayout>();
+  private persistQueue: Promise<void> = Promise.resolve();
 
   private constructor(private readonly filePath: string, snapshot: VersionedTabLayout) { this.snapshot = snapshot; }
 
@@ -24,17 +26,35 @@ export class PersistentTabLayoutStore {
   get(): VersionedTabLayout { return structuredClone(this.snapshot); }
 
   async set(value: AppTabManagerState, expectedRevision: number, idempotencyKey: string): Promise<VersionedTabLayout> {
-    const existing = this.idempotent.get(idempotencyKey);
-    if (existing) return structuredClone(existing);
-    if (this.snapshot.revision !== expectedRevision) throw new SessionRevisionConflictError('tab-layout');
-    const next = { revision: expectedRevision + 1, value: structuredClone(value) };
-    this.snapshot = next;
-    this.idempotent.set(idempotencyKey, next);
+    const operation = this.persistQueue.then(async () => {
+      const existing = this.idempotent.get(idempotencyKey);
+      if (existing) return structuredClone(existing);
+      if (this.snapshot.revision !== expectedRevision) throw new SessionRevisionConflictError('tab-layout');
+      const previous = this.snapshot;
+      const next = { revision: expectedRevision + 1, value: structuredClone(value) };
+      this.snapshot = next;
+      try {
+        await this.writeSnapshot(next);
+        this.idempotent.set(idempotencyKey, next);
+        return structuredClone(next);
+      } catch (error) {
+        this.snapshot = previous;
+        throw error;
+      }
+    });
+    this.persistQueue = operation.then(() => undefined, () => undefined);
+    return operation;
+  }
+
+  private async writeSnapshot(next: VersionedTabLayout): Promise<void> {
     await mkdir(path.dirname(this.filePath), { recursive: true });
-    const temporary = `${this.filePath}.${process.pid}.tmp`;
-    await writeFile(temporary, JSON.stringify(next), 'utf8');
-    await rename(temporary, this.filePath);
-    return structuredClone(next);
+    const temporary = `${this.filePath}.${process.pid}.${randomUUID()}.tmp`;
+    try {
+      await writeFile(temporary, JSON.stringify(next), 'utf8');
+      await rename(temporary, this.filePath);
+    } finally {
+      await rm(temporary, { force: true });
+    }
   }
 }
 

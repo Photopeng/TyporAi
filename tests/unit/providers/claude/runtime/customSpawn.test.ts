@@ -3,6 +3,7 @@ import { PassThrough } from 'stream';
 
 import type { ExecutionPolicy, ProcessSession, ProcessTransportFactory } from '@/core/ports';
 import { createCustomSpawnFunction } from '@/providers/claude/runtime/customSpawn';
+import { startDeferredSidecarProcess } from '@/sidecar/services/process/adaptProcessSession';
 
 function createTransport(): { transport: ProcessTransportFactory; session: ProcessSession } {
   const session: ProcessSession = {
@@ -57,6 +58,24 @@ describe('createCustomSpawnFunction', () => {
 
     expect(() => spawn({ command: 'claude', args: [], cwd: '/vault' } as unknown as SpawnOptions)).toThrow('blocked');
     expect(transport.start).not.toHaveBeenCalled();
+  });
+
+  it('uses Node streams in Sidecar without requiring Electron', async () => {
+    const { transport, session } = createTransport();
+    (globalThis as { window?: unknown }).window = undefined;
+    const spawn = createCustomSpawnFunction(
+      '/enhanced/path',
+      transport,
+      undefined,
+      startDeferredSidecarProcess,
+    );
+
+    const child = spawn({ command: 'claude', args: [], cwd: '/vault' } as unknown as SpawnOptions);
+    child.stdin?.write('input');
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(session.write).toHaveBeenCalledWith('input');
   });
 
   it('fails explicitly when no host transport is available', () => {

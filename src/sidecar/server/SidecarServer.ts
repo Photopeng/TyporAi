@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { watch as watchFile } from 'node:fs';
+import { readFile,unlink } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
@@ -10,21 +11,23 @@ import { testMcpServer } from '@/core/mcp/McpTester';
 import type { AppTabManagerState } from '@/core/providers/types';
 import type { ChatTurnMetadata } from '@/core/runtime/types';
 import type { Conversation, StreamChunk } from '@/core/types';
-import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope } from '@/protocol';
+import { type JsonRpcRequest,parseJsonRpcMessage,type RpcEventEnvelope,validateSystemInitializeParams } from '@/protocol';
 import { getClaudeProviderSettings } from '@/providers/claude/settings';
 import { getCodexProviderSettings } from '@/providers/codex/settings';
 import { getOpencodeProviderSettings } from '@/providers/opencode/settings';
 
+import { ClientLeaseManager } from '../lifecycle/ClientLeaseManager';
 import { SingleInstanceLock } from '../lifecycle/SingleInstanceLock';
 import { ClaudeSidecarRuntime } from '../providers/claude/ClaudeSidecarRuntime';
 import { CodexSidecarRuntime } from '../providers/codex/CodexSidecarRuntime';
 import { FakeChatService } from '../providers/fake/FakeChatService';
 import { OpencodeSidecarRuntime } from '../providers/opencode/OpencodeSidecarRuntime';
 import { SidecarProviderRegistry,type SidecarProviderRuntime,type SidecarTurnOptions } from '../providers/registry';
+import { resolveSidecarCliPath } from '../providers/resolveSidecarCliPath';
 import { RuntimeManager } from '../providers/RuntimeManager';
 import { TyporaApiRuntime } from '../providers/typora/TyporaApiRuntime';
 import { ApprovalBroker, type PendingInteraction } from '../services/approval/ApprovalBroker';
-import { BlobNotFoundError,BlobPayloadTooLargeError,BlobStore } from '../services/blobs/BlobStore';
+import { BlobCapacityExceededError,BlobNotFoundError,BlobPayloadTooLargeError,BlobStore } from '../services/blobs/BlobStore';
 import { FileConflictError,PathOutsideWorkspaceError,WorkspaceFileService,WorkspaceNotGrantedError } from '../services/fs/WorkspaceFileService';
 import { ManagedProcessRegistry } from '../services/process/ManagedProcessRegistry';
 import { SidecarProcessTransport } from '../services/process/SidecarProcessTransport';
@@ -38,6 +41,7 @@ import { PersistentSettingsStore } from '../services/settings/PersistentSettings
 import { SettingsRevisionConflictError } from '../services/settings/VersionedSettingsStore';
 import { PersistentWorkspaceGrantStore } from '../services/workspace/PersistentWorkspaceGrantStore';
 import { type ConnectionDescriptor,writeConnectionDescriptor } from './ConnectionDescriptor';
+import { EventReplayBuffer } from './EventReplayBuffer';
 import { RpcRouter } from './RpcRouter';
 
 export interface SidecarServerOptions {
@@ -47,6 +51,7 @@ export interface SidecarServerOptions {
   readonly port?: number;
   readonly sidecarVersion: string;
   readonly token: string;
+  readonly reconnectGraceMs?: number;
 }
 
 interface SidecarChatProviderRuntime extends SidecarProviderRuntime {
@@ -59,17 +64,22 @@ interface SidecarChatProviderRuntime extends SidecarProviderRuntime {
   steer?(turnId: string, prompt: string): Promise<boolean>;
 }
 
+class IdempotencyKeyReuseError extends Error {}
+
 export class SidecarServer {
   private readonly http = createServer((request, response) => this.handleHealth(request, response));
   private readonly lock: SingleInstanceLock;
   private readonly router: RpcRouter;
   private readonly providers = new SidecarProviderRegistry();
   private readonly runtimes: RuntimeManager;
-  private readonly activeTurns = new Map<string, { providerId: string; runtimeId: string }>();
+  private readonly activeTurns = new Map<string, { connectionId: string; providerId: string; runtimeId: string }>();
+  private readonly replayBuffers = new Map<string, EventReplayBuffer<StreamChunk>>();
+  private readonly leases: ClientLeaseManager;
   private readonly connections = new Map<string, WebSocket>();
-  private readonly fileOperationResults = new Map<string, Promise<unknown>>();
+  private readonly leaseCleanupTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  private readonly fileOperationResults = new Map<string, { readonly fingerprint: string; readonly result: Promise<unknown> }>();
   private readonly approvals = new ApprovalBroker(interaction => this.publishInteraction(interaction));
-  private readonly watches = new Map<string, { connection: WebSocket; close(): void }>();
+  private readonly watches = new Map<string, { connectionId: string; close(): void }>();
   private settings: PersistentSettingsStore<Record<string, unknown>> | null = null;
   private sessions: PersistentSessionRepository | null = null;
   private tabLayout: PersistentTabLayoutStore | null = null;
@@ -82,10 +92,13 @@ export class SidecarServer {
   readonly processTransport = new SidecarProcessTransport(this.processes);
   private blobs: BlobStore | null = null;
   private readonly webSocket = new WebSocketServer({ maxPayload: 1_048_576, noServer: true });
+  private startedAt: number | null = null;
+  private healthStatus: 'degraded' | 'ok' | 'shutting-down' | 'starting' = 'starting';
 
   constructor(private readonly options: SidecarServerOptions) {
     this.lock = new SingleInstanceLock(options.lockPath);
     this.router = new RpcRouter({ sidecarVersion: options.sidecarVersion, token: options.token });
+    this.leases = new ClientLeaseManager({ reconnectGraceMs: options.reconnectGraceMs });
     this.providers.register('fake', () => new FakeChatService());
     this.providers.register('claude', ({ runtimeId }) => new ClaudeSidecarRuntime({
       getSettings: () => this.settings?.getSnapshot().value ?? {},
@@ -93,15 +106,15 @@ export class SidecarServer {
       getMcpServers: () => this.mcp?.list() ?? [],
       processes: this.processTransport,
       requestApproval: async (toolName, input, description) => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'claude', runtimeId, toolName } });
+        const result = await this.requestInteraction(runtimeId, 'approval', { description, input, providerId: 'claude', runtimeId, toolName });
         return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
       },
       requestPlanApproval: async input => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'planApproval', payload: { ...input, providerId: 'claude', runtimeId } });
+        const result = await this.requestInteraction(runtimeId, 'planApproval', { ...input, providerId: 'claude', runtimeId });
         return result && typeof result === 'object' ? result as never : null;
       },
       requestUserInput: async input => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'userInput', payload: { ...input, providerId: 'claude', runtimeId } });
+        const result = await this.requestInteraction(runtimeId, 'userInput', { ...input, providerId: 'claude', runtimeId });
         const answers = (result as { answers?: unknown })?.answers;
         return answers && typeof answers === 'object' && !Array.isArray(answers)
           ? answers as Record<string, string | string[]>
@@ -113,7 +126,7 @@ export class SidecarServer {
       getWorkspacePath: () => this.workspace?.current ?? null,
       processes: this.processTransport,
       requestApproval: async (toolName, input, description) => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'codex', runtimeId, toolName } });
+        const result = await this.requestInteraction(runtimeId, 'approval', { description, input, providerId: 'codex', runtimeId, toolName });
         const decision = (result as { decision?: unknown })?.decision;
         return decision === 'allow' || decision === 'allow-always' || decision === 'deny'
           ? decision
@@ -121,7 +134,7 @@ export class SidecarServer {
           : (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
       },
       requestUserInput: async input => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'userInput', payload: { ...input, providerId: 'codex', runtimeId } });
+        const result = await this.requestInteraction(runtimeId, 'userInput', { ...input, providerId: 'codex', runtimeId });
         const answers = (result as { answers?: unknown })?.answers;
         return answers && typeof answers === 'object' && !Array.isArray(answers)
           ? answers as Record<string, string | string[]>
@@ -133,7 +146,7 @@ export class SidecarServer {
       getWorkspacePath: () => this.workspace?.current ?? null,
       processes: this.processTransport,
       requestApproval: async (toolName, input, description) => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'opencode', runtimeId, toolName } });
+        const result = await this.requestInteraction(runtimeId, 'approval', { description, input, providerId: 'opencode', runtimeId, toolName });
         return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
       },
     }));
@@ -141,7 +154,7 @@ export class SidecarServer {
       getSettings: () => this.settings?.getSnapshot().value ?? {},
       getWorkspacePath: () => this.workspace?.current ?? null,
       requestApproval: async (toolName, input, description) => {
-        const result = await this.approvals.request({ id: crypto.randomUUID(), kind: 'approval', payload: { description, input, providerId: 'typora', runtimeId, toolName } });
+        const result = await this.requestInteraction(runtimeId, 'approval', { description, input, providerId: 'typora', runtimeId, toolName });
         return (result as { approved?: unknown })?.approved === true ? 'allow' : 'deny';
       },
     }));
@@ -155,6 +168,9 @@ export class SidecarServer {
   async start(): Promise<ConnectionDescriptor> {
     if (!await this.lock.acquire()) throw new Error('A Sidecar instance is already running.');
     try {
+      // Lock ownership proves no healthy Sidecar owns this descriptor. Remove
+      // a stale endpoint before a failed start can strand the renderer.
+      await removeConnectionDescriptor(this.options.descriptorPath);
       this.settings = await PersistentSettingsStore.open(path.join(this.options.dataDirectory, 'settings.json'), {});
       this.sessions = await PersistentSessionRepository.open(path.join(this.options.dataDirectory, 'sessions.json'));
       this.tabLayout = await PersistentTabLayoutStore.open(path.join(this.options.dataDirectory, 'tab-layout.json'));
@@ -175,22 +191,29 @@ export class SidecarServer {
         sidecarVersion: this.options.sidecarVersion, protocolMin: 1, protocolMax: 1, startedAt: Date.now(),
       };
       await writeConnectionDescriptor(this.options.descriptorPath, descriptor);
+      this.startedAt = descriptor.startedAt;
+      this.healthStatus = 'ok';
       return descriptor;
     } catch (error) {
       if (this.http.listening) await new Promise<void>(resolve => this.http.close(() => resolve()));
+      await removeConnectionDescriptor(this.options.descriptorPath);
       await this.lock.release();
       throw error;
     }
   }
 
   async close(): Promise<void> {
-    this.processes.terminateAll('SIGTERM');
+    this.healthStatus = 'shutting-down';
+    for (const timer of this.leaseCleanupTimers.values()) clearTimeout(timer);
+    this.leaseCleanupTimers.clear();
+    await this.processes.terminateAll('SIGTERM');
     await this.runtimes.disposeAll();
     this.approvals.rejectAll('sidecar-shutdown');
     await this.blobs?.cleanupAll();
     for (const watch of this.watches.values()) watch.close();
     this.watches.clear();
     await new Promise<void>(resolve => this.http.close(() => resolve()));
+    await removeOwnedConnectionDescriptor(this.options.descriptorPath);
     await this.lock.release();
   }
 
@@ -200,7 +223,14 @@ export class SidecarServer {
       return;
     }
     response.setHeader('content-type', 'application/json');
-    response.end(JSON.stringify(this.router.health()));
+    response.end(JSON.stringify({
+      ...this.router.health(),
+      persistence: this.settings !== null && this.sessions !== null && this.tabLayout !== null && this.workspace !== null && this.mcp !== null,
+      processManager: true,
+      sidecarVersion: this.options.sidecarVersion,
+      startedAt: this.startedAt,
+      status: this.healthStatus,
+    }));
   }
 
   private handleConnection(connection: WebSocket): void {
@@ -209,10 +239,21 @@ export class SidecarServer {
       const message = parseJsonRpcMessage(raw.toString());
       if (!message || !('id' in message) || message.method !== 'system.initialize') return connection.close(1008, 'Initialize required');
       const response = this.router.route(message as JsonRpcRequest);
-      connection.send(JSON.stringify(response));
       if ('error' in response) return connection.close(1008, 'Authentication failed');
-      const connectionId = (response.result as { connectionId: string }).connectionId;
+      const parameters = validateSystemInitializeParams(message.params);
+      if (!parameters.ok) return connection.close(1008, 'Invalid initialize request');
+      const generatedConnectionId = (response.result as { connectionId: string }).connectionId;
+      const lease = this.leases.connect(generatedConnectionId, parameters.value.clientId, parameters.value.lastConnectionId);
+      const connectionId = lease.connectionId;
+      const result = { ...(response.result as Record<string, unknown>), connectionId, resumed: connectionId !== generatedConnectionId };
+      connection.send(JSON.stringify({ ...response, result }));
       this.connections.set(connectionId, connection);
+      const cleanup = this.leaseCleanupTimers.get(connectionId);
+      if (cleanup) {
+        clearTimeout(cleanup);
+        this.leaseCleanupTimers.delete(connectionId);
+      }
+      if ((result.resumed as boolean)) this.approvals.republishConnection(connectionId);
       initialized = true;
       connection.on('message', next => {
         const request = parseJsonRpcMessage(next.toString());
@@ -231,12 +272,42 @@ export class SidecarServer {
           return;
         }
         if (request.method === 'system.getDiagnostics') {
-          connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { activeTurns: this.activeTurns.size, managedProcesses: this.processes.size, providerRuntimes: this.providers.list(), watches: this.watches.size } }));
+          connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {
+            activeConnections: this.connections.size,
+            activeRuntimes: this.runtimes.size,
+            activeTurns: this.activeTurns.size,
+            blobs: this.blobs?.size ?? 0,
+            clientLeases: this.leases.size,
+            managedProcesses: this.processes.size,
+            pendingApprovals: this.approvals.size,
+            providerRuntimes: this.providers.list(),
+            sidecarVersion: this.options.sidecarVersion,
+            uptimeMs: this.startedAt === null ? 0 : Date.now() - this.startedAt,
+            watches: this.watches.size,
+          } }));
+          return;
+        }
+        if (request.method === 'stream.replay') {
+          const positions = (request.params as { positions?: unknown } | undefined)?.positions;
+          if (!positions || typeof positions !== 'object' || Array.isArray(positions)
+            || !Object.values(positions).every(value => Number.isInteger(value) && (value as number) >= 0)) {
+            return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INVALID_PARAMS', message: 'Invalid replay positions.' } }));
+          }
+          const events: RpcEventEnvelope<StreamChunk>[] = [];
+          const unavailable: string[] = [];
+          for (const [streamId, sequence] of Object.entries(positions)) {
+            const replay = this.replayBuffers.get(this.turnKey(connectionId, streamId));
+            if (!replay) { unavailable.push(streamId); continue; }
+            const recovered = replay.replayAfter(sequence as number);
+            if (recovered === null) unavailable.push(streamId); else events.push(...recovered);
+          }
+          events.sort((left, right) => left.timestamp - right.timestamp || left.seq - right.seq);
+          connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { events, unavailable } }));
           return;
         }
         if (request.method === 'approval.resolve' || request.method === 'userInput.resolve' || request.method === 'planApproval.resolve') {
           const params = request.params as { id?: unknown; result?: unknown } | undefined;
-          if (typeof params?.id !== 'string' || !this.approvals.resolve(params.id, params.result)) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Interaction not found.' } }));
+          if (typeof params?.id !== 'string' || !this.approvals.resolve(params.id, params.result, connectionId)) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Interaction not found.' } }));
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }));
           return;
         }
@@ -259,8 +330,8 @@ export class SidecarServer {
         }
         if (request.method === 'session.setTabLayout') {
           const params = request.params as { expectedRevision?: unknown; idempotencyKey?: unknown; value?: unknown } | undefined;
-          if (!this.tabLayout || !params || !Number.isInteger(params.expectedRevision) || typeof params.idempotencyKey !== 'string' || !params.value || typeof params.value !== 'object') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid tab layout.' } }));
-          void this.tabLayout.set(params.value as AppTabManagerState, params.expectedRevision as number, params.idempotencyKey).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(error => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: error instanceof SessionRevisionConflictError ? 'SESSION_REVISION_CONFLICT' : 'INTERNAL_ERROR', message: 'Tab layout update rejected.' } })));
+          if (!this.tabLayout || !params || !Number.isInteger(params.expectedRevision) || typeof params.idempotencyKey !== 'string' || !params.value || typeof params.value !== 'object') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INVALID_PARAMS', message: 'Invalid tab layout.' } }));
+          void this.tabLayout.set(params.value as AppTabManagerState, params.expectedRevision as number, params.idempotencyKey).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(error => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: error instanceof SessionRevisionConflictError ? 'TAB_LAYOUT_REVISION_CONFLICT' : 'PERSISTENCE_FAILED', message: 'Tab layout update rejected.' } })));
           return;
         }
         if (request.method === 'workspace.getCurrent') {
@@ -280,17 +351,19 @@ export class SidecarServer {
           return;
         }
         if (request.method.startsWith('fs.')) {
-          void this.handleFileRequest(request).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(error => {
+          void this.handleFileRequest(connectionId, request).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(error => {
             const code = error instanceof WorkspaceNotGrantedError ? 'WORKSPACE_NOT_GRANTED'
               : error instanceof PathOutsideWorkspaceError ? 'PATH_OUTSIDE_WORKSPACE'
-              : error instanceof FileConflictError ? 'FILE_CONFLICT' : 'INTERNAL_ERROR';
+              : error instanceof FileConflictError ? 'FILE_CONFLICT'
+                : error instanceof IdempotencyKeyReuseError ? 'IDEMPOTENCY_KEY_REUSED' : 'INTERNAL_ERROR';
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code, message: 'File operation rejected.' } }));
           });
           return;
         }
         if (request.method.startsWith('blob.')) {
           void this.handleBlobRequest(request).then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result }))).catch(error => {
-            const code = error instanceof BlobNotFoundError ? 'METHOD_NOT_SUPPORTED' : error instanceof BlobPayloadTooLargeError ? 'PAYLOAD_TOO_LARGE' : 'INTERNAL_ERROR';
+            const code = error instanceof BlobNotFoundError ? 'BLOB_NOT_FOUND'
+              : error instanceof BlobPayloadTooLargeError || error instanceof BlobCapacityExceededError ? 'PAYLOAD_TOO_LARGE' : 'INTERNAL_ERROR';
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code, message: 'Blob operation rejected.' } }));
           });
           return;
@@ -298,7 +371,7 @@ export class SidecarServer {
         if (request.method === 'watch.subscribe') {
           const target = (request.params as { path?: unknown } | undefined)?.path;
           if (typeof target !== 'string' || !target) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid watch path.' } }));
-          void this.createWatch(connectionId, connection, target).then(watchId => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { watchId } }))).catch(error => {
+          void this.createWatch(connectionId, target).then(watchId => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { watchId } }))).catch(error => {
             const code = error instanceof WorkspaceNotGrantedError ? 'WORKSPACE_NOT_GRANTED' : error instanceof PathOutsideWorkspaceError ? 'PATH_OUTSIDE_WORKSPACE' : 'INTERNAL_ERROR';
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code, message: 'Watch subscription rejected.' } }));
           });
@@ -308,7 +381,7 @@ export class SidecarServer {
           const watchId = (request.params as { watchId?: unknown } | undefined)?.watchId;
           if (typeof watchId !== 'string') return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Watch not found.' } }));
           const watch = this.watches.get(watchId);
-          if (!watch || watch.connection !== connection) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Watch not found.' } }));
+          if (!watch || watch.connectionId !== connectionId) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'METHOD_NOT_SUPPORTED', message: 'Watch not found.' } }));
           watch.close();
           this.watches.delete(watchId);
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }));
@@ -353,14 +426,14 @@ export class SidecarServer {
         if (request.method === 'settings.applyPatch') {
           const params = request.params as { expectedRevision?: unknown; idempotencyKey?: unknown; patch?: unknown } | undefined;
           if (!params || !Number.isInteger(params.expectedRevision) || typeof params.idempotencyKey !== 'string' || !params.patch || typeof params.patch !== 'object' || Array.isArray(params.patch)) {
-            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid settings patch.' } }));
+            connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INVALID_PARAMS', message: 'Invalid settings patch.' } }));
             return;
           }
           if (!this.settings) return connection.close(1011, 'Settings unavailable');
           void this.settings.applyPatch(params.patch as Record<string, unknown>, params.expectedRevision as number, params.idempotencyKey)
             .then(result => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result })))
             .catch(error => {
-              const code = error instanceof SettingsRevisionConflictError ? 'SESSION_REVISION_CONFLICT' : 'INTERNAL_ERROR';
+              const code = error instanceof SettingsRevisionConflictError ? 'SETTINGS_REVISION_CONFLICT' : 'PERSISTENCE_FAILED';
               connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code, message: 'Settings update rejected.' } }));
             });
           return;
@@ -372,7 +445,7 @@ export class SidecarServer {
             return;
           }
           const providerId = typeof params.providerId === 'string' ? params.providerId : 'fake';
-          const runtimeId = typeof params.runtimeId === 'string' && params.runtimeId ? params.runtimeId : connectionId;
+          const runtimeId = this.runtimeKey(connectionId, typeof params.runtimeId === 'string' && params.runtimeId ? params.runtimeId : connectionId);
           const conversationId = typeof params.conversationId === 'string' && params.conversationId ? params.conversationId : null;
           const turnId = params.turnId;
           const blobIds = Array.isArray(params.blobIds) && params.blobIds.every(value => typeof value === 'string') ? params.blobIds : [];
@@ -386,14 +459,17 @@ export class SidecarServer {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: 'Provider runtime is unavailable.' } }));
             return;
           }
-          this.activeTurns.set(turnId, { providerId, runtimeId });
+          this.activeTurns.set(this.turnKey(connectionId, turnId), { connectionId, providerId, runtimeId });
+          this.leases.attachRuntime(connectionId, runtimeId);
+          this.leases.attachTurn(connectionId, turnId);
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { streamId: turnId } }));
           void this.withBlobContext(params.prompt, blobIds).then(prompt => chatRuntime.startTurn(connectionId, turnId, prompt, event => {
-            if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: event }));
+            this.publishStreamEvent(connectionId, turnId, event.event, event.payload);
           }, turnOptions)).catch(error => {
-            if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: { connectionId, streamId: turnId, seq: 1, event: 'chat.chunk', timestamp: Date.now(), payload: { type: 'error', content: error instanceof Error ? error.message : 'Attachment preparation failed.' } } }));
+            this.publishStreamEvent(connectionId, turnId, 'chat.chunk', { type: 'error', content: error instanceof Error ? error.message : 'Attachment preparation failed.' });
           }).finally(() => {
-            this.activeTurns.delete(turnId);
+            this.activeTurns.delete(this.turnKey(connectionId, turnId));
+            this.leases.releaseTurn(connectionId, turnId);
             if (conversationId) void this.persistRuntimeSession(conversationId, chatRuntime).catch(() => undefined);
             void Promise.all(blobIds.map(blobId => this.blobs?.abort(blobId)));
           });
@@ -406,7 +482,9 @@ export class SidecarServer {
             return;
           }
           const conversationId = typeof params.conversationId === 'string' && params.conversationId ? params.conversationId : null;
-          void this.createChatRuntime(params.providerId, params.runtimeId, conversationId).then(() => {
+          const runtimeId = this.runtimeKey(connectionId, params.runtimeId);
+          void this.createChatRuntime(params.providerId, runtimeId, conversationId).then(() => {
+            this.leases.attachRuntime(connectionId, runtimeId);
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: { conversationId, providerId: params.providerId, runtimeId: params.runtimeId } }));
           }).catch(error => {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: error instanceof Error ? error.message : 'Provider runtime is unavailable.' } }));
@@ -419,8 +497,13 @@ export class SidecarServer {
             connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid runtime dispose.' } }));
             return;
           }
-          void this.runtimes.dispose(params.providerId, params.runtimeId)
-            .then(() => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} })))
+          const runtimeId = this.runtimeKey(connectionId, params.runtimeId);
+          if (!this.leases.ownsRuntime(connectionId, runtimeId)) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'RUNTIME_NOT_FOUND', message: 'Runtime not found.' } }));
+          void this.runtimes.dispose(params.providerId, runtimeId)
+            .then(() => {
+              this.leases.releaseRuntime(connectionId, runtimeId);
+              connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }));
+            })
             .catch(error => connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: error instanceof Error ? error.message : 'Runtime disposal failed.' } })));
           return;
         }
@@ -431,7 +514,9 @@ export class SidecarServer {
             return;
           }
           try {
-            const runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, params.runtimeId);
+            const runtimeId = this.runtimeKey(connectionId, params.runtimeId);
+            if (!this.leases.ownsRuntime(connectionId, runtimeId)) throw new Error('Runtime not found.');
+            const runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, runtimeId);
             connection.send(JSON.stringify({
               jsonrpc: '2.0',
               id: request.id,
@@ -448,8 +533,9 @@ export class SidecarServer {
         if (request.method === 'chat.cancelTurn') {
           const turnId = (request.params as { turnId?: unknown } | undefined)?.turnId;
           if (typeof turnId !== 'string' || !turnId) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'TURN_NOT_FOUND', message: 'Invalid turn id.' } }));
-          const active = this.activeTurns.get(turnId);
+          const active = this.activeTurns.get(this.turnKey(connectionId, turnId));
           if (!active) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'TURN_NOT_FOUND', message: 'Turn not found.' } }));
+          if (active.connectionId !== connectionId) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'TURN_NOT_FOUND', message: 'Turn not found.' } }));
           this.runtimes.getOrCreate<SidecarChatProviderRuntime>(active.providerId, active.runtimeId).cancelTurn(turnId);
           connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, result: {} }));
           return;
@@ -461,7 +547,9 @@ export class SidecarServer {
             return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid steer request.' } }));
           }
           let runtime: SidecarChatProviderRuntime;
-          try { runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, params.runtimeId); } catch (error) {
+          const runtimeId = this.runtimeKey(connectionId, params.runtimeId);
+          if (!this.leases.ownsRuntime(connectionId, runtimeId)) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'RUNTIME_NOT_FOUND', message: 'Runtime not found.' } }));
+          try { runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, runtimeId); } catch (error) {
             return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: error instanceof Error ? error.message : 'Provider runtime is unavailable.' } }));
           }
           const blobIds = Array.isArray(params.blobIds) && params.blobIds.every(value => typeof value === 'string') ? params.blobIds : [];
@@ -478,7 +566,9 @@ export class SidecarServer {
             return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'INTERNAL_ERROR', message: 'Invalid reset request.' } }));
           }
           let runtime: SidecarChatProviderRuntime;
-          try { runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, params.runtimeId); } catch (error) {
+          const runtimeId = this.runtimeKey(connectionId, params.runtimeId);
+          if (!this.leases.ownsRuntime(connectionId, runtimeId)) return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'RUNTIME_NOT_FOUND', message: 'Runtime not found.' } }));
+          try { runtime = this.runtimes.getOrCreate<SidecarChatProviderRuntime>(params.providerId, runtimeId); } catch (error) {
             return connection.send(JSON.stringify({ jsonrpc: '2.0', id: request.id, error: { code: 'CAPABILITY_UNAVAILABLE', message: error instanceof Error ? error.message : 'Provider runtime is unavailable.' } }));
           }
           void Promise.resolve(runtime.resetSession?.())
@@ -565,8 +655,40 @@ export class SidecarServer {
     return {
       claude: getClaudeProviderSettings(settings).cliPath,
       codex: getCodexProviderSettings(settings).cliPath,
-      opencode: getOpencodeProviderSettings(settings).cliPath,
+      opencode: resolveSidecarCliPath(settings, getOpencodeProviderSettings(settings)) ?? '',
     };
+  }
+
+  private runtimeKey(connectionId: string, runtimeId: string): string {
+    return `${connectionId}\u0000${runtimeId}`;
+  }
+
+  private turnKey(connectionId: string, turnId: string): string {
+    return `${connectionId}\u0000${turnId}`;
+  }
+
+  private publishStreamEvent(connectionId: string, streamId: string, event: string, payload: StreamChunk): void {
+    const key = this.turnKey(connectionId, streamId);
+    const buffer = this.replayBuffers.get(key) ?? new EventReplayBuffer<StreamChunk>(connectionId, streamId);
+    this.replayBuffers.set(key, buffer);
+    const envelope = buffer.append(event, payload);
+    const connection = this.connections.get(connectionId);
+    if (connection?.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: envelope }));
+  }
+
+  private connectionIdFromRuntimeKey(runtimeId: string): string {
+    return runtimeId.slice(0, runtimeId.indexOf('\u0000'));
+  }
+
+  private async requestInteraction(runtimeId: string, kind: PendingInteraction['kind'], payload: Record<string, unknown>): Promise<unknown> {
+    const connectionId = this.connectionIdFromRuntimeKey(runtimeId);
+    const id = randomUUID();
+    this.leases.attachApproval(connectionId, id);
+    try {
+      return await this.approvals.request({ connectionId, id, kind, payload });
+    } finally {
+      this.leases.releaseApproval(connectionId, id);
+    }
   }
 
   private async ensureChatConversation(conversationId: string, providerId: string): Promise<Conversation> {
@@ -593,25 +715,46 @@ export class SidecarServer {
     await this.sessions.persist();
   }
 
-  private async createWatch(connectionId: string, connection: WebSocket, inputPath: string): Promise<string> {
+  private async createWatch(connectionId: string, inputPath: string): Promise<string> {
     if (!this.files) throw new Error('File service unavailable.');
     const target = await this.files.resolveWatchTarget(inputPath);
     const watchId = randomUUID();
     let sequence = 0;
     const watcher = watchFile(target, { persistent: false }, eventType => {
-      if (connection.readyState !== 1) return;
+      const currentConnection = this.connections.get(connectionId);
+      if (currentConnection?.readyState !== 1) return;
       const type = eventType === 'change' ? 'modified' : 'renamed';
-      connection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: { connectionId, streamId: watchId, seq: ++sequence, event: 'watch.changed', payload: { path: target, type, watchId }, timestamp: Date.now() } }));
+      currentConnection.send(JSON.stringify({ jsonrpc: '2.0', method: 'stream.event', params: { connectionId, streamId: watchId, seq: ++sequence, event: 'watch.changed', payload: { path: target, type, watchId }, timestamp: Date.now() } }));
     });
-    this.watches.set(watchId, { connection, close: () => watcher.close() });
+    this.watches.set(watchId, { connectionId, close: () => watcher.close() });
+    this.leases.attachWatch(connectionId, watchId);
     return watchId;
   }
 
   private disposeConnection(connectionId: string, connection: WebSocket): void {
+    if (this.connections.get(connectionId) !== connection) return;
     this.connections.delete(connectionId);
-    this.approvals.rejectAll();
+    const lease = this.leases.disconnect(connectionId);
+    if (!lease) return;
+    const timer = setTimeout(() => this.expireConnectionLease(connectionId), this.options.reconnectGraceMs ?? 10_000);
+    timer.unref();
+    this.leaseCleanupTimers.set(connectionId, timer);
+  }
+
+  private expireConnectionLease(connectionId: string): void {
+    this.leaseCleanupTimers.delete(connectionId);
+    if (this.connections.has(connectionId)) return;
+    const lease = this.leases.expire(connectionId);
+    if (!lease) return;
+    this.approvals.rejectConnection(connectionId, 'reconnect-timeout');
+    for (const turnId of lease?.turnIds ?? []) {
+      const active = this.activeTurns.get(this.turnKey(connectionId, turnId));
+      if (active) this.runtimes.getOrCreate<SidecarChatProviderRuntime>(active.providerId, active.runtimeId).cancelTurn(turnId);
+    }
+    for (const runtimeId of lease?.runtimeIds ?? []) void this.runtimes.disposeByRuntimeId(runtimeId).catch(() => undefined);
+    for (const key of this.replayBuffers.keys()) if (key.startsWith(`${connectionId}\u0000`)) this.replayBuffers.delete(key);
     for (const [watchId, watch] of this.watches) {
-      if (watch.connection !== connection) continue;
+      if (watch.connectionId !== connectionId) continue;
       watch.close();
       this.watches.delete(watchId);
     }
@@ -619,12 +762,11 @@ export class SidecarServer {
 
   private publishInteraction(interaction: PendingInteraction): void {
     const method = interaction.kind === 'approval' ? 'approval.request' : interaction.kind === 'planApproval' ? 'planApproval.request' : 'userInput.request';
-    for (const connection of this.connections.values()) {
-      if (connection.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method, params: interaction }));
-    }
+    const connection = this.connections.get(interaction.connectionId);
+    if (connection?.readyState === 1) connection.send(JSON.stringify({ jsonrpc: '2.0', method, params: interaction }));
   }
 
-  private async handleFileRequest(request: JsonRpcRequest): Promise<unknown> {
+  private async handleFileRequest(connectionId: string, request: JsonRpcRequest): Promise<unknown> {
     if (!this.files) throw new Error('File service unavailable.');
     const params = request.params as Record<string, unknown> | undefined;
     const readPath = (): string => {
@@ -639,31 +781,35 @@ export class SidecarServer {
     };
     switch (request.method) {
       case 'fs.readText': return this.files.readText(readPath());
-      case 'fs.writeText': { const value = writeParams(); return this.idempotentFileOperation(request.method, params!.idempotencyKey as string, () => this.files!.writeText(value.path, value.data, value.expectedHash)); }
-      case 'fs.writeBinary': { const value = writeParams(); return this.idempotentFileOperation(request.method, params!.idempotencyKey as string, () => this.files!.writeBinary(value.path, value.data, value.expectedHash)); }
-      case 'fs.remove': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file remove.'); return this.idempotentFileOperation(request.method, params.idempotencyKey, () => this.files!.remove(readPath()));
+      case 'fs.writeText': { const value = writeParams(); return this.idempotentFileOperation(connectionId, request.method, params!.idempotencyKey as string, params!, () => this.files!.writeText(value.path, value.data, value.expectedHash)); }
+      case 'fs.writeBinary': { const value = writeParams(); return this.idempotentFileOperation(connectionId, request.method, params!.idempotencyKey as string, params!, () => this.files!.writeBinary(value.path, value.data, value.expectedHash)); }
+      case 'fs.remove': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file remove.'); return this.idempotentFileOperation(connectionId, request.method, params.idempotencyKey, params, () => this.files!.remove(readPath()));
       case 'fs.list': return this.files.list(readPath());
       case 'fs.stat': return this.files.stat(readPath());
       case 'fs.createBackup': return this.files.createBackup(readPath());
       case 'fs.restoreBackup': {
         if (typeof params?.backupId !== 'string' || typeof params?.idempotencyKey !== 'string') throw new Error('Invalid backup restore.');
-        return this.idempotentFileOperation(request.method, params.idempotencyKey, () => this.files!.restoreBackup(params.backupId as string, readPath(), typeof params.expectedHash === 'string' ? params.expectedHash : undefined));
+        return this.idempotentFileOperation(connectionId, request.method, params.idempotencyKey, params, () => this.files!.restoreBackup(params.backupId as string, readPath(), typeof params.expectedHash === 'string' ? params.expectedHash : undefined));
       }
       case 'fs.rename': {
         if (typeof params?.from !== 'string' || typeof params?.to !== 'string' || typeof params?.idempotencyKey !== 'string') throw new Error('Invalid file rename.');
-        return this.files.rename(params.from, params.to);
+        return this.idempotentFileOperation(connectionId, request.method, params.idempotencyKey, params, () => this.files!.rename(params.from as string, params.to as string));
       }
-      case 'fs.createDirectory': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid directory create.'); return this.files.createDirectory(readPath());
+      case 'fs.createDirectory': if (typeof params?.idempotencyKey !== 'string') throw new Error('Invalid directory create.'); return this.idempotentFileOperation(connectionId, request.method, params.idempotencyKey, params, () => this.files!.createDirectory(readPath()));
       default: throw new Error('Unsupported file operation.');
     }
   }
 
-  private idempotentFileOperation(method: string, key: string, operation: () => Promise<unknown>): Promise<unknown> {
-    const id = `${method}:${key}`;
+  private idempotentFileOperation(connectionId: string, method: string, key: string, params: Record<string, unknown>, operation: () => Promise<unknown>): Promise<unknown> {
+    const id = `${connectionId}:${this.workspace?.current ?? 'ungranted'}:${method}:${key}`;
+    const fingerprint = JSON.stringify(params);
     const existing = this.fileOperationResults.get(id);
-    if (existing) return existing;
+    if (existing) {
+      if (existing.fingerprint !== fingerprint) throw new IdempotencyKeyReuseError('Idempotency key was reused with a different request.');
+      return existing.result;
+    }
     const result = operation();
-    this.fileOperationResults.set(id, result);
+    this.fileOperationResults.set(id, { fingerprint, result });
     if (this.fileOperationResults.size > 1_000) this.fileOperationResults.delete(this.fileOperationResults.keys().next().value as string);
     return result;
   }
@@ -724,5 +870,18 @@ export class SidecarServer {
 
   private systemStatus(): { readonly providerRuntimes: readonly string[]; readonly status: 'ok'; readonly workspaceGranted: boolean } {
     return { providerRuntimes: this.providers.list(), status: 'ok', workspaceGranted: Boolean(this.workspace?.current) };
+  }
+}
+
+async function removeConnectionDescriptor(target: string): Promise<void> {
+  try { await unlink(target); } catch { /* It is normal for the first start. */ }
+}
+
+async function removeOwnedConnectionDescriptor(target: string): Promise<void> {
+  try {
+    const descriptor = JSON.parse(await readFile(target, 'utf8')) as { pid?: unknown };
+    if (descriptor.pid === process.pid) await unlink(target);
+  } catch {
+    // A malformed or already removed descriptor must not block shutdown.
   }
 }

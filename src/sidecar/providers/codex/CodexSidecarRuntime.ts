@@ -1,5 +1,6 @@
 import type { ProcessTransportFactory } from '@/core/ports';
 import type { ChatTurnMetadata } from '@/core/runtime/types';
+import { resolveUnifiedPermissionPolicy } from '@/core/security/UnifiedPermissionPolicy';
 import type { ApprovalDecision,StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
 import { toCodexRuntimeModelId } from '@/providers/codex/modelSelection';
@@ -314,9 +315,11 @@ function resolveEffort(value: unknown): string {
 }
 
 function resolvePermissionMode(settings: Record<string, unknown>): { approvalPolicy: string; sandbox: string } {
-  if (settings.permissionMode === 'yolo') return { approvalPolicy: 'never', sandbox: 'danger-full-access' };
-  if (settings.permissionMode === 'plan') return { approvalPolicy: 'on-request', sandbox: 'workspace-write' };
-  return { approvalPolicy: 'never', sandbox: 'read-only' };
+  const policy = resolveUnifiedPermissionPolicy(settings.permissionMode);
+  return {
+    approvalPolicy: policy.approvals === 'never' ? 'never' : policy.approvals === 'always' ? 'untrusted' : 'on-request',
+    sandbox: policy.filesystem === 'full-access' ? 'danger-full-access' : policy.filesystem === 'read-only' ? 'read-only' : 'workspace-write',
+  };
 }
 
 function resolveSandboxPolicy(settings: Record<string, unknown>, workspace: string): Record<string, unknown> {

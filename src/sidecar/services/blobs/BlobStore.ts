@@ -4,6 +4,7 @@ import path from 'node:path';
 
 export class BlobNotFoundError extends Error {}
 export class BlobPayloadTooLargeError extends Error {}
+export class BlobCapacityExceededError extends Error {}
 
 interface PendingBlob {
   readonly bytes: number;
@@ -15,12 +16,19 @@ interface PendingBlob {
 /** Sidecar-owned bounded upload staging for browser File and clipboard data. */
 export class BlobStore {
   private readonly pending = new Map<string, PendingBlob>();
-  private readonly committed = new Map<string, string>();
+  private readonly committed = new Map<string, { readonly bytes: number; readonly path: string }>();
 
-  constructor(private readonly directory: string, private readonly maxBlobBytes = 20 * 1024 * 1024, private readonly maxChunkBytes = 1024 * 1024) {}
+  constructor(
+    private readonly directory: string,
+    private readonly maxBlobBytes = 20 * 1024 * 1024,
+    private readonly maxChunkBytes = 1024 * 1024,
+    private readonly maxBlobCount = 32,
+    private readonly maxTotalBytes = 64 * 1024 * 1024,
+  ) {}
 
   begin(bytes: number, mimeType: string): { readonly blobId: string; readonly maxChunkBytes: number } {
     if (!Number.isInteger(bytes) || bytes < 0 || bytes > this.maxBlobBytes || !mimeType) throw new BlobPayloadTooLargeError('Blob exceeds the Sidecar upload limit.');
+    if (this.size >= this.maxBlobCount || this.totalBytes + bytes > this.maxTotalBytes) throw new BlobCapacityExceededError('Blob staging capacity has been reached.');
     const blobId = randomUUID();
     this.pending.set(blobId, { bytes, chunks: [], mimeType, temporaryPath: path.join(this.directory, `${blobId}.upload`) });
     return { blobId, maxChunkBytes: this.maxChunkBytes };
@@ -42,14 +50,14 @@ export class BlobStore {
     await writeFile(blob.temporaryPath, content);
     await rename(blob.temporaryPath, finalPath);
     this.pending.delete(blobId);
-    this.committed.set(blobId, finalPath);
+    this.committed.set(blobId, { bytes: content.byteLength, path: finalPath });
     return { mimeType: blob.mimeType, path: finalPath, size: content.byteLength };
   }
 
   async abort(blobId: string): Promise<void> {
     const pending = this.pending.get(blobId);
     this.pending.delete(blobId);
-    const committedPath = this.committed.get(blobId);
+    const committedPath = this.committed.get(blobId)?.path;
     this.committed.delete(blobId);
     await Promise.all([pending?.temporaryPath, committedPath].filter((value): value is string => Boolean(value)).map(target => rm(target, { force: true })));
   }
@@ -60,10 +68,16 @@ export class BlobStore {
   }
 
   async getCommittedPath(blobId: string): Promise<string> {
-    const target = this.committed.get(blobId);
+    const target = this.committed.get(blobId)?.path;
     if (!target) throw new BlobNotFoundError('Blob is not committed.');
     await stat(target);
     return target;
+  }
+
+  get size(): number { return this.pending.size + this.committed.size; }
+  get totalBytes(): number {
+    return [...this.pending.values()].reduce((total, blob) => total + blob.bytes, 0)
+      + [...this.committed.values()].reduce((total, blob) => total + blob.bytes, 0);
   }
 
   private requirePending(blobId: string): PendingBlob {

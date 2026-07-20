@@ -1,15 +1,22 @@
 import type { SpawnedProcess, SpawnOptions } from '@anthropic-ai/claude-agent-sdk';
 
 import { DefaultExecutionPolicy, type ExecutionPolicy, type ProcessSpec, type ProcessTransportFactory } from '@/core/ports';
-import { startDeferredNodeProcess } from '@/hosts/electron/NodeProcessSessionAdapter';
+import { type NodeCompatibleProcess,startDeferredNodeProcess } from '@/hosts/electron/NodeProcessSessionAdapter';
 
 import { cliPathRequiresNode, findNodeExecutable } from '../../../utils/env';
 import { resolveWindowsCmdShimSpawnSpec } from '../../../utils/windowsCmdShim';
+
+export type DeferredProcessStarter = (
+  factory: ProcessTransportFactory,
+  spec: ProcessSpec,
+  signal?: AbortSignal,
+) => NodeCompatibleProcess;
 
 export function createCustomSpawnFunction(
   enhancedPath: string,
   processTransport?: ProcessTransportFactory,
   executionPolicy: ExecutionPolicy = new DefaultExecutionPolicy(),
+  startProcess: DeferredProcessStarter = startDeferredNodeProcess,
 ): (options: SpawnOptions) => SpawnedProcess {
   return (options: SpawnOptions): SpawnedProcess => {
     if (!processTransport) {
@@ -30,7 +37,11 @@ export function createCustomSpawnFunction(
       }
     }
 
-    const resolvedSpawnSpec = resolveWindowsCmdShimSpawnSpec({ args, command });
+    const resolvedSpawnSpec = resolveWindowsCmdShimSpawnSpec({
+      args,
+      command,
+      env: { ...process.env, ...env, PATH: env?.PATH ?? enhancedPath },
+    });
     const processSpec: ProcessSpec = {
       executable: resolvedSpawnSpec.command,
       args: resolvedSpawnSpec.args,
@@ -41,7 +52,7 @@ export function createCustomSpawnFunction(
     };
     executionPolicy.assertAllowed(processSpec);
 
-    const child = startDeferredNodeProcess(processTransport, processSpec, signal);
+    const child = startProcess(processTransport, processSpec, signal);
     if (signal) {
       const killChild = (): void => { child.kill('SIGTERM'); };
       if (signal.aborted) killChild();

@@ -12,6 +12,7 @@ export interface RpcSocket {
 }
 
 export interface WebSocketRpcClientOptions {
+  readonly endpointResolver?: () => string | Promise<string>;
   readonly requestTimeoutMs?: number;
   readonly socketFactory: (endpoint: string) => RpcSocket;
 }
@@ -29,18 +30,22 @@ export class WebSocketRpcClient {
   private readonly stateMachine = new ConnectionStateMachine();
   private readonly subscriptions = new SubscriptionManager();
   private readonly eventListeners = new Set<(event: RpcEventEnvelope<unknown>) => void>();
+  private readonly reconnectedListeners = new Set<(result: SystemInitializeResult) => void>();
   private readonly notificationListeners = new Map<string, Set<(params: unknown) => void>>();
   private readonly pending = new Map<string, { reject(error: Error): void; resolve(result: unknown): void; timeout: ReturnType<typeof setTimeout> }>();
   private socket: RpcSocket | null = null;
   private sequence = 0;
   private connectionId: string | null = null;
+  private initializeParams: InitializeParams | null = null;
+  private reconnectTask: Promise<void> | null = null;
 
-  constructor(private readonly endpoint: string, private readonly options: WebSocketRpcClientOptions) {}
+  constructor(private endpoint: string, private readonly options: WebSocketRpcClientOptions) {}
 
   get state(): ConnectionState { return this.stateMachine.state; }
 
   async connect(): Promise<void> {
     this.stateMachine.transition(this.state === 'reconnecting' ? 'connecting' : 'connecting');
+    if (this.options.endpointResolver) this.endpoint = await this.options.endpointResolver();
     const socket = this.options.socketFactory(this.endpoint);
     this.socket = socket;
     await new Promise<void>((resolve, reject) => {
@@ -64,6 +69,7 @@ export class WebSocketRpcClient {
 
   async initialize(params: InitializeParams): Promise<SystemInitializeResult> {
     try {
+      this.initializeParams = params;
       const result = await this.request<SystemInitializeResult>('system.initialize', params);
       this.connectionId = result.connectionId;
       this.markReady();
@@ -77,6 +83,11 @@ export class WebSocketRpcClient {
   onEvent(listener: (event: RpcEventEnvelope<unknown>) => void): () => void {
     this.eventListeners.add(listener);
     return () => this.eventListeners.delete(listener);
+  }
+
+  onReconnected(listener: (result: SystemInitializeResult) => void): () => void {
+    this.reconnectedListeners.add(listener);
+    return () => this.reconnectedListeners.delete(listener);
   }
 
   onNotification(method: string, listener: (params: unknown) => void): () => void {
@@ -120,7 +131,7 @@ export class WebSocketRpcClient {
     try { response = JSON.parse(raw) as JsonRpcResponse | { method?: unknown; params?: unknown }; } catch { return; }
     const event = 'method' in response && response.method === 'stream.event' ? response.params : undefined;
     if (isEventEnvelope(event)) {
-      if (this.subscriptions.consume(event)) this.eventListeners.forEach(listener => listener(event));
+      this.dispatchEvent(event);
       return;
     }
     if ('method' in response && typeof response.method === 'string') {
@@ -139,6 +150,26 @@ export class WebSocketRpcClient {
     if (this.state === 'disposed') return;
     this.stateMachine.transition('reconnecting');
     this.rejectAll(new Error('Sidecar disconnected.'));
+    if (this.initializeParams && !this.reconnectTask) {
+      this.reconnectTask = this.restoreConnection().finally(() => { this.reconnectTask = null; });
+    }
+  }
+
+  private async restoreConnection(): Promise<void> {
+    let attempt = 0;
+    while (this.state === 'reconnecting' && this.initializeParams) {
+      try {
+        await this.reconnect(attempt++);
+        const result = await this.initialize({ ...this.initializeParams, lastConnectionId: this.connectionId ?? this.initializeParams.lastConnectionId });
+        await this.replaySubscriptions();
+        this.reconnectedListeners.forEach(listener => listener(result));
+        return;
+      } catch {
+        const state = this.stateMachine.state as ConnectionState;
+        if (state === 'incompatible' || state === 'disposed') return;
+        if (state === 'connecting') this.stateMachine.transition('reconnecting');
+      }
+    }
   }
 
   private rejectPending(id: string, error: Error): void {
@@ -147,6 +178,18 @@ export class WebSocketRpcClient {
     this.pending.delete(id);
     clearTimeout(pending.timeout);
     pending.reject(error);
+  }
+
+  private async replaySubscriptions(): Promise<void> {
+    const positions = this.subscriptions.resumePositions();
+    if (Object.keys(positions).length === 0) return;
+    const result = await this.request<{ events?: unknown }>('stream.replay', { positions });
+    if (!Array.isArray(result.events)) return;
+    for (const event of result.events) if (isEventEnvelope(event)) this.dispatchEvent(event);
+  }
+
+  private dispatchEvent(event: RpcEventEnvelope<unknown>): void {
+    if (this.subscriptions.consume(event)) this.eventListeners.forEach(listener => listener(event));
   }
 
   private rejectAll(error: Error): void { for (const id of [...this.pending.keys()]) this.rejectPending(id, error); }

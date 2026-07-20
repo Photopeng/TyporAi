@@ -12,6 +12,7 @@ import type {
   ProcessTransportFactory,
 } from '@/core/ports';
 import { ProviderWorkspaceRegistry } from '@/core/providers/ProviderWorkspaceRegistry';
+import { SIDECAR_RUNTIME_DEVICE_KEY } from '@/core/providers/sidecarRuntimeSettings';
 import { VIEW_TYPE_TYPORAI } from '@/core/types';
 import { TyporAiView } from '@/features/chat/TyporAiView';
 import { TyporAiSettingTab } from '@/features/settings/TyporAiSettings';
@@ -41,6 +42,7 @@ import { TyporaDocumentService } from '@/typora/TyporaDocumentService';
 import { setIcon } from '@/ui/Icon';
 import { ModalController } from '@/ui/ModalController';
 import { setTyporAiTooltip } from '@/ui/Tooltip';
+import { getHostnameKey } from '@/utils/env';
 
 import { BridgeProviderServiceFactory } from './BridgeProviderServiceFactory';
 import { FullBridgeChatRuntime } from './FullBridgeChatRuntime';
@@ -506,13 +508,17 @@ function installHostStyles(): void {
 }
 
 async function syncSidecarSettings(rpc: WebSocketRpcClient, settings: Record<string, unknown>): Promise<void> {
+  const patch = {
+    ...settings,
+    [SIDECAR_RUNTIME_DEVICE_KEY]: getHostnameKey(),
+  };
   for (let attempt = 0; attempt < 2; attempt++) {
     const snapshot = await rpc.request<{ revision: number }>('settings.getSnapshot');
     try {
       await rpc.request('settings.applyPatch', {
         expectedRevision: snapshot.revision,
         idempotencyKey: crypto.randomUUID(),
-        patch: settings,
+        patch,
       });
       return;
     } catch (error) {

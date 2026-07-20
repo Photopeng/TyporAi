@@ -27,12 +27,10 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Typecheck and lint
-        run: npm run typecheck && npm run lint
-      - name: Test Sidecar protocol and contracts
-        run: npm run test:protocol && npm run test:contract && npm run test:integration
+      - name: Run unified release quality gate
+        run: npm run check:release
       - name: Build portable Renderer and Sidecar
-        run: npm run build:release && npm run audit:renderer && npm run verify:sidecar
+        run: npm run build:release && npm run verify:sidecar
       - name: Package platform release
         run: npm run package:release -- --platform ${{ matrix.platform }}
       - name: Upload platform artifacts

@@ -14,17 +14,39 @@ export class SidecarProcessTransport implements ProcessTransportFactory {
     if (signal?.aborted) throw new DOMException('The operation was aborted', 'AbortError');
     const lease = this.policy.acquire?.(spec);
     if (!lease) this.policy.assertAllowed(spec);
-    const child = spawn(spec.executable, spec.args, {
-      cwd: spec.cwd,
-      detached: process.platform !== 'win32',
-      env: applyEnvironment(spec.envDelta),
-      stdio: 'pipe',
-      windowsHide: true,
-      ...(spec.windowsVerbatimArguments ? { windowsVerbatimArguments: true } : {}),
-    });
+    let child: ChildProcess;
+    try {
+      child = spawn(spec.executable, spec.args, {
+        cwd: spec.cwd,
+        detached: process.platform !== 'win32',
+        env: applyEnvironment(spec.envDelta),
+        stdio: 'pipe',
+        windowsHide: true,
+        ...(spec.windowsVerbatimArguments ? { windowsVerbatimArguments: true } : {}),
+      });
+    } catch (error) {
+      lease?.release();
+      throw processStartError(spec.executable, error);
+    }
     const id = randomUUID();
-    const session = new SidecarProcessSession(child, process.platform === 'win32', lease, () => this.registry.terminate(id));
-    this.registry.add({ id, terminate: signalName => { void session.terminate({ gracePeriodMs: signalName === 'SIGKILL' ? 0 : 3_000, reason: 'forced' }); } });
+    const session = new SidecarProcessSession(child, process.platform === 'win32', lease, () => this.registry.remove(id));
+    try {
+      await waitForSpawn(child);
+    } catch (error) {
+      // The session receives the same error event and releases the lease. Do
+      // not turn ENOENT/EACCES into an ambiguous process exit for the UI.
+      throw processStartError(spec.executable, error);
+    }
+    if (session.hasExited) {
+      return session;
+    }
+    this.registry.add({
+      id,
+      terminate: async signalName => ({
+        exit: await session.terminate({ gracePeriodMs: signalName === 'SIGKILL' ? 0 : 3_000, reason: 'forced' }),
+        reaped: session.hasExited,
+      }),
+    });
     signal?.addEventListener('abort', () => { void session.terminate({ gracePeriodMs: 0, reason: 'cancelled' }); }, { once: true });
     return session;
   }
@@ -36,6 +58,8 @@ class SidecarProcessSession implements ProcessSession {
   private readonly stderr = new Set<(chunk: string) => void>();
   private readonly exits = new Set<(exit: ProcessExit) => void>();
   private exit: ProcessExit | null = null;
+  private resolveExit: ((exit: ProcessExit) => void) | null = null;
+  private readonly exitPromise = new Promise<ProcessExit>(resolve => { this.resolveExit = resolve; });
   private disposed = false;
 
   constructor(private readonly child: ChildProcess, private readonly isWindows: boolean, private readonly lease: ProcessLease | undefined, private readonly unregister: () => void) {
@@ -58,8 +82,9 @@ class SidecarProcessSession implements ProcessSession {
   async terminate(options: { readonly gracePeriodMs: number; readonly reason: TerminationReason }): Promise<ProcessExit> {
     if (this.exit) return this.exit;
     this.killTree('SIGTERM');
-    if (options.gracePeriodMs > 0) await new Promise(resolve => setTimeout(resolve, options.gracePeriodMs));
+    if (options.gracePeriodMs > 0) await this.waitForExit(options.gracePeriodMs);
     if (!this.exit) this.killTree('SIGKILL');
+    await this.waitForExit(2_000);
     return this.exit ?? { code: null, signal: 'SIGKILL', reason: options.reason };
   }
   async dispose(): Promise<void> { this.disposed = true; if (!this.exit) await this.terminate({ gracePeriodMs: 0, reason: 'disposed' }); this.stdout.clear(); this.stderr.clear(); this.exits.clear(); }
@@ -68,12 +93,47 @@ class SidecarProcessSession implements ProcessSession {
     try { this.lease?.recordOutput(new TextEncoder().encode(value).byteLength); listeners.forEach(listener => listener(value)); }
     catch { void this.terminate({ gracePeriodMs: 0, reason: 'forced' }); }
   }
-  private complete(exit: ProcessExit): void { if (this.exit) return; this.exit = exit; this.lease?.release(); this.unregister(); this.exits.forEach(listener => listener(exit)); }
+  get hasExited(): boolean { return this.exit !== null; }
+
+  private async waitForExit(timeoutMs: number): Promise<void> {
+    if (this.exit) return;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    await Promise.race([
+      this.exitPromise,
+      new Promise<void>(resolve => { timer = setTimeout(resolve, timeoutMs); }),
+    ]);
+    if (timer) clearTimeout(timer);
+  }
+  private complete(exit: ProcessExit): void { if (this.exit) return; this.exit = exit; this.resolveExit?.(exit); this.resolveExit = null; this.lease?.release(); this.unregister(); this.exits.forEach(listener => listener(exit)); }
   private killTree(signal: NodeJS.Signals): void {
     if (this.isWindows && this.pid) { spawn('taskkill', ['/pid', String(this.pid), '/t', '/f'], { stdio: 'ignore', windowsHide: true }); return; }
     if (this.pid) { try { process.kill(-this.pid, signal); return; } catch { /* fall through */ } }
     this.child.kill(signal);
   }
+}
+
+function waitForSpawn(child: ChildProcess): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const cleanup = (): void => {
+      child.off('spawn', onSpawn);
+      child.off('error', onError);
+    };
+    const onSpawn = (): void => {
+      cleanup();
+      resolve();
+    };
+    const onError = (error: Error): void => {
+      cleanup();
+      reject(error);
+    };
+    child.once('spawn', onSpawn);
+    child.once('error', onError);
+  });
+}
+
+function processStartError(executable: string, error: unknown): Error {
+  const message = error instanceof Error ? error.message : String(error);
+  return new Error(`Unable to start ${executable}: ${message}`);
 }
 
 function applyEnvironment(delta: ProcessSpec['envDelta']): NodeJS.ProcessEnv {

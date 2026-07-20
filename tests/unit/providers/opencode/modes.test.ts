@@ -8,6 +8,7 @@ import {
   OPENCODE_FALLBACK_MODES,
   OPENCODE_SAFE_MODE_ID,
   OPENCODE_YOLO_MODE_ID,
+  resolveAvailableOpencodeModeForPermissionMode,
   resolveOpencodeModeForPermissionMode,
   resolvePermissionModeForManagedOpencodeMode,
 } from '../../../../src/providers/opencode/modes';
@@ -53,6 +54,21 @@ describe('OpenCode mode settings', () => {
     expect(resolveOpencodeModeForPermissionMode('yolo')).toBe(OPENCODE_YOLO_MODE_ID);
     expect(resolveOpencodeModeForPermissionMode('normal')).toBe(OPENCODE_SAFE_MODE_ID);
     expect(resolveOpencodeModeForPermissionMode('plan')).toBe('plan');
+  });
+
+  it('never sends TyporAi fallback mode IDs unless ACP advertised them', () => {
+    const openCodeModes = [
+      { id: 'build', name: 'Build' },
+      { id: 'plan', name: 'Plan' },
+    ];
+
+    expect(resolveAvailableOpencodeModeForPermissionMode('normal', openCodeModes)).toBeNull();
+    expect(resolveAvailableOpencodeModeForPermissionMode('yolo', openCodeModes)).toBeNull();
+    expect(resolveAvailableOpencodeModeForPermissionMode('plan', openCodeModes)).toBe('plan');
+    expect(resolveAvailableOpencodeModeForPermissionMode('normal', [
+      ...openCodeModes,
+      { id: OPENCODE_SAFE_MODE_ID, name: 'Safe' },
+    ])).toBe(OPENCODE_SAFE_MODE_ID);
   });
 
   it('maps managed OpenCode modes back to shared permission modes', () => {

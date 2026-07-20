@@ -134,6 +134,19 @@ export function resolveOpencodeModeForPermissionMode(
   return managedModes[0]?.id ?? '';
 }
 
+/**
+ * ACP accepts only mode identifiers advertised by the active OpenCode
+ * session. TyporAi's fallback IDs are UI-level permission labels, not valid
+ * ACP configuration values, so they must never be sent to the subprocess.
+ */
+export function resolveAvailableOpencodeModeForPermissionMode(
+  permissionMode: unknown,
+  availableModes: OpencodeMode[],
+): string | null {
+  const requested = resolveOpencodeModeForPermissionMode(permissionMode, availableModes);
+  return availableModes.some(mode => mode.id === requested) ? requested : null;
+}
+
 export function resolvePermissionModeForManagedOpencodeMode(
   modeId: unknown,
 ): 'normal' | 'plan' | 'yolo' | null {

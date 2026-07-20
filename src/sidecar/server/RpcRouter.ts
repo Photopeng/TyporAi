@@ -14,7 +14,7 @@ export class RpcRouter {
   route(request: JsonRpcRequest): JsonRpcResponse {
     if (request.method !== 'system.initialize') return this.failure(request.id, 'METHOD_NOT_SUPPORTED', 'Method is not available.');
     const parsed = validateSystemInitializeParams(request.params);
-    if (!parsed.ok) return this.failure(request.id, 'INTERNAL_ERROR', 'Invalid initialize request.');
+    if (!parsed.ok) return this.failure(request.id, 'INVALID_PARAMS', 'Invalid initialize request.');
     if (!tokenMatches(this.options.token, parsed.value.token)) return this.failure(request.id, 'AUTH_FAILED', 'Authentication failed.');
     const version = negotiateClientProtocol(parsed.value.protocol);
     if (version === null) return this.failure(request.id, 'PROTOCOL_VERSION_MISMATCH', 'No compatible protocol version exists.');

@@ -17,12 +17,14 @@ import {
   extractAcpSessionThoughtLevelState,
 } from '@/providers/acp';
 import { decodeOpencodeModelId,resolveOpencodeBaseModelRawId } from '@/providers/opencode/models';
-import { resolveOpencodeModeForPermissionMode } from '@/providers/opencode/modes';
+import { resolveAvailableOpencodeModeForPermissionMode } from '@/providers/opencode/modes';
 import { buildOpencodeRuntimeEnv } from '@/providers/opencode/runtime/OpencodeRuntimeEnvironment';
 import { getOpencodeProviderSettings } from '@/providers/opencode/settings';
 
 import { EventReplayBuffer } from '../../server/EventReplayBuffer';
+import { adaptSidecarProcessSession } from '../../services/process/adaptProcessSession';
 import type { SidecarTurnOptions } from '../registry';
+import { resolveSidecarCliPath } from '../resolveSidecarCliPath';
 
 export interface OpencodeSidecarRuntimeOptions {
   readonly getSettings: () => Record<string, unknown>;
@@ -124,14 +126,14 @@ export class OpencodeSidecarRuntime {
     await this.dispose();
     const settings = this.options.getSettings();
     const provider = getOpencodeProviderSettings(settings);
-    const command = provider.cliPath || 'opencode';
+    const command = resolveSidecarCliPath(settings, provider) || 'opencode';
     const runtimeEnv = buildOpencodeRuntimeEnv(settings, command);
     this.process = new AcpSubprocess({
       args: ['acp', `--cwd=${workspace}`],
       command,
       cwd: workspace,
       env: runtimeEnv,
-    }, this.options.processes);
+    }, this.options.processes, undefined, adaptSidecarProcessSession);
     await this.process.start();
     this.transport = new AcpJsonRpcTransport({
       input: this.process.stdout,
@@ -223,7 +225,7 @@ export class OpencodeSidecarRuntime {
 
   private async applySelectedModeAndEffort(connection: AcpClientConnection, sessionId: string): Promise<void> {
     const settings = this.options.getSettings();
-    const selectedMode = resolveOpencodeModeForPermissionMode(settings.permissionMode, this.availableModes);
+    const selectedMode = resolveAvailableOpencodeModeForPermissionMode(settings.permissionMode, this.availableModes);
     if (selectedMode) {
       await connection.setConfigOption({ configId: 'mode', sessionId, type: 'select', value: selectedMode });
     }

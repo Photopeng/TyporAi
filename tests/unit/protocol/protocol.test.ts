@@ -24,5 +24,7 @@ describe('Protocol v1', () => {
     expect(isRpcMethod('process.start')).toBe(false);
     expect(RPC_ERROR_CODES).toContain('PROTOCOL_VERSION_MISMATCH');
     expect(RPC_ERROR_CODES).toContain('PAYLOAD_TOO_LARGE');
+    expect(RPC_ERROR_CODES).toContain('INVALID_PARAMS');
+    expect(RPC_ERROR_CODES).toContain('SETTINGS_REVISION_CONFLICT');
   });
 });

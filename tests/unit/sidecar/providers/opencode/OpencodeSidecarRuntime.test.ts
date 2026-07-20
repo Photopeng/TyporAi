@@ -1,5 +1,6 @@
 import type { StreamChunk } from '@/core/types';
 import { OpencodeSidecarRuntime } from '@/sidecar/providers/opencode/OpencodeSidecarRuntime';
+import { resolveSidecarCliPath } from '@/sidecar/providers/resolveSidecarCliPath';
 
 describe('OpencodeSidecarRuntime', () => {
   it('refuses an ungranted workspace before creating an ACP subprocess', async () => {
@@ -30,5 +31,19 @@ describe('OpencodeSidecarRuntime', () => {
     });
 
     await expect(runtime.dispose()).resolves.toBeUndefined();
+  });
+
+  it('uses the CLI path selected by the connected Typora installation', () => {
+    expect(resolveSidecarCliPath({ __typoraiSidecarDeviceKey: 'device-a' }, {
+      cliPath: '',
+      cliPathsByHost: { 'device-a': 'C:\\Users\\test\\AppData\\Roaming\\npm\\opencode.cmd' },
+    })).toBe('C:\\Users\\test\\AppData\\Roaming\\npm\\opencode.cmd');
+  });
+
+  it('uses the single saved device path for a pre-upgrade Sidecar sync', () => {
+    expect(resolveSidecarCliPath({}, {
+      cliPath: '',
+      cliPathsByHost: { 'device-a': '/opt/homebrew/bin/opencode' },
+    })).toBe('/opt/homebrew/bin/opencode');
   });
 });

@@ -1,10 +1,12 @@
+import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { type SettingsSnapshot, VersionedSettingsStore } from './VersionedSettingsStore';
 
 export class PersistentSettingsStore<T extends Record<string, unknown>> {
-  private readonly memory: VersionedSettingsStore<T>;
+  private memory: VersionedSettingsStore<T>;
+  private persistQueue: Promise<void> = Promise.resolve();
 
   private constructor(private readonly filePath: string, initial: T, revision = 0) {
     this.memory = new VersionedSettingsStore(initial, revision);
@@ -21,11 +23,25 @@ export class PersistentSettingsStore<T extends Record<string, unknown>> {
   getSnapshot(): SettingsSnapshot<T> { return this.memory.getSnapshot(); }
 
   async applyPatch(patch: Partial<T>, expectedRevision: number, idempotencyKey: string): Promise<SettingsSnapshot<T>> {
-    const snapshot = this.memory.applyPatch(patch, expectedRevision, idempotencyKey);
+    const operation = this.persistQueue.then(async () => {
+      const previous = this.memory.getSnapshot();
+      const snapshot = this.memory.applyPatch(patch, expectedRevision, idempotencyKey);
+      try {
+        await this.writeSnapshot(snapshot);
+        return snapshot;
+      } catch (error) {
+        this.memory = new VersionedSettingsStore(previous.value, previous.revision);
+        throw error;
+      }
+    });
+    this.persistQueue = operation.then(() => undefined, () => undefined);
+    return operation;
+  }
+
+  private async writeSnapshot(snapshot: SettingsSnapshot<T>): Promise<void> {
     await mkdir(path.dirname(this.filePath), { recursive: true });
-    const temporary = `${this.filePath}.${process.pid}.tmp`;
+    const temporary = `${this.filePath}.${process.pid}.${randomUUID()}.tmp`;
     await writeFile(temporary, JSON.stringify(snapshot), { encoding: 'utf8', mode: 0o600 });
     await rename(temporary, this.filePath);
-    return snapshot;
   }
 }

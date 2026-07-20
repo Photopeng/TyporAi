@@ -1,9 +1,12 @@
-import { readFile, rename, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 
 import { DEFAULT_MCP_SERVER, isValidMcpServerConfig, type ManagedMcpServer } from '@/core/types';
 
 export class PersistentMcpStore {
   private servers: ManagedMcpServer[] = [];
+  private persistQueue: Promise<void> = Promise.resolve();
   private constructor(private readonly filePath: string) {}
 
   static async open(filePath: string): Promise<PersistentMcpStore> {
@@ -15,11 +18,25 @@ export class PersistentMcpStore {
   list(): readonly ManagedMcpServer[] { return this.servers.map(server => ({ ...server, config: { ...server.config }, disabledTools: server.disabledTools ? [...server.disabledTools] : undefined })); }
 
   async save(next: readonly ManagedMcpServer[]): Promise<readonly ManagedMcpServer[]> {
-    this.servers = this.validate(next);
-    const temporary = `${this.filePath}.tmp`;
-    await writeFile(temporary, JSON.stringify(this.servers, null, 2), 'utf8');
-    await rename(temporary, this.filePath);
-    return this.list();
+    const validated = this.validate(next);
+    const operation = this.persistQueue.then(async () => {
+      await this.writeServers(validated);
+      this.servers = validated;
+      return this.list();
+    });
+    this.persistQueue = operation.then(() => undefined, () => undefined);
+    return operation;
+  }
+
+  private async writeServers(servers: readonly ManagedMcpServer[]): Promise<void> {
+    await mkdir(path.dirname(this.filePath), { recursive: true });
+    const temporary = `${this.filePath}.${process.pid}.${randomUUID()}.tmp`;
+    try {
+      await writeFile(temporary, JSON.stringify(servers, null, 2), 'utf8');
+      await rename(temporary, this.filePath);
+    } finally {
+      await rm(temporary, { force: true });
+    }
   }
 
   private validate(value: unknown): ManagedMcpServer[] {

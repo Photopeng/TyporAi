@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { BlobPayloadTooLargeError,BlobStore } from '@/sidecar/services/blobs/BlobStore';
+import { BlobCapacityExceededError,BlobPayloadTooLargeError,BlobStore } from '@/sidecar/services/blobs/BlobStore';
 
 describe('BlobStore', () => {
   let directory: string;
@@ -33,5 +33,11 @@ describe('BlobStore', () => {
     const committed = await store.commit(blobId);
     await store.abort(blobId);
     await expect(readFile(committed.path)).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+
+  it('bounds both blob count and total declared storage', () => {
+    const store = new BlobStore(directory, 8, 8, 1, 8);
+    store.begin(8, 'text/plain');
+    expect(() => store.begin(1, 'text/plain')).toThrow(BlobCapacityExceededError);
   });
 });

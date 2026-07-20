@@ -30,4 +30,13 @@ export class RuntimeManager {
     this.runtimes.clear();
     await Promise.all(entries.map(([, runtime]) => runtime.dispose?.()));
   }
+
+  async disposeByRuntimeId(runtimeId: string): Promise<void> {
+    const suffix = `:${runtimeId}`;
+    const entries = [...this.runtimes.entries()].filter(([key]) => key.endsWith(suffix));
+    for (const [key] of entries) this.runtimes.delete(key);
+    await Promise.all(entries.map(([, runtime]) => runtime.dispose?.()));
+  }
+
+  get size(): number { return this.runtimes.size; }
 }

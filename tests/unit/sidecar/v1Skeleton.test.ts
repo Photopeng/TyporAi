@@ -1,4 +1,4 @@
-import { mkdtemp, readFile } from 'node:fs/promises';
+import { access, mkdtemp, readFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
@@ -47,6 +47,29 @@ describe('v1 Sidecar skeleton', () => {
     }
   });
 
+  it('reports a scrubbed, machine-readable health snapshot', async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), 'typorai-health-'));
+    const server = new SidecarServer({ dataDirectory: directory, descriptorPath: path.join(directory, 'descriptor.json'), lockPath: path.join(directory, 'lock'), sidecarVersion: '2.0.27', token: 'test-token' });
+    const descriptor = await server.start();
+    try {
+      const health = await (await fetch(`http://127.0.0.1:${descriptor.port}/health`)).json() as Record<string, unknown>;
+      expect(health).toMatchObject({ persistence: true, processManager: true, protocolMin: 1, protocolMax: 1, sidecarVersion: '2.0.27', status: 'ok' });
+      expect(JSON.stringify(health)).not.toContain('test-token');
+    } finally {
+      await server.close();
+    }
+  });
+
+  it('removes its connection descriptor during an orderly shutdown', async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), 'typorai-descriptor-close-'));
+    const descriptorPath = path.join(directory, 'descriptor.json');
+    const server = new SidecarServer({ dataDirectory: directory, descriptorPath, lockPath: path.join(directory, 'lock'), sidecarVersion: '2.0.27', token: 'test-token' });
+    await server.start();
+    await server.close();
+
+    await expect(access(descriptorPath)).rejects.toThrow();
+  });
+
   it('requires initialize authentication and version compatibility', () => {
     const router = new RpcRouter({ token: 'test-token', sidecarVersion: '2.0.27' });
     const parameters = { token: 'test-token', clientId: 'client', rendererVersion: '2.0.27', protocol: { min: 1, max: 1 }, platform: 'windows', lastConnectionId: null };
@@ -81,6 +104,9 @@ describe('v1 Sidecar skeleton', () => {
     socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'settings', method: 'settings.applyPatch', params: { expectedRevision: 0, idempotencyKey: 'settings-1', patch: { mode: 'safe' } } }));
     await waitFor(() => messages.some(message => message.id === 'settings'));
     expect(messages.find(message => message.id === 'settings')).toMatchObject({ result: { revision: 1, value: { mode: 'safe' } } });
+    socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'stale-settings', method: 'settings.applyPatch', params: { expectedRevision: 0, idempotencyKey: 'settings-2', patch: { mode: 'stale' } } }));
+    await waitFor(() => messages.some(message => message.id === 'stale-settings'));
+    expect(messages.find(message => message.id === 'stale-settings')).toMatchObject({ error: { code: 'SETTINGS_REVISION_CONFLICT' } });
     socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'session', method: 'session.create', params: { idempotencyKey: 'session-1', conversation: { id: 'conversation-1', providerId: 'fake', title: 'Test', createdAt: 1, updatedAt: 1, sessionId: null, messages: [] } } }));
     await waitFor(() => messages.some(message => message.id === 'session'));
     expect(messages.find(message => message.id === 'session')).toMatchObject({ result: { revision: 1, conversation: { id: 'conversation-1' } } });
@@ -91,6 +117,41 @@ describe('v1 Sidecar skeleton', () => {
     await waitFor(() => messages.some(message => message.method === 'stream.event'));
     expect(messages.some(message => message.method === 'stream.event')).toBe(true);
     socket.close();
+    await server.close();
+  });
+
+  it('resumes a disconnected client lease during its reconnect window', async () => {
+    const directory = await mkdtemp(path.join(os.tmpdir(), 'typorai-resume-'));
+    const server = new SidecarServer({ dataDirectory: directory, descriptorPath: path.join(directory, 'descriptor.json'), lockPath: path.join(directory, 'lock'), reconnectGraceMs: 100, sidecarVersion: '2.0.27', token: 'test-token' });
+    const descriptor = await server.start();
+    const first = await openSocket(descriptor.port);
+    const firstMessages: Array<Record<string, unknown>> = [];
+    first.on('message', raw => firstMessages.push(JSON.parse(raw.toString()) as Record<string, unknown>));
+    first.send(JSON.stringify({ jsonrpc: '2.0', id: 'init', method: 'system.initialize', params: { token: 'test-token', clientId: 'window-a', rendererVersion: '2.0.27', protocol: { min: 1, max: 1 }, platform: 'windows', lastConnectionId: null } }));
+    await waitFor(() => firstMessages.some(message => message.id === 'init'));
+    const firstConnectionId = ((firstMessages.find(message => message.id === 'init')?.result as { connectionId: string }).connectionId);
+    first.send(JSON.stringify({ jsonrpc: '2.0', id: 'runtime', method: 'chat.createRuntime', params: { providerId: 'fake', runtimeId: 'runtime-a' } }));
+    await waitFor(() => firstMessages.some(message => message.id === 'runtime'));
+    first.send(JSON.stringify({ jsonrpc: '2.0', id: 'turn', method: 'chat.startTurn', params: { providerId: 'fake', runtimeId: 'runtime-a', prompt: 'hello', turnId: 'turn-a' } }));
+    await waitFor(() => firstMessages.some(message => message.method === 'stream.event'));
+    first.close();
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    const second = await openSocket(descriptor.port);
+    const secondMessages: Array<Record<string, unknown>> = [];
+    second.on('message', raw => secondMessages.push(JSON.parse(raw.toString()) as Record<string, unknown>));
+    second.send(JSON.stringify({ jsonrpc: '2.0', id: 'resume', method: 'system.initialize', params: { token: 'test-token', clientId: 'window-a', rendererVersion: '2.0.27', protocol: { min: 1, max: 1 }, platform: 'windows', lastConnectionId: firstConnectionId } }));
+    await waitFor(() => secondMessages.some(message => message.id === 'resume'));
+    expect(secondMessages.find(message => message.id === 'resume')).toMatchObject({ result: { connectionId: firstConnectionId, resumed: true } });
+    second.send(JSON.stringify({ jsonrpc: '2.0', id: 'replay', method: 'stream.replay', params: { positions: { 'turn-a': 0 } } }));
+    await waitFor(() => secondMessages.some(message => message.id === 'replay'));
+    expect(secondMessages.find(message => message.id === 'replay')).toMatchObject({ result: { events: expect.arrayContaining([expect.objectContaining({ streamId: 'turn-a', seq: 1 })]), unavailable: [] } });
+    second.send(JSON.stringify({ jsonrpc: '2.0', id: 'state', method: 'chat.getRuntimeState', params: { providerId: 'fake', runtimeId: 'runtime-a' } }));
+    await waitFor(() => secondMessages.some(message => message.id === 'state'));
+    expect(secondMessages.find(message => message.id === 'state')).toHaveProperty('result');
+    const closed = new Promise<void>(resolve => second.once('close', () => resolve()));
+    second.close();
+    await closed;
     await server.close();
   });
 
@@ -135,6 +196,7 @@ describe('v1 Sidecar skeleton', () => {
     await waitFor(() => messages.some(message => message.id === 'first'));
     socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'retry', method: 'fs.writeText', params: { ...params, data: 'second' } }));
     await waitFor(() => messages.some(message => message.id === 'retry'));
+    expect(messages.find(message => message.id === 'retry')).toMatchObject({ error: { code: 'IDEMPOTENCY_KEY_REUSED' } });
     socket.send(JSON.stringify({ jsonrpc: '2.0', id: 'read', method: 'fs.readText', params: { path: 'retry.md' } }));
     await waitFor(() => messages.some(message => message.id === 'read'));
     expect(messages.find(message => message.id === 'read')).toMatchObject({ result: 'first' });

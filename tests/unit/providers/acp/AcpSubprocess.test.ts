@@ -2,6 +2,7 @@ import { PassThrough } from 'stream';
 
 import type { ExecutionPolicy, ProcessSession, ProcessTransportFactory } from '@/core/ports';
 import { AcpSubprocess } from '@/providers/acp/AcpSubprocess';
+import { adaptSidecarProcessSession } from '@/sidecar/services/process/adaptProcessSession';
 
 function createTransport(): { transport: ProcessTransportFactory; session: ProcessSession } {
   const exits = new Set<(exit: { code: number | null; signal: string | null }) => void>();
@@ -53,7 +54,33 @@ describe('AcpSubprocess', () => {
     expect(transport.start).not.toHaveBeenCalled();
   });
 
+  it('uses Node streams when Sidecar provides the process adapter', async () => {
+    const { transport, session } = createTransport();
+    (globalThis as { window?: unknown }).window = undefined;
+    const subprocess = new AcpSubprocess(launch, transport, undefined, adaptSidecarProcessSession);
+
+    await subprocess.start();
+    subprocess.stdin.write('request');
+    await Promise.resolve();
+
+    expect(session.write).toHaveBeenCalledWith('request');
+  });
+
   it('rejects direct process fallback', async () => {
     await expect(new AcpSubprocess(launch).start()).rejects.toThrow('ACP process transport is unavailable');
+  });
+
+  it('includes stderr when a started ACP process exits unsuccessfully', async () => {
+    const { transport, session } = createTransport();
+    const subprocess = new AcpSubprocess(launch, transport);
+    const closed = jest.fn();
+    subprocess.onClose(closed);
+    await subprocess.start();
+    const listener = (session.onStderr as jest.Mock).mock.calls[(session.onStderr as jest.Mock).mock.calls.length - 1][0] as (chunk: string) => void;
+    listener('OpenCode could not start');
+    const exit = (session.onExit as jest.Mock).mock.calls[(session.onExit as jest.Mock).mock.calls.length - 1][0] as (exit: { code: number | null; signal: string | null }) => void;
+    exit({ code: 1, signal: null });
+
+    expect(closed).toHaveBeenCalledWith(expect.objectContaining({ message: expect.stringContaining('OpenCode could not start') }));
   });
 });

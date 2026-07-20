@@ -82,7 +82,7 @@ function rendererCapabilities(
   // Browser renderers persist their provider-neutral transcript through the
   // shared TyporAi storage layer. Native provider session ids remain opaque
   // Sidecar state and are used only to resume execution.
-  return Object.freeze({ ...capabilities, supportsNativeHistory: false });
+  return Object.freeze({ ...capabilities, supportsNativeHistory: false, supportsRewind: false });
 }
 
 function unavailable(capability: string): never {

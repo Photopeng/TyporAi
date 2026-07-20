@@ -6,7 +6,7 @@ import { getBuiltInProviderDefaultConfigs } from '../../providers/defaultProvide
 export const DEFAULT_TYPORAI_SETTINGS: TyporAiSettings = {
   userName: '',
 
-  permissionMode: 'yolo',
+  permissionMode: 'normal',
 
   model: DEFAULT_TYPORA_ENGINE_SETTINGS.apiModel,
   thinkingBudget: 'off',

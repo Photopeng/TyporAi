@@ -2,6 +2,8 @@ import { access } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
+import { getEnhancedPath } from '@/utils/env';
+
 export type ProbedProviderId = 'claude' | 'codex' | 'opencode' | 'typora';
 export interface ProviderProbeResult { readonly available: boolean; readonly executable: string | null; readonly providerId: ProbedProviderId; }
 
@@ -32,7 +34,9 @@ export class ProviderProbeService {
 
   private async findExecutable(name: string): Promise<string | null> {
     const extensions = process.platform === 'win32' ? (process.env.PATHEXT ?? '.EXE;.CMD;.BAT').split(';') : [''];
-    for (const directory of (process.env.PATH ?? '').split(path.delimiter).filter(Boolean)) {
+    // Match the PATH used by provider processes. Typora is a GUI application
+    // and commonly omits %APPDATA%\\npm, where npm-installed CLIs live.
+    for (const directory of getEnhancedPath().split(path.delimiter).filter(Boolean)) {
       for (const extension of extensions) {
         const candidate = path.join(directory, `${name}${extension}`);
         try { await access(candidate); return candidate; } catch { /* Continue PATH search. */ }

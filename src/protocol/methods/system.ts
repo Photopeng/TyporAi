@@ -11,6 +11,7 @@ export interface SystemInitializeParams {
 
 export interface SystemInitializeResult {
   readonly connectionId: string;
+  readonly resumed?: boolean;
   readonly sidecarVersion: string;
   readonly protocolVersion: number;
   readonly capabilities: Readonly<Record<string, boolean>>;

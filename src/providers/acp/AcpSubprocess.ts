@@ -1,6 +1,6 @@
 import type { Readable, Writable } from 'node:stream';
 
-import { DefaultExecutionPolicy, type ExecutionPolicy, type ProcessSpec, type ProcessTransportFactory } from '@/core/ports';
+import { DefaultExecutionPolicy, type ExecutionPolicy, type ProcessSession, type ProcessSpec, type ProcessTransportFactory } from '@/core/ports';
 import { adaptProcessSession, type NodeCompatibleProcess } from '@/hosts/electron/NodeProcessSessionAdapter';
 
 import {
@@ -19,6 +19,7 @@ export interface AcpSubprocessLaunchSpec {
 }
 
 type CloseListener = (error?: Error) => void;
+type ProcessSessionAdapter = (session: ProcessSession) => NodeCompatibleProcess;
 
 export class AcpSubprocess {
   private closeError: Error | null = null;
@@ -32,6 +33,7 @@ export class AcpSubprocess {
     private readonly launchSpec: AcpSubprocessLaunchSpec,
     private readonly processTransport?: ProcessTransportFactory,
     private readonly executionPolicy: ExecutionPolicy = new DefaultExecutionPolicy(),
+    private readonly processSessionAdapter: ProcessSessionAdapter = adaptProcessSession,
   ) {}
 
   get stdin(): Writable {
@@ -73,7 +75,7 @@ export class AcpSubprocess {
         stdioMode: 'pipe',
         ...(resolvedSpawnSpec.windowsVerbatimArguments ? { windowsVerbatimArguments: true } : {}),
       });
-      const proc = adaptProcessSession(session);
+      const proc = this.processSessionAdapter(session);
       this.attachProcessHandlers(proc);
       this.proc = proc;
       return;
@@ -107,7 +109,7 @@ export class AcpSubprocess {
       const exitError = this.closeError ?? (
         code === 0 && signal === null
           ? undefined
-          : new Error(`ACP subprocess exited (${formatExit(code, signal)})`)
+          : new Error(`ACP subprocess exited (${formatExit(code, signal)})${this.getStderrSnapshot() ? `: ${this.getStderrSnapshot()}` : ''}`)
       );
       this.notifyClose(exitError);
     });

@@ -20,6 +20,7 @@ export interface SidecarBootstrap {
   readonly endpoint: string;
   readonly homeDirectory?: string;
   readonly protocolVersion: 1;
+  readonly refreshEndpoint?: () => string | Promise<string>;
   readonly token: string;
 }
 

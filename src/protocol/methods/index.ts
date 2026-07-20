@@ -6,6 +6,7 @@ export const RPC_METHODS = [
   'watch.subscribe', 'watch.unsubscribe', 'watch.resubscribe',
   'session.list', 'session.get', 'session.create', 'session.applyPatch', 'session.delete', 'session.fork', 'session.reloadHistory', 'session.getTabLayout', 'session.setTabLayout',
   'chat.createRuntime', 'chat.ensureReady', 'chat.startTurn', 'chat.steer', 'chat.cancelTurn', 'chat.rewind', 'chat.resetSession', 'chat.getCommands', 'chat.reloadMcp', 'chat.disposeRuntime', 'chat.getRuntimeState', 'chat.getSubagentToolCalls', 'chat.getSubagentFinalResult',
+  'stream.replay',
   'approval.resolve', 'userInput.resolve', 'planApproval.resolve',
   'provider.list', 'provider.getStatus', 'provider.getModels', 'provider.probeCli', 'provider.restart', 'provider.getRuntimeDiagnostics',
   'mcp.list', 'mcp.save', 'mcp.test', 'mcp.reload', 'skills.list', 'skills.read', 'agents.list', 'agents.save', 'agents.delete', 'agents.refresh',

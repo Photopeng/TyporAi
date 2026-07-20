@@ -10,6 +10,7 @@ import { query as agentQuery } from '@anthropic-ai/claude-agent-sdk';
 
 import type { ProcessTransportFactory } from '@/core/ports';
 import { buildSystemPrompt } from '@/core/prompt/mainAgent';
+import { resolveUnifiedPermissionPolicy } from '@/core/security/UnifiedPermissionPolicy';
 import { TOOL_ASK_USER_QUESTION,TOOL_EXIT_PLAN_MODE,TOOL_WRITE } from '@/core/tools/toolNames';
 import type { ExitPlanModeDecision,ImageAttachment,ManagedMcpServer,StreamChunk } from '@/core/types';
 import type { RpcEventEnvelope } from '@/protocol';
@@ -23,6 +24,7 @@ import { resolveEffortLevel } from '@/providers/claude/types/models';
 import { getEnhancedPath, getMissingNodeError, parseEnvironmentVariables } from '@/utils/env';
 
 import { EventReplayBuffer } from '../../server/EventReplayBuffer';
+import { startDeferredSidecarProcess } from '../../services/process/adaptProcessSession';
 import type { SidecarTurnOptions } from '../registry';
 
 export interface ClaudeSidecarRuntimeOptions {
@@ -116,6 +118,7 @@ export class ClaudeSidecarRuntime {
     if (missingNodeError) throw new Error(missingNodeError);
 
     const model = this.getModel(turnOptions.model);
+    const permission = resolveUnifiedPermissionPolicy(settings.permissionMode);
     const queryOptions: Options = {
       cwd: workspace,
       systemPrompt: buildSystemPrompt({
@@ -129,10 +132,15 @@ export class ClaudeSidecarRuntime {
       settingSources: resolveClaudeSettingSources(provider.loadUserSettings),
       env: { ...process.env, ...customEnvironment, PATH: enhancedPath },
       includePartialMessages: true,
-      allowDangerouslySkipPermissions: true,
-      permissionMode: typeof settings.permissionMode === 'string' && settings.permissionMode === 'plan' ? 'plan' : 'default',
+      allowDangerouslySkipPermissions: permission.filesystem === 'full-access',
+      permissionMode: permission.planOnly ? 'plan' : permission.filesystem === 'full-access' ? 'bypassPermissions' : 'default',
       canUseTool: this.createApprovalCallback(),
-      spawnClaudeCodeProcess: createCustomSpawnFunction(enhancedPath, this.options.processes),
+      spawnClaudeCodeProcess: createCustomSpawnFunction(
+        enhancedPath,
+        this.options.processes,
+        undefined,
+        startDeferredSidecarProcess,
+      ),
       thinking: { type: 'adaptive' },
       effort: resolveEffortLevel(model, settings.effortLevel),
     };
