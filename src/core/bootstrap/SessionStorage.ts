@@ -14,6 +14,8 @@ export {
   SESSIONS_PATH,
 };
 
+export const SESSION_METADATA_SCHEMA_VERSION = 1;
+
 export class SessionStorage {
   constructor(private adapter: WorkspaceFileAdapter) {}
 
@@ -27,7 +29,10 @@ export class SessionStorage {
 
   async saveMetadata(metadata: SessionMetadata): Promise<void> {
     const filePath = this.getMetadataPath(metadata.id);
-    const content = JSON.stringify(metadata, null, 2);
+    const content = JSON.stringify({
+      ...metadata,
+      schemaVersion: SESSION_METADATA_SCHEMA_VERSION,
+    }, null, 2);
     await this.adapter.write(filePath, content);
     await this.deleteLegacyMetadataIfPresent(metadata.id);
   }
@@ -110,6 +115,7 @@ export class SessionStorage {
       .supportsNativeHistory;
 
     return {
+      schemaVersion: SESSION_METADATA_SCHEMA_VERSION,
       id: conversation.id,
       providerId: conversation.providerId,
       title: conversation.title,

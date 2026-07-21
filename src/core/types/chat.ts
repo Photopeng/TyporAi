@@ -121,6 +121,8 @@ export interface ConversationMeta {
  * The provider handles message storage; this stores UI-only state.
  */
 export interface SessionMetadata {
+  /** Version of the TyporAi-owned session metadata schema. */
+  schemaVersion?: number;
   id: string;
   providerId?: ProviderId;
   title: string;

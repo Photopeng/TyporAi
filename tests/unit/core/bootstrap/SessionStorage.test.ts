@@ -42,6 +42,7 @@ describe('SessionStorage provider-neutral metadata', () => {
     };
 
     expect(storage.toSessionMetadata(conversation).messages).toEqual(conversation.messages);
+    expect(storage.toSessionMetadata(conversation).schemaVersion).toBe(1);
   });
 
   it('does not duplicate messages for providers with native history', () => {
