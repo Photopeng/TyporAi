@@ -9,11 +9,14 @@
 - Settings and session metadata use schema version `1`; legacy `.claude/typorai-*` settings and session files are retained as read-only migration sources while new data writes under `.typorai`.
 - Chinese provider and platform terminology has been corrected for API, WSL, Codex, Ubuntu, Sonnet, Opus, and OpenCode.
 - The architecture audit prevents API tool-calling regressions.
+- API settings provide explicit protocol selection, a document-free connection test, and credential redaction in returned errors.
+- Claude, Codex, and OpenCode use one shared current-CLI selector that makes their mutual exclusion explicit.
+- All ten locale catalogs use workspace/document terminology and are structurally verified against English.
 
 ## Still requiring implementation or real-environment evidence
 
 - Shared CLI settings sections, diagnostics, runtime tests, and restart/save feedback are not yet fully unified across Claude, Codex, and OpenCode.
-- Complete user-visible terminology cleanup across all ten locales remains in progress; CLI-native `.claude` paths and legal attribution are intentionally allowlisted.
+- CLI-native `.claude` paths and legal attribution are intentionally allowlisted during terminology checks.
 - macOS Apple Silicon CLI discovery, architecture validation, Finder/Dock startup, TCC behavior, sleep/wake, and process cleanup require real macOS hardware validation.
 - Live API connection tests, protocol picker UI, secret redaction, and provider diagnostic panels remain to be implemented.
 - OpenCode provider-neutral fork behavior and comprehensive CLI parity coverage remain to be implemented.
