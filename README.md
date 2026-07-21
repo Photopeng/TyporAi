@@ -8,6 +8,8 @@
 TyporAi 是运行在 Typora 中的 AI 写作与文档协作插件。它把 AI 对话、当前文档上下文和原位编辑整合到右侧边栏，让你无需离开编辑器即可阅读、提问、改写和完善 Markdown 文档。
 
 > 适用于 Windows、macOS 14 及更高版本和 Linux 桌面版 Typora。Claude 是默认且功能最完整的提供商；Codex 和 OpenCode 可按需启用。
+>
+> **macOS 支持范围：** 仅支持 Apple Silicon 原生环境（M1、M2、M3、M4 及后续芯片）。Typora、TyporAi Sidecar、Node Runtime 和 CLI 集成必须以 arm64 原生方式运行；项目不提供 Intel Mac 或 Rosetta 2 兼容保证。
 
 ## 主要功能
 
