@@ -147,6 +147,22 @@ describe('OpencodeSettingsTab', () => {
     expect(context.refreshModelSelectors).toHaveBeenCalledTimes(1);
   });
 
+  it('restores the selected CLI and shows feedback when saving fails', async () => {
+    saveSettings.mockRejectedValueOnce(new Error('disk unavailable'));
+    const target = plugin();
+    const { container, context } = render(target);
+    const enabled = control<HTMLSelectElement>(container, 'settings.cliProvider.name');
+    enabled.value = 'none';
+    enabled.dispatchEvent(new dom.window.Event('change'));
+    await flush();
+
+    expect(target.settings.providerConfigs.opencode.enabled).toBe(true);
+    expect(enabled.value).toBe('opencode');
+    expect(context.refreshModelSelectors).not.toHaveBeenCalled();
+    expect(container.querySelector('.typorai-cli-provider-feedback')?.textContent)
+      .toBe('settings.cliProvider.saveFailed');
+  });
+
   it('persists model selection and warms metadata', async () => {
     runtimeWarmModelMetadata.mockResolvedValue(true);
     const target = plugin({ providerConfigs: { opencode: {

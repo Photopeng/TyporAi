@@ -62,7 +62,21 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
     settings.heading(t('settings.opencode.setup.heading'));
 
     renderCliProviderSelectionSection(
-      container, settingsBag, () => context.plugin.saveSettings(), context.refreshModelSelectors,
+      container,
+      settingsBag,
+      () => context.plugin.saveSettings(),
+      context.refreshModelSelectors,
+      async () => {
+        const pluginWithViews = context.plugin as typeof context.plugin & {
+          getAllViews?: () => ReturnType<typeof context.plugin.getAllViews>;
+        };
+        const views = pluginWithViews.getAllViews?.() ?? [context.plugin.getView()].filter(Boolean);
+        for (const view of views) {
+          await view.getTabManager()?.broadcastToAllTabs?.(
+            service => Promise.resolve(service.cleanup()),
+          );
+        }
+      },
     );
 
     const validationEl = container.ownerDocument.createElement('div');

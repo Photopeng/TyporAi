@@ -204,7 +204,7 @@
     "content": "Inhalte",
     "input": "Eingabe",
     "setup": "Einrichtung",
-    "cliProvider": { "name": "Aktuelle CLI", "desc": "Nur eine CLI kann gleichzeitig aktiv sein. Die Auswahl deaktiviert die anderen CLI-Anbieter.", "none": "Keine CLI verwenden" },
+    "cliProvider": { "name": "Aktuelle CLI", "desc": "Nur eine CLI kann gleichzeitig aktiv sein. Die Auswahl deaktiviert die anderen CLI-Anbieter.", "none": "Keine CLI verwenden", "savedAndRestarted": "Gespeichert und Provider-Laufzeit neu gestartet.", "saveFailed": "Provider konnte nicht gespeichert oder neu gestartet werden: {error}" },
     "models": "Modelle",
     "experimental": "Experimentell",
     "userName": {

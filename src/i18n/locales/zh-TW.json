@@ -538,7 +538,7 @@
     "content": "內容",
     "input": "輸入",
     "setup": "設定",
-    "cliProvider": { "name": "目前 CLI", "desc": "同一時間只能啟用一個 CLI。選擇後會停用其他 CLI Provider。", "none": "不使用 CLI" },
+    "cliProvider": { "name": "目前 CLI", "desc": "同一時間只能啟用一個 CLI。選擇後會停用其他 CLI Provider。", "none": "不使用 CLI", "savedAndRestarted": "已儲存並重新啟動 Provider 執行環境。", "saveFailed": "無法儲存或重新啟動 Provider：{error}" },
     "models": "模型",
     "experimental": "實驗性",
     "userName": {

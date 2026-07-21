@@ -169,6 +169,8 @@ export type TranslationKey =
   | 'settings.cliProvider.name'
   | 'settings.cliProvider.desc'
   | 'settings.cliProvider.none'
+  | 'settings.cliProvider.savedAndRestarted'
+  | 'settings.cliProvider.saveFailed'
   | 'settings.models'
   | 'settings.experimental'
   | 'settings.userName.name'

@@ -204,7 +204,7 @@
     "content": "Conte煤do",
     "input": "Entrada",
     "setup": "Configura莽茫o",
-    "cliProvider": { "name": "CLI atual", "desc": "Apenas uma CLI pode estar ativa de cada vez. A seleção desativa os outros provedores CLI.", "none": "Não usar uma CLI" },
+    "cliProvider": { "name": "CLI atual", "desc": "Apenas uma CLI pode estar ativa de cada vez. A seleção desativa os outros provedores CLI.", "none": "Não usar uma CLI", "savedAndRestarted": "Guardado e runtime do Provider reiniciado.", "saveFailed": "Não foi possível guardar ou reiniciar o Provider: {error}" },
     "models": "Modelos",
     "experimental": "Recursos experimentais",
     "userName": {

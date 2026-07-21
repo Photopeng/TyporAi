@@ -204,7 +204,7 @@
     "content": "Contenido",
     "input": "Entrada",
     "setup": "Configuraci贸n",
-    "cliProvider": { "name": "CLI actual", "desc": "Solo puede haber una CLI activa a la vez. Al elegir una se desactivan las demás.", "none": "No usar una CLI" },
+    "cliProvider": { "name": "CLI actual", "desc": "Solo puede haber una CLI activa a la vez. Al elegir una se desactivan las demás.", "none": "No usar una CLI", "savedAndRestarted": "Guardado y runtime del Provider reiniciado.", "saveFailed": "No se pudo guardar o reiniciar el Provider: {error}" },
     "models": "Modelos",
     "experimental": "Funciones experimentales",
     "userName": {

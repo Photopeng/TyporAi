@@ -538,7 +538,7 @@
     "content": "コンテンツ",
     "input": "入力",
     "setup": "設定",
-    "cliProvider": { "name": "現在の CLI", "desc": "同時に有効にできる CLI は 1 つだけです。選択すると他の CLI プロバイダーは無効になります。", "none": "CLI を使用しない" },
+    "cliProvider": { "name": "現在の CLI", "desc": "同時に有効にできる CLI は 1 つだけです。選択すると他の CLI プロバイダーは無効になります。", "none": "CLI を使用しない", "savedAndRestarted": "保存し、Provider ランタイムを再起動しました。", "saveFailed": "Provider を保存または再起動できませんでした: {error}" },
     "models": "モデル",
     "experimental": "実験的",
     "userName": {

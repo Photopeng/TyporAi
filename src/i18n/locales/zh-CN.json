@@ -541,7 +541,9 @@
     "cliProvider": {
       "name": "当前 CLI",
       "desc": "同一时间只能启用一个 CLI。选择一个 CLI 会停用另外的 CLI Provider。",
-      "none": "不使用 CLI"
+      "none": "不使用 CLI",
+      "savedAndRestarted": "已保存并重启 Provider 运行时。",
+      "saveFailed": "无法保存或重启 Provider：{error}"
     },
     "models": "模型",
     "experimental": "实验性",

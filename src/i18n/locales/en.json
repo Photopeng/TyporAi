@@ -541,7 +541,9 @@
     "cliProvider": {
       "name": "Current CLI",
       "desc": "Only one CLI can be active at a time. Selecting one disables the other CLI providers.",
-      "none": "Do not use a CLI"
+      "none": "Do not use a CLI",
+      "savedAndRestarted": "Saved and provider runtime restarted.",
+      "saveFailed": "Could not save or restart provider: {error}"
     },
     "models": "Models",
     "experimental": "Experimental",

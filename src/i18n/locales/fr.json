@@ -204,7 +204,7 @@
     "content": "Contenu",
     "input": "Saisie",
     "setup": "Configuration",
-    "cliProvider": { "name": "CLI active", "desc": "Une seule CLI peut être active à la fois. Ce choix désactive les autres fournisseurs CLI.", "none": "Ne pas utiliser de CLI" },
+    "cliProvider": { "name": "CLI active", "desc": "Une seule CLI peut être active à la fois. Ce choix désactive les autres fournisseurs CLI.", "none": "Ne pas utiliser de CLI", "savedAndRestarted": "Enregistré et runtime du Provider redémarré.", "saveFailed": "Impossible d’enregistrer ou de redémarrer le Provider : {error}" },
     "models": "Modèles",
     "experimental": "Expérimental",
     "userName": {
