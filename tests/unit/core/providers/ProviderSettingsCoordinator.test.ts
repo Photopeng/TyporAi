@@ -196,7 +196,7 @@ describe('ProviderSettingsCoordinator', () => {
 
       ProviderSettingsCoordinator.projectActiveProviderState(settings);
 
-      expect(settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
+      expect(settings.model).toBe('haiku');
       expect(settings.effortLevel).toBe('medium');
       expect(settings.serviceTier).toBe('fast');
       expect(settings.thinkingBudget).toBe('off');
@@ -261,7 +261,7 @@ describe('ProviderSettingsCoordinator', () => {
 
       ProviderSettingsCoordinator.projectActiveProviderState(settings);
 
-      expect(settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
+      expect(settings.model).toBe('haiku');
       expect(settings.effortLevel).toBe('high');
       expect(settings.thinkingBudget).toBe('off');
     });
@@ -279,7 +279,7 @@ describe('ProviderSettingsCoordinator', () => {
       // Should not throw
       ProviderSettingsCoordinator.projectActiveProviderState(settings);
 
-      expect(settings.model).toBe('haiku');
+      expect(settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
     });
 
     it('normalizes saved effort values that the projected Claude model no longer supports', () => {
@@ -479,7 +479,7 @@ describe('ProviderSettingsCoordinator', () => {
       expect(result.changed).toBe(true);
       expect(codexConv.sessionId).toBeNull();
       expect(codexConv.providerState).toBeUndefined();
-      expect(settings.model).toBe('haiku');
+      expect(settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
       expect(settings.savedProviderModel).toEqual({
         claude: 'haiku',
         codex: DEFAULT_CODEX_PRIMARY_MODEL,
