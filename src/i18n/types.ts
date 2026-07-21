@@ -658,6 +658,11 @@ export type TranslationKey =
   | 'settings.typora.apiProtocol.auto'
   | 'settings.typora.apiProtocol.anthropic'
   | 'settings.typora.apiProtocol.openai'
+  | 'settings.typora.connectionTest.name'
+  | 'settings.typora.connectionTest.desc'
+  | 'settings.typora.connectionTest.button'
+  | 'settings.typora.connectionTest.running'
+  | 'settings.typora.connectionTest.success'
   | 'settings.typora.apiModel.name'
   | 'settings.typora.apiModel.desc'
 

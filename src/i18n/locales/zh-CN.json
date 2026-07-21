@@ -1277,6 +1277,13 @@
         "anthropic": "Anthropic Messages",
         "openai": "OpenAI Chat Completions"
       },
+      "connectionTest": {
+        "name": "测试连接",
+        "desc": "只发送最小化健康检查请求；绝不包含文档、选中文本、历史或工作区内容。",
+        "button": "测试 API 连接",
+        "running": "正在测试连接…",
+        "success": "已在 {latency} 毫秒内连接到 {protocol} API。"
+      },
       "apiModel": {
         "name": "API 模型",
         "desc": "API 使用的模型 ID。"

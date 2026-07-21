@@ -107,6 +107,13 @@ describe('typoraSettingsTabRenderer', () => {
     expect((settings.providerConfigs.typora as any).apiProtocol).toBe('openai');
     expect(mockBroadcastToProviderTabs).toHaveBeenCalledTimes(1);
   });
+
+  it('renders a connection test that does not expose document context', () => {
+    typoraSettingsTabRenderer.render(container, createContext({ providerConfigs: { typora: {} } }));
+    const field = findField(container, 'Test connection');
+    expect(field.querySelector('button')?.textContent).toBe('Test API connection');
+    expect(field.querySelector('.setting-item-description')?.textContent).toContain('never includes document');
+  });
 });
 
 function createContext(settings: Record<string, unknown>): any {

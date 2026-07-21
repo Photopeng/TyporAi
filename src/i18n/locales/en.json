@@ -1277,6 +1277,13 @@
         "anthropic": "Anthropic Messages",
         "openai": "OpenAI Chat Completions"
       },
+      "connectionTest": {
+        "name": "Test connection",
+        "desc": "Sends a minimal health-check request only; it never includes document, selection, history, or workspace content.",
+        "button": "Test API connection",
+        "running": "Testing connection…",
+        "success": "Connected to {protocol} API in {latency} ms."
+      },
       "apiModel": {
         "name": "API model",
         "desc": "Model ID to use for the API."

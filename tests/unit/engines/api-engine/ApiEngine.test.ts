@@ -4,6 +4,7 @@ import {
   resolveAnthropicMessagesUrl,
   resolveApiEndpoint,
   resolveOpenAiChatCompletionsUrl,
+  testApiConnection,
 } from '@/engines/api-engine/ApiEngine';
 
 describe('ApiEngine', () => {
@@ -61,6 +62,24 @@ describe('ApiEngine', () => {
     await expect(new ApiEngine({ apiKey: 'test-key' }).chat({
       prompt: 'Hello', workspacePath: '/workspace',
     }, {})).rejects.toThrow('authorization: Bearer [REDACTED]');
+  });
+
+  it('tests API connectivity without sending document or workspace content', async () => {
+    const fetchMock = jest.fn().mockResolvedValue(new Response('{}', { status: 200 }));
+    globalThis.fetch = fetchMock;
+
+    await expect(testApiConnection({
+      apiBaseUrl: 'https://api.example.test/v1', apiKey: 'test-key', apiModel: 'model-a',
+    })).resolves.toMatchObject({ endpoint: { protocol: 'openai' } });
+
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(payload).toEqual({
+      max_tokens: 1,
+      messages: [{ role: 'user', content: 'Reply with OK.' }],
+      model: 'model-a',
+      stream: false,
+    });
+    expect(JSON.stringify(payload)).not.toMatch(/document|workspace|selection|history/i);
   });
 
   it('sends an Anthropic text-only request while retaining explicit document context', async () => {

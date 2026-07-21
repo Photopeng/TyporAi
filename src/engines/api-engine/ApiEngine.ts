@@ -18,6 +18,11 @@ export interface ApiEndpoint {
   url: string;
 }
 
+export interface ApiConnectionTestResult {
+  endpoint: ApiEndpoint;
+  latencyMs: number;
+}
+
 interface OpenAiMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -203,6 +208,54 @@ export function resolveApiEndpoint(
     return { protocol: 'anthropic', url: resolveAnthropicMessagesUrl(withoutTrailingSlash) };
   }
   return { protocol: 'openai', url: resolveOpenAiChatCompletionsUrl(withoutTrailingSlash) };
+}
+
+/**
+ * Verifies credentials and request compatibility without sending document,
+ * selection, history, or workspace data.
+ */
+export async function testApiConnection(config: AgentEngineConfig): Promise<ApiConnectionTestResult> {
+  if (!config.apiKey?.trim()) {
+    throw new Error('API key is required. Add it in Settings > Providers > API.');
+  }
+
+  const endpoint = resolveApiEndpoint(config.apiBaseUrl, config.apiProtocol);
+  const startedAt = Date.now();
+  const response = endpoint.protocol === 'anthropic'
+    ? await fetch(endpoint.url, {
+      method: 'POST',
+      headers: {
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'x-api-key': config.apiKey,
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        max_tokens: 1,
+        messages: [{ role: 'user', content: 'Reply with OK.' }],
+        model: config.apiModel ?? 'claude-sonnet-4-20250514',
+        stream: false,
+      }),
+    })
+    : await fetch(endpoint.url, {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${config.apiKey}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        max_tokens: 1,
+        messages: [{ role: 'user', content: 'Reply with OK.' }],
+        model: config.apiModel ?? 'gpt-4.1',
+        stream: false,
+      }),
+    });
+
+  if (!response.ok) {
+    throw new Error(formatApiRequestError(response.status, await response.text(), config.apiKey));
+  }
+
+  return { endpoint, latencyMs: Date.now() - startedAt };
 }
 
 export function resolveAnthropicMessagesUrl(apiBaseUrl?: string): string {

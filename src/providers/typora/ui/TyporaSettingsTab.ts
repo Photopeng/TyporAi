@@ -1,5 +1,6 @@
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
 import { t } from '../../../i18n/i18n';
+import { testApiConnection } from '../../../engines/api-engine/ApiEngine';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import {
   getTyporaProviderSettings,
@@ -54,12 +55,13 @@ export const typoraSettingsTabRenderer: ProviderSettingsTabRenderer = {
     const apiSectionEl = container.ownerDocument.createElement('div');
     apiSectionEl.className = 'typorai-typora-api-settings';
     container.append(apiSectionEl);
-    renderApiSettings(apiSectionEl, typoraSettings, persist);
+    renderApiSettings(apiSectionEl, settingsBag, typoraSettings, persist);
   },
 };
 
 function renderApiSettings(
   container: HTMLElement,
+  settingsBag: Record<string, unknown>,
   typoraSettings: TyporaProviderSettings,
   persist: (updates: Partial<TyporaProviderSettings>, options?: {
     refreshModels?: boolean;
@@ -118,4 +120,46 @@ function renderApiSettings(
   );
   apiModel.placeholder = 'claude-sonnet-4-20250514';
   apiModel.classList.add('typorai-settings-model-input');
+
+  const testField = container.ownerDocument.createElement('div');
+  testField.className = 'setting-item';
+  const info = container.ownerDocument.createElement('div');
+  info.className = 'setting-item-info';
+  const name = container.ownerDocument.createElement('div');
+  name.className = 'setting-item-name';
+  name.textContent = t('settings.typora.connectionTest.name');
+  const description = container.ownerDocument.createElement('div');
+  description.className = 'setting-item-description';
+  description.textContent = t('settings.typora.connectionTest.desc');
+  info.append(name, description);
+  const control = container.ownerDocument.createElement('div');
+  control.className = 'setting-item-control';
+  const button = container.ownerDocument.createElement('button');
+  button.type = 'button';
+  button.textContent = t('settings.typora.connectionTest.button');
+  const result = container.ownerDocument.createElement('div');
+  result.className = 'typorai-setting-validation typorai-hidden';
+  control.append(button, result);
+  testField.append(info, control);
+  container.append(testField);
+
+  button.addEventListener('click', () => {
+    void (async () => {
+      button.disabled = true;
+      result.textContent = t('settings.typora.connectionTest.running');
+      result.classList.remove('typorai-hidden');
+      try {
+        const current = getTyporaProviderSettings(settingsBag);
+        const outcome = await testApiConnection(current);
+        result.textContent = t('settings.typora.connectionTest.success', {
+          latency: outcome.latencyMs,
+          protocol: outcome.endpoint.protocol,
+        });
+      } catch (error) {
+        result.textContent = error instanceof Error ? error.message : String(error);
+      } finally {
+        button.disabled = false;
+      }
+    })();
+  });
 }
