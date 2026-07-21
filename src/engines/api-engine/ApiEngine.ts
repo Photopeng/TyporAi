@@ -136,11 +136,15 @@ export class ApiEngine implements IAgentEngine {
   private async fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
     const timeoutMs = this.config.apiTimeoutMs ?? 30_000;
     const controller = this.abortController;
-    const timeout = setTimeout(() => controller?.abort(), timeoutMs);
+    let timedOut = false;
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      controller?.abort();
+    }, timeoutMs);
     try {
       return await fetch(url, init);
     } catch (error) {
-      if (controller?.signal.aborted) {
+      if (timedOut) {
         throw new Error(`API request timed out after ${timeoutMs} ms.`);
       }
       throw error;
