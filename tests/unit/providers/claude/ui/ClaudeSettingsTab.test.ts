@@ -120,12 +120,12 @@ describe('ClaudeSettingsTab', () => {
     expect(context.refreshModelSelectors).toHaveBeenCalledTimes(1);
   });
 
-  it('persists the enabled state through a native toggle', async () => {
+  it('clears the selected CLI through the shared selector', async () => {
     const target = plugin();
     const { container, context } = render(target);
-    const enabled = control<HTMLInputElement>(container, 'settings.claude.enableProvider.name');
+    const enabled = control<HTMLSelectElement>(container, 'settings.cliProvider.name');
 
-    enabled.checked = false;
+    enabled.value = 'none';
     enabled.dispatchEvent(new dom.window.Event('change'));
     await flush();
 

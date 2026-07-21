@@ -102,7 +102,7 @@ describe('OpencodeSettingsTab', () => {
 
   it('renders native setup and model-picker controls', () => {
     const { container } = render();
-    expect(control<HTMLInputElement>(container, 'settings.opencode.enable.name').tagName).toBe('INPUT');
+    expect(control<HTMLSelectElement>(container, 'settings.cliProvider.name').tagName).toBe('SELECT');
     expect(control<HTMLSelectElement>(container, 'Default mode').value).toBe('typorai-yolo');
     expect(container.querySelector('.typorai-opencode-model-picker')).not.toBeNull();
     expect(container.querySelector('details.typorai-opencode-model-picker-catalog')).not.toBeNull();
@@ -135,11 +135,11 @@ describe('OpencodeSettingsTab', () => {
     expect(invalidateCommands).toHaveBeenCalledWith(['opencode']);
   });
 
-  it('persists enabled state through a native toggle', async () => {
+  it('clears the selected CLI through the shared selector', async () => {
     const target = plugin();
     const { container, context } = render(target);
-    const enabled = control<HTMLInputElement>(container, 'settings.opencode.enable.name');
-    enabled.checked = false;
+    const enabled = control<HTMLSelectElement>(container, 'settings.cliProvider.name');
+    enabled.value = 'none';
     enabled.dispatchEvent(new dom.window.Event('change'));
     await flush();
 

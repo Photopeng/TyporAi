@@ -538,6 +538,11 @@
     "content": "Content",
     "input": "Input",
     "setup": "Setup",
+    "cliProvider": {
+      "name": "Current CLI",
+      "desc": "Only one CLI can be active at a time. Selecting one disables the other CLI providers.",
+      "none": "Do not use a CLI"
+    },
     "models": "Models",
     "experimental": "Experimental",
     "userName": {

@@ -41,6 +41,16 @@ export function setSingleEnabledCliProvider(
   settings.settingsProvider = providerId;
 }
 
+export function clearEnabledCliProviders(settings: Record<string, unknown>): void {
+  for (const providerId of CLI_PROVIDER_IDS) {
+    const current = getProviderConfig(settings, providerId);
+    setProviderConfig(settings, providerId, { ...current, enabled: false });
+  }
+  if (isCliProviderId(settings.settingsProvider as ProviderId | null | undefined)) {
+    settings.settingsProvider = 'typora';
+  }
+}
+
 export function normalizeSingleEnabledCliProvider(settings: Record<string, unknown>): boolean {
   const enabledProviders = CLI_PROVIDER_IDS.filter(providerId => getProviderConfig(settings, providerId).enabled === true);
   if (enabledProviders.length <= 1) {

@@ -1,6 +1,6 @@
-import { setSingleEnabledCliProvider } from '../../../core/providers/cliProviderSelection';
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
+import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import { setTyporAiTooltip } from '../../../ui/Tooltip';
@@ -61,14 +61,8 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
 
     settings.heading(t('settings.opencode.setup.heading'));
 
-    settings.toggle(
-      t('settings.opencode.enable.name'), opencodeSettings.enabled,
-      async (value) => {
-        setSingleEnabledCliProvider(settingsBag, 'opencode', value);
-        await context.plugin.saveSettings();
-        context.refreshModelSelectors();
-      },
-      t('settings.opencode.enable.desc'),
+    renderCliProviderSelectionSection(
+      container, settingsBag, () => context.plugin.saveSettings(), context.refreshModelSelectors,
     );
 
     const validationEl = container.ownerDocument.createElement('div');

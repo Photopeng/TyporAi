@@ -1,7 +1,7 @@
-import { setSingleEnabledCliProvider } from '../../../core/providers/cliProviderSelection';
 import { ProviderSettingsCoordinator } from '../../../core/providers/ProviderSettingsCoordinator';
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
+import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import { getHostnameKey } from '../../../utils/env';
@@ -43,15 +43,8 @@ export const codexSettingsTabRenderer: ProviderSettingsTabRenderer = {
 
     settings.heading(t('settings.setup'));
 
-    settings.toggle(
-      t('settings.codex.enable.name'),
-      codexSettings.enabled,
-      async (value) => {
-        setSingleEnabledCliProvider(settingsBag, 'codex', value);
-        await context.plugin.saveSettings();
-        context.refreshModelSelectors();
-      },
-      t('settings.codex.enable.desc'),
+    renderCliProviderSelectionSection(
+      container, settingsBag, () => context.plugin.saveSettings(), context.refreshModelSelectors,
     );
 
     if (isWindowsHost) {

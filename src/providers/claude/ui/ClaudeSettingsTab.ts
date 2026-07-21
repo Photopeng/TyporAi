@@ -1,8 +1,8 @@
 import { testMcpServer } from '../../../core/mcp/McpTester';
-import { setSingleEnabledCliProvider } from '../../../core/providers/cliProviderSelection';
 import { ProviderSettingsCoordinator } from '../../../core/providers/ProviderSettingsCoordinator';
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
+import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { McpSettingsManager } from '../../../features/settings/ui/McpSettingsManager';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
@@ -48,15 +48,8 @@ export const claudeSettingsTabRenderer: ProviderSettingsTabRenderer = {
 
     settings.heading(t('settings.setup'));
 
-    settings.toggle(
-      t('settings.claude.enableProvider.name'),
-      claudeSettings.enabled,
-      async (value) => {
-        setSingleEnabledCliProvider(settingsBag, 'claude', value);
-        await context.plugin.saveSettings();
-        context.refreshModelSelectors();
-      },
-      t('settings.claude.enableProvider.desc'),
+    renderCliProviderSelectionSection(
+      container, settingsBag, () => context.plugin.saveSettings(), context.refreshModelSelectors,
     );
 
     const hostnameKey = getHostnameKey();

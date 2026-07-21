@@ -117,13 +117,13 @@ describe('CodexSettingsTab', () => {
     expect(() => control(container, 'settings.codex.wslDistro.name')).toThrow('Missing setting');
   });
 
-  it('persists enabled state through native change events', async () => {
+  it('clears the selected CLI through the shared selector', async () => {
     Object.defineProperty(process, 'platform', { value: 'linux' });
     const plugin = createPlugin();
     const { container, context } = render(plugin);
-    const enabled = control<HTMLInputElement>(container, 'settings.codex.enable.name');
+    const enabled = control<HTMLSelectElement>(container, 'settings.cliProvider.name');
 
-    enabled.checked = false;
+    enabled.value = 'none';
     enabled.dispatchEvent(new dom.window.Event('change'));
     await flush();
 
