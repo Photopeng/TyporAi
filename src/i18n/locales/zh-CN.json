@@ -1287,7 +1287,7 @@
         "desc": "只发送最小化健康检查请求；绝不包含文档、选中文本、历史或工作区内容。",
         "button": "测试 API 连接",
         "running": "正在测试连接…",
-        "success": "已在 {latency} 毫秒内连接到 {protocol} API。"
+        "success": "已在 {latency} 毫秒内连接到 {protocol} API。模型可用；流式输出：{streaming}。"
       },
       "apiModel": {
         "name": "API 模型",

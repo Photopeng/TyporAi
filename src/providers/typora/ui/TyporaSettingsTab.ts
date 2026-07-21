@@ -157,6 +157,7 @@ function renderApiSettings(
         result.textContent = t('settings.typora.connectionTest.success', {
           latency: outcome.latencyMs,
           protocol: outcome.endpoint.protocol,
+          streaming: outcome.streamingAvailable ? t('common.enabled') : t('common.disabled'),
         });
       } catch (error) {
         result.textContent = error instanceof Error ? error.message : String(error);

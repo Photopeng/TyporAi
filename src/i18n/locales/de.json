@@ -932,7 +932,7 @@
         "desc": "Basis-URL für die Typora-Anbieter-API. Als Standardwert leer lassen."
       },
       "apiProtocol": { "name": "API-Protokoll", "desc": "Wähle die automatische Erkennung, sofern die kompatible API kein bestimmtes Anfrageformat verlangt.", "auto": "Automatische Erkennung", "anthropic": "Anthropic-Messages-API", "openai": "OpenAI-Chat-Completions-API" },
-      "connectionTest": { "name": "Verbindung testen", "desc": "Sendet nur eine minimale Gesundheitsprüfung und niemals Dokument-, Auswahl-, Verlauf- oder Arbeitsbereichsinhalte.", "button": "API-Verbindung testen", "running": "Verbindung wird getestet…", "success": "Mit der {protocol}-API in {latency} ms verbunden." },
+      "connectionTest": { "name": "Verbindung testen", "desc": "Sendet nur eine minimale Gesundheitsprüfung und niemals Dokument-, Auswahl-, Verlauf- oder Arbeitsbereichsinhalte.", "button": "API-Verbindung testen", "running": "Verbindung wird getestet…", "success": "Mit der {protocol}-API in {latency} ms verbunden. Modell verfügbar; Streaming: {streaming}." },
       "apiModel": {
         "name": "API-Modell",
         "desc": "Modell-ID zur Verwendung für die Typora-Anbieter-API."

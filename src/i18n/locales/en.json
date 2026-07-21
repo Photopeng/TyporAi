@@ -1287,7 +1287,7 @@
         "desc": "Sends a minimal health-check request only; it never includes document, selection, history, or workspace content.",
         "button": "Test API connection",
         "running": "Testing connection…",
-        "success": "Connected to {protocol} API in {latency} ms."
+        "success": "Connected to {protocol} API in {latency} ms. Model accepted; streaming: {streaming}."
       },
       "apiModel": {
         "name": "API model",

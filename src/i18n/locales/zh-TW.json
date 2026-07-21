@@ -1272,7 +1272,7 @@
         "desc": "Typora 提供商 API 的基礎 URL。留空則使用預設值。"
       },
       "apiProtocol": { "name": "API 通訊協定", "desc": "除非相容 API 要求特定請求格式，否則請選擇自動偵測。", "auto": "自動偵測", "anthropic": "Anthropic Messages API", "openai": "OpenAI Chat Completions API" },
-      "connectionTest": { "name": "測試連線", "desc": "只會傳送最小化健康檢查請求；絕不包含文件、選取內容、歷程或工作區內容。", "button": "測試 API 連線", "running": "正在測試連線…", "success": "已在 {latency} 毫秒內連線至 {protocol} API。" },
+      "connectionTest": { "name": "測試連線", "desc": "只會傳送最小化健康檢查請求；絕不包含文件、選取內容、歷程或工作區內容。", "button": "測試 API 連線", "running": "正在測試連線…", "success": "已在 {latency} 毫秒內連線至 {protocol} API。模型可用；串流輸出：{streaming}。" },
       "apiModel": {
         "name": "API 模型",
         "desc": "Typora 提供商 API 使用的模型 ID。"

@@ -932,7 +932,7 @@
         "desc": "URL de base pour l'API du fournisseur Typora. Laissez vide par défaut."
       },
       "apiProtocol": { "name": "Protocole API", "desc": "Choisissez la détection automatique sauf si votre API compatible exige un format précis.", "auto": "Détection automatique", "anthropic": "API Messages Anthropic", "openai": "API OpenAI Chat Completions" },
-      "connectionTest": { "name": "Tester la connexion", "desc": "Envoie seulement une requête de vérification minimale, jamais de document, sélection, historique ou contenu d’espace de travail.", "button": "Tester la connexion API", "running": "Test de connexion…", "success": "Connecté à l’API {protocol} en {latency} ms." },
+      "connectionTest": { "name": "Tester la connexion", "desc": "Envoie seulement une requête de vérification minimale, jamais de document, sélection, historique ou contenu d’espace de travail.", "button": "Tester la connexion API", "running": "Test de connexion…", "success": "Connecté à l’API {protocol} en {latency} ms. Modèle accepté ; streaming : {streaming}." },
       "apiModel": {
         "name": "Modèle API",
         "desc": "ID de modèle à utiliser pour l'API du fournisseur Typora."

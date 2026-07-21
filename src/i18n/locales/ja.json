@@ -1272,7 +1272,7 @@
         "desc": "Typora プロバイダー API のベース URL。デフォルトでは空のままにしておきます。"
       },
       "apiProtocol": { "name": "API プロトコル", "desc": "互換 API が特定の要求形式を必要とする場合以外は自動検出を選択してください。", "auto": "自動検出", "anthropic": "Anthropic Messages API", "openai": "OpenAI Chat Completions API" },
-      "connectionTest": { "name": "接続をテスト", "desc": "最小限の健全性確認のみを送信し、文書、選択、履歴、ワークスペースの内容は含めません。", "button": "API 接続をテスト", "running": "接続をテスト中…", "success": "{latency} ms で {protocol} API に接続しました。" },
+      "connectionTest": { "name": "接続をテスト", "desc": "最小限の健全性確認のみを送信し、文書、選択、履歴、ワークスペースの内容は含めません。", "button": "API 接続をテスト", "running": "接続をテスト中…", "success": "{latency} ms で {protocol} API に接続しました。モデルは利用可能、ストリーミング: {streaming}。" },
       "apiModel": {
         "name": "APIモデル",
         "desc": "Typora プロバイダー API に使用するモデル ID。"
