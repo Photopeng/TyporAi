@@ -18,5 +18,5 @@
 - Shared CLI settings sections, diagnostics, runtime tests, and restart/save feedback are not yet fully unified across Claude, Codex, and OpenCode.
 - CLI-native `.claude` paths and legal attribution are intentionally allowlisted during terminology checks.
 - macOS Apple Silicon CLI discovery, architecture validation, Finder/Dock startup, TCC behavior, sleep/wake, and process cleanup require real macOS hardware validation.
-- Live API connection tests, protocol picker UI, secret redaction, and provider diagnostic panels remain to be implemented.
-- OpenCode provider-neutral fork behavior and comprehensive CLI parity coverage remain to be implemented.
+- Provider diagnostic panels and comprehensive CLI parity coverage remain to be implemented.
+- OpenCode provider-neutral fork behavior remains unimplemented: the currently integrated OpenCode protocol exposes session creation but no verified fork/branch endpoint, so the capability remains correctly disabled.
