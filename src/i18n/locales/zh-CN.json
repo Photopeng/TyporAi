@@ -1256,23 +1256,23 @@
         "heading": "设置"
       },
       "enable": {
-        "name": "启用 Typora 提供商",
-        "desc": "启用后，Typora 提供商可在模型选择器中使用。"
+        "name": "启用 API",
+        "desc": "启用后，可在模型选择器中使用仅文本 API。"
       },
       "api": {
-        "heading": "应用程序编程接口"
+        "heading": "API"
       },
       "apiKey": {
         "name": "API 密钥",
-        "desc": "用于向 Typora 提供商 API 发送请求的 API 密钥。"
+        "desc": "用于验证仅文本 API 请求的密钥。"
       },
       "apiBaseUrl": {
         "name": "API 基础 URL",
-        "desc": "Typora 提供商 API 的基础 URL。留空则使用默认值。"
+        "desc": "API 的基础 URL。留空则使用默认值。"
       },
       "apiModel": {
         "name": "API 模型",
-        "desc": "Typora 提供商 API 使用的模型 ID。"
+        "desc": "API 使用的模型 ID。"
       }
     },
     "mcp": {
@@ -1381,6 +1381,6 @@
     "claude": "Claude",
     "codex": "Codex",
     "opencode": "OpenCode",
-    "typora": "Typora"
+    "typora": "API"
   }
 }

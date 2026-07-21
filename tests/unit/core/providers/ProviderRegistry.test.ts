@@ -133,18 +133,18 @@ describe('ProviderRegistry', () => {
       providerConfigs: {
         codex: { enabled: false },
       },
-    })).toEqual(['typora']);
+    })).toEqual([]);
     expect(ProviderRegistry.getEnabledProviderIds({
       providerConfigs: {
         codex: { enabled: true },
       },
-    })).toEqual(['codex', 'typora']);
+    })).toEqual(['codex']);
     expect(ProviderRegistry.getEnabledProviderIds({
       providerConfigs: {
         codex: { enabled: true },
         opencode: { enabled: true },
       },
-    })).toEqual(['opencode', 'codex', 'typora']);
+    })).toEqual(['opencode', 'codex']);
     expect(ProviderRegistry.getEnabledProviderIds({
       providerConfigs: {
         typora: { enabled: true },
@@ -157,7 +157,7 @@ describe('ProviderRegistry', () => {
     expect(ProviderRegistry.getProviderDisplayName('claude')).toBe('Claude');
     expect(ProviderRegistry.getProviderDisplayName('codex')).toBe('Codex');
     expect(ProviderRegistry.getProviderDisplayName('opencode')).toBe('OpenCode');
-    expect(ProviderRegistry.getProviderDisplayName('typora')).toBe('Typora');
+    expect(ProviderRegistry.getProviderDisplayName('typora')).toBe('API');
   });
 
   it('returns a non-empty display name under non-English locales', () => {

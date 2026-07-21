@@ -1,13 +1,8 @@
 import { typoraChatUIConfig } from '@/providers/typora/ui/TyporaChatUIConfig';
 
 describe('typoraChatUIConfig', () => {
-  it('exposes the same SAFE/YOLO document editing gate as CLI providers', () => {
-    expect(typoraChatUIConfig.getPermissionModeToggle?.()).toEqual({
-      activeLabel: 'YOLO',
-      activeValue: 'yolo',
-      inactiveLabel: 'Safe',
-      inactiveValue: 'normal',
-    });
+  it('does not expose CLI permission controls in text-only API mode', () => {
+    expect(typoraChatUIConfig.getPermissionModeToggle?.()).toBeNull();
   });
 
   it('does not claim arbitrary provider models as Typora defaults', () => {

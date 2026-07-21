@@ -17,14 +17,10 @@ import type {
   SessionUpdateResult,
   SubagentRuntimeState,
 } from '../../../core/runtime/types';
-import { isDocumentEditingAllowed } from '../../../core/security/documentEditing';
 import type { ChatMessage, Conversation, SlashCommand, StreamChunk, ToolCallInfo, UsageInfo } from '../../../core/types';
-import type { AgentChatRequest, AgentMessage, EngineToolEvent, IAgentEngine } from '../../../core/types/agent-engine';
-import { t } from '../../../i18n/i18n';
+import type { AgentChatRequest, AgentMessage, IAgentEngine } from '../../../core/types/agent-engine';
 import type TyporAiPlugin from '../../../main';
 import { TyporaEditorApi } from '../../../typora/editor-api';
-import { NoticeAdapter } from '../../../ui/NoticeAdapter';
-import { getVaultPath } from '../../../utils/path';
 import { TYPORA_PROVIDER_CAPABILITIES } from '../capabilities';
 import { getTyporaProviderSettings } from '../settings';
 
@@ -37,7 +33,6 @@ export class TyporaChatRuntime implements ChatRuntime {
   private sessionId: string | null = null;
   private syncedForkSource: { resumeAt: string; sessionId: string } | null = null;
   private turnMetadata: ChatTurnMetadata = {};
-  private approvalCallback: ApprovalCallback | null = null;
 
   constructor(private readonly plugin: TyporAiPlugin) {}
 
@@ -140,21 +135,6 @@ export class TyporaChatRuntime implements ChatRuntime {
           streamedText += token;
           queue.push({ type: 'text', content: token });
         },
-        onToolStart: (event) => {
-          queue.push({
-            type: 'tool_use',
-            id: event.id,
-            name: event.name,
-            input: normalizeToolInput(event.input),
-          });
-        },
-        onToolEnd: (event) => {
-          queue.push({
-            type: 'tool_result',
-            id: event.id,
-            content: normalizeToolOutput(event.output),
-          });
-        },
         onError: (error) => {
           queue.push({ type: 'error', content: error.message });
         },
@@ -240,9 +220,7 @@ export class TyporaChatRuntime implements ChatRuntime {
     return { canRewind: false, error: 'Typora provider does not support rewind.' };
   }
 
-  setApprovalCallback(callback: ApprovalCallback | null): void {
-    this.approvalCallback = callback;
-  }
+  setApprovalCallback(_callback: ApprovalCallback | null): void {}
   setApprovalDismisser(_dismisser: (() => void) | null): void {}
   setAskUserQuestionCallback(_callback: AskUserQuestionCallback | null): void {}
   setExitPlanModeCallback(_callback: ExitPlanModeCallback | null): void {}
@@ -294,7 +272,6 @@ export class TyporaChatRuntime implements ChatRuntime {
     turn: PreparedChatTurn,
     conversationHistory: ChatMessage[],
   ): AgentChatRequest {
-    const workspacePath = getVaultPath(this.plugin.app) ?? process.cwd();
     const editor = this.getEditorSnapshot();
     const selection = turn.request.editorSelection?.mode === 'selection'
       ? turn.request.editorSelection.selectedText
@@ -304,7 +281,7 @@ export class TyporaChatRuntime implements ChatRuntime {
 
     return {
       prompt: turn.prompt,
-      workspacePath,
+      workspacePath: '',
       currentFilePath: turn.request.currentNotePath
         ?? turn.request.editorSelection?.notePath
         ?? editor.currentFilePath
@@ -312,22 +289,12 @@ export class TyporaChatRuntime implements ChatRuntime {
       currentDocument: editor.currentDocument,
       selection,
       history: conversationHistory.map(toAgentMessage),
-      approvalCallback: isDocumentEditingAllowed(this.plugin.settings.permissionMode)
-        ? this.approvalCallback
-        : async () => {
-          new NoticeAdapter().show(t('inlineEdit.errors.documentEditingBlocked'), 'warning');
-          return 'deny';
-        },
-      replaceSelection: isDocumentEditingAllowed(this.plugin.settings.permissionMode)
-        ? editor.replaceSelection
-        : undefined,
     };
   }
 
   private getEditorSnapshot(): {
     currentDocument: string;
     currentFilePath: string | null;
-    replaceSelection?: (text: string) => boolean;
     selection: string;
   } {
     if (typeof window === 'undefined') {
@@ -339,7 +306,6 @@ export class TyporaChatRuntime implements ChatRuntime {
       return {
         currentDocument: editor.getAllText(),
         currentFilePath: editor.getCurrentFilePath(),
-        replaceSelection: (text) => editor.insertText(text),
         selection: editor.getSelection(),
       };
     } catch {
@@ -403,30 +369,6 @@ function toAgentMessage(message: ChatMessage): AgentMessage {
     content: message.content,
     timestamp: message.timestamp,
   };
-}
-
-function normalizeToolInput(input: EngineToolEvent['input']): Record<string, unknown> {
-  if (!input || typeof input !== 'object' || Array.isArray(input)) {
-    return input === undefined ? {} : { value: input };
-  }
-
-  return input as Record<string, unknown>;
-}
-
-function normalizeToolOutput(output: EngineToolEvent['output']): string {
-  if (typeof output === 'string') {
-    return output;
-  }
-
-  if (output === undefined) {
-    return '';
-  }
-
-  try {
-    return JSON.stringify(output, null, 2);
-  } catch {
-    return String(output);
-  }
 }
 
 function createSessionId(): string {

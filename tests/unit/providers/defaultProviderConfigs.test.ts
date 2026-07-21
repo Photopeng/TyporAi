@@ -21,7 +21,7 @@ describe('getBuiltInProviderDefaultConfigs', () => {
     const configs = getBuiltInProviderDefaultConfigs();
 
     expect(configs).toMatchObject({
-      typora: { enabled: true },
+      typora: { enabled: false },
       claude: { enabled: false },
       codex: { enabled: false },
       opencode: { enabled: false },

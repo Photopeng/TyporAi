@@ -50,7 +50,7 @@ describe('typoraSettingsTabRenderer', () => {
       },
     }));
 
-    expect(findField(container, 'Enable Typora provider').querySelector<HTMLInputElement>('input')?.checked).toBe(true);
+    expect(findField(container, 'Enable API').querySelector<HTMLInputElement>('input')?.checked).toBe(true);
     expect(findField(container, 'API key').querySelector<HTMLInputElement>('input')?.value).toBe('key');
     expect(findField(container, 'API key').querySelector<HTMLInputElement>('input')?.type).toBe('password');
     expect(findField(container, 'API base URL').querySelector<HTMLInputElement>('input')?.value).toBe('https://example.test/messages');
@@ -60,7 +60,7 @@ describe('typoraSettingsTabRenderer', () => {
   it('persists enable changes', async () => {
     const settings = { providerConfigs: { typora: { enabled: false } } };
     typoraSettingsTabRenderer.render(container, createContext(settings));
-    const toggle = findField(container, 'Enable Typora provider').querySelector<HTMLInputElement>('input')!;
+    const toggle = findField(container, 'Enable API').querySelector<HTMLInputElement>('input')!;
     toggle.checked = true;
     toggle.dispatchEvent(new container.ownerDocument.defaultView!.Event('change'));
     await flushAsyncHandlers();

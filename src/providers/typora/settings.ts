@@ -10,7 +10,9 @@ export interface TyporaProviderSettings extends TyporaEngineSettings {
 
 export const DEFAULT_TYPORA_PROVIDER_SETTINGS: Readonly<TyporaProviderSettings> = Object.freeze({
   ...DEFAULT_TYPORA_ENGINE_SETTINGS,
-  enabled: true,
+  // A new installation has no credentials. Keep API opt-in so the initial
+  // provider state never advertises a model that cannot send a request.
+  enabled: false,
 });
 
 function normalizeString(value: unknown, fallback: string): string {

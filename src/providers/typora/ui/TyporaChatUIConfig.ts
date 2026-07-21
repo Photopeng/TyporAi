@@ -1,18 +1,7 @@
-import type {
-  ProviderChatUIConfig,
-  ProviderPermissionModeToggleConfig,
-  ProviderReasoningOption,
-  ProviderUIOption,
-} from '../../../core/providers/types';
+import type { ProviderChatUIConfig, ProviderReasoningOption, ProviderUIOption } from '../../../core/providers/types';
 import { getTyporaProviderSettings, updateTyporaProviderSettings } from '../settings';
 
 const DEFAULT_CONTEXT_WINDOW = 200_000;
-const TYPORA_PERMISSION_MODE_TOGGLE: ProviderPermissionModeToggleConfig = {
-  inactiveValue: 'normal',
-  inactiveLabel: 'Safe',
-  activeValue: 'yolo',
-  activeLabel: 'YOLO',
-};
 const TYPORA_REASONING_OPTIONS: ProviderReasoningOption[] = [
   { value: 'low', label: 'Low' },
   { value: 'medium', label: 'Medium' },
@@ -20,8 +9,8 @@ const TYPORA_REASONING_OPTIONS: ProviderReasoningOption[] = [
 ];
 
 export const typoraChatUIConfig: ProviderChatUIConfig = {
-  getPermissionModeToggle(): ProviderPermissionModeToggleConfig {
-    return TYPORA_PERMISSION_MODE_TOGGLE;
+  getPermissionModeToggle() {
+    return null;
   },
 
   getModelOptions(settings: Record<string, unknown>): ProviderUIOption[] {
@@ -29,7 +18,7 @@ export const typoraChatUIConfig: ProviderChatUIConfig = {
     return [{
       value: typoraSettings.apiModel,
       label: typoraSettings.apiModel,
-      description: 'Typora API engine',
+      description: 'Text-only API',
     }];
   },
 

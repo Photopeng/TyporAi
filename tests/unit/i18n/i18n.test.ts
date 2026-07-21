@@ -243,7 +243,7 @@ describe('i18n', () => {
       );
       expect(t('settings.opencode.commands.heading' as TranslationKey)).toBe('命令');
       expect(t('settings.opencode.hiddenCommands.name' as TranslationKey)).toBe('隐藏的命令');
-      expect(t('settings.typora.enable.name' as TranslationKey)).toBe('启用 Typora 提供商');
+      expect(t('settings.typora.enable.name' as TranslationKey)).toBe('启用 API');
       expect(t('typora.settings.openAria' as TranslationKey)).toBe('打开 TyporAi 设置');
     });
 

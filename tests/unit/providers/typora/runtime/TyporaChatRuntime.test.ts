@@ -23,8 +23,6 @@ describe('TyporaChatRuntime', () => {
   it('wraps engine callbacks as provider-neutral stream chunks', async () => {
     const engine = createMockEngine(async (_request, callbacks) => {
       callbacks.onToken?.('Hello');
-      callbacks.onToolStart?.({ id: 'tool-1', name: 'read_file', input: { path: 'note.md' } });
-      callbacks.onToolEnd?.({ id: 'tool-1', name: 'read_file', output: 'contents' });
       callbacks.onFinish?.({
         id: 'assistant-1',
         role: 'assistant',
@@ -47,8 +45,6 @@ describe('TyporaChatRuntime', () => {
 
     expect(chunks).toEqual([
       { type: 'text', content: 'Hello' },
-      { type: 'tool_use', id: 'tool-1', name: 'read_file', input: { path: 'note.md' } },
-      { type: 'tool_result', id: 'tool-1', content: 'contents' },
       expect.objectContaining({ type: 'usage', sessionId: expect.stringMatching(/^typora-session-/) }),
       { type: 'done' },
     ]);
@@ -143,9 +139,8 @@ describe('TyporaChatRuntime', () => {
     expect(engine.chat).not.toHaveBeenCalled();
   });
 
-  it('passes Typora editor context and replacement callback into the engine request', async () => {
+  it('passes Typora editor text context into the engine request without document mutation hooks', async () => {
     const replaceSelection = jest.fn();
-    const approvalCallback = jest.fn();
     (window as any).File = {
       editor: {
         getMarkdown: () => '# Current document',
@@ -172,20 +167,18 @@ describe('TyporaChatRuntime', () => {
     mockedCreateAgentEngine.mockReturnValue(engine);
 
     const runtime = new TyporaChatRuntime(createPlugin());
-    runtime.setApprovalCallback(approvalCallback);
     await collectChunks(runtime.query(runtime.prepareTurn({ text: 'Hello' })));
 
     const request = (engine.chat as jest.Mock).mock.calls[0][0];
     expect(request.currentDocument).toBe('# Current document');
     expect(request.currentFilePath).toBe('C:\\workspace\\note.md');
     expect(request.selection).toBe('Current');
-    expect(request.approvalCallback).toBe(approvalCallback);
-
-    expect(request.replaceSelection('replacement')).toBe(true);
-    expect(replaceSelection).toHaveBeenCalledWith('replacement');
+    expect(request.approvalCallback).toBeUndefined();
+    expect(request.replaceSelection).toBeUndefined();
+    expect(replaceSelection).not.toHaveBeenCalled();
   });
 
-  it('does not expose the document replacement callback while SAFE is enabled', async () => {
+  it('never exposes document mutation callbacks in API text mode', async () => {
     const replaceSelection = jest.fn();
     (window as any).File = {
       editor: {
@@ -208,7 +201,7 @@ describe('TyporaChatRuntime', () => {
     const request = (engine.chat as jest.Mock).mock.calls[0][0];
     expect(request.replaceSelection).toBeUndefined();
     expect(replaceSelection).not.toHaveBeenCalled();
-    await expect(request.approvalCallback('write_file', {}, 'Write document')).resolves.toBe('deny');
+    expect(request.approvalCallback).toBeUndefined();
   });
 
   it('passes conversation history and turn editor selection overrides into the engine request', async () => {

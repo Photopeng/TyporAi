@@ -1256,23 +1256,23 @@
         "heading": "Setup"
       },
       "enable": {
-        "name": "Enable Typora provider",
-        "desc": "When enabled, the Typora provider can be used in the model selector."
+        "name": "Enable API",
+        "desc": "When enabled, the text-only API can be used in the model selector."
       },
       "api": {
         "heading": "API"
       },
       "apiKey": {
         "name": "API key",
-        "desc": "API key used to authenticate requests to the Typora provider API."
+        "desc": "API key used to authenticate requests to the text-only API."
       },
       "apiBaseUrl": {
         "name": "API base URL",
-        "desc": "Base URL for the Typora provider API. Leave empty for default."
+        "desc": "Base URL for the API. Leave empty for default."
       },
       "apiModel": {
         "name": "API model",
-        "desc": "Model ID to use for the Typora provider API."
+        "desc": "Model ID to use for the API."
       }
     },
     "mcp": {
@@ -1381,6 +1381,6 @@
     "claude": "Claude",
     "codex": "Codex",
     "opencode": "OpenCode",
-    "typora": "Typora"
+    "typora": "API"
   }
 }
