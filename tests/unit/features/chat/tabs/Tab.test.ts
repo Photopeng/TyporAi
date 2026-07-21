@@ -1067,7 +1067,7 @@ describe('Tab - Service Initialization', () => {
 
       await toolbarCallbacks.onModelChange(DEFAULT_CODEX_PRIMARY_MODEL);
 
-      expect(plugin.settings.model).toBe('claude-sonnet-4-5');
+      expect(plugin.settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
       expect(plugin.settings.savedProviderModel).toEqual(expect.objectContaining({
         claude: 'claude-sonnet-4-5',
         codex: DEFAULT_CODEX_PRIMARY_MODEL,
@@ -1142,7 +1142,7 @@ describe('Tab - Service Initialization', () => {
         claude: 'yolo',
         opencode: 'normal',
       }));
-      expect(plugin.settings.permissionMode).toBe('yolo');
+      expect(plugin.settings.permissionMode).toBe('normal');
       expect(plugin.saveSettings).toHaveBeenCalled();
       expect(mockPermissionToggle.updateDisplay).toHaveBeenCalled();
     });

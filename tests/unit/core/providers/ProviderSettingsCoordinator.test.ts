@@ -22,7 +22,7 @@ describe('ProviderSettingsCoordinator', () => {
       expect(settings.settingsProvider).toBe('typora');
     });
 
-    it('falls back to Typora for unknown providers', () => {
+    it('falls back to the enabled provider for unknown providers', () => {
       const settings: Record<string, unknown> = {
         settingsProvider: 'mystery-provider',
         providerConfigs: {
@@ -33,7 +33,7 @@ describe('ProviderSettingsCoordinator', () => {
       const changed = ProviderSettingsCoordinator.normalizeProviderSelection(settings);
 
       expect(changed).toBe(true);
-      expect(settings.settingsProvider).toBe('typora');
+      expect(settings.settingsProvider).toBe('codex');
     });
 
     it('returns false when already normalized (no-op)', () => {
@@ -261,7 +261,7 @@ describe('ProviderSettingsCoordinator', () => {
 
       ProviderSettingsCoordinator.projectActiveProviderState(settings);
 
-      expect(settings.model).toBe('haiku');
+      expect(settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
       expect(settings.effortLevel).toBe('high');
       expect(settings.thinkingBudget).toBe('off');
     });
@@ -365,7 +365,7 @@ describe('ProviderSettingsCoordinator', () => {
 
       ProviderSettingsCoordinator.projectProviderState(settings, 'codex');
 
-      expect(settings.model).toBe('gpt-5.4-mini');
+      expect(settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
       expect(settings.effortLevel).toBe('high');
       expect(settings.serviceTier).toBe('default');
     });
@@ -379,11 +379,11 @@ describe('ProviderSettingsCoordinator', () => {
             environmentVariables: '',
           },
         },
-        model: 'gpt-5.4-mini',
+        model: DEFAULT_CODEX_PRIMARY_MODEL,
         effortLevel: 'medium',
         serviceTier: 'default',
         thinkingBudget: 'off',
-        savedProviderModel: { codex: 'gpt-5.4-mini' },
+        savedProviderModel: { codex: DEFAULT_CODEX_PRIMARY_MODEL },
         savedProviderEffort: { codex: 'medium' },
         savedProviderServiceTier: { codex: 'fast' },
         savedProviderThinkingBudget: { codex: 'off' },
@@ -391,7 +391,7 @@ describe('ProviderSettingsCoordinator', () => {
 
       ProviderSettingsCoordinator.projectProviderState(settings, 'codex');
 
-      expect(settings.model).toBe('gpt-5.4-mini');
+      expect(settings.model).toBe(DEFAULT_CODEX_PRIMARY_MODEL);
       expect(settings.serviceTier).toBe('fast');
     });
 
