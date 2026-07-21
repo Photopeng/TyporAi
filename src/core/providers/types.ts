@@ -32,6 +32,11 @@ export interface ProviderCapabilities {
   supportsProviderCommands: boolean;
   supportsImageAttachments: boolean;
   supportsInstructionMode: boolean;
+  /** Whether the provider's native runtime can use MCP servers. */
+  supportsMcpRuntime?: boolean;
+  /** Whether TyporAi can manage MCP configuration for this provider. */
+  supportsInAppMcpManagement?: boolean;
+  /** @deprecated Use supportsInAppMcpManagement for TyporAi UI gating. */
   supportsMcpTools: boolean;
   supportsTurnSteer?: boolean;
   reasoningControl: 'effort' | 'token-budget' | 'none';

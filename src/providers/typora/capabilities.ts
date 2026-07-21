@@ -10,6 +10,8 @@ export const TYPORA_PROVIDER_CAPABILITIES: Readonly<ProviderCapabilities> = Obje
   supportsProviderCommands: false,
   supportsImageAttachments: false,
   supportsInstructionMode: true,
+  supportsMcpRuntime: false,
+  supportsInAppMcpManagement: false,
   supportsMcpTools: false,
   supportsTurnSteer: false,
   reasoningControl: 'effort',

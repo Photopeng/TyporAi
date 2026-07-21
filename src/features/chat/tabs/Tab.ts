@@ -407,15 +407,17 @@ function refreshTabProviderUI(tab: TabData, plugin: TyporAiPlugin): void {
 function applyProviderUIGating(tab: TabData, plugin: TyporAiPlugin): void {
   const capabilities = getTabCapabilities(tab, plugin);
   const uiConfig = getTabChatUIConfig(tab, plugin);
-  const mcpManager = capabilities.supportsMcpTools
+  const supportsInAppMcpManagement = capabilities.supportsInAppMcpManagement
+    ?? capabilities.supportsMcpTools;
+  const mcpManager = supportsInAppMcpManagement
     ? getProviderMcpManager(capabilities.providerId)
     : null;
   const hasPermissionToggle = Boolean(uiConfig.getPermissionModeToggle?.());
 
-  if (!capabilities.supportsMcpTools) {
+  if (!supportsInAppMcpManagement) {
     tab.ui.mcpServerSelector?.clearEnabled();
   }
-  tab.ui.mcpServerSelector?.setVisible(capabilities.supportsMcpTools);
+  tab.ui.mcpServerSelector?.setVisible(supportsInAppMcpManagement);
   tab.ui.permissionToggle?.setVisible(hasPermissionToggle);
   tab.ui.fileContextManager?.setMcpManager(mcpManager);
 

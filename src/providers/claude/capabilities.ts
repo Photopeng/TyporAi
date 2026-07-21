@@ -10,6 +10,8 @@ export const CLAUDE_PROVIDER_CAPABILITIES: Readonly<ProviderCapabilities> = Obje
   supportsProviderCommands: true,
   supportsImageAttachments: true,
   supportsInstructionMode: true,
+  supportsMcpRuntime: true,
+  supportsInAppMcpManagement: true,
   supportsMcpTools: true,
   supportsTurnSteer: false,
   reasoningControl: 'effort',

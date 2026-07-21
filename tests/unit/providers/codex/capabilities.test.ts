@@ -29,6 +29,11 @@ describe('CODEX_PROVIDER_CAPABILITIES', () => {
     expect(CODEX_PROVIDER_CAPABILITIES.supportsProviderCommands).toBe(false);
   });
 
+  it('separates unavailable MCP runtime and in-app management capabilities', () => {
+    expect(CODEX_PROVIDER_CAPABILITIES.supportsMcpRuntime).toBe(false);
+    expect(CODEX_PROVIDER_CAPABILITIES.supportsInAppMcpManagement).toBe(false);
+  });
+
   it('should use effort-based reasoning control', () => {
     expect(CODEX_PROVIDER_CAPABILITIES.reasoningControl).toBe('effort');
   });
