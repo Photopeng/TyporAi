@@ -1,7 +1,7 @@
 import { ProviderSettingsCoordinator } from '../../../core/providers/ProviderSettingsCoordinator';
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
-import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
 import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
+import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import { getHostnameKey } from '../../../utils/env';

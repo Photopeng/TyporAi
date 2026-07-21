@@ -1,6 +1,6 @@
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
-import { t } from '../../../i18n/i18n';
 import { testApiConnection } from '../../../engines/api-engine/ApiEngine';
+import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import {
   getTyporaProviderSettings,

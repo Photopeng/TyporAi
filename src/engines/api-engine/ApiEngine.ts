@@ -145,7 +145,7 @@ export class ApiEngine implements IAgentEngine {
       return await fetch(url, init);
     } catch (error) {
       if (timedOut) {
-        throw new Error(`API request timed out after ${timeoutMs} ms.`);
+        throw new Error(`API request timed out after ${timeoutMs} ms.`, { cause: error });
       }
       throw error;
     } finally {
