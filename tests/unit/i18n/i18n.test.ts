@@ -247,6 +247,15 @@ describe('i18n', () => {
       expect(t('typora.settings.openAria' as TranslationKey)).toBe('打开 TyporAi 设置');
     });
 
+    it('keeps provider, model, and platform names untransliterated in Simplified Chinese', () => {
+      setLocale('zh-CN');
+      expect(t('settings.codex.installationMethod.wsl' as TranslationKey)).toBe('WSL');
+      expect(t('settings.codex.cliPath.placeholderWsl' as TranslationKey)).toBe('codex');
+      expect(t('settings.codex.wslDistro.placeholder' as TranslationKey)).toBe('Ubuntu');
+      expect(t('settings.subagents.modelOptions.sonnet' as TranslationKey)).toBe('Sonnet');
+      expect(t('settings.subagents.modelOptions.opus' as TranslationKey)).toBe('Opus');
+    });
+
     it('translates correctly in French', () => {
       setLocale('fr');
       const result = t('common.save' as TranslationKey);

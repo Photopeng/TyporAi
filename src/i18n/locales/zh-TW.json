@@ -649,7 +649,7 @@
       "modelOptions": {
         "inherit": "繼承",
         "sonnet": "十四行詩",
-        "opus": "作品",
+        "opus": "Opus",
         "haiku": "俳句"
       },
       "modal": {
@@ -920,7 +920,7 @@
         "name": "安裝方式",
         "desc": "TyporAi 在 Windows 上如何啟動 Codex。原生 Windows 使用 Windows 可執行檔案路徑。WSL 在選定的發行版內啟動 Linux CLI。",
         "nativeWindows": "原生 Windows",
-        "wsl": "世界SL"
+        "wsl": "WSL"
       },
       "cliPath": {
         "name": "Codex CLI 路徑",
@@ -930,7 +930,7 @@
         "descWsl": "WSL 內執行的 Linux 端 Codex 命令或絕對路徑。留空則在選定發行版內查詢 PATH。",
         "descWindows": "本地 Codex CLI 的自定義路徑。留空則從 PATH 自動檢測。使用原生 Windows 可執行檔案路徑，通常為 `codex.exe`。",
         "placeholderNative": "/usr/local/bin/codex",
-        "placeholderWsl": "法典",
+        "placeholderWsl": "codex",
         "placeholderWindows": "C:\\Users\\you\\AppData\\Roaming\\npm\\codex.exe",
         "wslModeError": "WSL 模式需要 Linux 命令或 Linux 絕對路徑，而不是 Windows 可執行檔案路徑。"
       },
