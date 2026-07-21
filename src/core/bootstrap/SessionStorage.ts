@@ -34,7 +34,6 @@ export class SessionStorage {
       schemaVersion: SESSION_METADATA_SCHEMA_VERSION,
     }, null, 2);
     await this.adapter.write(filePath, content);
-    await this.deleteLegacyMetadataIfPresent(metadata.id);
   }
 
   async loadMetadata(id: string): Promise<SessionMetadata | null> {
@@ -60,7 +59,6 @@ export class SessionStorage {
 
   async deleteMetadata(id: string): Promise<void> {
     await this.adapter.delete(this.getMetadataPath(id));
-    await this.deleteLegacyMetadataIfPresent(id);
   }
 
   async listMetadata(): Promise<SessionMetadata[]> {
@@ -146,13 +144,6 @@ export class SessionStorage {
     }
 
     return null;
-  }
-
-  private async deleteLegacyMetadataIfPresent(id: string): Promise<void> {
-    const legacyFilePath = this.getLegacyMetadataPath(id);
-    if (await this.adapter.exists(legacyFilePath)) {
-      await this.adapter.delete(legacyFilePath);
-    }
   }
 
   private async listUniqueMetadataFiles(): Promise<string[]> {

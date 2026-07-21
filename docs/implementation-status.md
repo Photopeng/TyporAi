@@ -6,7 +6,7 @@
 - API is opt-in on a new installation and is displayed as **API** while retaining the `typora` internal ID for existing settings.
 - OpenCode exposes a persisted default mode and explains that runtime-discovered commands are read-only in TyporAi.
 - MCP runtime capability is distinct from in-app MCP management capability.
-- Settings and session metadata use schema version `1`; legacy `.claude/typorai-*` files are retained as read-only migration sources while new data writes under `.typorai`.
+- Settings and session metadata use schema version `1`; legacy `.claude/typorai-*` settings and session files are retained as read-only migration sources while new data writes under `.typorai`.
 - Chinese provider and platform terminology has been corrected for API, WSL, Codex, Ubuntu, Sonnet, Opus, and OpenCode.
 - The architecture audit prevents API tool-calling regressions.
 

@@ -107,7 +107,7 @@ describe('SessionStorage', () => {
       expect(result).toBeNull();
     });
 
-    it('loads legacy metadata and migrates it to .typorai', async () => {
+    it('loads legacy metadata into .typorai while retaining the read-only migration source', async () => {
       const metadata = {
         id: 'session-legacy',
         title: 'Legacy Session',
@@ -127,9 +127,7 @@ describe('SessionStorage', () => {
         '.typorai/sessions/session-legacy.meta.json',
         expect.any(String),
       );
-      expect(mockAdapter.delete).toHaveBeenCalledWith(
-        '.claude/sessions/session-legacy.meta.json',
-      );
+      expect(mockAdapter.delete).not.toHaveBeenCalled();
     });
 
     it('loads and parses metadata from JSON file', async () => {
