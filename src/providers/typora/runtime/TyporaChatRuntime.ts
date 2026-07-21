@@ -59,7 +59,7 @@ export class TyporaChatRuntime implements ChatRuntime {
   }
 
   setResumeCheckpoint(_checkpointId: string | undefined): void {
-    // The lightweight Typora engine has no provider-native rewind checkpoints.
+    // The text-only API has no provider-native rewind checkpoints.
   }
 
   syncConversationState(conversation: ChatRuntimeConversationState | null): void {
@@ -68,7 +68,7 @@ export class TyporaChatRuntime implements ChatRuntime {
   }
 
   async reloadMcpServers(): Promise<void> {
-    // Typora provider does not own MCP server management.
+    // API mode does not own MCP server management.
   }
 
   async ensureReady(_options?: ChatRuntimeEnsureReadyOptions): Promise<boolean> {
@@ -119,7 +119,7 @@ export class TyporaChatRuntime implements ChatRuntime {
 
     const engine = this.engine;
     if (!engine) {
-      yield { type: 'error', content: 'Typora engine is not ready.' };
+      yield { type: 'error', content: 'API runtime is not ready.' };
       yield { type: 'done' };
       return;
     }
@@ -217,7 +217,7 @@ export class TyporaChatRuntime implements ChatRuntime {
     _assistantMessageId: string | undefined,
     _mode?: ChatRewindMode,
   ): Promise<ChatRewindResult> {
-    return { canRewind: false, error: 'Typora provider does not support rewind.' };
+    return { canRewind: false, error: 'API does not support rewind.' };
   }
 
   setApprovalCallback(_callback: ApprovalCallback | null): void {}

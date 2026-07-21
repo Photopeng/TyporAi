@@ -356,12 +356,12 @@ describe('TyporaChatRuntime', () => {
     });
   });
 
-  it('reports rewind as unsupported for the lightweight Typora provider', async () => {
+  it('reports rewind as unsupported for the text-only API', async () => {
     const runtime = new TyporaChatRuntime(createPlugin());
 
     await expect(runtime.rewind('user-1', 'assistant-1')).resolves.toEqual({
       canRewind: false,
-      error: 'Typora provider does not support rewind.',
+      error: 'API does not support rewind.',
     });
   });
 });
