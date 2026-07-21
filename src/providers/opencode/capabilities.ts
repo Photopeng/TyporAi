@@ -6,7 +6,9 @@ export const OPENCODE_PROVIDER_CAPABILITIES: Readonly<ProviderCapabilities> = Ob
   supportsNativeHistory: true,
   supportsPlanMode: true,
   supportsRewind: false,
-  supportsFork: false,
+  // Forks start a new ACP session with the truncated local transcript; the
+  // source OpenCode session is never resumed or modified.
+  supportsFork: true,
   supportsProviderCommands: true,
   supportsImageAttachments: true,
   supportsInstructionMode: true,

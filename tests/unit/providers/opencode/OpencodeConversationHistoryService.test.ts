@@ -93,6 +93,25 @@ describe('OpencodeConversationHistoryService', () => {
       },
     ]);
   });
+
+  it('marks a local transcript fork as pending until a new ACP session exists', () => {
+    const service = new OpencodeConversationHistoryService();
+    const sourceState = { databasePath: path.join(tmpRoot, 'opencode.db') };
+    const providerState = service.buildForkProviderState('source-session', 'assistant-message', sourceState);
+    const fork = {
+      ...createConversation('', sourceState.databasePath),
+      messages: [{ content: 'Forked history', id: 'message-1', role: 'user' as const, timestamp: 1 }],
+      providerState,
+      sessionId: null,
+    };
+
+    expect(service.isPendingForkConversation(fork)).toBe(true);
+    expect(providerState).toEqual({
+      databasePath: sourceState.databasePath,
+      forkSource: { resumeAt: 'assistant-message', sessionId: 'source-session' },
+    });
+    expect(service.buildPersistedProviderState(fork)).toEqual(providerState);
+  });
 });
 
 function createConversation(sessionId: string, databasePath: string): Conversation {

@@ -1,6 +1,6 @@
 import type { FileProbe, ProcessTransportFactory } from '../../../core/ports';
 import type { ProviderConversationHistoryService } from '../../../core/providers/types';
-import type { Conversation } from '../../../core/types';
+import type { Conversation, ForkSource } from '../../../core/types';
 import { getOpencodeState, type OpencodeProviderState } from '../types';
 import {
   isOpencodeSessionHydrationDiagnosticMessage,
@@ -71,16 +71,22 @@ export class OpencodeConversationHistoryService implements ProviderConversationH
     return conversation?.sessionId ?? null;
   }
 
-  isPendingForkConversation(_conversation: Conversation): boolean {
-    return false;
+  isPendingForkConversation(conversation: Conversation): boolean {
+    const state = getOpencodeState(conversation.providerState);
+    return !!state.forkSource && !conversation.sessionId;
   }
 
   buildForkProviderState(
-    _sourceSessionId: string,
-    _resumeAt: string,
-    _sourceProviderState?: Record<string, unknown>,
+    sourceSessionId: string,
+    resumeAt: string,
+    sourceProviderState?: Record<string, unknown>,
   ): Record<string, unknown> {
-    return {};
+    const source = getOpencodeState(sourceProviderState);
+    const providerState: OpencodeProviderState = {
+      ...(source.databasePath ? { databasePath: source.databasePath } : {}),
+      forkSource: { sessionId: sourceSessionId, resumeAt } satisfies ForkSource,
+    };
+    return providerState as Record<string, unknown>;
   }
 
   buildPersistedProviderState(
@@ -89,6 +95,9 @@ export class OpencodeConversationHistoryService implements ProviderConversationH
     const state = getOpencodeState(conversation.providerState);
     const providerState: OpencodeProviderState = {
       ...(state.databasePath ? { databasePath: state.databasePath } : {}),
+      ...(this.isPendingForkConversation(conversation) && state.forkSource
+        ? { forkSource: state.forkSource }
+        : {}),
     };
 
     return Object.keys(providerState).length > 0

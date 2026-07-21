@@ -19,4 +19,4 @@
 - CLI-native `.claude` paths and legal attribution are intentionally allowlisted during terminology checks.
 - macOS Apple Silicon CLI discovery, architecture validation, Finder/Dock startup, TCC behavior, sleep/wake, and process cleanup require real macOS hardware validation.
 - Provider diagnostic panels and comprehensive CLI parity coverage remain to be implemented.
-- OpenCode provider-neutral fork behavior remains unimplemented: the currently integrated OpenCode protocol exposes session creation but no verified fork/branch endpoint, so the capability remains correctly disabled.
+- OpenCode provider-neutral Fork creates a new ACP session from the truncated local transcript. It does not claim or require an unverified native fork RPC, and never mutates the source OpenCode session.

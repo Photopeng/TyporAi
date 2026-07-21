@@ -22,7 +22,7 @@ describe('OPENCODE_PROVIDER_CAPABILITIES', () => {
   });
 
   it('should not support fork', () => {
-    expect(OPENCODE_PROVIDER_CAPABILITIES.supportsFork).toBe(false);
+    expect(OPENCODE_PROVIDER_CAPABILITIES.supportsFork).toBe(true);
   });
 
   it('should support provider commands', () => {
