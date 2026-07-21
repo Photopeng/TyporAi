@@ -4,6 +4,22 @@ import path from 'node:path';
 const root = process.cwd();
 const rules = [
   {
+    name: 'API provider must remain text-only',
+    files: ['src/engines/api-engine/ApiEngine.ts', 'src/providers/typora/runtime/TyporaChatRuntime.ts'],
+    patterns: [
+      /workspaceTools/,
+      /executeWorkspaceTool/,
+      /ANTHROPIC_WORKSPACE_TOOLS/,
+      /OPENAI_WORKSPACE_TOOLS/,
+      /tool_choice\s*:/,
+      /\btools\s*:/,
+      /onToolStart/,
+      /onToolEnd/,
+      /approvalCallback\s*:/,
+      /replaceSelection\s*:/,
+    ],
+  },
+  {
     name: 'Typora-only source must not import Obsidian APIs or compatibility shims',
     directories: ['src'],
     patterns: [
@@ -40,7 +56,21 @@ const rules = [
 
 const failures = [];
 for (const rule of rules) {
-  for (const directory of rule.directories) {
+  for (const relativeFile of rule.files ?? []) {
+    const file = path.join(root, relativeFile);
+    if (!fs.existsSync(file)) {
+      failures.push(`${rule.name}: missing ${relativeFile}`);
+      continue;
+    }
+    const contents = fs.readFileSync(file, 'utf8');
+    for (const pattern of rule.patterns) {
+      if (pattern.test(contents)) {
+        failures.push(`${rule.name}: ${relativeFile} / ${pattern}`);
+        break;
+      }
+    }
+  }
+  for (const directory of rule.directories ?? []) {
     const absoluteDirectory = path.join(root, directory);
     if (!fs.existsSync(absoluteDirectory)) continue;
     for (const file of walk(absoluteDirectory)) {
