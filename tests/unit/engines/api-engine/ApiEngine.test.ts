@@ -73,21 +73,35 @@ describe('ApiEngine', () => {
   });
 
   it('tests API connectivity without sending document or workspace content', async () => {
-    const fetchMock = jest.fn().mockResolvedValue(new Response('{}', { status: 200 }));
+    const fetchMock = jest.fn().mockResolvedValue(new Response('data: [DONE]\n\n', {
+      status: 200,
+      headers: { 'content-type': 'text/event-stream' },
+    }));
     globalThis.fetch = fetchMock;
 
     await expect(testApiConnection({
       apiBaseUrl: 'https://api.example.test/v1', apiKey: 'test-key', apiModel: 'model-a',
-    })).resolves.toMatchObject({ endpoint: { protocol: 'openai' } });
+    })).resolves.toMatchObject({
+      endpoint: { protocol: 'openai' }, modelAvailable: true, streamingAvailable: true,
+    });
 
     const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(payload).toEqual({
       max_tokens: 1,
       messages: [{ role: 'user', content: 'Reply with OK.' }],
       model: 'model-a',
-      stream: false,
+      stream: true,
     });
     expect(JSON.stringify(payload)).not.toMatch(/document|workspace|selection|history/i);
+  });
+
+  it('reports a compatible non-streaming response without claiming stream support', async () => {
+    globalThis.fetch = jest.fn().mockResolvedValue(new Response('{}', { status: 200 }));
+
+    await expect(testApiConnection({ apiKey: 'test-key' })).resolves.toMatchObject({
+      modelAvailable: true,
+      streamingAvailable: false,
+    });
   });
 
   it('sends an Anthropic text-only request while retaining explicit document context', async () => {

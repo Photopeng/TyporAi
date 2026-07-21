@@ -21,6 +21,10 @@ export interface ApiEndpoint {
 export interface ApiConnectionTestResult {
   endpoint: ApiEndpoint;
   latencyMs: number;
+  /** A successful minimal request proves that the configured model is accepted. */
+  modelAvailable: true;
+  /** Whether the endpoint honored the streaming request with an SSE response. */
+  streamingAvailable: boolean;
 }
 
 export function validateApiBaseUrl(value: string): string | null {
@@ -257,7 +261,7 @@ export async function testApiConnection(config: AgentEngineConfig): Promise<ApiC
   const endpoint = resolveApiEndpoint(config.apiBaseUrl, config.apiProtocol);
   const startedAt = Date.now();
   const response = endpoint.protocol === 'anthropic'
-    ? await fetch(endpoint.url, {
+    ? await fetchApiConnectionWithTimeout(endpoint.url, {
       method: 'POST',
       headers: {
         'anthropic-version': '2023-06-01',
@@ -269,10 +273,10 @@ export async function testApiConnection(config: AgentEngineConfig): Promise<ApiC
         max_tokens: 1,
         messages: [{ role: 'user', content: 'Reply with OK.' }],
         model: config.apiModel ?? 'claude-sonnet-4-20250514',
-        stream: false,
+        stream: true,
       }),
     })
-    : await fetch(endpoint.url, {
+    : await fetchApiConnectionWithTimeout(endpoint.url, {
       method: 'POST',
       headers: {
         authorization: `Bearer ${config.apiKey}`,
@@ -282,7 +286,7 @@ export async function testApiConnection(config: AgentEngineConfig): Promise<ApiC
         max_tokens: 1,
         messages: [{ role: 'user', content: 'Reply with OK.' }],
         model: config.apiModel ?? 'gpt-4.1',
-        stream: false,
+        stream: true,
       }),
     });
 
@@ -290,7 +294,39 @@ export async function testApiConnection(config: AgentEngineConfig): Promise<ApiC
     throw new Error(formatApiRequestError(response.status, await response.text(), config.apiKey));
   }
 
-  return { endpoint, latencyMs: Date.now() - startedAt };
+  const streamingAvailable = isSseResponse(response);
+  // The health check is intentionally disconnected immediately: it verifies
+  // stream negotiation without collecting generated content or user data.
+  await response.body?.cancel();
+  return {
+    endpoint,
+    latencyMs: Date.now() - startedAt,
+    modelAvailable: true,
+    streamingAvailable,
+  };
+}
+
+async function fetchApiConnectionWithTimeout(url: string, init: RequestInit, timeoutMs = 30_000): Promise<Response> {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timeout = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } catch (error) {
+    if (timedOut) {
+      throw new Error(`API connection test timed out after ${timeoutMs} ms.`, { cause: error });
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function isSseResponse(response: Response): boolean {
+  return response.headers.get('content-type')?.toLowerCase().includes('text/event-stream') ?? false;
 }
 
 export function resolveAnthropicMessagesUrl(apiBaseUrl?: string): string {

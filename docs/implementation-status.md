@@ -9,7 +9,7 @@
 - Settings and session metadata use schema version `1`; legacy `.claude/typorai-*` settings and session files are retained as read-only migration sources while new data writes under `.typorai`.
 - Chinese provider and platform terminology has been corrected for API, WSL, Codex, Ubuntu, Sonnet, Opus, and OpenCode.
 - The architecture audit prevents API tool-calling regressions.
-- API settings provide explicit protocol selection, a document-free connection test, and credential redaction in returned errors.
+- API settings provide explicit protocol selection, HTTP(S) URL validation, a bounded document-free connection test, configured-model availability verification, streaming capability detection, and credential redaction in returned errors.
 - Claude, Codex, and OpenCode use one shared current-CLI selector that makes their mutual exclusion explicit.
 - All ten locale catalogs use workspace/document terminology and are structurally verified against English.
 
