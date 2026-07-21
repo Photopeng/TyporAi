@@ -551,7 +551,7 @@
     },
     "mediaFolder": {
       "name": "미디어 폴더",
-      "desc": "첨부 파일/이미지가 포함된 폴더입니다. 메모에서 ![[image.jpg]]를 사용하면 Claude가 여기를 보게 됩니다. Vault 루트는 비워 두세요.",
+      "desc": "첨부 파일/이미지가 포함된 폴더입니다. 문서에서 ![[image.jpg]]를 사용하면 Claude가 여기를 보게 됩니다. 작업 공간 루트는 비워 두세요.",
       "placeholder": "첨부파일"
     },
     "systemPrompt": {
@@ -1128,7 +1128,7 @@
       },
       "commands": {
         "heading": "명령",
-        "desc": "Vault 수준 OpenCode 명령을 관리합니다."
+        "desc": "작업 공간 OpenCode 명령을 관리합니다."
       },
       "hiddenCommands": {
         "name": "숨겨진 명령",
@@ -1236,7 +1236,7 @@
       },
       "agentList": {
         "label": "OpenCode 하위 에이전트",
-        "empty": "Vault에 OpenCode 하위 에이전트가 없습니다. 하나를 만들려면 +를 클릭하세요.",
+        "empty": "이 작업 공간에는 OpenCode 하위 에이전트가 없습니다. 하나를 만들려면 +를 클릭하세요.",
         "badgeSubagent": "하위 에이전트",
         "refreshAria": "새로 고치다",
         "addAria": "추가하다",

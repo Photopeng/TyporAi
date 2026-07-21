@@ -280,7 +280,7 @@
     },
     "slashCommands": {
       "name": "Commandes et compétences",
-      "desc": "Gérez les commandes et compétences au niveau du vault stockées dans .claude/commands/ et .claude/skills/. Déclenchées par /nom."
+      "desc": "Gérez les commandes et compétences de l’espace de travail stockées dans .claude/commands/ et .claude/skills/. Déclenchées par /nom."
     },
     "hiddenSlashCommands": {
       "name": "Commandes et compétences masquées",
@@ -289,15 +289,15 @@
     },
     "mcpServers": {
       "name": "Serveurs MCP",
-      "desc": "Gérez les configurations de serveurs MCP au niveau du vault stockées dans .claude/mcp.json. Les serveurs avec mode de sauvegarde de contexte nécessitent une @mention pour s'activer."
+      "desc": "Gérez les configurations de serveurs MCP de l’espace de travail stockées dans .claude/mcp.json. Les serveurs avec mode de sauvegarde de contexte nécessitent une @mention pour s'activer."
     },
     "plugins": {
       "name": "Plugins Claude Code",
-      "desc": "Gérez les plugins Claude Code découverts dans ~/.claude/plugins. Les plugins activés sont stockés par vault dans .claude/settings.json."
+      "desc": "Gérez les plugins Claude Code découverts dans ~/.claude/plugins. Les plugins activés sont stockés par espace de travail dans .claude/settings.json."
     },
     "subagents": {
       "name": "Sous-agents",
-      "desc": "Gérez les sous-agents au niveau du vault stockés dans .claude/agents/. Chaque fichier Markdown définit un agent personnalisé.",
+      "desc": "Gérez les sous-agents de l’espace de travail stockés dans .claude/agents/. Chaque fichier Markdown définit un agent personnalisé.",
       "noAgents": "Aucun sous-agent configuré. Cliquez sur + pour en créer un.",
       "deleteConfirm": "Supprimer le sous-agent \"{name}\" ?",
       "saveFailed": "Échec de l’enregistrement du sous-agent : {message}",
@@ -1326,7 +1326,7 @@
     }
   },
   "inlineEdit": {
-    "unavailable": "Modification en ligne indisponible : impossible d'accéder à l'éditeur actif. Essayez de rouvrir la note.",
+    "unavailable": "Modification en ligne indisponible : impossible d'accéder à l'éditeur actif. Essayez de rouvrir le document.",
     "workspaceLoadFailed": "Échec du chargement des fichiers de l'espace de travail. Les @-mentions de l’espace de travail peuvent être indisponibles.",
     "invalidPath": "Échec de la pièce jointe : chemin non valide",
     "placeholderInsert": "Insérer les instructions...",

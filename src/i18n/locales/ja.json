@@ -615,7 +615,7 @@
     "hotkeySearch": "TyporAi",
     "slashCommands": {
       "name": "コマンドとスキル",
-      "desc": ".claude/commands/ および .claude/skills/ に保存されている Vault レベルのコマンドとスキルを管理します。 /name によってトリガーされます。"
+      "desc": ".claude/commands/ および .claude/skills/ に保存されているワークスペースのコマンドとスキルを管理します。 /name によってトリガーされます。"
     },
     "hiddenSlashCommands": {
       "name": "隠しコマンドとスキル",
@@ -952,9 +952,9 @@
       },
       "skills": {
         "heading": "コーデックスのスキル",
-        "desc": ".codex/skills/ または .agents/skills/ に保存されている Vault レベルの Codex スキルを管理します。家庭レベルのスキルはここでは除外されます。",
+        "desc": ".codex/skills/ または .agents/skills/ に保存されているワークスペースの Codex スキルを管理します。ホームレベルのスキルはここでは除外されます。",
         "label": "コーデックススキル",
-        "empty": "Vault には Codex スキルがありません。 + をクリックして作成します。",
+        "empty": "このワークスペースには Codex スキルがありません。 + をクリックして作成します。",
         "skillBadge": "スキル",
         "deletedNotice": "コーデックススキル「{name}」を削除",
         "createdNotice": "コーデックススキル「{name}」作成",
@@ -1236,7 +1236,7 @@
       },
       "agentList": {
         "label": "OpenCode サブエージェント",
-        "empty": "Vault に OpenCode サブエージェントがありません。 + をクリックして作成します。",
+        "empty": "このワークスペースには OpenCode サブエージェントがありません。 + をクリックして作成します。",
         "badgeSubagent": "復代理人",
         "refreshAria": "リフレッシュ",
         "addAria": "追加",

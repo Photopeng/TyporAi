@@ -36,6 +36,12 @@ const rules = [
     patterns: [/[\u3400-\u9fff]/],
   },
   {
+    name: 'user-visible locale copy must use Typora workspace terminology',
+    directories: ['src/i18n/locales'],
+    extensions: ['.json'],
+    patterns: [/\b(?:Obsidian|Claudian|Vault)\b/i],
+  },
+  {
     name: 'renderer layers must not import host APIs or the compatibility shim',
     directories: ['src/core', 'src/application', 'src/providers', 'src/ui'],
     patterns: [
@@ -74,7 +80,8 @@ for (const rule of rules) {
     const absoluteDirectory = path.join(root, directory);
     if (!fs.existsSync(absoluteDirectory)) continue;
     for (const file of walk(absoluteDirectory)) {
-      if (!file.endsWith('.ts')) continue;
+      const extensions = rule.extensions ?? ['.ts'];
+      if (!extensions.some(extension => file.endsWith(extension))) continue;
       if ((rule.excludeDirectories ?? []).some(excluded => {
         const excludedPath = path.join(root, excluded);
         return file === excludedPath || file.startsWith(`${excludedPath}${path.sep}`);
