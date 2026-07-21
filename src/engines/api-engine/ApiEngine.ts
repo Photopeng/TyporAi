@@ -90,7 +90,7 @@ export class ApiEngine implements IAgentEngine {
       signal: this.abortController?.signal,
     });
     if (!response.ok || !response.body) {
-      throw new Error(`API request failed: ${response.status} ${await response.text()}`);
+      throw new Error(formatApiRequestError(response.status, await response.text(), this.config.apiKey));
     }
     return readSseText(response.body, (event) => {
       const data = event as { type?: string; delta?: { type?: string; text?: string } };
@@ -120,13 +120,29 @@ export class ApiEngine implements IAgentEngine {
       signal: this.abortController?.signal,
     });
     if (!response.ok || !response.body) {
-      throw new Error(`API request failed: ${response.status} ${await response.text()}`);
+      throw new Error(formatApiRequestError(response.status, await response.text(), this.config.apiKey));
     }
     return readSseText(response.body, (event) => {
       const data = event as { choices?: Array<{ delta?: { content?: string | null } }> };
       return data.choices?.[0]?.delta?.content ?? '';
     }, callbacks);
   }
+}
+
+function formatApiRequestError(status: number, body: string, apiKey?: string): string {
+  return `API request failed: ${status} ${redactApiSecrets(body, apiKey)}`;
+}
+
+/** Removes credentials before API diagnostics or compatibility-server errors reach the UI. */
+export function redactApiSecrets(value: string, apiKey?: string): string {
+  let redacted = value;
+  if (apiKey) {
+    redacted = redacted.split(apiKey).join('[REDACTED]');
+  }
+
+  return redacted
+    .replace(/(authorization\s*[:=]\s*(?:bearer\s+)?)[^\s,;"'}]+/gi, '$1[REDACTED]')
+    .replace(/((?:api[_-]?key|token|secret)\s*[=:]\s*["']?)[^\s,;"'}]+/gi, '$1[REDACTED]');
 }
 
 async function readSseText(

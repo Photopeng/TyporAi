@@ -1,5 +1,6 @@
 import {
   ApiEngine,
+  redactApiSecrets,
   resolveAnthropicMessagesUrl,
   resolveApiEndpoint,
   resolveOpenAiChatCompletionsUrl,
@@ -34,6 +35,24 @@ describe('ApiEngine', () => {
       protocol: 'openai',
       url: 'https://api.deepseek.com/v1/chat/completions',
     });
+  });
+
+  it('redacts API credentials from compatibility-server error text', () => {
+    expect(redactApiSecrets(
+      'authorization: Bearer test-key, api_key=another-secret, token: third-secret',
+      'test-key',
+    )).toBe('authorization: Bearer [REDACTED], api_key=[REDACTED], token: [REDACTED]');
+  });
+
+  it('does not surface the configured key when an API request fails', async () => {
+    globalThis.fetch = jest.fn().mockResolvedValue(new Response(
+      'upstream rejected authorization: Bearer test-key',
+      { status: 401 },
+    ));
+
+    await expect(new ApiEngine({ apiKey: 'test-key' }).chat({
+      prompt: 'Hello', workspacePath: '/workspace',
+    }, {})).rejects.toThrow('authorization: Bearer [REDACTED]');
   });
 
   it('sends an Anthropic text-only request while retaining explicit document context', async () => {
