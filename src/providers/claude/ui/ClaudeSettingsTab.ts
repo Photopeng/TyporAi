@@ -5,6 +5,7 @@ import { renderCliDiagnosticsSection } from '../../../features/settings/ui/CliDi
 import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
 import { McpSettingsManager } from '../../../features/settings/ui/McpSettingsManager';
+import { orderSettingsSections } from '../../../features/settings/ui/SettingsSectionOrder';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import { getHostnameKey } from '../../../utils/env';
@@ -378,5 +379,12 @@ export const claudeSettingsTabRenderer: ProviderSettingsTabRenderer = {
       },
       t('settings.enableBangBash.desc'),
     );
+
+    orderSettingsSections(container, [
+      t('settings.setup'), t('settings.models'), t('settings.safety'),
+      t('settings.slashCommands.name'), t('settings.subagents.name'),
+      t('settings.mcpServers.name'), t('settings.plugins.name'), t('settings.environment'),
+      t('settings.cliProvider.diagnostics'), t('settings.experimental'),
+    ]);
   },
 };

@@ -3,6 +3,7 @@ import type { ProviderSettingsTabRenderer } from '../../../core/providers/types'
 import { renderCliDiagnosticsSection } from '../../../features/settings/ui/CliDiagnosticsSection';
 import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
+import { orderSettingsSections } from '../../../features/settings/ui/SettingsSectionOrder';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import { getHostnameKey } from '../../../utils/env';
@@ -396,5 +397,11 @@ export const codexSettingsTabRenderer: ProviderSettingsTabRenderer = {
       placeholder: t('settings.codex.env.placeholder'),
       renderCustomContextLimits: (target) => context.renderCustomContextLimits(target, 'codex'),
     });
+
+    orderSettingsSections(container, [
+      t('settings.setup'), t('settings.models'), t('settings.safety'),
+      t('settings.codex.skills.heading'), t('settings.codex.subagents.heading'),
+      t('settings.environment'), t('settings.cliProvider.diagnostics'),
+    ]);
   },
 };
