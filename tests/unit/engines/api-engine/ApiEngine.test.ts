@@ -5,6 +5,7 @@ import {
   resolveApiEndpoint,
   resolveOpenAiChatCompletionsUrl,
   testApiConnection,
+  validateApiBaseUrl,
 } from '@/engines/api-engine/ApiEngine';
 
 describe('ApiEngine', () => {
@@ -44,6 +45,13 @@ describe('ApiEngine', () => {
       protocol: 'openai',
       url: 'https://gateway.example.test/v1/chat/completions',
     });
+  });
+
+  it('accepts HTTP(S) API URLs and rejects invalid schemes', () => {
+    expect(validateApiBaseUrl('https://api.example.test/v1')).toBeNull();
+    expect(validateApiBaseUrl('')).toBeNull();
+    expect(validateApiBaseUrl('file:///tmp/api')).toContain('HTTP');
+    expect(validateApiBaseUrl('not a url')).toContain('valid');
   });
 
   it('redacts API credentials from compatibility-server error text', () => {

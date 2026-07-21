@@ -23,6 +23,19 @@ export interface ApiConnectionTestResult {
   latencyMs: number;
 }
 
+export function validateApiBaseUrl(value: string): string | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
+      ? null
+      : 'API URL must use HTTP or HTTPS.';
+  } catch {
+    return 'API URL must be a valid HTTP(S) URL.';
+  }
+}
+
 interface OpenAiMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
@@ -238,6 +251,8 @@ export async function testApiConnection(config: AgentEngineConfig): Promise<ApiC
   if (!config.apiKey?.trim()) {
     throw new Error('API key is required. Add it in Settings > Providers > API.');
   }
+  const urlError = validateApiBaseUrl(config.apiBaseUrl ?? '');
+  if (urlError) throw new Error(urlError);
 
   const endpoint = resolveApiEndpoint(config.apiBaseUrl, config.apiProtocol);
   const startedAt = Date.now();

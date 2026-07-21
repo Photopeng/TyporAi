@@ -96,6 +96,18 @@ describe('typoraSettingsTabRenderer', () => {
     expect(mockRefreshModelSelectors).toHaveBeenCalledTimes(1);
   });
 
+  it('does not persist an invalid API URL', async () => {
+    const settings = { providerConfigs: { typora: {} } };
+    typoraSettingsTabRenderer.render(container, createContext(settings));
+    const input = findField(container, 'API base URL').querySelector<HTMLInputElement>('input')!;
+    input.value = 'file:///not-an-api';
+    input.dispatchEvent(new container.ownerDocument.defaultView!.Event('input'));
+    await flushAsyncHandlers();
+
+    expect((settings.providerConfigs.typora as any).apiBaseUrl).toBeUndefined();
+    expect(input.validationMessage).toContain('HTTP');
+  });
+
   it('persists an explicit API protocol and recycles the runtime', async () => {
     const settings = { providerConfigs: { typora: {} } };
     typoraSettingsTabRenderer.render(container, createContext(settings));

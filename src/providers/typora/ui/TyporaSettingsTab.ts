@@ -1,5 +1,5 @@
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
-import { testApiConnection } from '../../../engines/api-engine/ApiEngine';
+import { testApiConnection, validateApiBaseUrl } from '../../../engines/api-engine/ApiEngine';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 import {
@@ -87,6 +87,9 @@ function renderApiSettings(
     t('settings.typora.apiBaseUrl.name'),
     typoraSettings.apiBaseUrl,
     async (value) => {
+      const error = validateApiBaseUrl(value);
+      apiBaseUrl.setCustomValidity(error ?? '');
+      if (error) return;
       await persist({ apiBaseUrl: value }, { recycleRuntime: true });
     },
     t('settings.typora.apiBaseUrl.desc'),
