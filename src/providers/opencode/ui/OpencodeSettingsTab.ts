@@ -15,6 +15,7 @@ import {
   type OpencodeDiscoveredModel,
   splitOpencodeModelLabel,
 } from '../models';
+import { getManagedOpencodeModes } from '../modes';
 import { OpencodeChatRuntime } from '../runtime/OpencodeChatRuntime';
 import {
   getOpencodeProviderSettings,
@@ -160,6 +161,23 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
       : t('settings.opencode.cliPath.placeholderUnix');
     cliPathInputEl.classList.add('typorai-settings-cli-path-input');
     updateCliPathValidation(currentValue, cliPathInputEl);
+
+    settings.heading('Default mode');
+    const modeOptions = getManagedOpencodeModes(opencodeSettings.availableModes);
+    settings.select(
+      'Default mode',
+      opencodeSettings.selectedMode || modeOptions[0]?.id || '',
+      modeOptions.map((mode) => ({
+        value: mode.id,
+        label: mode.name,
+      })),
+      async (value) => {
+        updateOpencodeProviderSettings(settingsBag, { selectedMode: value });
+        await context.plugin.saveSettings();
+        await recycleOpencodeRuntime();
+      },
+      'Use this OpenCode mode for new conversations. Changes restart OpenCode conversations.',
+    );
 
     settings.heading(t('settings.opencode.models.heading'));
 
@@ -557,7 +575,7 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
 
     const commandsDesc = container.ownerDocument.createElement('p');
     commandsDesc.className = 'typorai-sp-settings-desc setting-item-description';
-    commandsDesc.textContent = t('settings.opencode.commands.desc');
+    commandsDesc.textContent = 'Commands are discovered from OpenCode at runtime. You can hide entries here, but TyporAi does not edit or delete them.';
     container.append(commandsDesc);
 
     context.renderHiddenProviderCommandSetting(container, 'opencode', {

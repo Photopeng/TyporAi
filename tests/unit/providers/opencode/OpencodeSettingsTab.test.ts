@@ -90,7 +90,8 @@ describe('OpencodeSettingsTab', () => {
 
   function control<T extends HTMLElement>(container: HTMLElement, name: string): T {
     const item = [...container.querySelectorAll<HTMLElement>('.setting-item')]
-      .find(candidate => candidate.querySelector('.setting-item-name')?.textContent === name);
+      .find(candidate => candidate.querySelector('.setting-item-name')?.textContent === name
+        && candidate.querySelector('input, select, textarea'));
     if (!item) throw new Error(`Missing setting: ${name}`);
     const result = item.querySelector<T>('input, select, textarea');
     if (!result) throw new Error(`Missing control: ${name}`);
@@ -102,8 +103,21 @@ describe('OpencodeSettingsTab', () => {
   it('renders native setup and model-picker controls', () => {
     const { container } = render();
     expect(control<HTMLInputElement>(container, 'settings.opencode.enable.name').tagName).toBe('INPUT');
+    expect(control<HTMLSelectElement>(container, 'Default mode').value).toBe('typorai-yolo');
     expect(container.querySelector('.typorai-opencode-model-picker')).not.toBeNull();
     expect(container.querySelector('details.typorai-opencode-model-picker-catalog')).not.toBeNull();
+  });
+
+  it('persists the default mode and recycles OpenCode conversations', async () => {
+    const target = plugin();
+    const { container } = render(target);
+    const mode = control<HTMLSelectElement>(container, 'Default mode');
+    mode.value = 'typorai-safe';
+    mode.dispatchEvent(new dom.window.Event('change'));
+    await flush();
+
+    expect(target.settings.providerConfigs.opencode.selectedMode).toBe('typorai-safe');
+    expect(broadcasts).toHaveBeenCalledWith('opencode', expect.any(Function));
   });
 
   it('stores a valid CLI path per host and resets runtime state', async () => {
