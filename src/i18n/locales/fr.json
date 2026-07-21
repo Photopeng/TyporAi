@@ -204,7 +204,7 @@
     "content": "Contenu",
     "input": "Saisie",
     "setup": "Configuration",
-    "cliProvider": { "name": "CLI active", "desc": "Une seule CLI peut être active à la fois. Ce choix désactive les autres fournisseurs CLI.", "none": "Ne pas utiliser de CLI", "savedAndRestarted": "Enregistré et runtime du Provider redémarré.", "saveFailed": "Impossible d’enregistrer ou de redémarrer le Provider : {error}" },
+    "cliProvider": { "name": "CLI active", "desc": "Une seule CLI peut être active à la fois. Ce choix désactive les autres fournisseurs CLI.", "none": "Ne pas utiliser de CLI", "savedAndRestarted": "Enregistré et runtime du Provider redémarré.", "saveFailed": "Impossible d’enregistrer ou de redémarrer le Provider : {error}", "diagnostics": "Diagnostic", "testStartup": "Tester le démarrage CLI", "copyDiagnostics": "Copier le diagnostic expurgé", "diagnosticPathMissing": "Chemin CLI introuvable.", "diagnosticUnavailable": "Diagnostic CLI indisponible.", "diagnosticNodeMissing": "Node.js requis par ce wrapper CLI est introuvable.", "diagnosticExitCode": "Code de sortie", "diagnosticPath": "Chemin CLI", "diagnosticArchitecture": "Architecture de l’hôte", "diagnosticVersion": "Version", "diagnosticLogin": "Connexion", "diagnosticNotProbed": "Non vérifié", "diagnosticLatestError": "Dernière erreur" },
     "models": "Modèles",
     "experimental": "Expérimental",
     "userName": {

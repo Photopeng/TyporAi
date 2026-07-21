@@ -204,7 +204,7 @@
     "content": "Содержание",
     "input": "Ввод",
     "setup": "Настройка",
-    "cliProvider": { "name": "Текущий CLI", "desc": "Одновременно может быть активен только один CLI. Выбор отключает другие CLI-провайдеры.", "none": "Не использовать CLI", "savedAndRestarted": "Сохранено, среда выполнения Provider перезапущена.", "saveFailed": "Не удалось сохранить или перезапустить Provider: {error}" },
+    "cliProvider": { "name": "Текущий CLI", "desc": "Одновременно может быть активен только один CLI. Выбор отключает другие CLI-провайдеры.", "none": "Не использовать CLI", "savedAndRestarted": "Сохранено, среда выполнения Provider перезапущена.", "saveFailed": "Не удалось сохранить или перезапустить Provider: {error}", "diagnostics": "Диагностика", "testStartup": "Проверить запуск CLI", "copyDiagnostics": "Копировать диагностику без секретов", "diagnosticPathMissing": "Путь к CLI не найден.", "diagnosticUnavailable": "Диагностика CLI недоступна.", "diagnosticNodeMissing": "Не найден Node.js для этой обёртки CLI.", "diagnosticExitCode": "Код выхода", "diagnosticPath": "Путь CLI", "diagnosticArchitecture": "Архитектура хоста", "diagnosticVersion": "Версия", "diagnosticLogin": "Вход", "diagnosticNotProbed": "Не проверено", "diagnosticLatestError": "Последняя ошибка" },
     "models": "Модели",
     "experimental": "Экспериментальное",
     "userName": {

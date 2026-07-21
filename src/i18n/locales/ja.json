@@ -538,7 +538,7 @@
     "content": "コンテンツ",
     "input": "入力",
     "setup": "設定",
-    "cliProvider": { "name": "現在の CLI", "desc": "同時に有効にできる CLI は 1 つだけです。選択すると他の CLI プロバイダーは無効になります。", "none": "CLI を使用しない", "savedAndRestarted": "保存し、Provider ランタイムを再起動しました。", "saveFailed": "Provider を保存または再起動できませんでした: {error}" },
+    "cliProvider": { "name": "現在の CLI", "desc": "同時に有効にできる CLI は 1 つだけです。選択すると他の CLI プロバイダーは無効になります。", "none": "CLI を使用しない", "savedAndRestarted": "保存し、Provider ランタイムを再起動しました。", "saveFailed": "Provider を保存または再起動できませんでした: {error}", "diagnostics": "診断", "testStartup": "CLI 起動をテスト", "copyDiagnostics": "匿名化した診断をコピー", "diagnosticPathMissing": "CLI パスが見つかりません。", "diagnosticUnavailable": "CLI 診断は利用できません。", "diagnosticNodeMissing": "この CLI ラッパーに必要な Node.js が見つかりません。", "diagnosticExitCode": "終了コード", "diagnosticPath": "CLI パス", "diagnosticArchitecture": "ホストのアーキテクチャ", "diagnosticVersion": "バージョン", "diagnosticLogin": "ログイン", "diagnosticNotProbed": "未確認", "diagnosticLatestError": "最新のエラー" },
     "models": "モデル",
     "experimental": "実験的",
     "userName": {

@@ -204,7 +204,7 @@
     "content": "Contenido",
     "input": "Entrada",
     "setup": "Configuraci贸n",
-    "cliProvider": { "name": "CLI actual", "desc": "Solo puede haber una CLI activa a la vez. Al elegir una se desactivan las demás.", "none": "No usar una CLI", "savedAndRestarted": "Guardado y runtime del Provider reiniciado.", "saveFailed": "No se pudo guardar o reiniciar el Provider: {error}" },
+    "cliProvider": { "name": "CLI actual", "desc": "Solo puede haber una CLI activa a la vez. Al elegir una se desactivan las demás.", "none": "No usar una CLI", "savedAndRestarted": "Guardado y runtime del Provider reiniciado.", "saveFailed": "No se pudo guardar o reiniciar el Provider: {error}", "diagnostics": "Diagnóstico", "testStartup": "Probar inicio de CLI", "copyDiagnostics": "Copiar diagnóstico sin datos sensibles", "diagnosticPathMissing": "No se encontró la ruta de CLI.", "diagnosticUnavailable": "El diagnóstico de CLI no está disponible.", "diagnosticNodeMissing": "No se encontró Node.js para este envoltorio CLI.", "diagnosticExitCode": "Código de salida", "diagnosticPath": "Ruta de CLI", "diagnosticArchitecture": "Arquitectura del host", "diagnosticVersion": "Versión", "diagnosticLogin": "Inicio de sesión", "diagnosticNotProbed": "Sin comprobar", "diagnosticLatestError": "Último error" },
     "models": "Modelos",
     "experimental": "Funciones experimentales",
     "userName": {

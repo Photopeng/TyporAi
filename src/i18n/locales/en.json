@@ -544,6 +544,7 @@
       "none": "Do not use a CLI",
       "savedAndRestarted": "Saved and provider runtime restarted.",
       "saveFailed": "Could not save or restart provider: {error}"
+      ,"diagnostics": "Diagnostics", "testStartup": "Test CLI startup", "copyDiagnostics": "Copy redacted diagnostics", "diagnosticPathMissing": "CLI path was not found.", "diagnosticUnavailable": "CLI diagnostics are unavailable.", "diagnosticNodeMissing": "Node.js was not found for this CLI wrapper.", "diagnosticExitCode": "Exit code", "diagnosticPath": "CLI path", "diagnosticArchitecture": "Host architecture", "diagnosticVersion": "Version", "diagnosticLogin": "Login", "diagnosticNotProbed": "Not probed", "diagnosticLatestError": "Latest error"
     },
     "models": "Models",
     "experimental": "Experimental",

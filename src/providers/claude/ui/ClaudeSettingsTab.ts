@@ -1,6 +1,7 @@
 import { testMcpServer } from '../../../core/mcp/McpTester';
 import { ProviderSettingsCoordinator } from '../../../core/providers/ProviderSettingsCoordinator';
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
+import { renderCliDiagnosticsSection } from '../../../features/settings/ui/CliDiagnosticsSection';
 import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
 import { McpSettingsManager } from '../../../features/settings/ui/McpSettingsManager';
@@ -326,6 +327,8 @@ export const claudeSettingsTabRenderer: ProviderSettingsTabRenderer = {
         );
       },
     });
+
+    renderCliDiagnosticsSection(container, 'claude', settingsBag);
 
     // --- Environment ---
 

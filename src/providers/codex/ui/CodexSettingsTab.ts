@@ -1,5 +1,6 @@
 import { ProviderSettingsCoordinator } from '../../../core/providers/ProviderSettingsCoordinator';
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
+import { renderCliDiagnosticsSection } from '../../../features/settings/ui/CliDiagnosticsSection';
 import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
 import { t } from '../../../i18n/i18n';
@@ -380,6 +381,8 @@ export const codexSettingsTabRenderer: ProviderSettingsTabRenderer = {
     new CodexSubagentSettings(subagentContainer, codexWorkspace.subagentStorage, () => {
       void codexWorkspace.refreshAgentMentions?.();
     });
+
+    renderCliDiagnosticsSection(container, 'codex', settingsBag);
 
     // --- Environment ---
 

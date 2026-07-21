@@ -544,6 +544,7 @@
       "none": "不使用 CLI",
       "savedAndRestarted": "已保存并重启 Provider 运行时。",
       "saveFailed": "无法保存或重启 Provider：{error}"
+      ,"diagnostics": "诊断信息", "testStartup": "测试 CLI 启动", "copyDiagnostics": "复制脱敏诊断信息", "diagnosticPathMissing": "未找到 CLI 路径。", "diagnosticUnavailable": "CLI 诊断不可用。", "diagnosticNodeMissing": "未找到此 CLI 包装器所需的 Node.js。", "diagnosticExitCode": "退出代码", "diagnosticPath": "CLI 路径", "diagnosticArchitecture": "宿主架构", "diagnosticVersion": "版本", "diagnosticLogin": "登录", "diagnosticNotProbed": "未探测", "diagnosticLatestError": "最近错误"
     },
     "models": "模型",
     "experimental": "实验性",

@@ -204,7 +204,7 @@
     "content": "Inhalte",
     "input": "Eingabe",
     "setup": "Einrichtung",
-    "cliProvider": { "name": "Aktuelle CLI", "desc": "Nur eine CLI kann gleichzeitig aktiv sein. Die Auswahl deaktiviert die anderen CLI-Anbieter.", "none": "Keine CLI verwenden", "savedAndRestarted": "Gespeichert und Provider-Laufzeit neu gestartet.", "saveFailed": "Provider konnte nicht gespeichert oder neu gestartet werden: {error}" },
+    "cliProvider": { "name": "Aktuelle CLI", "desc": "Nur eine CLI kann gleichzeitig aktiv sein. Die Auswahl deaktiviert die anderen CLI-Anbieter.", "none": "Keine CLI verwenden", "savedAndRestarted": "Gespeichert und Provider-Laufzeit neu gestartet.", "saveFailed": "Provider konnte nicht gespeichert oder neu gestartet werden: {error}", "diagnostics": "Diagnose", "testStartup": "CLI-Start testen", "copyDiagnostics": "Bereinigte Diagnose kopieren", "diagnosticPathMissing": "CLI-Pfad wurde nicht gefunden.", "diagnosticUnavailable": "CLI-Diagnose ist nicht verfügbar.", "diagnosticNodeMissing": "Node.js für diesen CLI-Wrapper wurde nicht gefunden.", "diagnosticExitCode": "Exit-Code", "diagnosticPath": "CLI-Pfad", "diagnosticArchitecture": "Host-Architektur", "diagnosticVersion": "Version", "diagnosticLogin": "Anmeldung", "diagnosticNotProbed": "Nicht geprüft", "diagnosticLatestError": "Letzter Fehler" },
     "models": "Modelle",
     "experimental": "Experimentell",
     "userName": {

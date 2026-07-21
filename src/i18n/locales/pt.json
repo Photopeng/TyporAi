@@ -204,7 +204,7 @@
     "content": "Conte煤do",
     "input": "Entrada",
     "setup": "Configura莽茫o",
-    "cliProvider": { "name": "CLI atual", "desc": "Apenas uma CLI pode estar ativa de cada vez. A seleção desativa os outros provedores CLI.", "none": "Não usar uma CLI", "savedAndRestarted": "Guardado e runtime do Provider reiniciado.", "saveFailed": "Não foi possível guardar ou reiniciar o Provider: {error}" },
+    "cliProvider": { "name": "CLI atual", "desc": "Apenas uma CLI pode estar ativa de cada vez. A seleção desativa os outros provedores CLI.", "none": "Não usar uma CLI", "savedAndRestarted": "Guardado e runtime do Provider reiniciado.", "saveFailed": "Não foi possível guardar ou reiniciar o Provider: {error}", "diagnostics": "Diagnóstico", "testStartup": "Testar início da CLI", "copyDiagnostics": "Copiar diagnóstico sem segredos", "diagnosticPathMissing": "Caminho da CLI não encontrado.", "diagnosticUnavailable": "Diagnóstico da CLI indisponível.", "diagnosticNodeMissing": "Node.js não encontrado para este wrapper da CLI.", "diagnosticExitCode": "Código de saída", "diagnosticPath": "Caminho da CLI", "diagnosticArchitecture": "Arquitetura do host", "diagnosticVersion": "Versão", "diagnosticLogin": "Início de sessão", "diagnosticNotProbed": "Não testado", "diagnosticLatestError": "Último erro" },
     "models": "Modelos",
     "experimental": "Recursos experimentais",
     "userName": {

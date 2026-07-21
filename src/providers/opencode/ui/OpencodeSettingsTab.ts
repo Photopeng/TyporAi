@@ -1,4 +1,5 @@
 import type { ProviderSettingsTabRenderer } from '../../../core/providers/types';
+import { renderCliDiagnosticsSection } from '../../../features/settings/ui/CliDiagnosticsSection';
 import { renderCliProviderSelectionSection } from '../../../features/settings/ui/CliProviderSelectionSection';
 import { renderEnvironmentSettingsSection } from '../../../features/settings/ui/EnvironmentSettingsSection';
 import { t } from '../../../i18n/i18n';
@@ -610,6 +611,8 @@ export const opencodeSettingsTabRenderer: ProviderSettingsTabRenderer = {
         },
       );
     }
+
+    renderCliDiagnosticsSection(container, 'opencode', settingsBag);
 
     renderEnvironmentSettingsSection({
       container,

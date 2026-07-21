@@ -15,7 +15,7 @@
 
 ## Still requiring implementation or real-environment evidence
 
-- Shared CLI settings sections, diagnostics, runtime tests, and restart/save feedback are not yet fully unified across Claude, Codex, and OpenCode.
+- Shared CLI selection now has save/restart feedback and bounded diagnostics (resolved path, host architecture, version/startup probe, latest error, and redacted copy) across Claude, Codex, and OpenCode. Provider-specific login probes and comprehensive CLI parity coverage remain.
 - CLI-native `.claude` paths and legal attribution are intentionally allowlisted during terminology checks.
 - macOS Apple Silicon CLI discovery, architecture validation, Finder/Dock startup, TCC behavior, sleep/wake, and process cleanup require real macOS hardware validation.
 - Provider diagnostic panels and comprehensive CLI parity coverage remain to be implemented.

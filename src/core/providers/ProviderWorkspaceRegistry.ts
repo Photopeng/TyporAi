@@ -23,6 +23,7 @@ export class ProviderWorkspaceRegistry {
   private static registrations: Partial<Record<ProviderId, ProviderWorkspaceRegistration>> = {};
   private static services: Partial<Record<ProviderId, ProviderWorkspaceServices>> = {};
   private static homeAdapter: HomeFileStore | null = null;
+  private static hostServices: HostServices | null = null;
 
   static register(
     providerId: ProviderId,
@@ -82,6 +83,7 @@ export class ProviderWorkspaceRegistry {
 
   static clear(): void {
     this.services = {};
+    this.hostServices = null;
   }
 
   static async disposeAll(): Promise<void> {
@@ -97,9 +99,15 @@ export class ProviderWorkspaceRegistry {
   }
 
   static configureHostServices(host: HostServices): void {
+    this.hostServices = host;
     for (const service of Object.values(this.services)) {
       service?.configureHostServices?.(host);
     }
+  }
+
+  /** Host services are exposed only to shared provider UI that needs a bounded diagnostic probe. */
+  static getHostServices(): HostServices | null {
+    return this.hostServices;
   }
 
   static getServices(
