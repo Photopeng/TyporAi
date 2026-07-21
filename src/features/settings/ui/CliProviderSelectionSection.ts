@@ -1,4 +1,5 @@
 import { clearEnabledCliProviders, isCliProviderId, setSingleEnabledCliProvider } from '../../../core/providers/cliProviderSelection';
+import { ProviderWorkspaceRegistry } from '../../../core/providers/ProviderWorkspaceRegistry';
 import { t } from '../../../i18n/i18n';
 import { SettingBuilder } from '../../../ui/SettingBuilder';
 
@@ -29,4 +30,16 @@ export function renderCliProviderSelectionSection(
     },
     t('settings.cliProvider.desc'),
   );
+
+  const diagnostic = container.ownerDocument.createElement('p');
+  diagnostic.className = 'setting-item-description typorai-cli-provider-status';
+  if (active === 'none') {
+    diagnostic.textContent = t('common.disabled');
+  } else {
+    const providerId = active as 'claude' | 'codex' | 'opencode';
+    const path = ProviderWorkspaceRegistry.getCliResolver(providerId)
+      ?.resolveFromSettings(settings);
+    diagnostic.textContent = `${active} · ${t('common.enabled')} · ${path ?? t('common.unknown')}`;
+  }
+  container.append(diagnostic);
 }
