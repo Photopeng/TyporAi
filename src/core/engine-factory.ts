@@ -31,6 +31,9 @@ export function loadTyporaEngineSettings(storage: Storage = window.localStorage)
       apiProtocol: parsed.apiProtocol === 'anthropic' || parsed.apiProtocol === 'openai'
         ? parsed.apiProtocol
         : 'auto',
+      apiTimeoutMs: typeof parsed.apiTimeoutMs === 'number' && parsed.apiTimeoutMs > 0
+        ? parsed.apiTimeoutMs
+        : DEFAULT_TYPORA_ENGINE_SETTINGS.apiTimeoutMs,
     };
   } catch {
     return { ...DEFAULT_TYPORA_ENGINE_SETTINGS };
@@ -50,6 +53,7 @@ export function createAgentEngine(settings = loadTyporaEngineSettings()): IAgent
     apiBaseUrl: settings.apiBaseUrl.trim() || DEFAULT_TYPORA_ENGINE_SETTINGS.apiBaseUrl,
     apiModel: settings.apiModel.trim() || DEFAULT_TYPORA_ENGINE_SETTINGS.apiModel,
     apiProtocol: settings.apiProtocol ?? 'auto',
+    apiTimeoutMs: settings.apiTimeoutMs,
     effortLevel: settings.effortLevel?.trim(),
   };
 

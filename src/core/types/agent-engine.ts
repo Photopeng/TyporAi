@@ -39,6 +39,7 @@ export interface AgentEngineConfig {
   apiBaseUrl?: string;
   apiModel?: string;
   apiProtocol?: 'auto' | 'anthropic' | 'openai';
+  apiTimeoutMs?: number;
   effortLevel?: string;
 }
 

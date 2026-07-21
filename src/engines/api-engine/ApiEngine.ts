@@ -76,7 +76,7 @@ export class ApiEngine implements IAgentEngine {
     callbacks: EngineCallbacks,
     endpointUrl: string,
   ): Promise<string> {
-    const response = await fetch(endpointUrl, {
+    const response = await this.fetchWithTimeout(endpointUrl, {
       method: 'POST',
       headers: {
         'anthropic-version': '2023-06-01',
@@ -110,7 +110,7 @@ export class ApiEngine implements IAgentEngine {
     callbacks: EngineCallbacks,
     endpointUrl: string,
   ): Promise<string> {
-    const response = await fetch(endpointUrl, {
+    const response = await this.fetchWithTimeout(endpointUrl, {
       method: 'POST',
       headers: {
         authorization: `Bearer ${this.config.apiKey ?? ''}`,
@@ -131,6 +131,22 @@ export class ApiEngine implements IAgentEngine {
       const data = event as { choices?: Array<{ delta?: { content?: string | null } }> };
       return data.choices?.[0]?.delta?.content ?? '';
     }, callbacks);
+  }
+
+  private async fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
+    const timeoutMs = this.config.apiTimeoutMs ?? 30_000;
+    const controller = this.abortController;
+    const timeout = setTimeout(() => controller?.abort(), timeoutMs);
+    try {
+      return await fetch(url, init);
+    } catch (error) {
+      if (controller?.signal.aborted) {
+        throw new Error(`API request timed out after ${timeoutMs} ms.`);
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 }
 
