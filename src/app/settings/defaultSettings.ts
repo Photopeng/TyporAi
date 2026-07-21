@@ -4,6 +4,7 @@ import { type TyporAiSettings } from '../../core/types/settings';
 import { getBuiltInProviderDefaultConfigs } from '../../providers/defaultProviderConfigs';
 
 export const DEFAULT_TYPORAI_SETTINGS: TyporAiSettings = {
+  schemaVersion: 1,
   userName: '',
 
   permissionMode: 'normal',

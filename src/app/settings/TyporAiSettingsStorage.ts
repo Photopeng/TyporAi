@@ -41,6 +41,7 @@ export {
 };
 
 export type StoredTyporAiSettings = TyporAiSettings;
+export const TYPORAI_SETTINGS_SCHEMA_VERSION = 1;
 
 const LEGACY_TOP_LEVEL_PROVIDER_FIELDS = [
   'claudeSafeMode',
@@ -316,6 +317,7 @@ export class TyporAiSettingsStorage {
     const merged = {
       ...this.getDefaults(),
       ...legacyNormalized,
+      schemaVersion: TYPORAI_SETTINGS_SCHEMA_VERSION,
     };
 
     updateClaudeProviderSettings(
@@ -369,7 +371,6 @@ export class TyporAiSettingsStorage {
       2,
     );
     await this.adapter.write(TYPORAI_SETTINGS_PATH, content);
-    await this.deleteLegacyFileIfPresent();
   }
 
   async exists(): Promise<boolean> {
@@ -424,9 +425,4 @@ export class TyporAiSettingsStorage {
     return null;
   }
 
-  private async deleteLegacyFileIfPresent(): Promise<void> {
-    if (await this.adapter.exists(LEGACY_TYPORAI_SETTINGS_PATH)) {
-      await this.adapter.delete(LEGACY_TYPORAI_SETTINGS_PATH);
-    }
-  }
 }

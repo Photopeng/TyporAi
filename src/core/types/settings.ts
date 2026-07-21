@@ -90,6 +90,8 @@ export type ProviderConfigMap = Partial<Record<string, Record<string, unknown>>>
  * narrower types.
  */
 export interface TyporAiSettings {
+  /** Version of the TyporAi-owned settings schema. */
+  schemaVersion?: number;
   // User preferences
   userName: string;
 

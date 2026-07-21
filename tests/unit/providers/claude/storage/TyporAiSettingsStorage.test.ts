@@ -52,6 +52,7 @@ describe('TyporAiSettingsStorage', () => {
       expect(result.thinkingBudget).toBe(DEFAULT_SETTINGS.thinkingBudget);
       expect(result.permissionMode).toBe(DEFAULT_SETTINGS.permissionMode);
       expect(result.requireCommandOrControlEnterToSend).toBe(false);
+      expect(result.schemaVersion).toBe(1);
       expect(mockAdapter.read).not.toHaveBeenCalled();
     });
 
@@ -77,7 +78,8 @@ describe('TyporAiSettingsStorage', () => {
         TYPORAI_SETTINGS_PATH,
         expect.any(String),
       );
-      expect(mockAdapter.delete).toHaveBeenCalledWith(LEGACY_TYPORAI_SETTINGS_PATH);
+      expect(JSON.parse(mockAdapter.write.mock.calls[0][1]).schemaVersion).toBe(1);
+      expect(mockAdapter.delete).not.toHaveBeenCalledWith(LEGACY_TYPORAI_SETTINGS_PATH);
     });
 
     it('should parse valid JSON and merge with defaults', async () => {
@@ -521,7 +523,7 @@ describe('TyporAiSettingsStorage', () => {
       expect(writtenContent).not.toHaveProperty('slashCommands');
     });
 
-    it('deletes the legacy settings file after writing the new path', async () => {
+    it('keeps the legacy settings file as a read-only migration source', async () => {
       mockAdapter.exists.mockImplementation(async (path: string) => (
         path === LEGACY_TYPORAI_SETTINGS_PATH
       ));
@@ -532,7 +534,7 @@ describe('TyporAiSettingsStorage', () => {
         TYPORAI_SETTINGS_PATH,
         expect.any(String),
       );
-      expect(mockAdapter.delete).toHaveBeenCalledWith(LEGACY_TYPORAI_SETTINGS_PATH);
+      expect(mockAdapter.delete).not.toHaveBeenCalledWith(LEGACY_TYPORAI_SETTINGS_PATH);
     });
 
     it('should throw on write error', async () => {
