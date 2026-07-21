@@ -38,6 +38,7 @@ export interface AgentEngineConfig {
   apiKey?: string;
   apiBaseUrl?: string;
   apiModel?: string;
+  apiProtocol?: 'auto' | 'anthropic' | 'openai';
   effortLevel?: string;
 }
 

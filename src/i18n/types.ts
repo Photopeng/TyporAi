@@ -653,6 +653,11 @@ export type TranslationKey =
   | 'settings.typora.apiKey.desc'
   | 'settings.typora.apiBaseUrl.name'
   | 'settings.typora.apiBaseUrl.desc'
+  | 'settings.typora.apiProtocol.name'
+  | 'settings.typora.apiProtocol.desc'
+  | 'settings.typora.apiProtocol.auto'
+  | 'settings.typora.apiProtocol.anthropic'
+  | 'settings.typora.apiProtocol.openai'
   | 'settings.typora.apiModel.name'
   | 'settings.typora.apiModel.desc'
 

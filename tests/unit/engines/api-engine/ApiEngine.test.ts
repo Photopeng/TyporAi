@@ -35,6 +35,14 @@ describe('ApiEngine', () => {
       protocol: 'openai',
       url: 'https://api.deepseek.com/v1/chat/completions',
     });
+    expect(resolveApiEndpoint('https://gateway.example.test', 'anthropic')).toEqual({
+      protocol: 'anthropic',
+      url: 'https://gateway.example.test/v1/messages',
+    });
+    expect(resolveApiEndpoint('https://gateway.example.test', 'openai')).toEqual({
+      protocol: 'openai',
+      url: 'https://gateway.example.test/v1/chat/completions',
+    });
   });
 
   it('redacts API credentials from compatibility-server error text', () => {

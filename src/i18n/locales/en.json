@@ -1270,6 +1270,13 @@
         "name": "API base URL",
         "desc": "Base URL for the API. Leave empty for default."
       },
+      "apiProtocol": {
+        "name": "API protocol",
+        "desc": "Choose automatic detection unless your compatible API requires a specific request format.",
+        "auto": "Automatic detection",
+        "anthropic": "Anthropic Messages",
+        "openai": "OpenAI Chat Completions"
+      },
       "apiModel": {
         "name": "API model",
         "desc": "Model ID to use for the API."

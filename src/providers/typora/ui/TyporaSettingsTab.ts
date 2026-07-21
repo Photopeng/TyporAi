@@ -92,6 +92,22 @@ function renderApiSettings(
   apiBaseUrl.placeholder = 'https://api.anthropic.com/v1/messages';
   apiBaseUrl.classList.add('typorai-settings-url-input');
 
+  settings.select(
+    t('settings.typora.apiProtocol.name'),
+    typoraSettings.apiProtocol ?? 'auto',
+    [
+      { value: 'auto', label: t('settings.typora.apiProtocol.auto') },
+      { value: 'anthropic', label: t('settings.typora.apiProtocol.anthropic') },
+      { value: 'openai', label: t('settings.typora.apiProtocol.openai') },
+    ],
+    async (value) => {
+      await persist({
+        apiProtocol: value === 'anthropic' || value === 'openai' ? value : 'auto',
+      }, { recycleRuntime: true });
+    },
+    t('settings.typora.apiProtocol.desc'),
+  );
+
   const apiModel = settings.text(
     t('settings.typora.apiModel.name'),
     typoraSettings.apiModel,

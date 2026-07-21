@@ -19,6 +19,10 @@ function normalizeString(value: unknown, fallback: string): string {
   return typeof value === 'string' ? value : fallback;
 }
 
+function normalizeProtocol(value: unknown): NonNullable<TyporaProviderSettings['apiProtocol']> {
+  return value === 'anthropic' || value === 'openai' ? value : 'auto';
+}
+
 export function getTyporaProviderSettings(settings: Record<string, unknown>): TyporaProviderSettings {
   const config = getProviderConfig(settings, 'typora');
 
@@ -29,6 +33,7 @@ export function getTyporaProviderSettings(settings: Record<string, unknown>): Ty
     apiKey: normalizeString(config.apiKey, DEFAULT_TYPORA_PROVIDER_SETTINGS.apiKey),
     apiBaseUrl: normalizeString(config.apiBaseUrl, DEFAULT_TYPORA_PROVIDER_SETTINGS.apiBaseUrl),
     apiModel: normalizeString(config.apiModel, DEFAULT_TYPORA_PROVIDER_SETTINGS.apiModel),
+    apiProtocol: normalizeProtocol(config.apiProtocol),
   };
 }
 

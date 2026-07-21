@@ -54,6 +54,7 @@ describe('typoraSettingsTabRenderer', () => {
     expect(findField(container, 'API key').querySelector<HTMLInputElement>('input')?.value).toBe('key');
     expect(findField(container, 'API key').querySelector<HTMLInputElement>('input')?.type).toBe('password');
     expect(findField(container, 'API base URL').querySelector<HTMLInputElement>('input')?.value).toBe('https://example.test/messages');
+    expect(findField(container, 'API protocol').querySelector<HTMLSelectElement>('select')?.value).toBe('auto');
     expect(findField(container, 'API model').querySelector<HTMLInputElement>('input')?.value).toBe('model-a');
   });
 
@@ -93,6 +94,18 @@ describe('typoraSettingsTabRenderer', () => {
     expect(mockSaveSettings).toHaveBeenCalledTimes(3);
     expect(mockBroadcastToProviderTabs).toHaveBeenCalledTimes(3);
     expect(mockRefreshModelSelectors).toHaveBeenCalledTimes(1);
+  });
+
+  it('persists an explicit API protocol and recycles the runtime', async () => {
+    const settings = { providerConfigs: { typora: {} } };
+    typoraSettingsTabRenderer.render(container, createContext(settings));
+    const select = findField(container, 'API protocol').querySelector<HTMLSelectElement>('select')!;
+    select.value = 'openai';
+    select.dispatchEvent(new container.ownerDocument.defaultView!.Event('change'));
+    await flushAsyncHandlers();
+
+    expect((settings.providerConfigs.typora as any).apiProtocol).toBe('openai');
+    expect(mockBroadcastToProviderTabs).toHaveBeenCalledTimes(1);
   });
 });
 

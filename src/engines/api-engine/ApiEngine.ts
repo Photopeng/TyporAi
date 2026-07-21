@@ -46,7 +46,7 @@ export class ApiEngine implements IAgentEngine {
     await this.init();
     this.abortController = new AbortController();
     const userMessage = toUserMessage(request);
-    const endpoint = resolveApiEndpoint(this.config.apiBaseUrl);
+    const endpoint = resolveApiEndpoint(this.config.apiBaseUrl, this.config.apiProtocol);
     const priorHistory = request.history ?? this.history;
     const text = endpoint.protocol === 'openai'
       ? await this.streamOpenAi(buildOpenAiMessages(priorHistory, userMessage), callbacks, endpoint.url)
@@ -181,7 +181,16 @@ async function readSseText(
   return text;
 }
 
-export function resolveApiEndpoint(apiBaseUrl?: string): ApiEndpoint {
+export function resolveApiEndpoint(
+  apiBaseUrl?: string,
+  protocol: 'auto' | ApiProtocol = 'auto',
+): ApiEndpoint {
+  if (protocol === 'anthropic') {
+    return { protocol, url: resolveAnthropicMessagesUrl(apiBaseUrl) };
+  }
+  if (protocol === 'openai') {
+    return { protocol, url: resolveOpenAiChatCompletionsUrl(apiBaseUrl) };
+  }
   const fallback = 'https://api.anthropic.com/v1/messages';
   const trimmed = apiBaseUrl?.trim();
   if (!trimmed) return { protocol: 'anthropic', url: fallback };
