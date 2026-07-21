@@ -204,6 +204,7 @@
     "content": "Inhalte",
     "input": "Eingabe",
     "setup": "Einrichtung",
+    "cliProvider": { "name": "Aktuelle CLI", "desc": "Nur eine CLI kann gleichzeitig aktiv sein. Die Auswahl deaktiviert die anderen CLI-Anbieter.", "none": "Keine CLI verwenden" },
     "models": "Modelle",
     "experimental": "Experimentell",
     "userName": {
@@ -930,6 +931,8 @@
         "name": "API-Basis-URL",
         "desc": "Basis-URL für die Typora-Anbieter-API. Als Standardwert leer lassen."
       },
+      "apiProtocol": { "name": "API-Protokoll", "desc": "Wähle die automatische Erkennung, sofern die kompatible API kein bestimmtes Anfrageformat verlangt.", "auto": "Automatische Erkennung", "anthropic": "Anthropic-Messages-API", "openai": "OpenAI-Chat-Completions-API" },
+      "connectionTest": { "name": "Verbindung testen", "desc": "Sendet nur eine minimale Gesundheitsprüfung und niemals Dokument-, Auswahl-, Verlauf- oder Arbeitsbereichsinhalte.", "button": "API-Verbindung testen", "running": "Verbindung wird getestet…", "success": "Mit der {protocol}-API in {latency} ms verbunden." },
       "apiModel": {
         "name": "API-Modell",
         "desc": "Modell-ID zur Verwendung für die Typora-Anbieter-API."

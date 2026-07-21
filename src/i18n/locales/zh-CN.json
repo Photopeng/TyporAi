@@ -1279,8 +1279,8 @@
         "name": "API 协议",
         "desc": "除非兼容 API 要求特定请求格式，否则请使用自动检测。",
         "auto": "自动检测",
-        "anthropic": "Anthropic Messages",
-        "openai": "OpenAI Chat Completions"
+        "anthropic": "Anthropic Messages 协议",
+        "openai": "OpenAI Chat Completions 协议"
       },
       "connectionTest": {
         "name": "测试连接",

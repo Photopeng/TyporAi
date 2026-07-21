@@ -204,6 +204,7 @@
     "content": "Conte煤do",
     "input": "Entrada",
     "setup": "Configura莽茫o",
+    "cliProvider": { "name": "CLI atual", "desc": "Apenas uma CLI pode estar ativa de cada vez. A seleção desativa os outros provedores CLI.", "none": "Não usar uma CLI" },
     "models": "Modelos",
     "experimental": "Recursos experimentais",
     "userName": {
@@ -930,6 +931,8 @@
         "name": "URL base da API",
         "desc": "URL base para a API do provedor Typora. Deixe em branco por padr茫o."
       },
+      "apiProtocol": { "name": "Protocolo de API", "desc": "Escolha a deteção automática, salvo se a API compatível exigir um formato específico.", "auto": "Deteção automática", "anthropic": "API de mensagens Anthropic", "openai": "API OpenAI Chat Completions" },
+      "connectionTest": { "name": "Testar ligação", "desc": "Envia apenas uma verificação mínima e nunca inclui conteúdo de documento, seleção, histórico ou espaço de trabalho.", "button": "Testar ligação API", "running": "A testar ligação…", "success": "Ligado à API {protocol} em {latency} ms." },
       "apiModel": {
         "name": "Modelo de API",
         "desc": "ID do modelo a ser usado para a API do provedor Typora."
