@@ -6,6 +6,7 @@ import { cliPathRequiresNode } from '../../../utils/env';
 interface CliDiagnosticResult {
   architecture: string;
   error: string | null;
+  login: string;
   path: string | null;
   version: string | null;
 }
@@ -58,6 +59,7 @@ function initialDiagnostic(
   return {
     architecture: process.arch,
     error: null,
+    login: t('settings.cliProvider.diagnosticNotProbed'),
     path: ProviderWorkspaceRegistry.getCliResolver(providerId)?.resolveFromSettings(settings) ?? null,
     version: null,
   };
@@ -82,14 +84,43 @@ async function probeCli(
   }
 
   try {
-    const result = await runProcess(executable, args, host.environment.homeDirectory() ?? '.');
+    const cwd = host.environment.homeDirectory() ?? '.';
+    const result = await runProcess(executable, args, cwd);
+    const login = await probeLogin(providerId, executable, initial.path, cwd);
     return {
       ...initial,
       error: result.error,
+      login,
       version: result.output || null,
     };
   } catch (error) {
     return { ...initial, error: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+async function probeLogin(
+  providerId: CliProviderId,
+  executable: string,
+  cliPath: string,
+  cwd: string,
+): Promise<string> {
+  const providerArgs: Record<CliProviderId, string[]> = {
+    claude: ['auth', 'status'],
+    codex: ['login', 'status'],
+    opencode: ['providers', 'list'],
+  };
+  const args = cliPathRequiresNode(cliPath)
+    ? [cliPath, ...providerArgs[providerId]]
+    : providerArgs[providerId];
+  try {
+    const result = await runProcess(executable, args, cwd);
+    if (result.error) return t('common.disabled');
+    if (providerId === 'opencode' && /\b0 credentials\b/i.test(result.output)) {
+      return t('common.disabled');
+    }
+    return t('common.enabled');
+  } catch {
+    return t('common.disabled');
   }
 }
 
@@ -129,7 +160,7 @@ function renderDiagnosticText(result: CliDiagnosticResult): string {
     `${t('settings.cliProvider.diagnosticPath')}: ${result.path ?? t('common.unknown')}`,
     `${t('settings.cliProvider.diagnosticArchitecture')}: ${result.architecture}`,
     `${t('settings.cliProvider.diagnosticVersion')}: ${result.version ?? t('common.unknown')}`,
-    `${t('settings.cliProvider.diagnosticLogin')}: ${t('settings.cliProvider.diagnosticNotProbed')}`,
+    `${t('settings.cliProvider.diagnosticLogin')}: ${result.login}`,
     `${t('settings.cliProvider.diagnosticLatestError')}: ${result.error ?? t('common.unknown')}`,
   ].join('\n');
 }
