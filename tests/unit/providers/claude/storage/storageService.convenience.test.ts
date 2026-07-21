@@ -232,7 +232,7 @@ describe('StorageService convenience methods', () => {
       await storage.initialize();
 
       expect(files.get('.typorai/typorai-settings.json')).toBeDefined();
-      expect(files.has('.claude/typorai-settings.json')).toBe(false);
+      expect(files.has('.claude/typorai-settings.json')).toBe(true);
     });
   });
 
