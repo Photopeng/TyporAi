@@ -217,7 +217,7 @@
     },
     "mediaFolder": {
       "name": "Medienordner",
-      "desc": "Ordner mit Anhängen/Bildern. Wenn Notizen ![[image.jpg]] verwenden, sucht Claude hier. Leer lassen für Vault-Stammverzeichnis.",
+      "desc": "Ordner mit Anhängen/Bildern. Wenn Dokumente ![[image.jpg]] verwenden, sucht Claude hier. Leer lassen für das Stammverzeichnis des Arbeitsbereichs.",
       "placeholder": "Anhänge"
     },
     "systemPrompt": {
@@ -280,7 +280,7 @@
     },
     "slashCommands": {
       "name": "Befehle und Fähigkeiten",
-      "desc": "Verwalte Vault-Befehle und -Fähigkeiten in .claude/commands/ und .claude/skills/. Ausgelöst durch /Name."
+      "desc": "Verwalte Befehle und Fähigkeiten im Arbeitsbereich in .claude/commands/ und .claude/skills/. Ausgelöst durch /Name."
     },
     "hiddenSlashCommands": {
       "name": "Ausgeblendete Befehle und Fähigkeiten",
@@ -289,15 +289,15 @@
     },
     "mcpServers": {
       "name": "MCP-Server",
-      "desc": "Verwalte Vault-MCP-Serverkonfigurationen in .claude/mcp.json. Server mit Kontext-Speichermodus benötigen @mention zur Aktivierung."
+      "desc": "Verwalte MCP-Serverkonfigurationen im Arbeitsbereich in .claude/mcp.json. Server mit Kontext-Speichermodus benötigen @mention zur Aktivierung."
     },
     "plugins": {
       "name": "Claude Code-Plugins",
-      "desc": "Verwalte Claude Code Plugins aus ~/.claude/plugins. Aktivierte Plugins werden pro Vault in .claude/settings.json gespeichert."
+      "desc": "Verwalte Claude Code Plugins aus ~/.claude/plugins. Aktivierte Plugins werden pro Arbeitsbereich in .claude/settings.json gespeichert."
     },
     "subagents": {
       "name": "Sub-Agenten",
-      "desc": "Verwalte Vault-Sub-Agenten in .claude/agents/. Jede Markdown-Datei definiert einen benutzerdefinierten Agenten.",
+      "desc": "Verwalte Sub-Agenten im Arbeitsbereich in .claude/agents/. Jede Markdown-Datei definiert einen benutzerdefinierten Agenten.",
       "noAgents": "Keine Sub-Agenten konfiguriert. Klicke auf +, um einen zu erstellen.",
       "deleteConfirm": "Sub-Agent \"{name}\" löschen?",
       "saveFailed": "Sub-Agent konnte nicht gespeichert werden: {message}",

@@ -229,7 +229,7 @@
     }
   },
   "inlineEdit": {
-    "unavailable": "Inline edit unavailable: could not access the active editor. Try reopening the note.",
+    "unavailable": "Inline edit unavailable: could not access the active editor. Try reopening the document.",
     "workspaceLoadFailed": "Failed to load workspace files. Workspace @-mentions may be unavailable.",
     "placeholderInsert": "Insert instructions...",
     "placeholderEdit": "Edit instructions...",
@@ -551,7 +551,7 @@
     },
     "mediaFolder": {
       "name": "Media folder",
-      "desc": "Folder containing attachments/images. When notes use ![[image.jpg]], Claude will look here. Leave empty for vault root.",
+      "desc": "Folder containing attachments/images. When documents use ![[image.jpg]], Claude will look here. Leave empty for the workspace root.",
       "placeholder": "Attachments"
     },
     "systemPrompt": {
@@ -615,7 +615,7 @@
     "hotkeySearch": "TyporAi",
     "slashCommands": {
       "name": "Commands and Skills",
-      "desc": "Manage vault-level commands and skills stored in .claude/commands/ and .claude/skills/. Triggered by /name."
+      "desc": "Manage workspace commands and skills stored in .claude/commands/ and .claude/skills/. Triggered by /name."
     },
     "hiddenSlashCommands": {
       "name": "Hidden Commands and Skills",
@@ -624,15 +624,15 @@
     },
     "mcpServers": {
       "name": "MCP Servers",
-      "desc": "Manage vault-level MCP server configurations stored in .claude/mcp.json. Servers with context-saving mode require @mention to activate."
+      "desc": "Manage workspace MCP server configurations stored in .claude/mcp.json. Servers with context-saving mode require @mention to activate."
     },
     "plugins": {
       "name": "Claude Code Plugins",
-      "desc": "Manage Claude Code plugins discovered from ~/.claude/plugins. Enabled plugins are stored per vault in .claude/settings.json."
+      "desc": "Manage Claude Code plugins discovered from ~/.claude/plugins. Enabled plugins are stored per workspace in .claude/settings.json."
     },
     "subagents": {
       "name": "Subagents",
-      "desc": "Manage vault-level subagents stored in .claude/agents/. Each Markdown file defines one custom agent.",
+      "desc": "Manage workspace subagents stored in .claude/agents/. Each Markdown file defines one custom agent.",
       "noAgents": "No subagents configured. Click + to create one.",
       "deleteConfirm": "Delete subagent \"{name}\"?",
       "saveFailed": "Failed to save subagent: {message}",
@@ -952,9 +952,9 @@
       },
       "skills": {
         "heading": "Codex skills",
-        "desc": "Manage vault-level Codex skills stored in .codex/skills/ or .agents/skills/. Home-level skills are excluded here.",
+        "desc": "Manage workspace Codex skills stored in .codex/skills/ or .agents/skills/. Home-level skills are excluded here.",
         "label": "Codex Skills",
-        "empty": "No Codex skills in vault. Click + to create one.",
+        "empty": "No Codex skills in this workspace. Click + to create one.",
         "skillBadge": "skill",
         "deletedNotice": "Codex skill \"{name}\" deleted",
         "createdNotice": "Codex skill \"{name}\" created",
@@ -992,9 +992,9 @@
       },
       "subagents": {
         "heading": "Codex subagents",
-        "desc": "Manage vault-level Codex subagents stored in .codex/agents/. Each TOML file defines one custom agent.",
+        "desc": "Manage workspace Codex subagents stored in .codex/agents/. Each TOML file defines one custom agent.",
         "label": "Codex Subagents",
-        "empty": "No Codex subagents in vault. Click + to create one."
+        "empty": "No Codex subagents in this workspace. Click + to create one."
       },
       "subagentModal": {
         "titleAdd": "Add Codex Subagent",
@@ -1128,7 +1128,7 @@
       },
       "commands": {
         "heading": "Commands",
-        "desc": "Manage vault-level OpenCode commands."
+        "desc": "Manage workspace OpenCode commands."
       },
       "hiddenCommands": {
         "name": "Hidden Commands",
@@ -1137,7 +1137,7 @@
       },
       "subagents": {
         "heading": "Subagents",
-        "desc": "Manage vault-level OpenCode subagents."
+        "desc": "Manage workspace OpenCode subagents."
       },
       "agentModal": {
         "titleAdd": "Add OpenCode Subagent",
@@ -1236,7 +1236,7 @@
       },
       "agentList": {
         "label": "OpenCode Subagents",
-        "empty": "No OpenCode subagents in vault. Click + to create one.",
+        "empty": "No OpenCode subagents in this workspace. Click + to create one.",
         "badgeSubagent": "subagent",
         "refreshAria": "Refresh",
         "addAria": "Add",

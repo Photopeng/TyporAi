@@ -280,7 +280,7 @@
     },
     "slashCommands": {
       "name": "Comandos y habilidades",
-      "desc": "Administra comandos y habilidades a nivel de vault almacenados en .claude/commands/ y .claude/skills/. Activados por /nombre."
+      "desc": "Administra comandos y habilidades del espacio de trabajo almacenados en .claude/commands/ y .claude/skills/. Activados por /nombre."
     },
     "hiddenSlashCommands": {
       "name": "Comandos y habilidades ocultos",
@@ -289,15 +289,15 @@
     },
     "mcpServers": {
       "name": "Servidores MCP",
-      "desc": "Administra configuraciones de servidores MCP a nivel de vault almacenadas en .claude/mcp.json. Los servidores con modo de guardado de contexto requieren @mention para activarse."
+      "desc": "Administra configuraciones de servidores MCP del espacio de trabajo almacenadas en .claude/mcp.json. Los servidores con modo de guardado de contexto requieren @mention para activarse."
     },
     "plugins": {
       "name": "Plugins de Claude Code",
-      "desc": "Administra plugins de Claude Code descubiertos desde ~/.claude/plugins. Los plugins habilitados se almacenan por vault en .claude/settings.json."
+      "desc": "Administra plugins de Claude Code descubiertos desde ~/.claude/plugins. Los plugins habilitados se almacenan por espacio de trabajo en .claude/settings.json."
     },
     "subagents": {
       "name": "Subagentes",
-      "desc": "Administra subagentes a nivel de vault almacenados en .claude/agents/. Cada archivo Markdown define un agente personalizado.",
+      "desc": "Administra subagentes del espacio de trabajo almacenados en .claude/agents/. Cada archivo Markdown define un agente personalizado.",
       "noAgents": "No hay subagentes configurados. Haz clic en + para crear uno.",
       "deleteConfirm": "驴Eliminar el subagente \"{name}\"?",
       "saveFailed": "No se pudo guardar el subagente: {message}",
