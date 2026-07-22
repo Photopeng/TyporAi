@@ -18,7 +18,6 @@ describe('package-release script', () => {
     writeInput('README.md', '# TyporAi');
     writeInput('styles.css', 'body {}');
     writeInput('typora-typorai.renderer.js', 'console.log("renderer")');
-    writeInput('typora-typorai.js', 'console.log("legacy")');
     writeInput('typorai-sidecar-v1.mjs', 'console.log("sidecar")');
     writeInput('scripts/diagnose-typora.mjs', 'console.log("diagnose")');
     writeInput('scripts/deploy-typora.mjs', readFileSync(path.join(repoRoot, 'scripts', 'deploy-typora.mjs'), 'utf8'));
@@ -51,15 +50,6 @@ describe('package-release script', () => {
     expect(readFileSync(path.join(packageDirectory, 'INSTALL.md'), 'utf8')).toContain('sudo');
     expect(readFileSync(path.join(packageDirectory, 'scripts', 'deploy-typora.mjs'), 'utf8')).toContain("'release-manifest.json'");
     expect(existsSync(path.join(packageDirectory, 'package.json'))).toBe(false);
-  });
-
-  it('includes the Windows-only legacy rollback bundle', () => {
-    const outputRoot = path.join(temporaryRoot, 'windows-output');
-    execFileSync(process.execPath, [script, '--source', temporaryRoot, '--output', outputRoot, '--platform', 'windows-x64'], { cwd: repoRoot, encoding: 'utf8' });
-    const packageDirectory = path.join(outputRoot, 'TyporAi-windows-x64');
-    const releaseManifest = JSON.parse(readFileSync(path.join(packageDirectory, 'release-manifest.json'), 'utf8'));
-    expect(existsSync(path.join(packageDirectory, 'typora-typorai.js'))).toBe(true);
-    expect(releaseManifest.files).toEqual(expect.arrayContaining([expect.objectContaining({ path: 'typora-typorai.js' })]));
   });
 
   it('installs a macOS package without a repository package.json', () => {

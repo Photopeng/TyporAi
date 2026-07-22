@@ -21,19 +21,19 @@ describe('Typora runtime injection', () => {
   it('injects the TyporAi runtime into Typora window.html', async () => {
     await expect(injectRuntimeScript({
       windowHtmlPath,
-      scriptSrc: 'file:///plugins/typorai/typora-typorai.js',
+      scriptSrc: 'file:///plugins/typorai/typora-typorai.renderer.js',
       version: '2.0.27',
     })).resolves.toBe(true);
 
     expect(fs.readFileSync(windowHtmlPath, 'utf8')).toContain(
-      '<script id="typora-ai-assistant-runtime" src="file:///plugins/typorai/typora-typorai.js" data-version="2.0.27"></script>',
+      '<script id="typora-ai-assistant-runtime" src="file:///plugins/typorai/typora-typorai.renderer.js" data-version="2.0.27"></script>',
     );
   });
 
   it('is idempotent for the installed version', async () => {
     const options = {
       windowHtmlPath,
-      scriptSrc: 'file:///plugins/typorai/typora-typorai.js',
+      scriptSrc: 'file:///plugins/typorai/typora-typorai.renderer.js',
       version: '2.0.27',
     };
     await injectRuntimeScript(options);
@@ -42,7 +42,7 @@ describe('Typora runtime injection', () => {
 
   it('updates an existing TyporAi runtime tag during upgrade', async () => {
     await injectRuntimeScript({ windowHtmlPath, scriptSrc: 'old.js', version: '1.0.0' });
-    await injectRuntimeScript({ windowHtmlPath, scriptSrc: 'typora-typorai.js', version: '2.0.27' });
+    await injectRuntimeScript({ windowHtmlPath, scriptSrc: 'typora-typorai.renderer.js', version: '2.0.27' });
 
     const html = fs.readFileSync(windowHtmlPath, 'utf8');
     expect(html).not.toContain('old.js');

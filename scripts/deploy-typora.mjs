@@ -30,8 +30,6 @@ const args = process.argv.slice(2);
 const requestedAction = args.find(arg => actions.has(arg)) ?? 'install';
 const flags = new Set(args.filter(arg => arg.startsWith('--')));
 const deploymentPlatform = process.env.TYPORAI_DEPLOY_PLATFORM || process.platform;
-const rendererMode = resolveRendererMode();
-
 const paths = resolvePaths();
 
 try {
@@ -78,8 +76,10 @@ function install(options) {
 
   if (!options.dryRun) {
     mkdirSync(paths.pluginDir, { recursive: true });
+    for (const retiredRendererPath of paths.retiredRendererPaths) {
+      rmSync(retiredRendererPath, { force: true });
+    }
     copyFileSync(paths.bundlePath, paths.deployedBundlePath);
-    if (deploymentPlatform === 'win32' && existsSync(paths.legacyBundlePath)) copyFileSync(paths.legacyBundlePath, paths.deployedLegacyBundlePath);
     if (existsSync(paths.stylesPath)) {
       copyFileSync(paths.stylesPath, paths.deployedStylesPath);
     }
@@ -170,13 +170,6 @@ function verifyInstall(options = {}) {
     filesMatch(paths.sidecarPath, paths.deployedSidecarPath),
     `Sidecar artifact does not match the current build: ${paths.deployedSidecarPath}`,
   );
-  if (rendererMode === 'legacy') {
-    check(
-      'Legacy renderer artifact matches',
-      filesMatch(paths.legacyBundlePath, paths.deployedLegacyBundlePath),
-      `Legacy renderer artifact does not match the current build: ${paths.deployedLegacyBundlePath}`,
-    );
-  }
   check('Bootstrap token', existsSync(paths.sidecarTokenPath), `Missing sidecar token: ${paths.sidecarTokenPath}`);
   if (deploymentPlatform === 'darwin') {
     check('Renderer bootstrap', existsSync(paths.deployedBootstrapPath), `Missing renderer bootstrap: ${paths.deployedBootstrapPath}`);
@@ -191,8 +184,7 @@ function verifyInstall(options = {}) {
   } else {
     const windowHtml = readFileSync(paths.windowHtmlPath, 'utf8');
     check('Loader marker', hasLoader(windowHtml), `Missing TyporAi loader marker in ${paths.windowHtmlPath}`);
-    const expectedBundle = rendererMode === 'legacy' ? 'typora-typorai.legacy.js' : 'typora-typorai.renderer.js';
-    check('Shared renderer loader', windowHtml.includes(expectedBundle), 'Loader does not point at the Typora plugin directory.');
+    check('Shared renderer loader', windowHtml.includes('typora-typorai.renderer.js'), 'Loader does not point at the Typora plugin directory.');
     check('Legacy fallback hygiene', !hasLegacyLoader(windowHtml), 'Legacy loader marker is still present.');
   }
 
@@ -214,9 +206,6 @@ function assertInstallInputs() {
     throw new Error(`Missing Typora styles: ${paths.stylesPath}. Run npm run build first.`);
   }
   if (!existsSync(paths.sidecarPath)) throw new Error(`Missing sidecar: ${paths.sidecarPath}. Run npm run build first.`);
-  if (rendererMode === 'legacy' && !existsSync(paths.legacyBundlePath)) {
-    throw new Error(`Missing Windows legacy bundle: ${paths.legacyBundlePath}. Run npm run build:legacy first.`);
-  }
   assertWindowHtmlExists();
 }
 
@@ -233,7 +222,6 @@ function writeInstallationState(originalWindowHtml, deployedWindowHtml) {
     files,
     installedAt: new Date().toISOString(),
     platform: deploymentPlatform,
-    rendererMode,
     typoraInstallDir: paths.typoraInstallDir,
     typoraVersion: null,
     typoraiVersion: resolveTyporAiVersion(),
@@ -409,7 +397,6 @@ function legacyMarkerPattern() {
 }
 
 function buildLoader(resolvedPaths) {
-  if (rendererMode === 'legacy') return buildLegacyLoader(resolvedPaths);
   if (deploymentPlatform === 'darwin') return buildMacosBrowserLoader(resolvedPaths);
   return buildBrowserLoader(resolvedPaths);
 }
@@ -431,25 +418,6 @@ function buildMacosBrowserLoader(resolvedPaths) {
 </section>
 <script id="typorai-typora-bootstrap" src="${escapeHtmlAttribute(bootstrapUrl)}"></script>
 <script id="typorai-typora-runtime" defer src="${escapeHtmlAttribute(rendererUrl)}"></script>
-${markerEnd}`;
-}
-
-function buildLegacyLoader(resolvedPaths) {
-  return `${markerStart}
-<script id="typorai-typora-loader">
-(function () {
-  try {
-    var req = window.reqnode || window.require;
-    if (!req) return;
-    var pathToFileURL = req("url").pathToFileURL;
-    var fs = req("fs");
-    var pluginPath = ${JSON.stringify(resolvedPaths.deployedLegacyBundlePath)};
-    if (!fs.existsSync(pluginPath)) throw new Error("Legacy bundle is unavailable");
-    if (!document.getElementById("typorai-style")) { var style = document.createElement("link"); style.id = "typorai-style"; style.rel = "stylesheet"; style.href = pathToFileURL(${JSON.stringify(resolvedPaths.deployedStylesPath)}).href; document.head.appendChild(style); }
-    var script = document.createElement("script"); script.id = "typorai-typora-runtime"; script.defer = true; script.src = pathToFileURL(pluginPath).href; document.head.appendChild(script);
-  } catch (error) { console.error("[TyporAi] legacy loader failed", error); }
-})();
-</script>
 ${markerEnd}`;
 }
 
@@ -740,9 +708,11 @@ function resolvePaths() {
     appData,
     bundlePath: path.join(root, 'typora-typorai.renderer.js'),
     deployedBootstrapPath: path.join(pluginDir, 'typorai-bootstrap.js'),
-    legacyBundlePath: path.join(root, 'typora-typorai.js'),
-    deployedLegacyBundlePath: path.join(pluginDir, 'typora-typorai.legacy.js'),
     deployedSidecarPath: path.join(pluginDir, 'typorai-sidecar-v1.mjs'),
+    retiredRendererPaths: [
+      path.join(pluginDir, 'typora-typorai.js'),
+      path.join(pluginDir, 'typora-typorai.legacy.js'),
+    ],
     installationStatePath: path.join(pluginDir, 'installation-state.json'),
     deployedBundlePath: path.join(pluginDir, 'typora-typorai.renderer.js'),
     deployedStylesPath: path.join(pluginDir, 'styles.css'),
@@ -771,13 +741,6 @@ function resolvePaths() {
     typoraResourcesDir,
     windowHtmlPath,
   };
-}
-
-function resolveRendererMode() {
-  const requested = process.env.TYPORAI_RENDERER_MODE ?? 'sidecar';
-  if (requested !== 'sidecar' && requested !== 'legacy') throw new Error('TYPORAI_RENDERER_MODE must be "sidecar" or "legacy".');
-  if (requested === 'legacy' && deploymentPlatform !== 'win32') throw new Error('Legacy renderer mode is supported only on Windows.');
-  return requested;
 }
 
 function resolveTyporaInstallDir(platform) {

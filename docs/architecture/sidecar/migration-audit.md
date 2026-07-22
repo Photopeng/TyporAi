@@ -11,13 +11,11 @@ claim that the migration is complete.
 | D8 MCP, skills and agents | Persistent MCP store/test, workspace discovery and agent RPC | Implemented and tested |
 | D9 files, images and inline edit | Hash-protected file service, backups/restore, blob upload and private attachment context | Files and blob boundary implemented; Codex maps staged attachments to `localImage`, OpenCode to ACP image blocks, and Claude to SDK image blocks; full inline-edit acceptance remains open |
 | D10 delivery and diagnostics | Platform packages, checksums, release workflow, deploy/repair/uninstall and redacted diagnostics | Implemented and tested in repository; install/upgrade/rollback hardware evidence open |
-| D11 switching/retirement | Explicit Windows legacy rollback, legacy package artifact and default-switch gate | Gate intentionally open; no retirement or default-switch claim |
+| D11 switching/retirement | Legacy renderer build, package artifact, and runtime selection removed | Sidecar-only deployment |
 
 ## Required before final completion
 
 - Complete the remaining D9 provider image and inline-edit acceptance paths.
-- Execute the Windows legacy/Sidecar and macOS Apple Silicon feature matrices. Intel macOS is not supported.
+- Execute the Windows Sidecar and macOS Apple Silicon feature matrices. Intel macOS is not supported.
 - Verify clean install, upgrade, repair, rollback, uninstall, provider compatibility, process cleanup and soak requirements on the documented hardware.
-- Maintain Windows legacy until every row in `default-switch-gate.md` has direct passing evidence and a stable release cycle has elapsed.
-
-Automated checks are evidence for code behavior only. They do not close a platform matrix cell or authorize ElectronHost retirement.
+Automated checks are evidence for code behavior only. They do not close a platform matrix cell.

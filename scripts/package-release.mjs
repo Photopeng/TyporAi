@@ -31,8 +31,6 @@ const files = [
   'scripts/diagnose-typora.mjs',
   'scripts/deploy-typora.mjs',
 ];
-if (platform === 'windows-x64') files.splice(1, 0, 'typora-typorai.js');
-
 for (const relativePath of files) {
   const absolutePath = path.join(root, relativePath);
   if (!existsSync(absolutePath) || !statSync(absolutePath).isFile()) {

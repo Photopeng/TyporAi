@@ -2,7 +2,7 @@
   "name": "typorai",
   "version": "2.0.31",
   "description": "TyporAi - AI assistant embedded in Typora sidebar",
-  "main": "typora-typorai.js",
+  "main": "typorai-sidecar-v1.mjs",
   "engines": {
     "node": ">=24 <25"
   },
@@ -12,9 +12,8 @@
     "dev": "npm run build:css && node esbuild.renderer.config.mjs",
     "build": "npm run clean && npm run build:css && npm run build:renderer && npm run build:sidecar-v1",
     "build:renderer": "node esbuild.renderer.config.mjs production",
-    "build:legacy": "node esbuild.config.mjs production",
     "build:sidecar-v1": "node esbuild.sidecar-v1.config.mjs production",
-    "build:release": "npm run build && npm run build:legacy",
+    "build:release": "npm run build",
     "package:release": "node scripts/package-release.mjs",
     "deploy:typora": "npm run build:release && node scripts/deploy-typora.mjs install",
     "install:typora": "npm run deploy:typora",

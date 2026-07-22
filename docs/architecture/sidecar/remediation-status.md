@@ -21,7 +21,7 @@ before that label can be used.
 
 ## Still required before Stable
 
-- Windows legacy, Windows Sidecar, and macOS Apple Silicon real-Typora matrix
+- Windows Sidecar and macOS Apple Silicon real-Typora matrix
   evidence for install, repair, upgrade, uninstall, rollback, approvals,
   multi-window operation, and crash recovery.
 - Provider P0 feature-matrix evidence against real Claude, Codex, OpenCode,

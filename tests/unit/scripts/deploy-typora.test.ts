@@ -15,7 +15,6 @@ const markerStart = '<!-- TyporAi Typora Plugin Loader: start -->';
 const repoRoot = process.cwd();
 
 describe('deploy-typora script', () => {
-  let createdBundle = false;
   let createdRenderer = false;
   let createdSidecar = false;
   let createdStyles = false;
@@ -37,17 +36,12 @@ describe('deploy-typora script', () => {
     mkdirSync(path.dirname(windowHtmlPath), { recursive: true });
     writeFileSync(windowHtmlPath, '<html><head></head><body><main>Typora</main></body></html>', 'utf8');
     ensureBuildInput('typora-typorai.renderer.js', 'console.log("renderer");');
-    ensureBuildInput('typora-typorai.js', 'console.log("legacy");');
     ensureBuildInput('typorai-sidecar-v1.mjs', 'console.log("sidecar");');
     ensureBuildInput('styles.css', 'body { color: inherit; }');
   });
 
   afterEach(() => {
     rmSync(tempRoot, { recursive: true, force: true });
-    if (createdBundle) {
-      rmSync(path.join(repoRoot, 'typora-typorai.js'), { force: true });
-      createdBundle = false;
-    }
     if (createdRenderer) {
       rmSync(path.join(repoRoot, 'typora-typorai.renderer.js'), { force: true });
       createdRenderer = false;
@@ -98,16 +92,15 @@ describe('deploy-typora script', () => {
     expect(existsSync(pluginDir)).toBe(false);
   });
 
-  it('installs the Windows legacy rollback loader only when explicitly requested', () => {
-    runDeployWithEnv({
-      APPDATA: appDataDir,
-      TYPORA_INSTALL_DIR: installDir,
-      TYPORAI_DEPLOY_PLATFORM: 'win32',
-      TYPORAI_RENDERER_MODE: 'legacy',
-    }, 'install');
+  it('removes retired renderer artifacts when installing the Sidecar deployment', () => {
+    mkdirSync(pluginDir, { recursive: true });
+    writeFileSync(path.join(pluginDir, 'typora-typorai.js'), 'retired renderer', 'utf8');
+    writeFileSync(path.join(pluginDir, 'typora-typorai.legacy.js'), 'retired renderer', 'utf8');
 
-    expect(readWindowHtml()).toContain('typora-typorai.legacy.js');
-    expect(existsSync(path.join(pluginDir, 'typora-typorai.legacy.js'))).toBe(true);
+    runDeploy('install');
+
+    expect(existsSync(path.join(pluginDir, 'typora-typorai.js'))).toBe(false);
+    expect(existsSync(path.join(pluginDir, 'typora-typorai.legacy.js'))).toBe(false);
   });
 
   it('creates a restorable stable backup when the loader is already installed', () => {
@@ -242,7 +235,6 @@ describe('deploy-typora script', () => {
     const filePath = path.join(repoRoot, name);
     if (existsSync(filePath)) return;
     writeFileSync(filePath, contents, 'utf8');
-    if (name === 'typora-typorai.js') createdBundle = true;
     if (name === 'typora-typorai.renderer.js') createdRenderer = true;
     if (name === 'typorai-sidecar-v1.mjs') createdSidecar = true;
     if (name === 'styles.css') createdStyles = true;

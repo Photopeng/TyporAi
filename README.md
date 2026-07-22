@@ -3,7 +3,7 @@
 > Sidecar remediation status and remaining Stable-release evidence are tracked
 > in [the architecture status record](docs/architecture/sidecar/remediation-status.md).
 
-> **v2.0.31 release status:** This release unifies Claude, Codex, and OpenCode settings, adds safe API compatibility checks, and introduces provider-neutral OpenCode conversation forks. Sidecar deployment remains Beta / release candidate: multi-window and reconnect behavior still require platform acceptance evidence. Windows retains the legacy renderer as the documented rollback path, and only macOS Apple Silicon is in the current macOS support matrix. Do not label a Sidecar build as stable until the [default-switch gate](docs/architecture/sidecar/default-switch-gate.md) is closed.
+> **v2.0.31 release status:** This release unifies Claude, Codex, and OpenCode settings, adds safe API compatibility checks, and introduces provider-neutral OpenCode conversation forks. Deployment is Sidecar-only on every supported platform. Multi-window and reconnect behavior still require platform acceptance evidence; only macOS Apple Silicon is in the current macOS support matrix.
 
 TyporAi 是运行在 Typora 中的 AI 写作与文档协作插件。它把 AI 对话、当前文档上下文和原位编辑整合到右侧边栏，让你无需离开编辑器即可阅读、提问、改写和完善 Markdown 文档。
 
