@@ -18,7 +18,7 @@ describe('pathGuard', () => {
   it('resolves paths inside the workspace root', async () => {
     const resolved = await pathGuard.resolve(tempRoot, 'notes/example.md');
 
-    expect(resolved).toBe(path.join(tempRoot, 'notes', 'example.md'));
+    expect(resolved).toBe(path.join(await fs.promises.realpath(tempRoot), 'notes', 'example.md'));
   });
 
   it('rejects parent-directory traversal', async () => {
