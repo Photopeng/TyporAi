@@ -1,7 +1,7 @@
 {
   "id": "typorai",
   "name": "TyporAi",
-  "version": "2.0.30",
+  "version": "2.0.31",
   "minAppVersion": "1.7.2",
   "description": "Embeds Claude Code, Codex, OpenCode, and Typora API assistants in Typora for document editing, questions, citations, and multi-step workflows.",
   "author": "Yishen Tu",
