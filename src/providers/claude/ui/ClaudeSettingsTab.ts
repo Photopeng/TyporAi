@@ -155,7 +155,7 @@ export const claudeSettingsTabRenderer: ProviderSettingsTabRenderer = {
 
     settings.select(
       t('settings.claudeSafeMode.name'), claudeSettings.safeMode,
-      CLAUDE_SAFE_MODES.map(value => ({ value, label: value })),
+      CLAUDE_SAFE_MODES.map(value => ({ value, label: t(`settings.claudeSafeMode.${value}` as const) })),
       async (value) => {
         updateClaudeProviderSettings(settingsBag, { safeMode: value as ClaudeSafeMode });
         await context.plugin.saveSettings();

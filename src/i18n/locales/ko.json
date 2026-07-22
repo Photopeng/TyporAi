@@ -683,7 +683,7 @@
     },
     "claudeSafeMode": {
       "name": "안전 모드",
-      "desc": "안전 토글이 활성화되었을 때 사용되는 권한 모드입니다."
+      "desc": "안전 토글이 활성화되었을 때 사용되는 권한 모드입니다.", "acceptEdits": "변경 전 확인", "auto": "자동 변경", "default": "Provider 기본값"
     },
     "codexSafeMode": {
       "name": "안전 모드",

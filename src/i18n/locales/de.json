@@ -348,7 +348,7 @@
     },
     "claudeSafeMode": {
       "name": "Abgesicherter Modus",
-      "desc": "Berechtigungsmodus, der verwendet wird, wenn die sichere Umschaltung aktiv ist."
+      "desc": "Berechtigungsmodus, der verwendet wird, wenn die sichere Umschaltung aktiv ist.", "acceptEdits": "Vor Änderungen bestätigen", "auto": "Automatische Änderungen", "default": "Provider-Standard"
     },
     "codexSafeMode": {
       "name": "Abgesicherter Modus",

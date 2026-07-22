@@ -348,7 +348,7 @@
     },
     "claudeSafeMode": {
       "name": "Modo seguro",
-      "desc": "Modo de permiso utilizado cuando el interruptor Seguro est谩 activo."
+      "desc": "Modo de permiso utilizado cuando el interruptor Seguro est谩 activo.", "acceptEdits": "Confirmar antes de cambios", "auto": "Cambios automáticos", "default": "Predeterminado del Provider"
     },
     "codexSafeMode": {
       "name": "Modo seguro",

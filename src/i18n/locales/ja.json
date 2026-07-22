@@ -683,7 +683,7 @@
     },
     "claudeSafeMode": {
       "name": "セーフモード",
-      "desc": "Safe トグルがアクティブな場合に使用される許可モード。"
+      "desc": "Safe トグルがアクティブな場合に使用される許可モード。", "acceptEdits": "変更前に確認", "auto": "自動変更", "default": "Provider の既定値"
     },
     "codexSafeMode": {
       "name": "セーフモード",

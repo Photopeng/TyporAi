@@ -690,7 +690,7 @@
     },
     "claudeSafeMode": {
       "name": "安全模式",
-      "desc": "安全切换激活时使用的权限模式。"
+      "desc": "安全切换激活时使用的权限模式。", "acceptEdits": "修改前确认", "auto": "自动修改", "default": "Provider 默认"
     },
     "codexSafeMode": {
       "name": "安全模式",

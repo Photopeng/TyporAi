@@ -348,7 +348,7 @@
     },
     "claudeSafeMode": {
       "name": "Modo de seguran莽a",
-      "desc": "Modo de permiss茫o usado quando a altern芒ncia Segura est谩 ativa."
+      "desc": "Modo de permiss茫o usado quando a altern芒ncia Segura est谩 ativa.", "acceptEdits": "Confirmar antes de alterações", "auto": "Alterações automáticas", "default": "Predefinição do Provider"
     },
     "codexSafeMode": {
       "name": "Modo de seguran莽a",

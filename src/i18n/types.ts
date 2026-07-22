@@ -272,6 +272,9 @@ export type TranslationKey =
   | 'settings.loadUserSettings.desc'
   | 'settings.claudeSafeMode.name'
   | 'settings.claudeSafeMode.desc'
+  | 'settings.claudeSafeMode.acceptEdits'
+  | 'settings.claudeSafeMode.auto'
+  | 'settings.claudeSafeMode.default'
   | 'settings.codexSafeMode.name'
   | 'settings.codexSafeMode.desc'
   // Settings - Environment

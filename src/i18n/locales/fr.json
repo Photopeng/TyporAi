@@ -348,7 +348,7 @@
     },
     "claudeSafeMode": {
       "name": "Mode sans échec",
-      "desc": "Mode d'autorisation utilisé lorsque la bascule Coffre-fort est active."
+      "desc": "Mode d'autorisation utilisé lorsque la bascule Coffre-fort est active.", "acceptEdits": "Confirmer avant les modifications", "auto": "Modifications automatiques", "default": "Valeur par défaut du Provider"
     },
     "codexSafeMode": {
       "name": "Mode sans échec",

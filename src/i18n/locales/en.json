@@ -690,7 +690,7 @@
     },
     "claudeSafeMode": {
       "name": "Safe mode",
-      "desc": "Permission mode used when the Safe toggle is active."
+      "desc": "Permission mode used when the Safe toggle is active.", "acceptEdits": "Confirm before changes", "auto": "Automatic changes", "default": "Provider default"
     },
     "codexSafeMode": {
       "name": "Safe mode",
