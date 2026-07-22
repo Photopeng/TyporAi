@@ -1,4 +1,5 @@
-import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
+import { realpath } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -50,7 +51,7 @@ describe('WorkspaceFileService backups', () => {
     symlinkSync(realDirectory, path.join(root, 'alias'), 'junction');
     const files = new WorkspaceFileService(() => root);
 
-    expect(await files.resolveWatchTarget('alias/note.md')).toBe(path.join(realpathSync(realDirectory), 'note.md'));
+    expect(await files.resolveWatchTarget('alias/note.md')).toBe(path.join(await realpath(realDirectory), 'note.md'));
     await files.writeText('alias/nested/new.md', 'new');
     expect(readFileSync(path.join(realDirectory, 'nested', 'new.md'), 'utf8')).toBe('new');
   });
