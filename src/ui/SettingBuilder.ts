@@ -1,3 +1,5 @@
+import { t } from '../i18n/i18n';
+
 export class SettingBuilder {
   constructor(private readonly container: HTMLElement) {}
 
@@ -18,27 +20,27 @@ export class SettingBuilder {
   text(
     label: string,
     value: string,
-    onChange: (value: string) => void,
+    onChange: (value: string) => unknown,
     description?: string,
   ): HTMLInputElement {
     const control = this.field(label, description);
     const input = document.createElement('input');
     input.type = 'text'; input.value = value; input.className = 'typorai-setting-input';
-    input.addEventListener('input', () => onChange(input.value));
+    input.addEventListener('input', () => { void this.runChange(control, () => onChange(input.value)); });
     control.append(input); return input;
   }
 
   textarea(
     label: string,
     value: string,
-    onChange: (value: string) => void,
+    onChange: (value: string) => unknown,
     description?: string,
   ): HTMLTextAreaElement {
     const control = this.field(label, description);
     const input = document.createElement('textarea');
     input.value = value;
     input.className = 'typorai-setting-input';
-    input.addEventListener('input', () => onChange(input.value));
+    input.addEventListener('input', () => { void this.runChange(control, () => onChange(input.value)); });
     control.append(input);
     return input;
   }
@@ -47,7 +49,7 @@ export class SettingBuilder {
     label: string,
     value: string,
     options: Iterable<{ label: string; value: string }>,
-    onChange: (value: string) => void,
+    onChange: (value: string) => unknown,
     description?: string,
   ): HTMLSelectElement {
     const control = this.field(label, description);
@@ -60,7 +62,7 @@ export class SettingBuilder {
       input.append(element);
     }
     input.value = value;
-    input.addEventListener('change', () => onChange(input.value));
+    input.addEventListener('change', () => { void this.runChange(control, () => onChange(input.value)); });
     control.append(input);
     return input;
   }
@@ -69,7 +71,7 @@ export class SettingBuilder {
     label: string,
     value: number,
     limits: { max: number; min: number; step: number },
-    onChange: (value: number) => void,
+    onChange: (value: number) => unknown,
     description?: string,
   ): HTMLInputElement {
     const control = this.field(label, description);
@@ -87,7 +89,7 @@ export class SettingBuilder {
     input.addEventListener('input', () => {
       output.value = input.value;
       output.textContent = input.value;
-      onChange(Number(input.value));
+      void this.runChange(control, () => onChange(Number(input.value)));
     });
     control.append(input, output);
     return input;
@@ -96,13 +98,13 @@ export class SettingBuilder {
   toggle(
     label: string,
     value: boolean,
-    onChange: (value: boolean) => void,
+    onChange: (value: boolean) => unknown,
     description?: string,
   ): HTMLInputElement {
     const control = this.field(label, description);
     const input = document.createElement('input');
     input.type = 'checkbox'; input.checked = value; input.className = 'typorai-setting-toggle';
-    input.addEventListener('change', () => onChange(input.checked));
+    input.addEventListener('change', () => { void this.runChange(control, () => onChange(input.checked)); });
     control.append(input); return input;
   }
 
@@ -126,5 +128,25 @@ export class SettingBuilder {
     field.append(info, control);
     this.container.append(field);
     return control;
+  }
+
+  private async runChange(control: HTMLElement, change: () => unknown): Promise<void> {
+    try {
+      await change();
+      this.showFeedback(control, t('common.success'), false);
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      this.showFeedback(control, `${t('common.error')}: ${detail}`, true);
+    }
+  }
+
+  private showFeedback(control: HTMLElement, text: string, isError: boolean): void {
+    const existing = control.querySelector<HTMLElement>('.typorai-setting-save-feedback');
+    const feedback = existing ?? document.createElement('div');
+    feedback.className = 'setting-item-description typorai-setting-save-feedback';
+    feedback.setAttribute('role', 'status');
+    feedback.textContent = text;
+    feedback.classList.toggle('typorai-setting-validation-error', isError);
+    if (!existing) control.append(feedback);
   }
 }
